@@ -1,0 +1,68 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(apps/mobile/lib/**)",
+      "Edit(apps/mobile/test/**)",
+      "Edit(apps/mobile/integration_test/**)",
+      "Edit(packages/**)",
+      "Edit(.github/workflows/**)",
+      "Edit(docs/**)",
+      "Bash(flutter test:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(flutter build:*)",
+      "Bash(flutter run:*)",
+      "Bash(dart format:*)",
+      "Bash(dart run build_runner:*)",
+      "Bash(flutterfire:*)"
+    ],
+    "deny": [
+      "Edit(**/*.g.dart)",
+      "Edit(**/*.freezed.dart)",
+      "Edit(**/generated_plugin_registrant.*)",
+      "Edit(apps/mobile/android/app/build/**)",
+      "Edit(apps/mobile/ios/Pods/**)",
+      "Bash(git push --force*)",
+      "Bash(rm -rf*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/track-writes.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-dangerous-git.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-changes.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true
+  }
+}
