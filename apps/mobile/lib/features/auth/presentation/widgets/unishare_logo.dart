@@ -3,7 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UnishareLogo extends StatelessWidget {
-  const UnishareLogo({super.key, this.iconSize = 40, this.fontSize = 20, this.darkText = true});
+  const UnishareLogo({
+    super.key,
+    this.iconSize = 40,
+    this.fontSize = 20,
+    this.darkText = true,
+  });
 
   final double iconSize;
   final double fontSize;
@@ -22,10 +27,7 @@ class UnishareLogo extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
           ),
           clipBehavior: Clip.antiAlias,
-          child: SvgPicture.asset(
-            'assets/icon.svg',
-            fit: BoxFit.contain,
-          ),
+          child: SvgPicture.asset('assets/icon.svg', fit: BoxFit.contain),
         ),
         const SizedBox(width: 10),
         Text(

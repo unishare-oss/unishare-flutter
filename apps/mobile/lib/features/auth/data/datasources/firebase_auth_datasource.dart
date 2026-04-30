@@ -13,23 +13,20 @@ class FirebaseAuthDatasource {
 
   User? get currentUser => _firebaseAuth.currentUser;
 
-  /// Returns null if user cancels (throws [StateError] with 'cancelled' message).
-  /// Caller should treat [StateError] as a silent cancel.
+  /// Returns null if the user cancels. Caller treats null as a silent no-op.
   Future<UserCredential?> signInWithGoogle() async {
     late final GoogleSignInAccount googleUser;
     try {
       googleUser = await GoogleSignIn.instance.authenticate();
     } on GoogleSignInException catch (e) {
-      if (e.code == GoogleSignInExceptionCode.canceled) {
-        // Silent cancel — caller treats null as no-op.
+      if (e.code == GoogleSignInExceptionCode.canceled ||
+          e.code == GoogleSignInExceptionCode.interrupted) {
         return null;
       }
       throw AuthException(AuthFailureType.unknown, e.description);
     }
 
-    // In v7, idToken is on account.authentication (synchronous getter).
     final idToken = googleUser.authentication.idToken;
-
     final credential = GoogleAuthProvider.credential(idToken: idToken);
 
     try {
