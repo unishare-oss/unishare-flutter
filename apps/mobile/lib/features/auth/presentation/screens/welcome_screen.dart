@@ -450,7 +450,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
             // Consent checkbox row
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Checkbox(
                   value: _consentChecked,
@@ -467,14 +467,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 2),
-                    child: Text(
-                      'I have read and agree to the Terms of Service and Privacy Policy.',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 12,
-                        color: _kTextSecondary,
-                      ),
+                  child: Text(
+                    'I have read and agree to the Terms of Service and Privacy Policy.',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 12,
+                      color: _kTextSecondary,
                     ),
                   ),
                 ),
@@ -536,7 +533,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           ],
 
           // 9. Submit button
-          const SizedBox(height: 4),
+          const SizedBox(height: 16),
           SizedBox(
             height: 42,
             child: FilledButton(
