@@ -50,3 +50,21 @@ Outcome: All 16 unit tests passed. flutter analyze reported no issues. dart form
 Decisions: Committed formatting fixes under a style: prefix to keep them distinct from feature commits.
 Handoff: Branch feat/design-system clean and ready for review.
 Review: PENDING
+Files:
+  ? apps/mobile/lib/features/post_feed/ (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post_feed/ (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post_feed/ (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post_feed/ (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post_feed/ (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post_feed/ (untracked)
+
