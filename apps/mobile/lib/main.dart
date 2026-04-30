@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/router/router.dart';
-import 'shared/theme/app_theme.dart';
+import 'shared/theme/providers/theme_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('settings');
   runApp(const ProviderScope(child: App()));
 }
 
@@ -14,11 +18,11 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final theme = ref.watch(activeThemeProvider);
     return MaterialApp.router(
       title: 'Unishare',
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      theme: theme,
+      themeMode: ThemeMode.light,
       routerConfig: router,
     );
   }
