@@ -158,3 +158,29 @@ Review: PENDING
   [15:52] Edit: apps/mobile/lib/features/auth/presentation/screens/sign_up_screen.dart
   [15:52] Edit: apps/mobile/lib/features/auth/presentation/widgets/google_sign_in_button.dart
   [15:54] Edit: apps/mobile/lib/features/auth/presentation/screens/sign_up_screen.dart
+  [16:00] Edit: apps/mobile/pubspec.yaml
+  [16:00] Edit: apps/mobile/pubspec.yaml
+  [16:07] Write: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [16:07] Edit: apps/mobile/lib/core/router/router.dart
+  [16:07] Edit: apps/mobile/lib/core/router/router.dart
+  [16:07] Edit: apps/mobile/lib/core/router/router.dart
+  [16:08] Write: apps/mobile/test/widget/auth/welcome_screen_test.dart
+  [16:09] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [16:09] Edit: apps/mobile/test/widget/auth/welcome_screen_test.dart
+  [16:09] Edit: apps/mobile/test/widget/auth/welcome_screen_test.dart
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  1 file changed, 7 insertions(+), 5 deletions(-)
+
+  [16:14] Edit: apps/mobile/lib/features/auth/presentation/widgets/auth_text_field.dart
+  [16:14] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  1 file changed, 7 insertions(+), 5 deletions(-)
+
+  [16:21] Edit: apps/mobile/lib/features/auth/data/datasources/firebase_auth_datasource.dart
+  [16:21] Edit: apps/mobile/lib/features/auth/data/datasources/firebase_auth_datasource.dart
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  1 file changed, 7 insertions(+), 5 deletions(-)
+
