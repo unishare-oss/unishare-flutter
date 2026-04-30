@@ -18,28 +18,35 @@ date: YYYY-MM-DD
 
 # NNNN — Title
 
-**Status:** PROPOSED | **Date:**
+**Date:** YYYY-MM-DD
+**Status:** PROPOSED
+**Author:** [architect agent / member name]
 
-## Context
+## Problem
 
-What situation or constraint forced this decision?
-Include any relevant prior art or constraints.
+State the problem in one paragraph. What constraint or requirement forced a decision?
+
+## Options Considered
+
+| # | Option | Upside | Downside |
+|---|--------|--------|----------|
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
 
 ## Decision
 
-State the decision clearly and specifically.
+**Chosen:** Option N — [name]
+
+3-sentence justification: what it does, why it fits better than the alternatives, what assumption it relies on.
+
+## Reversal Cost
+
+Low / Medium / High — what would it take to undo this decision?
 
 ## Consequences
 
-**Positive:**
--
-
-**Negative / trade-offs:**
--
-
-## Alternatives considered
-
-What else was evaluated and why it was not chosen.
+What becomes easier? What becomes harder? Any follow-up decisions required?
 ````
 
 ---

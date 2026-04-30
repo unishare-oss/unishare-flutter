@@ -56,7 +56,7 @@ def collect(folder):
     if not os.path.isdir(folder):
         return entries
     for fname in sorted(os.listdir(folder)):
-        if fname == "index.md" or not fname.endswith(".md"):
+        if fname.startswith("_") or fname == "index.md" or not fname.endswith(".md"):
             continue
         entries.append((fname, parse_file(os.path.join(folder, fname), fname)))
     return entries
