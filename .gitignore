@@ -23,3 +23,6 @@ apps/mobile/docs/
 # Environment / secrets
 .env
 *.env.local
+
+# GSD
+.planning/
