@@ -50,21 +50,15 @@ Outcome: All 16 unit tests passed. flutter analyze reported no issues. dart form
 Decisions: Committed formatting fixes under a style: prefix to keep them distinct from feature commits.
 Handoff: Branch feat/design-system clean and ready for review.
 Review: PENDING
-Files:
-  ? apps/mobile/lib/features/post_feed/ (untracked)
 
-Files:
-  ? apps/mobile/lib/features/post_feed/ (untracked)
+---
+Date: 2026-04-30
+Member: Pyae Sone Shin Thant
+Agent: architect
+Task: Write tech spec for post-feed feature
+Prompt: Read tech-proposals/0003-post-feed.md and docs/sessions/2026-04-30-post-feed.md and write a tech spec
 
-Files:
-  ? apps/mobile/lib/features/post_feed/ (untracked)
-
-Files:
-  ? apps/mobile/lib/features/post_feed/ (untracked)
-
-Files:
-  ? apps/mobile/lib/features/post_feed/ (untracked)
-
-Files:
-  ? apps/mobile/lib/features/post_feed/ (untracked)
-
+Outcome: Created tech-specs/03-post-feed.md. Resolved all 4 open questions from the proposal. Spec covers Firestore schema, clean architecture layers (domain/data/presentation), pagination cursor strategy, optimistic like flow, error handling, test plan, and acceptance criteria. Post creation and media upload deferred to a separate spec.
+Decisions: Author denormalization staleness acceptable for v1; score field reserved at 0 to avoid future schema migration; offline support relies on Firestore cache only; media upload is a prerequisite step owned by the presentation layer before calling CreatePost.
+Handoff: Spec ready for approval. Once approved, flutter-engineer can implement following the layer breakdown in 03-post-feed.md. Add mocktail to dev_dependencies before writing tests.
+Review: PENDING
