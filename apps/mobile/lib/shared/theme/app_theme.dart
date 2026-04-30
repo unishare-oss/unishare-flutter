@@ -47,17 +47,17 @@ class AppTheme {
       textTheme: AppTypography.textTheme(d.foreground),
       scaffoldBackgroundColor: d.background,
       cardColor: d.card,
-      dividerColor: scheme.outline,
+      dividerColor: d.border,
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: d.card,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: scheme.outline),
+          borderSide: BorderSide(color: d.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: scheme.outline),
+          borderSide: BorderSide(color: d.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
@@ -68,7 +68,7 @@ class AppTheme {
         color: d.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
-          side: BorderSide(color: scheme.outline),
+          side: BorderSide(color: d.border),
         ),
         elevation: 0,
       ),
