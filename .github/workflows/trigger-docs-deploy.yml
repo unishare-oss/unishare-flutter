@@ -6,6 +6,7 @@ on:
     paths:
       - 'tech-specs/**'
       - 'tech-proposals/**'
+      - 'docs/decisions/**'
 
 permissions:
   actions: write
