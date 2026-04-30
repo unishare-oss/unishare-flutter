@@ -93,18 +93,20 @@ class _AuthTextFieldState extends State<AuthTextField> {
           borderSide: const BorderSide(color: _kErrorBorder, width: 1),
         ),
         errorStyle: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kErrorColor),
+        // Fixed 36×36 slot on every field keeps all heights identical.
+        suffixIconConstraints: const BoxConstraints.tightFor(width: 36, height: 36),
         suffixIcon:
             widget.suffixIcon ??
             (widget.obscureText
-                ? IconButton(
-                    icon: Icon(
+                ? GestureDetector(
+                    onTap: () => setState(() => _obscured = !_obscured),
+                    child: Icon(
                       _obscured ? Icons.visibility_off : Icons.visibility,
                       color: _kTextSecondary,
                       size: 18,
                     ),
-                    onPressed: () => setState(() => _obscured = !_obscured),
                   )
-                : null),
+                : const SizedBox.shrink()),
       ),
     );
   }
