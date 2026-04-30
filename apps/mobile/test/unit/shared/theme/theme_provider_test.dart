@@ -21,7 +21,6 @@ void main() {
   });
 
   tearDown(() async {
-    await Hive.deleteFromDisk();
     await Hive.close();
     await tempDir.delete(recursive: true);
   });

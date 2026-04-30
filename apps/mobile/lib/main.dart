@@ -22,6 +22,9 @@ class App extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Unishare',
       theme: theme,
+      // Single-slot theming: all themes (light and dark) live in the `theme` param.
+      // ThemeMode.light forces MaterialApp to always use `theme`. Material 3 widgets
+      // use colorScheme.brightness directly, so dark themes render correctly.
       themeMode: ThemeMode.light,
       routerConfig: router,
     );

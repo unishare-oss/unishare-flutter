@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../app_theme.dart';
+import '../themes.dart';
 
 part 'theme_provider.g.dart';
 
@@ -18,8 +19,9 @@ class ThemeNotifier extends _$ThemeNotifier {
   }
 
   Future<void> setTheme(String id) async {
-    await Hive.box(_boxName).put(_key, id);
+    if (!AppThemes.all.containsKey(id)) return;
     state = id;
+    await Hive.box(_boxName).put(_key, id);
   }
 }
 
