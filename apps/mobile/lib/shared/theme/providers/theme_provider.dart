@@ -14,8 +14,13 @@ class ThemeNotifier extends _$ThemeNotifier {
 
   @override
   String build() {
-    final box = Hive.box(_boxName);
-    return box.get(_key, defaultValue: 'unishare') as String;
+    try {
+      final box = Hive.box(_boxName);
+      final id = box.get(_key, defaultValue: 'unishare') as String;
+      return AppThemes.all.containsKey(id) ? id : 'unishare';
+    } catch (_) {
+      return 'unishare';
+    }
   }
 
   Future<void> setTheme(String id) async {
@@ -25,7 +30,7 @@ class ThemeNotifier extends _$ThemeNotifier {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 ThemeData activeTheme(Ref ref) {
   final id = ref.watch(themeProvider);
   return AppTheme.fromId(id);

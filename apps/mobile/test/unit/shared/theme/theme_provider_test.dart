@@ -52,6 +52,14 @@ void main() {
       await container.read(themeProvider.notifier).setTheme('tokyo-night');
       expect(Hive.box('settings').get('selected_theme'), 'tokyo-night');
     });
+
+    test('setTheme ignores unknown id', () async {
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
+      await container.read(themeProvider.notifier).setTheme('not-a-real-theme');
+      expect(container.read(themeProvider), 'unishare');
+      expect(Hive.box('settings').get('selected_theme'), isNull);
+    });
   });
 
   group('activeThemeProvider', () {
