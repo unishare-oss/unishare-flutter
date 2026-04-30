@@ -68,3 +68,8 @@ Files:
 Files:
   ? apps/mobile/lib/features/post_feed/ (untracked)
 
+Files:
+  ~ apps/mobile/lib/main.dart
+  ? apps/mobile/lib/core/firebase/firebase_init.dart (untracked)
+Summary:  1 file changed, 2 insertions(+)
+
