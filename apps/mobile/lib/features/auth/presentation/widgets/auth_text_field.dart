@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 const _kBorder = Color(0xFFE2DAD0);
 const _kFocusBorder = Color(0xFFD97706);
 const _kErrorBorder = Color(0xFFDC2626);
-const _kFillColor = Color(0xFFFFFFFF);
+const _kFillColor = Color(0xFFFEF3C7);
 const _kTextSecondary = Color(0xFF6B6560);
 const _kErrorColor = Color(0xFFDC2626);
 
