@@ -25,7 +25,12 @@ This file provides guidance to Claude Code when working in this repository.
 │       └── ios/
 ├── packages/            ← shared Dart packages (design system, auth, networking)
 ├── tools/               ← repo scripts (codegen, localization, release)
+├── tech-proposals/      ← Tech Proposals (auto-rendered on docs site)
+├── tech-specs/          ← Tech Specs (auto-rendered on docs site)
 ├── docs/
+│   ├── decisions/       ← Architecture Decision Records (auto-rendered on docs site)
+│   ├── sessions/        ← per-session agent scratchpads
+│   ├── agent-runs/      ← structured reviewer audit reports
 │   └── agent-log.md     ← automated session log
 └── .github/workflows/
 ```
@@ -102,6 +107,7 @@ apps/mobile/integration_test/
 | Images | `cached_network_image` |
 | Secrets | `flutter_secure_storage` |
 | Models | `freezed` + `json_serializable` |
+| Typography | `google_fonts` (Space Grotesk + Fira Code) |
 
 ## Agents
 
@@ -160,7 +166,7 @@ To regenerate: `dart run build_runner build --delete-conflicting-outputs`
 
 ## Docs Folder Conventions
 
-Three separate logging channels — each serves a different purpose:
+Each folder serves a distinct purpose:
 
 | Folder | Written by | Format | Purpose |
 |--------|-----------|--------|---------|
