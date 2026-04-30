@@ -100,7 +100,7 @@ class _PostBody extends ConsumerWidget {
             count: post.likesCount,
             onTap: () {
               ref
-                  .read(postFeedNotifierProvider.notifier)
+                  .read(postFeedProvider.notifier)
                   .toggleLike(post.id, liked: !post.isLikedByCurrentUser)
                   .catchError((_) {
                 if (context.mounted) {

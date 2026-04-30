@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../domain/entities/post.dart';
+import '../../domain/entities/post_type.dart';
 
 part 'post_model.freezed.dart';
 part 'post_model.g.dart';
 
 @freezed
-class PostModel with _$PostModel {
+abstract class PostModel with _$PostModel {
   const PostModel._();
 
   const factory PostModel({
@@ -23,6 +24,10 @@ class PostModel with _$PostModel {
     @Default(false) bool isLikedByCurrentUser,
     required DateTime createdAt,
     required DateTime updatedAt,
+    @Default('NOTE') String type,
+    @Default('') String courseCode,
+    @Default('') String courseDepartment,
+    @Default(0) int commentCount,
   }) = _PostModel;
 
   factory PostModel.fromJson(Map<String, dynamic> json) =>
@@ -46,6 +51,10 @@ class PostModel with _$PostModel {
       isLikedByCurrentUser: isLiked,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      type: data['type'] as String? ?? 'NOTE',
+      courseCode: data['courseCode'] as String? ?? '',
+      courseDepartment: data['courseDepartment'] as String? ?? '',
+      commentCount: data['commentCount'] as int? ?? 0,
     );
   }
 
@@ -62,5 +71,10 @@ class PostModel with _$PostModel {
         isLikedByCurrentUser: isLikedByCurrentUser,
         createdAt: createdAt,
         updatedAt: updatedAt,
+        type: PostType.fromString(type),
+        courseCode: courseCode.isEmpty ? null : courseCode,
+        courseDepartment: courseDepartment.isEmpty ? null : courseDepartment,
+        commentCount: commentCount,
       );
 }
+

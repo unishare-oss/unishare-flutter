@@ -1,3 +1,5 @@
+import 'post_type.dart';
+
 class Post {
   const Post({
     required this.id,
@@ -12,6 +14,10 @@ class Post {
     required this.isLikedByCurrentUser,
     required this.createdAt,
     required this.updatedAt,
+    this.type = PostType.note,
+    this.courseCode,
+    this.courseDepartment,
+    this.commentCount = 0,
   });
 
   final String id;
@@ -26,6 +32,10 @@ class Post {
   final bool isLikedByCurrentUser;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final PostType type;
+  final String? courseCode;
+  final String? courseDepartment;
+  final int commentCount;
 
   Post copyWith({
     String? id,
@@ -40,6 +50,10 @@ class Post {
     bool? isLikedByCurrentUser,
     DateTime? createdAt,
     DateTime? updatedAt,
+    PostType? type,
+    String? courseCode,
+    String? courseDepartment,
+    int? commentCount,
   }) {
     return Post(
       id: id ?? this.id,
@@ -54,6 +68,11 @@ class Post {
       isLikedByCurrentUser: isLikedByCurrentUser ?? this.isLikedByCurrentUser,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      type: type ?? this.type,
+      courseCode: courseCode ?? this.courseCode,
+      courseDepartment: courseDepartment ?? this.courseDepartment,
+      commentCount: commentCount ?? this.commentCount,
     );
   }
 }
+

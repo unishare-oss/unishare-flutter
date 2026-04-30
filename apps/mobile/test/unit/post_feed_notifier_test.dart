@@ -53,7 +53,7 @@ void main() {
       final container = _buildContainer(repo);
       addTearDown(container.dispose);
 
-      final state = await container.read(postFeedNotifierProvider.future);
+      final state = await container.read(postFeedProvider.future);
 
       expect(state.posts.length, 5);
       expect(state.hasMore, isFalse);
@@ -73,10 +73,10 @@ void main() {
       final container = _buildContainer(repo);
       addTearDown(container.dispose);
 
-      await container.read(postFeedNotifierProvider.future);
-      await container.read(postFeedNotifierProvider.notifier).fetchNextPage();
+      await container.read(postFeedProvider.future);
+      await container.read(postFeedProvider.notifier).fetchNextPage();
 
-      final state = container.read(postFeedNotifierProvider).valueOrNull!;
+      final state = container.read(postFeedProvider).asData!.value;
       expect(state.posts.length, 21);
       expect(state.hasMore, isFalse);
     });
@@ -96,12 +96,12 @@ void main() {
       final container = _buildContainer(repo);
       addTearDown(container.dispose);
 
-      await container.read(postFeedNotifierProvider.future);
+      await container.read(postFeedProvider.future);
 
       // Fire two concurrent fetches — only one should reach the repo.
-      await Future.wait([
-        container.read(postFeedNotifierProvider.notifier).fetchNextPage(),
-        container.read(postFeedNotifierProvider.notifier).fetchNextPage(),
+      await Future.wait<void>([
+        container.read(postFeedProvider.notifier).fetchNextPage(),
+        container.read(postFeedProvider.notifier).fetchNextPage(),
       ]);
 
       verify(() => repo.getPostFeed(page: 1, pageSize: 20)).called(1);
@@ -119,15 +119,15 @@ void main() {
 
       final container = _buildContainer(repo);
       addTearDown(container.dispose);
-      await container.read(postFeedNotifierProvider.future);
+      await container.read(postFeedProvider.future);
 
       // Don't await — check state after the optimistic mutation but before
       // the async call completes.
       unawaited(
-        container.read(postFeedNotifierProvider.notifier).toggleLike('p1', liked: true),
+        container.read(postFeedProvider.notifier).toggleLike('p1', liked: true),
       );
 
-      final state = container.read(postFeedNotifierProvider).valueOrNull!;
+      final state = container.read(postFeedProvider).asData!.value;
       expect(state.posts.first.isLikedByCurrentUser, isTrue);
       expect(state.posts.first.likesCount, 3);
     });
@@ -141,16 +141,16 @@ void main() {
 
       final container = _buildContainer(repo);
       addTearDown(container.dispose);
-      await container.read(postFeedNotifierProvider.future);
+      await container.read(postFeedProvider.future);
 
       await expectLater(
         () => container
-            .read(postFeedNotifierProvider.notifier)
+            .read(postFeedProvider.notifier)
             .toggleLike('p1', liked: true),
         throwsException,
       );
 
-      final state = container.read(postFeedNotifierProvider).valueOrNull!;
+      final state = container.read(postFeedProvider).asData!.value;
       expect(state.posts.first.isLikedByCurrentUser, isFalse);
       expect(state.posts.first.likesCount, 2);
     });

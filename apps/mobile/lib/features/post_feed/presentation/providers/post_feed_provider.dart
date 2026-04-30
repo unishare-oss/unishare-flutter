@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../data/datasources/post_firestore_datasource.dart';
+import '../../data/mock/mock_posts.dart';
 import '../../data/repositories/post_repository_impl.dart';
 import '../../domain/entities/post.dart';
 import '../../domain/repositories/post_repository.dart';
@@ -11,6 +12,9 @@ import '../../domain/usecases/get_post_feed.dart';
 import '../../domain/usecases/toggle_like.dart';
 
 part 'post_feed_provider.g.dart';
+
+// Flip to false to use Firestore.
+const _kMockFeed = true;
 
 class PostFeedState {
   const PostFeedState({
@@ -55,6 +59,9 @@ class PostFeedNotifier extends _$PostFeedNotifier {
 
   @override
   Future<PostFeedState> build() async {
+    if (_kMockFeed) {
+      return PostFeedState(posts: kMockPosts, hasMore: false);
+    }
     _nextPage = 0;
     final useCase = GetPostFeed(ref.read(postRepositoryProvider));
     final page = await useCase(page: 0);
@@ -63,7 +70,8 @@ class PostFeedNotifier extends _$PostFeedNotifier {
   }
 
   Future<void> fetchNextPage() async {
-    final current = state.valueOrNull;
+    if (_kMockFeed) return;
+    final current = state.asData?.value;
     if (current == null || current.isFetchingMore || !current.hasMore) return;
 
     state = AsyncData(current.copyWith(isFetchingMore: true));
@@ -83,7 +91,7 @@ class PostFeedNotifier extends _$PostFeedNotifier {
   }
 
   Future<void> toggleLike(String postId, {required bool liked}) async {
-    final current = state.valueOrNull;
+    final current = state.asData?.value;
     if (current == null) return;
 
     final idx = current.posts.indexWhere((p) => p.id == postId);
@@ -99,11 +107,12 @@ class PostFeedNotifier extends _$PostFeedNotifier {
     newPosts[idx] = updated;
     state = AsyncData(current.copyWith(posts: newPosts));
 
+    if (_kMockFeed) return;
+
     try {
       final useCase = ToggleLike(ref.read(postRepositoryProvider));
       await useCase(postId, liked: liked);
     } catch (e) {
-      // Revert optimistic update.
       newPosts[idx] = original;
       state = AsyncData(current.copyWith(posts: List.unmodifiable(newPosts)));
       rethrow;
@@ -111,10 +120,12 @@ class PostFeedNotifier extends _$PostFeedNotifier {
   }
 
   Future<void> deletePost(String postId) async {
-    final useCase = DeletePost(ref.read(postRepositoryProvider));
-    await useCase(postId);
+    if (!_kMockFeed) {
+      final useCase = DeletePost(ref.read(postRepositoryProvider));
+      await useCase(postId);
+    }
 
-    final current = state.valueOrNull;
+    final current = state.asData?.value;
     if (current == null) return;
     state = AsyncData(
       current.copyWith(posts: current.posts.where((p) => p.id != postId).toList()),
@@ -126,3 +137,4 @@ class PostFeedNotifier extends _$PostFeedNotifier {
 Future<Post> postDetail(Ref ref, String postId) {
   return ref.read(postRepositoryProvider).getPost(postId);
 }
+
