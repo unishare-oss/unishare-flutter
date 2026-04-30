@@ -5,8 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/auth/presentation/providers/auth_state_provider.dart';
 import '../../features/auth/presentation/providers/guest_mode_provider.dart';
-import '../../features/auth/presentation/screens/sign_in_screen.dart';
-import '../../features/auth/presentation/screens/sign_up_screen.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/auth/presentation/widgets/academic_profile_bottom_sheet.dart';
 
@@ -43,7 +41,7 @@ class _RouterNotifier extends ChangeNotifier {
     // itself be null = signed-out) for AsyncData.
     final isAuthenticated = authAsync.hasValue && authAsync.value != null;
 
-    const authRoutes = {'/welcome', '/sign-in', '/sign-up'};
+    const authRoutes = {'/welcome'};
     final currentPath = state.uri.path;
 
     // 1. No session + not guest → force /welcome
@@ -80,14 +78,6 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/welcome',
         builder: (context, state) => const WelcomeScreen(),
-      ),
-      GoRoute(
-        path: '/sign-in',
-        builder: (context, state) => const SignInScreen(),
-      ),
-      GoRoute(
-        path: '/sign-up',
-        builder: (context, state) => const SignUpScreen(),
       ),
       GoRoute(path: '/', builder: (context, state) => const _HomeScreen()),
     ],
