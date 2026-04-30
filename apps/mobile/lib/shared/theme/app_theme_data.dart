@@ -17,7 +17,6 @@ class AppThemeData {
     required this.accentForeground,
     required this.destructive,
     required this.destructiveForeground,
-    required this.border,
     required this.textSecondary,
     required this.textMuted,
     required this.amber,
@@ -43,7 +42,6 @@ class AppThemeData {
   final Color accentForeground;
   final Color destructive;
   final Color destructiveForeground;
-  final Color border;
   final Color textSecondary;
   final Color textMuted;
   final Color amber;

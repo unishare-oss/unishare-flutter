@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 @immutable
 class AppColors extends ThemeExtension<AppColors> {
   const AppColors({
-    required this.border,
     required this.muted,
     required this.mutedForeground,
     required this.textSecondary,
@@ -17,7 +16,6 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.cardDark,
   });
 
-  final Color border;
   final Color muted;
   final Color mutedForeground;
   final Color textSecondary;
@@ -32,7 +30,6 @@ class AppColors extends ThemeExtension<AppColors> {
 
   @override
   AppColors copyWith({
-    Color? border,
     Color? muted,
     Color? mutedForeground,
     Color? textSecondary,
@@ -46,7 +43,6 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? cardDark,
   }) {
     return AppColors(
-      border: border ?? this.border,
       muted: muted ?? this.muted,
       mutedForeground: mutedForeground ?? this.mutedForeground,
       textSecondary: textSecondary ?? this.textSecondary,
@@ -65,7 +61,6 @@ class AppColors extends ThemeExtension<AppColors> {
   AppColors lerp(AppColors? other, double t) {
     if (other == null) return this;
     return AppColors(
-      border: Color.lerp(border, other.border, t)!,
       muted: Color.lerp(muted, other.muted, t)!,
       mutedForeground: Color.lerp(mutedForeground, other.mutedForeground, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,

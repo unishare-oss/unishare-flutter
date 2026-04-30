@@ -22,12 +22,10 @@ class AppTheme {
           onError: d.destructiveForeground,
           surface: d.background,
           onSurface: d.foreground,
-          outline: d.border,
           surfaceContainerHighest: d.card,
         );
 
     final appColors = AppColors(
-      border: d.border,
       muted: d.muted,
       mutedForeground: d.mutedForeground,
       textSecondary: d.textSecondary,
@@ -49,17 +47,17 @@ class AppTheme {
       textTheme: AppTypography.textTheme(d.foreground),
       scaffoldBackgroundColor: d.background,
       cardColor: d.card,
-      dividerColor: d.border,
+      dividerColor: scheme.outline,
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: d.card,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: d.border),
+          borderSide: BorderSide(color: scheme.outline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: BorderSide(color: d.border),
+          borderSide: BorderSide(color: scheme.outline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
@@ -70,7 +68,7 @@ class AppTheme {
         color: d.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
-          side: BorderSide(color: d.border),
+          side: BorderSide(color: scheme.outline),
         ),
         elevation: 0,
       ),

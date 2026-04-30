@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 const _sample = AppColors(
-  border: Color(0xFFE2DAD0),
   muted: Color(0xFFF7F3EE),
   mutedForeground: Color(0xFF6B6560),
   textSecondary: Color(0xFF6B6560),
@@ -22,14 +21,12 @@ void main() {
     test('copyWith overrides only specified fields', () {
       final copy = _sample.copyWith(amber: const Color(0xFF000000));
       expect(copy.amber, const Color(0xFF000000));
-      expect(copy.border, _sample.border);
       expect(copy.success, _sample.success);
     });
 
     test('copyWith with no args returns equal instance', () {
       final copy = _sample.copyWith();
       expect(copy.amber, _sample.amber);
-      expect(copy.border, _sample.border);
     });
 
     test('lerp at t=0 returns this', () {
