@@ -31,9 +31,18 @@ void main() {
 
     testWidgets('all themes include AppColors extension', (tester) async {
       for (final id in [
-        'unishare', 'catppuccin-mocha', 'catppuccin-latte', 'nord',
-        'arctic', 'tokyo-night', 'dracula', 'gruvbox-dark',
-        'midnight-library', 'parchment', 'ocean-depth', 'sakura',
+        'unishare',
+        'catppuccin-mocha',
+        'catppuccin-latte',
+        'nord',
+        'arctic',
+        'tokyo-night',
+        'dracula',
+        'gruvbox-dark',
+        'midnight-library',
+        'parchment',
+        'ocean-depth',
+        'sakura',
       ]) {
         final theme = AppTheme.fromId(id);
         expect(

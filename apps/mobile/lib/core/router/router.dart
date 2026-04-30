@@ -22,8 +22,6 @@ class _PlaceholderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Unishare')),
-    );
+    return const Scaffold(body: Center(child: Text('Unishare')));
   }
 }

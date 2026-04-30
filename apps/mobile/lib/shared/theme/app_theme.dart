@@ -9,21 +9,22 @@ class AppTheme {
       build(AppThemes.all[id] ?? AppThemes.unishare);
 
   static ThemeData build(AppThemeData d) {
-    final scheme = ColorScheme.fromSeed(
-      seedColor: d.primary,
-      brightness: d.brightness,
-    ).copyWith(
-      primary: d.primary,
-      onPrimary: d.primaryForeground,
-      secondary: d.accent,
-      onSecondary: d.accentForeground,
-      error: d.destructive,
-      onError: d.destructiveForeground,
-      surface: d.background,
-      onSurface: d.foreground,
-      outline: d.border,
-      surfaceContainerHighest: d.card,
-    );
+    final scheme =
+        ColorScheme.fromSeed(
+          seedColor: d.primary,
+          brightness: d.brightness,
+        ).copyWith(
+          primary: d.primary,
+          onPrimary: d.primaryForeground,
+          secondary: d.accent,
+          onSecondary: d.accentForeground,
+          error: d.destructive,
+          onError: d.destructiveForeground,
+          surface: d.background,
+          onSurface: d.foreground,
+          outline: d.border,
+          surfaceContainerHighest: d.card,
+        );
 
     final appColors = AppColors(
       border: d.border,
