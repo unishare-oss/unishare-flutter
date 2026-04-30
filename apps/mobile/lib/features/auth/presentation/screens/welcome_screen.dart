@@ -7,6 +7,7 @@ import '../../domain/entities/auth_exception.dart';
 import '../providers/auth_repository_provider.dart';
 import '../providers/guest_mode_provider.dart';
 import '../widgets/google_sign_in_button.dart';
+import '../widgets/unishare_logo.dart';
 
 // Web-matched auth palette — hardcoded so these screens always look correct
 // regardless of the active app theme.
@@ -108,34 +109,7 @@ class _MobileLayout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Spacer(flex: 2),
-            // Logo row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: _kPrimary,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Icon(
-                    Icons.school_rounded,
-                    color: _kPrimaryFg,
-                    size: 36,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Unishare',
-                  style: GoogleFonts.firaCode(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: _kForeground,
-                  ),
-                ),
-              ],
-            ),
+            const UnishareLogo(iconSize: 48, fontSize: 22),
             const SizedBox(height: 8),
             Text(
               'Every lecture note and study guide — shared by students who’ve been there.',
@@ -246,33 +220,7 @@ class _DesktopLayout extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Logo row
-                Row(
-                  children: [
-                    Container(
-                      width: 28,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: _kPrimary,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Icon(
-                        Icons.school_rounded,
-                        color: _kPrimaryFg,
-                        size: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Unishare',
-                      style: GoogleFonts.firaCode(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFFF7F3EE),
-                      ),
-                    ),
-                  ],
-                ),
+                const UnishareLogo(iconSize: 28, fontSize: 18, darkText: false),
                 // Tagline
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 480),
