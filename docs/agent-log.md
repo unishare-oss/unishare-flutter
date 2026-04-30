@@ -148,3 +148,13 @@ Outcome: Full auth feature implemented — 9 domain classes, 4 data classes (wit
 Decisions: GoogleSignIn v7 requires `GoogleSignIn.instance.authenticate()` (no more `signIn()` method). Session dismissal of academic profile bottom sheet stored as module-level bool (not a provider) so it resets on cold start automatically. `AuthStateProvider` redirect guards use `.hasValue` (not `.valueOrNull`) due to Riverpod v3 `AsyncValue` API. `_academicProfileSessionDismissed` set to true before showing sheet to prevent re-show on same-session re-navigation.
 Handoff: GoogleSignIn.instance.initialize() must be called during app startup (not yet done in firebase_init.dart) before Google sign-in will work on Android/iOS at runtime. Firestore security rules for users/{uid} create/update are not yet written. Academic profile bottom sheet will not re-show after sign-out + sign-in within same session (not specified by spec, acceptable).
 Review: PENDING
+  [15:49] Write: apps/mobile/lib/features/auth/presentation/widgets/auth_text_field.dart
+  [15:50] Write: apps/mobile/lib/features/auth/presentation/widgets/google_sign_in_button.dart
+  [15:50] Write: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [15:51] Write: apps/mobile/lib/features/auth/presentation/screens/sign_in_screen.dart
+  [15:52] Write: apps/mobile/lib/features/auth/presentation/screens/sign_up_screen.dart
+  [15:52] Edit: apps/mobile/lib/features/auth/presentation/screens/sign_up_screen.dart
+  [15:52] Edit: apps/mobile/lib/features/auth/presentation/screens/sign_up_screen.dart
+  [15:52] Edit: apps/mobile/lib/features/auth/presentation/screens/sign_up_screen.dart
+  [15:52] Edit: apps/mobile/lib/features/auth/presentation/widgets/google_sign_in_button.dart
+  [15:54] Edit: apps/mobile/lib/features/auth/presentation/screens/sign_up_screen.dart
