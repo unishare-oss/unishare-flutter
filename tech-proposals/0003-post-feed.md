@@ -1,4 +1,4 @@
-# Tech Proposal 0001 — Post Feed
+# Post Feed
 
 **Status:** PROPOSED  
 **Author:** architect  
@@ -83,21 +83,21 @@ the user must scroll through preceding pages to build the cursor cache.
 
 ### Clean Architecture Layers
 
-| Layer | Responsibility |
-|---|---|
-| `domain/entities/Post` | Pure Dart; no Firebase types |
-| `domain/entities/Author` | Pure Dart snapshot of author fields |
-| `domain/repositories/PostRepository` | Abstract interface |
-| `domain/usecases/GetPostFeed` | Returns `Stream<List<Post>>` or `Future<PostFeedPage>` |
-| `domain/usecases/CreatePost` | Validates and delegates to repository |
-| `domain/usecases/DeletePost` | Checks ownership, delegates to repository |
-| `data/datasources/PostFirestoreDataSource` | Firestore queries, cursor management |
-| `data/models/PostDto` | Freezed + `fromJson`/`toJson` |
-| `data/repositories/PostRepositoryImpl` | Maps DTOs → entities |
-| `presentation/providers/postFeedProvider` | `@riverpod`, exposes paginated state |
-| `presentation/screens/PostFeedScreen` | Infinite scroll list |
-| `presentation/screens/PostDetailScreen` | Single post view |
-| `presentation/widgets/PostCard` | Feed list item |
+| Layer                                      | Responsibility                                         |
+| ------------------------------------------ | ------------------------------------------------------ |
+| `domain/entities/Post`                     | Pure Dart; no Firebase types                           |
+| `domain/entities/Author`                   | Pure Dart snapshot of author fields                    |
+| `domain/repositories/PostRepository`       | Abstract interface                                     |
+| `domain/usecases/GetPostFeed`              | Returns `Stream<List<Post>>` or `Future<PostFeedPage>` |
+| `domain/usecases/CreatePost`               | Validates and delegates to repository                  |
+| `domain/usecases/DeletePost`               | Checks ownership, delegates to repository              |
+| `data/datasources/PostFirestoreDataSource` | Firestore queries, cursor management                   |
+| `data/models/PostDto`                      | Freezed + `fromJson`/`toJson`                          |
+| `data/repositories/PostRepositoryImpl`     | Maps DTOs → entities                                   |
+| `presentation/providers/postFeedProvider`  | `@riverpod`, exposes paginated state                   |
+| `presentation/screens/PostFeedScreen`      | Infinite scroll list                                   |
+| `presentation/screens/PostDetailScreen`    | Single post view                                       |
+| `presentation/widgets/PostCard`            | Feed list item                                         |
 
 ---
 
