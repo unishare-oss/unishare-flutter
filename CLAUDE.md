@@ -179,7 +179,7 @@ Three separate logging channels — each serves a different purpose:
 
 **Agent runs** (`docs/agent-runs/`) — every reviewer agent writes its final report here (role + timestamp + session-id header). This is the audit trail: for every line of code you can show what agent proposed it and which reviewer cleared it.
 
-**Decisions** (`docs/decisions/`) — architect writes an ADR for every non-trivial design choice using `_template.md`. Number sequentially (0001, 0002, …). Status values: `PROPOSED` → `ACCEPTED` → `SUPERSEDED by #NNNN`.
+**Decisions** (`docs/decisions/`) — the **architect agent must automatically write and commit an ADR immediately after any non-trivial design decision is made**, without waiting to be asked. Use the stencil at `docs/stencils/adr.md`. Number sequentially (0001, 0002, …). Status values: `PROPOSED` → `ACCEPTED` → `SUPERSEDED by #NNNN`. The ADR is committed directly to `main` — the docs site updates automatically.
 
 ## Agent Logging (mandatory for every session)
 
