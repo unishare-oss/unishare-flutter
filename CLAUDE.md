@@ -118,12 +118,12 @@ The agent that writes code must NOT be the agent that approves it.
 
 Every non-trivial feature follows this pipeline before any code is written:
 
-### 1. Tech Proposal (`docs/proposals/YYYY-MM-DD-slug.md`)
+### 1. Tech Proposal (`docs/proposals/NNNN-slug.md`)
 The **architect** writes a proposal using the stencil at `docs/stencils/tech-proposal.md` (rendered at <https://unishare-oss.github.io/unishare-flutter/stencils/tech-proposal/>). Covers: problem, proposed solution, alternatives considered, and open questions. The team approves before moving on.
 
 > Skip for changes touching ≤ 2 files with no architectural impact.
 
-### 2. Tech Spec (`docs/specs/YYYY-MM-DD-slug.md`)
+### 2. Tech Spec (`docs/specs/NNNN-slug.md`)
 The **architect** expands the approved proposal into a full spec using `docs/stencils/tech-spec.md`. Covers: Clean Architecture layer breakdown, Firestore schema, Riverpod providers, acceptance criteria, and test plan.
 
 ### 3. Implementation
@@ -164,8 +164,8 @@ Three separate logging channels — each serves a different purpose:
 
 | Folder | Written by | Format | Purpose |
 |--------|-----------|--------|---------|
-| `docs/proposals/` | Architect | `YYYY-MM-DD-slug.md` | Tech Proposals — problem + solution + alternatives, approved before spec |
-| `docs/specs/` | Architect | `YYYY-MM-DD-slug.md` | Tech Specs — full layer design, schema, acceptance criteria |
+| `docs/proposals/` | Architect | `NNNN-slug.md` | Tech Proposals — problem + solution + alternatives, approved before spec |
+| `docs/specs/` | Architect | `NNNN-slug.md` | Tech Specs — full layer design, schema, acceptance criteria |
 | `docs/sessions/` | Any agent | `YYYY-MM-DD-task-slug.md` | Session scratchpad for context passing between agents |
 | `docs/agent-runs/` | Reviewer agents | `YYYY-MM-DD-<role>-<task>.md` | Structured audit reports (security, QA, architect reviews) |
 | `docs/decisions/` | Architect | `NNNN-slug.md` | Architecture Decision Records (ADRs) |
