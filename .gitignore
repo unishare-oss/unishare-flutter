@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# PDF docs (handbook reference, not source)
+*.pdf
+
+# FVM (Flutter Version Manager) — keep config, ignore SDK
+.fvm/flutter_sdk
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Environment / secrets
+.env
+*.env.local
