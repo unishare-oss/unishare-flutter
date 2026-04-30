@@ -116,12 +116,23 @@ The agent that writes code must NOT be the agent that approves it.
 
 ## Planning Workflow
 
-Before implementing any feature:
+Every non-trivial feature follows this pipeline before any code is written:
 
-1. The **architect** agent designs the layer structure and Firestore schema.
-2. Present the plan and wait for approval before writing any code.
-3. The **flutter-engineer** agent implements following the approved design.
-4. Submit for review to **architect** or **qa-engineer** — never the same agent that wrote the code.
+### 1. Tech Proposal (`docs/proposals/YYYY-MM-DD-slug.md`)
+The **architect** writes a proposal using the stencil at `docs/stencils/tech-proposal.md` (rendered at <https://unishare-oss.github.io/unishare-flutter/stencils/tech-proposal/>). Covers: problem, proposed solution, alternatives considered, and open questions. The team approves before moving on.
+
+> Skip for changes touching ≤ 2 files with no architectural impact.
+
+### 2. Tech Spec (`docs/specs/YYYY-MM-DD-slug.md`)
+The **architect** expands the approved proposal into a full spec using `docs/stencils/tech-spec.md`. Covers: Clean Architecture layer breakdown, Firestore schema, Riverpod providers, acceptance criteria, and test plan.
+
+### 3. Implementation
+The **flutter-engineer** implements strictly following the approved spec. No scope creep beyond what the spec describes.
+
+### 4. Review
+Submit for review to **architect** or **qa-engineer** — never the same agent that wrote the code. Reviewer checks implementation against the spec.
+
+---
 
 For any task spanning more than 2 files or touching architecture, use Plan Mode first.
 
@@ -153,10 +164,16 @@ Three separate logging channels — each serves a different purpose:
 
 | Folder | Written by | Format | Purpose |
 |--------|-----------|--------|---------|
+| `docs/proposals/` | Architect | `YYYY-MM-DD-slug.md` | Tech Proposals — problem + solution + alternatives, approved before spec |
+| `docs/specs/` | Architect | `YYYY-MM-DD-slug.md` | Tech Specs — full layer design, schema, acceptance criteria |
 | `docs/sessions/` | Any agent | `YYYY-MM-DD-task-slug.md` | Session scratchpad for context passing between agents |
 | `docs/agent-runs/` | Reviewer agents | `YYYY-MM-DD-<role>-<task>.md` | Structured audit reports (security, QA, architect reviews) |
 | `docs/decisions/` | Architect | `NNNN-slug.md` | Architecture Decision Records (ADRs) |
 | `docs/agent-log.md` | Stop hook | append-only | Human-readable chronological timeline |
+
+**Proposals** (`docs/proposals/`) — use the stencil at `docs/stencils/tech-proposal.md`. Must be approved before a spec is written.
+
+**Specs** (`docs/specs/`) — use the stencil at `docs/stencils/tech-spec.md`. Must reference the approved proposal. Implementation only begins once the spec is approved.
 
 **Sessions** (`docs/sessions/`) — create one per work session using `_template.md`. Fill in context, plan, and handoff. The next agent reads this before starting.
 
