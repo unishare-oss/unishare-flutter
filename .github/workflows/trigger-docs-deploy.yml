@@ -1,0 +1,26 @@
+name: Trigger Docs Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tech-specs/**'
+      - 'tech-proposals/**'
+
+permissions:
+  actions: write
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger docs deploy
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy-docs.yml',
+              ref: 'docs'
+            })
