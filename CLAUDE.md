@@ -175,7 +175,7 @@ Each folder serves a distinct purpose:
 | `docs/sessions/` | Any agent | `YYYY-MM-DD-task-slug.md` | Session scratchpad for context passing between agents |
 | `docs/agent-runs/` | Reviewer agents | `YYYY-MM-DD-<role>-<task>.md` | Structured audit reports (security, QA, architect reviews) |
 | `docs/decisions/` | Architect | `NNNN-slug.md` | Architecture Decision Records (ADRs) |
-| `docs/agent-log.md` | Stop hook | append-only | Human-readable chronological timeline |
+| `docs/agent-log-<member>.md` | Stop hook | append-only | Per-member chronological session log |
 
 **Proposals** (`tech-proposals/`) — use the stencil at `docs/stencils/tech-proposal.md`. Must be approved before a spec is written. Auto-rendered on the docs site when pushed to `main`.
 
@@ -189,7 +189,7 @@ Each folder serves a distinct purpose:
 
 ## Agent Logging (mandatory for every session)
 
-At the start of every session, before doing any work, ask the user for their name if not known, then immediately append to `docs/agent-log.md`:
+At the start of every session, before doing any work, ask the user for their name if not known, then immediately append to `docs/agent-log-<member>.md` (where `<member>` is the git user name lowercased with spaces replaced by hyphens, e.g. `docs/agent-log-jane-doe.md`):
 
 ```
 ---
