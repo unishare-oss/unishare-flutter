@@ -170,5 +170,5 @@ The agent that writes code is never the agent that approves it.
 | Architecture Decisions (ADRs) | `docs/decisions/NNNN-slug.md`      |
 | Session scratchpads           | `docs/sessions/YYYY-MM-DD-task.md` |
 | Review reports                | `docs/agent-runs/`                 |
-| Session log                   | `docs/agent-log.md`                |
+| Session log                   | `docs/agent-log-<member>.md`       |
 | Stencils                      | `docs/stencils/`                   |
