@@ -24,5 +24,8 @@ apps/mobile/docs/
 .env
 *.env.local
 
+# Firebase CLI cache (local hosting emulator, deploy cache)
+.firebase/
+
 # GSD
 .planning/

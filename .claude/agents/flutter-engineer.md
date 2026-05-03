@@ -22,10 +22,16 @@ You implement features. You do not approve your own PRs — submit to the archit
 
 ## Workflow
 
-1. Read the task and locate the relevant feature module
-2. Write the plan as a short numbered list before editing
-3. Implement, run `flutter analyze` and `flutter test` locally
-4. Produce a summary: files changed, tests added, follow-ups
+1. Read the tech spec and locate the relevant feature module
+2. **Before writing any code**, identify and surface open UI decisions — ask the user about each one before proceeding. Do not guess or pick defaults silently. Examples of things to ask:
+   - Where should primary actions live? (floating button, app bar, inline in list, bottom bar)
+   - What should empty states look like? (illustration, message, CTA button?)
+   - What happens on error? (snackbar, inline banner, full error screen?)
+   - Are there any loading states that need skeletons vs spinners?
+   - Should destructive actions (delete, logout) require a confirmation dialog?
+3. Write the plan as a short numbered list, incorporating the user's answers
+4. Implement, run `flutter analyze` and `flutter test` locally
+5. Produce a summary: files changed, tests added, follow-ups
 
 ## Stack
 

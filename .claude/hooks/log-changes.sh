@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Stop hook: appends git file changes to the current session entry in docs/agent-log.md.
+# Stop hook: appends git file changes to the current session entry in docs/agent-log-<member>.md.
 # Only runs when Flutter source files are affected.
 
 FLUTTER_STATUS=$(git status --short -- apps/mobile/lib/ apps/mobile/test/ apps/mobile/integration_test/ apps/mobile/pubspec.yaml 2>/dev/null)
@@ -9,7 +9,11 @@ if [ -z "$FLUTTER_STATUS" ]; then
   exit 0
 fi
 
-LOG="docs/agent-log.md"
+# Derive member name from git config, fall back to 'unknown'
+MEMBER=$(git config user.name 2>/dev/null | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+MEMBER="${MEMBER:-unknown}"
+
+LOG="docs/agent-log-${MEMBER}.md"
 mkdir -p docs
 
 # Warn if Claude forgot to write a session header
