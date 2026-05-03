@@ -35,8 +35,8 @@ class FirestoreUserDatasource {
     await _users.doc(uid).set({
       'name': name,
       'email': email,
-      'photoUrl': photoUrl,
-      'universityId': universityId,
+      if (photoUrl != null) 'photoUrl': photoUrl,
+      if (universityId != null) 'universityId': universityId,
       'role': 'student',
       'createdAt': FieldValue.serverTimestamp(),
       if (withConsent) 'consentGivenAt': FieldValue.serverTimestamp(),
@@ -50,23 +50,27 @@ class FirestoreUserDatasource {
   }) async {
     await _users.doc(uid).update({
       'departmentId': departmentId,
-      'enrollmentYear': enrollmentYear,
+      if (enrollmentYear != null) 'enrollmentYear': enrollmentYear,
     });
   }
 
   Stream<List<({String id, String name})>> getUniversities() {
-    return _universities.snapshots().map(
-      (snap) => snap.docs
-          .map((doc) => (id: doc.id, name: doc.data()['name'] as String? ?? ''))
-          .toList(),
+    return Stream.fromFuture(
+      _universities.get().then(
+        (snap) => snap.docs
+            .map((doc) => (id: doc.id, name: doc.data()['name'] as String? ?? ''))
+            .toList(),
+      ),
     );
   }
 
   Stream<List<({String id, String name})>> getDepartments() {
-    return _departments.snapshots().map(
-      (snap) => snap.docs
-          .map((doc) => (id: doc.id, name: doc.data()['name'] as String? ?? ''))
-          .toList(),
+    return Stream.fromFuture(
+      _departments.get().then(
+        (snap) => snap.docs
+            .map((doc) => (id: doc.id, name: doc.data()['name'] as String? ?? ''))
+            .toList(),
+      ),
     );
   }
 }
