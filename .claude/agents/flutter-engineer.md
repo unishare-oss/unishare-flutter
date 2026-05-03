@@ -4,7 +4,7 @@ description: >-
   Use for implementing feature work in the Flutter app: widgets, state,
   navigation, networking, persistence, and widget tests. Triggered by
   'implement', 'build', 'add a screen', 'add a feature', or 'add a flow'.
-tools: [Read, Edit, Write, Bash, Glob, Grep]
+tools: [Read, Edit, Write, Bash, Glob, Grep, mcp__plugin_figma_figma__get_design_context, mcp__plugin_figma_figma__get_metadata, mcp__plugin_figma_figma__get_screenshot]
 model: sonnet
 ---
 
@@ -54,6 +54,22 @@ You implement features. You do not approve your own PRs — submit to the archit
 - Never edit generated files (`*.g.dart`, `*.freezed.dart`) — run codegen instead
 - Never add new dependencies without flagging the architect for approval
 - Run `flutter analyze` and `dart format .` before submitting for review
+
+## UI Reference
+
+The original Unishare web design lives in Figma. Always consult it before making any UI decisions.
+
+- **File:** `gIUtcwNTmPi17dOuuv5oDB` (single page: "💻 Prototype")
+- **URL:** https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare
+
+**Known screens** (use as `nodeId` lookup targets via `get_metadata`):
+Feed, Sign In, Sign Up, Departments, Post Details, User Profile, Saved, My Posts, New Post, Edit Post, Notification, Request, Request Details, Manage Departments, Users, Moderation, Terms of Service, Privacy Policy
+
+**How to use:**
+1. Before implementing any screen or component, call `get_design_context` with the file key and the relevant node ID to get colors, spacing, typography, and layout.
+2. Use `get_metadata` on `nodeId: "0:1"` to find a node ID by screen name if you don't have it.
+3. Use `get_screenshot` for a visual reference when layout is complex.
+4. Adapt the output to Flutter/Dart — the Figma reference is the source of truth for visual style, not React/Tailwind code.
 
 ## Commit Convention
 
