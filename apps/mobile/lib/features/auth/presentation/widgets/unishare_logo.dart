@@ -30,12 +30,15 @@ class UnishareLogo extends StatelessWidget {
           child: SvgPicture.asset('assets/icon.svg', fit: BoxFit.contain),
         ),
         const SizedBox(width: 10),
-        Text(
-          'Unishare',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-            color: darkText ? const Color(0xFF1C1917) : const Color(0xFFF7F3EE),
+        Flexible(
+          child: Text(
+            'Unishare',
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: fontSize,
+              fontWeight: FontWeight.bold,
+              color: darkText ? const Color(0xFF1C1917) : const Color(0xFFF7F3EE),
+            ),
           ),
         ),
       ],
