@@ -94,9 +94,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
       }
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Something went wrong')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Something went wrong. Please try again.')),
+        );
       }
     } finally {
       if (mounted) setState(() => _googleLoading = false);
@@ -125,7 +125,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } on AuthException catch (e) {
       if (mounted) setState(() => _serverError = e.userMessage);
     } catch (_) {
-      if (mounted) setState(() => _serverError = 'Something went wrong');
+      if (mounted) setState(() => _serverError = 'Something went wrong. Please try again.');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -153,7 +153,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } on AuthException catch (e) {
       if (mounted) setState(() => _serverError = e.userMessage);
     } catch (_) {
-      if (mounted) setState(() => _serverError = 'Something went wrong');
+      if (mounted) setState(() => _serverError = 'Something went wrong. Please try again.');
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -343,17 +343,23 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             // University dropdown
             universitiesAsync.when(
               data: (universities) => DropdownButtonFormField<String>(
-                initialValue: _selectedUniversityId,
+                value: _selectedUniversityId,
+                isExpanded: true,
                 hint: Text(
-                  'Select your university (optional)',
+                  'No university',
                   style: GoogleFonts.spaceGrotesk(
                     fontSize: 14,
                     color: _kTextSecondary,
                   ),
                 ),
+                icon: const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: _kTextSecondary,
+                  size: 20,
+                ),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: const Color(0xFFFEF3C7),
+                  fillColor: Colors.white,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 9,
@@ -383,6 +389,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         child: Text(
                           u.name,
                           style: GoogleFonts.spaceGrotesk(fontSize: 14),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     )
@@ -618,8 +625,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
-
           // 13. Sign-up OAuth footnote
           if (isSignUp) ...[
             const SizedBox(height: 8),
@@ -629,6 +634,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               style: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kTextMuted),
             ),
           ],
+          const SizedBox(height: 8),
         ],
       ),
     );
