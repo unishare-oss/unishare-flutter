@@ -1,6 +1,28 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /universities/{universityId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /departments/{departmentId} {
+      allow read: if true;
+      allow write: if false;
+
+      match /courses/{courseId} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
     match /posts/{postId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null
