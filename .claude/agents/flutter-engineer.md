@@ -4,7 +4,7 @@ description: >-
   Use for implementing feature work in the Flutter app: widgets, state,
   navigation, networking, persistence, and widget tests. Triggered by
   'implement', 'build', 'add a screen', 'add a feature', or 'add a flow'.
-tools: [Read, Edit, Write, Bash, Glob, Grep, mcp__plugin_figma_figma__get_design_context, mcp__plugin_figma_figma__get_metadata, mcp__plugin_figma_figma__get_screenshot]
+tools: [Read, Edit, Write, Bash, Glob, Grep, mcp__plugin_figma_figma__get_design_context, mcp__plugin_figma_figma__get_screenshot]
 model: sonnet
 ---
 
@@ -57,19 +57,57 @@ You implement features. You do not approve your own PRs — submit to the archit
 
 ## UI Reference
 
-The original Unishare web design lives in Figma. Always consult it before making any UI decisions.
+The original Unishare web design lives in Figma. Always consult it before implementing any screen or component.
 
-- **File:** `gIUtcwNTmPi17dOuuv5oDB` (single page: "💻 Prototype")
+- **File key:** `gIUtcwNTmPi17dOuuv5oDB` (1 page: "💻 Prototype")
 - **URL:** https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare
 
-**Known screens** (use as `nodeId` lookup targets via `get_metadata`):
-Feed, Sign In, Sign Up, Departments, Post Details, User Profile, Saved, My Posts, New Post, Edit Post, Notification, Request, Request Details, Manage Departments, Users, Moderation, Terms of Service, Privacy Policy
+Call `get_design_context` with the file key and the `nodeId` from the table below. Never call `get_metadata` on the root — it returns a 2.5M character file.
 
-**How to use:**
-1. Before implementing any screen or component, call `get_design_context` with the file key and the relevant node ID to get colors, spacing, typography, and layout.
-2. Use `get_metadata` on `nodeId: "0:1"` to find a node ID by screen name if you don't have it.
-3. Use `get_screenshot` for a visual reference when layout is complex.
-4. Adapt the output to Flutter/Dart — the Figma reference is the source of truth for visual style, not React/Tailwind code.
+| Screen | nodeId |
+|---|---|
+| Feed (authenticated) | `328:792` |
+| Feed (guest) | `12:1620` |
+| Feed (unregistered) | `9:2` |
+| Sign In | `10:2` |
+| Sign Up | `11:2` |
+| Departments | `15:2` |
+| Post Details | `20:2` |
+| User Profile | `21:2` |
+| Profile (own) | `31:2` |
+| Saved | `25:2` |
+| My Posts | `30:2` |
+| New Post (step 1) | `12:1868` |
+| New Post (step 2) | `12:5556` |
+| New Post (step 3) | `12:5681` |
+| Edit Post | `12:3271` |
+| Notification | `12:504` |
+| Request | `12:3501` |
+| Request Details | `12:3667` |
+| Manage Departments | `60:2` |
+| Users (admin) | `62:2` |
+| Moderation | `8:531` |
+| Terms of Service | `6:2` |
+| Privacy Policy | `7:2` |
+
+### Design tokens
+
+Use these directly without fetching Figma. Only call `get_design_context` for screen layout and component-specific detail.
+
+| Token | Value |
+|---|---|
+| Background | `#f7f3ee` |
+| Surface | `#ffffff` |
+| Primary text | `#1c1917` |
+| Muted text | `#8a837e` |
+| Border | `#e2dad0` |
+| Accent (required/amber) | `#d97706` |
+| Font — headings/body | Space Grotesk |
+| Font — labels/tags | Fira Code (uppercase, 11px, 0.55px tracking) |
+| Border radius — inputs/cards | 6px |
+| Border radius — buttons | 4px |
+
+Adapt all output to Flutter/Dart — Figma is the source of truth for visual style, not the React/Tailwind code it generates.
 
 ## Commit Convention
 
