@@ -30,6 +30,7 @@ class FirestoreUserDatasource {
     required String email,
     String? photoUrl,
     String? universityId,
+    bool withConsent = false,
   }) async {
     await _users.doc(uid).set({
       'name': name,
@@ -38,6 +39,7 @@ class FirestoreUserDatasource {
       'universityId': universityId,
       'role': 'student',
       'createdAt': FieldValue.serverTimestamp(),
+      if (withConsent) 'consentGivenAt': FieldValue.serverTimestamp(),
     });
   }
 
@@ -49,12 +51,6 @@ class FirestoreUserDatasource {
     await _users.doc(uid).update({
       'departmentId': departmentId,
       'enrollmentYear': enrollmentYear,
-    });
-  }
-
-  Future<void> writeConsentGivenAt(String uid) async {
-    await _users.doc(uid).update({
-      'consentGivenAt': FieldValue.serverTimestamp(),
     });
   }
 

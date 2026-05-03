@@ -42,6 +42,12 @@ class AuthRepositoryImpl implements AuthRepository {
         email: firebaseUser.email ?? '',
         photoUrl: firebaseUser.photoURL,
       );
+      return AppUser(
+        id: firebaseUser.uid,
+        name: firebaseUser.displayName ?? '',
+        email: firebaseUser.email ?? '',
+        photoUrl: firebaseUser.photoURL,
+      );
     }
 
     final model = await _firestore.getUser(firebaseUser.uid);
@@ -79,12 +85,10 @@ class AuthRepositoryImpl implements AuthRepository {
       name: name,
       email: email,
       universityId: universityId,
+      withConsent: true,
     );
 
-    await _firestore.writeConsentGivenAt(uid);
-
-    final model = await _firestore.getUser(uid);
-    return model!.toEntity();
+    return AppUser(id: uid, name: name, email: email, universityId: universityId);
   }
 
   @override

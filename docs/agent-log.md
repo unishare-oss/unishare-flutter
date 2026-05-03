@@ -36,3 +36,6 @@
   [20:36] Edit: apps/mobile/lib/main.dart
   [20:36] Edit: apps/mobile/lib/main.dart
   [20:36] Edit: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [20:47] Edit: apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  [20:47] Edit: apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+  [20:47] Edit: apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
