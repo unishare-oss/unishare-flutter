@@ -183,3 +183,102 @@ Summary:  1 file changed, 7 insertions(+), 5 deletions(-)
 Files:
   ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
 Summary:  1 file changed, 7 insertions(+), 5 deletions(-)
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  2 files changed, 13 insertions(+), 10 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  2 files changed, 13 insertions(+), 10 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  2 files changed, 15 insertions(+), 12 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  2 files changed, 15 insertions(+), 12 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  2 files changed, 15 insertions(+), 12 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  2 files changed, 15 insertions(+), 12 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  3 files changed, 18 insertions(+), 15 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  3 files changed, 18 insertions(+), 15 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  3 files changed, 18 insertions(+), 15 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  3 files changed, 18 insertions(+), 15 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  3 files changed, 18 insertions(+), 15 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  3 files changed, 18 insertions(+), 15 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  3 files changed, 30 insertions(+), 23 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  3 files changed, 30 insertions(+), 23 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/auth_text_field.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  4 files changed, 42 insertions(+), 29 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/auth_text_field.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  4 files changed, 42 insertions(+), 29 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/auth_text_field.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
+Summary:  4 files changed, 42 insertions(+), 29 deletions(-)
+
