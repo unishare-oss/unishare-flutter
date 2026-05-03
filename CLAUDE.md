@@ -57,6 +57,33 @@ flutter pub run build_runner watch # Watch mode for code gen
 flutterfire configure              # Link to Firebase project
 ```
 
+Firebase commands run from the **repo root** (where `firebase.json` lives):
+
+```bash
+# Deploy Firestore security rules
+firebase deploy --only firestore:rules
+
+# Deploy Firestore indexes
+firebase deploy --only firestore:indexes
+
+# Deploy both rules and indexes together
+firebase deploy --only firestore
+```
+
+Seed reference data (universities, departments, courses) — one-time per environment:
+
+```bash
+# 1. Get a service account key:
+#    Firebase Console → Project Settings → Service accounts → Generate new private key
+#    Save as tools/service-account.json (gitignored)
+
+# 2. Install seed dependencies
+cd tools && pnpm install
+
+# 3. Run the seed
+node seed_firestore.js service-account.json
+```
+
 ## Architecture
 
 Strict Clean Architecture — the Domain layer must have **zero Flutter or Firebase imports**.
