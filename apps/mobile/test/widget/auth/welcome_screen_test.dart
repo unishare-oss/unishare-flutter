@@ -8,6 +8,8 @@ import 'package:unishare_mobile/features/auth/presentation/providers/auth_reposi
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/universities_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 // ---------------------------------------------------------------------------
 // Fakes
@@ -60,7 +62,10 @@ Widget _buildSubject() {
         (ref) => Stream.value(<({String id, String name})>[]),
       ),
     ],
-    child: const MaterialApp(home: AuthScreen()),
+    child: MaterialApp(
+      theme: AppTheme.build(AppThemes.unishare),
+      home: const AuthScreen(),
+    ),
   );
 }
 
@@ -113,7 +118,10 @@ void main() {
           child: Consumer(
             builder: (context, ref, _) {
               capturedRef = ref;
-              return const MaterialApp(home: AuthScreen());
+              return MaterialApp(
+                theme: AppTheme.build(AppThemes.unishare),
+                home: const AuthScreen(),
+              );
             },
           ),
         ),

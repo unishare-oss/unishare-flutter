@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-// Web-matched color constants for auth text field.
-const _kBorder = Color(0xFFE2DAD0);
-const _kFocusBorder = Color(0xFFD97706);
-const _kErrorBorder = Color(0xFFDC2626);
-const _kFillColor = Color(0xFFFEF3C7);
-const _kTextSecondary = Color(0xFF6B6560);
-const _kErrorColor = Color(0xFFDC2626);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class AuthTextField extends StatefulWidget {
   const AuthTextField({
@@ -50,6 +43,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>()!;
     final baseStyle = GoogleFonts.spaceGrotesk(
       fontSize: 14,
       color: Theme.of(context).colorScheme.onSurface,
@@ -67,32 +61,13 @@ class _AuthTextFieldState extends State<AuthTextField> {
       style: baseStyle,
       decoration: InputDecoration(
         hintText: widget.hint,
-        hintStyle: baseStyle.copyWith(color: _kTextSecondary),
-        filled: true,
-        fillColor: _kFillColor,
+        hintStyle: baseStyle.copyWith(color: colors.textSecondary),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
         isDense: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kBorder, width: 1),
+        errorStyle: GoogleFonts.spaceGrotesk(
+          fontSize: 12,
+          color: Theme.of(context).colorScheme.error,
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kBorder, width: 1),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kFocusBorder, width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kErrorBorder, width: 1),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kErrorBorder, width: 1),
-        ),
-        errorStyle: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kErrorColor),
         // Fixed 36×36 slot on every field keeps all heights identical.
         suffixIconConstraints: const BoxConstraints.tightFor(width: 36, height: 36),
         suffixIcon:
@@ -102,7 +77,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                     onTap: () => setState(() => _obscured = !_obscured),
                     child: Icon(
                       _obscured ? Icons.visibility_off : Icons.visibility,
-                      color: _kTextSecondary,
+                      color: colors.textSecondary,
                       size: 18,
                     ),
                   )
