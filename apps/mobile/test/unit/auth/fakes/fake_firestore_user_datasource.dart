@@ -30,6 +30,7 @@ class FakeFirestoreUserDatasource extends FirestoreUserDatasource {
     required String email,
     String? photoUrl,
     String? universityId,
+    bool withConsent = false,
   }) async {
     createUserCallCount++;
     storedUsers[uid] = AppUserModel(
@@ -39,6 +40,7 @@ class FakeFirestoreUserDatasource extends FirestoreUserDatasource {
       photoUrl: photoUrl,
       universityId: universityId,
     );
+    if (withConsent) consentWrittenForUids.add(uid);
   }
 
   @override
@@ -54,11 +56,6 @@ class FakeFirestoreUserDatasource extends FirestoreUserDatasource {
         enrollmentYear: enrollmentYear,
       );
     }
-  }
-
-  @override
-  Future<void> writeConsentGivenAt(String uid) async {
-    consentWrittenForUids.add(uid);
   }
 
   @override
