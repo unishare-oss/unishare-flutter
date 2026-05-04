@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/auth/presentation/providers/auth_state_provider.dart';
 import '../../features/auth/presentation/providers/guest_mode_provider.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
-import '../../features/auth/presentation/widgets/academic_profile_bottom_sheet.dart';
+import '../../features/auth/presentation/widgets/academic_profile_dialog.dart';
 import '../../features/post/presentation/screens/create_post_screen.dart';
 
 part 'router.g.dart';
