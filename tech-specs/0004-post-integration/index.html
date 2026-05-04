@@ -6,19 +6,15 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Full write path for post creation with media upload and offline draft queue.">
       
-      
-        <meta name="author" content="architect">
       
       
         <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/0004-post-integration/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../0002-navigation-design/">
       
-      
-        <link rel="next" href="../01-auth-design/">
       
       
         
@@ -29,7 +25,7 @@
     
     
       
-        <title>Post Integration - Unishare Engineering Docs</title>
+        <title>0004: Post Integration - Unishare Engineering Docs</title>
       
     
     
@@ -114,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Post Integration
+              0004: Post Integration
             
           </span>
         </div>
@@ -823,7 +819,7 @@
   <span class="md-ellipsis">
     
   
-    Post Feed
+    PROP-0003: Post Feed
   
 
     
@@ -851,19 +847,12 @@
   <span class="md-ellipsis">
     
   
-    Post Integration
+    PROP-0004: Post Integration
   
 
     
   </span>
   
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
   
 
       </a>
@@ -968,6 +957,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-auth-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Auth Feature Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-navigation-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: Navigation Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -987,19 +1032,12 @@
   <span class="md-ellipsis">
     
   
-    Post Integration
+    0004: Post Integration
   
 
     
   </span>
   
-  
-    
-  
-  
-    <span class="md-status md-status--APPROVED"></span>
-  
-
   
 
           <span class="md-nav__icon md-icon"></span>
@@ -1012,19 +1050,12 @@
   <span class="md-ellipsis">
     
   
-    Post Integration
+    0004: Post Integration
   
 
     
   </span>
   
-  
-    
-  
-  
-    <span class="md-status md-status--APPROVED"></span>
-  
-
   
 
       </a>
@@ -1291,62 +1322,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../01-auth-design/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Auth Feature Design
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../02-navigation-design/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Navigation Design
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1654,7 +1629,11 @@
 
 
 <h1 id="spec-0004-post-integration">SPEC-0004: Post Integration<a class="headerlink" href="#spec-0004-post-integration" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> APPROVED | <strong>Author:</strong> architect | <strong>Date:</strong> 2026-05-03 | <strong>Proposal:</strong> <a href="../../tech-proposals/0004-post-integration/">PROP-0004</a> | <strong>Approved by:</strong> Slade (CTO) on 2026-05-03</p>
+<p><strong>Status:</strong> APPROVED<br />
+<strong>Author:</strong> architect<br />
+<strong>Date:</strong> 2026-05-03<br />
+<strong>Proposal:</strong> <a href="../../tech-proposals/0004-post-integration/">PROP-0004</a><br />
+<strong>Approved by:</strong> Slade (CTO) on 2026-05-03</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This spec describes the complete write path for post creation in Unishare. Students can currently read the feed (established by PROP-0003) but have no mechanism to author or publish content. SPEC-0004 adds a guarded <code>/posts/create</code> route that collects title, body, tags, and optional media attachments. All media is uploaded to Firebase Storage first; the resulting download URLs are collected before a single atomic Firestore document write to <code>posts/{postId}</code>. If the device is offline when the user taps Publish, the full draft — including any already-uploaded Storage URLs — is persisted to a Hive queue and auto-published on the next connectivity event. No Cloud Functions are introduced; the entire write path runs on the client.</p>

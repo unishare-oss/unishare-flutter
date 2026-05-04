@@ -6,10 +6,8 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Proposal for post creation write path with Firebase Storage upload and offline Hive draft queue.">
       
-      
-        <meta name="author" content="architect">
       
       
         <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0004-post-integration/">
@@ -29,7 +27,7 @@
     
     
       
-        <title>Post Integration - Unishare Engineering Docs</title>
+        <title>PROP-0004: Post Integration - Unishare Engineering Docs</title>
       
     
     
@@ -114,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Post Integration
+              PROP-0004: Post Integration
             
           </span>
         </div>
@@ -828,7 +826,7 @@
   <span class="md-ellipsis">
     
   
-    Post Feed
+    PROP-0003: Post Feed
   
 
     
@@ -865,19 +863,12 @@
   <span class="md-ellipsis">
     
   
-    Post Integration
+    PROP-0004: Post Integration
   
 
     
   </span>
   
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
   
 
           <span class="md-nav__icon md-icon"></span>
@@ -890,19 +881,12 @@
   <span class="md-ellipsis">
     
   
-    Post Integration
+    PROP-0004: Post Integration
   
 
     
   </span>
   
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
   
 
       </a>
@@ -1130,6 +1114,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Auth Feature Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: Navigation Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
         
   
@@ -1137,70 +1177,7 @@
   <span class="md-ellipsis">
     
   
-    Post Integration
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--APPROVED"></span>
-  
-
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-specs/01-auth-design/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Auth Feature Design
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-specs/02-navigation-design/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Navigation Design
+    0004: Post Integration
   
 
     
@@ -1378,7 +1355,11 @@
 
 
 <h1 id="prop-0004-post-integration">PROP-0004: Post Integration<a class="headerlink" href="#prop-0004-post-integration" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> ACCEPTED | <strong>Author:</strong> architect | <strong>Date:</strong> 2026-05-03 | <strong>Approved by:</strong> Slade (CTO) on 2026-05-03</p>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> architect<br />
+<strong>Date:</strong> 2026-05-03<br />
+<strong>Spec:</strong> <a href="../../tech-specs/0004-post-integration/">0004-post-integration</a><br />
+<strong>Approved by:</strong> Slade (CTO) on 2026-05-03</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
 <p>Students can browse the Unishare feed (established in PROP-0003) but have no mechanism to contribute content. There is no UI, no write path, and no offline-capable draft queue for creating posts. The Firestore schema from PROP-0003 defines the target shape of a published post:</p>

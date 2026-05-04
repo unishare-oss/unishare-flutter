@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="App-wide navigation shell — bottom nav, navigation rail, route structure, and upload FAB.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/stencils/tech-spec/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/0002-navigation-design/">
       
       
-        <link rel="prev" href="../tech-proposal/">
+        <link rel="prev" href="../0001-auth-design/">
       
       
-        <link rel="next" href="../../tech-proposals/">
+        <link rel="next" href="../0004-post-integration/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Tech Spec Template - Unishare Engineering Docs</title>
+        <title>0002: Navigation Design - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tech-spec-template" class="md-skip">
+        <a href="#spec-0002-navigation-design" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tech Spec Template
+              0002: Navigation Design
             
           </span>
         </div>
@@ -262,13 +262,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../adr/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -304,11 +302,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../tech-specs/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -588,31 +588,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -630,7 +625,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -648,7 +643,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adr/" class="md-nav__link">
+      <a href="../../stencils/adr/" class="md-nav__link">
         
   
   
@@ -676,7 +671,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposal/" class="md-nav__link">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
         
   
   
@@ -701,37 +696,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tech Spec Template
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
         
   
   
@@ -747,48 +715,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Template
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Status values
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -948,26 +874,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -985,7 +916,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1003,7 +934,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-specs/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -1031,7 +962,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
+      <a href="../0001-auth-design/" class="md-nav__link">
         
   
   
@@ -1056,10 +987,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: Navigation Design
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1075,6 +1033,103 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nav-items-auth-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nav Items &amp; Auth States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adaptive-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adaptive Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#route-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope-this-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Scope (this phase)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1087,7 +1142,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
+      <a href="../0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1142,10 +1197,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Overview
       
     </span>
   </a>
@@ -1153,10 +1208,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#nav-items-auth-states" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Nav Items &amp; Auth States
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adaptive-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adaptive Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#route-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope-this-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Scope (this phase)
       
     </span>
   </a>
@@ -1180,7 +1290,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/stencils/tech-spec.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0002-navigation-design.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1188,108 +1298,171 @@
   
 
 
-<h1 id="tech-spec-template">Tech Spec Template<a class="headerlink" href="#tech-spec-template" title="Permanent link">&para;</a></h1>
-<p>Copy the markdown below into <code>tech-specs/NNNN-slug.md</code> on the <code>main</code> branch and fill it in.</p>
-<p><strong>When to write one:</strong> Any change spanning more than 2 files or with a defined test contract. Must be approved before coding begins.</p>
+<h1 id="spec-0002-navigation-design">SPEC-0002: Navigation Design<a class="headerlink" href="#spec-0002-navigation-design" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> APPROVED<br />
+<strong>Author:</strong> architect<br />
+<strong>Date:</strong> 2026-04-30<br />
+<strong>Scope:</strong> App-wide navigation shell — bottom nav, navigation rail, route structure, and upload FAB</p>
 <hr />
-<h2 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>---
-id: SPEC-NNNN
-title: &quot;Short title&quot;
-status: DRAFT
-author: &quot;&quot;
-date: YYYY-MM-DD
-<span class="gu">proposal: PROP-NNNN</span>
-<span class="gu">---</span>
-
-<span class="gh"># SPEC-NNNN: Title</span>
-
-<span class="gs">**Status:**</span> DRAFT | <span class="gs">**Author:**</span> | <span class="gs">**Date:**</span> | <span class="gs">**Proposal:**</span> [<span class="nt">NNNN</span>](<span class="na">../tech-proposals/nnnn-slug.md</span>)
-
----
-
-<span class="gu">## Overview</span>
-
-One paragraph: what is being built and why.
-
-<span class="gu">## Architecture</span>
-
-<span class="sb">```mermaid</span>
-<span class="s">flowchart LR</span>
-<span class="s">    A[Presentation] --&gt; B[Domain]</span>
-<span class="s">    B --&gt; C[Data]</span>
-<span class="sb">```</span>
-
-<span class="gu">## File map</span>
-
-| Action | Path | Responsibility |
-|---|---|---|
-| Create | <span class="sb">`lib/features/&lt;name&gt;/domain/entities/foo.dart`</span> | |
-| Create | <span class="sb">`lib/features/&lt;name&gt;/data/models/foo_model.dart`</span> | |
-| Modify | <span class="sb">`lib/main.dart`</span> | |
-
-<span class="gu">## API contracts</span>
-
-<span class="sb">```dart</span>
-<span class="c1">// Public interfaces the implementation must expose</span>
-<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">FooRepository</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">doSomething</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="sb">```</span>
-
-<span class="gu">## Test plan</span>
-
-| Test file | Covers |
-|---|---|
-| <span class="sb">`test/unit/features/&lt;name&gt;/foo_test.dart`</span> | |
-| <span class="sb">`test/widget/features/&lt;name&gt;/foo_screen_test.dart`</span> | |
-
-<span class="gu">## Out of scope</span>
-
-<span class="k">-</span><span class="w"> </span>Explicitly list what this spec does NOT cover.
-
-<span class="gu">## Open questions</span>
-
-<span class="k">- [ ]</span> Must be resolved before status moves to APPROVED.
-</code></pre></div>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Adaptive navigation shell using GoRouter's <code>StatefulShellRoute</code>. Bottom nav on mobile (&lt; 600dp), NavigationRail on tablet/desktop (≥ 600dp). Four destination tabs with an Upload FAB scoped to the Feed screen only.</p>
 <hr />
-<h2 id="status-values">Status values<a class="headerlink" href="#status-values" title="Permanent link">&para;</a></h2>
+<h2 id="nav-items-auth-states">Nav Items &amp; Auth States<a class="headerlink" href="#nav-items-auth-states" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Status</th>
-<th>Meaning</th>
+<th>Tab</th>
+<th>Guest</th>
+<th>Authenticated</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>DRAFT</code></td>
-<td>Work in progress</td>
+<td>Feed</td>
+<td>✓</td>
+<td>✓</td>
 </tr>
 <tr>
-<td><code>REVIEW</code></td>
-<td>Ready for architect/QA review</td>
+<td>Departments</td>
+<td>✓</td>
+<td>✓</td>
 </tr>
 <tr>
-<td><code>APPROVED</code></td>
-<td>Implementation can begin</td>
+<td>Saved</td>
+<td>→ sign-in prompt</td>
+<td>✓</td>
 </tr>
 <tr>
-<td><code>IMPLEMENTED</code></td>
-<td>Done and merged</td>
+<td>Profile</td>
+<td>→ sign-in screen</td>
+<td>✓ (avatar + name)</td>
 </tr>
 <tr>
-<td><code>SUPERSEDED</code></td>
-<td>Replaced by a newer spec</td>
+<td>Upload FAB</td>
+<td>hidden</td>
+<td>Feed screen only</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Active indicator:</strong> accent color on icon + label, indicator line at top of tab (BottomNavigationBar) or leading edge (NavigationRail). Matches the web platform's amber indicator style.</p>
+<hr />
+<h2 id="adaptive-layout">Adaptive Layout<a class="headerlink" href="#adaptive-layout" title="Permanent link">&para;</a></h2>
+<p><strong>Breakpoints (Material 3):</strong>
+- <code>&lt; 600dp</code> → <code>BottomNavigationBar</code>
+- <code>≥ 600dp</code> → <code>NavigationRail</code></p>
+<p><strong>NavigationRail (tablet/desktop):</strong>
+- Fixed left rail, icons + labels visible
+- Upload action moves from FAB to a button at the top of the rail
+- No collapse/expand at this phase</p>
+<p><strong>Shell:</strong> <code>AppShell</code> reads <code>MediaQuery</code> width and switches between <code>BottomNavigationBar</code> layout and <code>Row(NavigationRail, VerticalDivider, Expanded(content))</code> layout.</p>
+<hr />
+<h2 id="route-structure">Route Structure<a class="headerlink" href="#route-structure" title="Permanent link">&para;</a></h2>
+<p><code>StatefulShellRoute</code> is used (not plain <code>ShellRoute</code>) so each tab maintains its own independent navigator stack — navigating deep in one tab does not affect another.</p>
+<div class="highlight"><pre><span></span><code>GoRouter
+├── /welcome                    ← unauthenticated landing
+├── /sign-in                    ← email sign-in
+├── /sign-up                    ← email sign-up
+└── StatefulShellRoute          ← AppShell (nav bar / rail)
+    ├── branch: /feed           ← Feed tab (+ Upload FAB)
+    │   └── /feed/posts/:id     ← Post detail (stacked within branch)
+    ├── branch: /departments    ← Departments tab
+    │   └── /departments/:id    ← Department detail (stacked within branch)
+    ├── branch: /saved          ← Saved tab
+    └── branch: /profile        ← Profile tab
+        └── /profile/edit       ← Edit profile (stacked within branch)
+</code></pre></div>
+<p><strong>Tab index → branch mapping:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Index</th>
+<th>Branch</th>
+<th>Route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Feed</td>
+<td><code>/feed</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Departments</td>
+<td><code>/departments</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Saved</td>
+<td><code>/saved</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Profile</td>
+<td><code>/profile</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Redirect logic</strong> lives in the <code>router.dart</code> redirect callback, reading from <code>authStateProvider</code>:
+- No session → <code>/welcome</code>
+- Authenticated → allow through
+- Authenticated user hits <code>/welcome</code>, <code>/sign-in</code>, <code>/sign-up</code> → redirect to <code>/feed</code></p>
+<hr />
+<h2 id="file-structure">File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>core/
+  router/
+    router.dart                  ← GoRouter config, StatefulShellRoute, redirects
+    app_shell.dart               ← adaptive shell widget
+
+shared/
+  widgets/
+    bottom_nav_bar.dart          ← BottomNavigationBar wrapper
+    navigation_rail.dart         ← NavigationRail wrapper
+    upload_fab.dart              ← FAB, visible only when branch index == 0
+</code></pre></div>
+<hr />
+<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
+<p><strong>Widget tests:</strong></p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>app_shell_test.dart</code></td>
+<td>Shows <code>BottomNavigationBar</code> on narrow screen, <code>NavigationRail</code> on wide screen</td>
+</tr>
+<tr>
+<td><code>bottom_nav_bar_test.dart</code></td>
+<td>Correct tabs render; active tab highlights; tapping switches branch</td>
+</tr>
+<tr>
+<td><code>upload_fab_test.dart</code></td>
+<td>FAB visible on Feed tab, hidden on all other tabs; hidden for guests</td>
+</tr>
+</tbody>
+</table>
+<p>No unit tests — this feature is pure UI with no business logic.</p>
+<hr />
+<h2 id="out-of-scope-this-phase">Out of Scope (this phase)<a class="headerlink" href="#out-of-scope-this-phase" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Chat tab</li>
+<li>Notifications tab</li>
+<li>Sidebar collapse/expand on desktop</li>
+<li>Admin section in nav</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
