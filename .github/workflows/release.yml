@@ -42,7 +42,7 @@ jobs:
       - name: Archive web build
         run: cd apps/mobile/build/web && zip -r $GITHUB_WORKSPACE/web-release.zip .
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: web-release
           path: web-release.zip
@@ -87,7 +87,7 @@ jobs:
         working-directory: apps/mobile
         run: flutter build apk --debug
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: android-apk
           path: apps/mobile/build/app/outputs/flutter-apk/app-debug.apk
@@ -100,11 +100,11 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: web-release
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: android-apk
 
