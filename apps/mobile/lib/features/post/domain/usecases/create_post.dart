@@ -30,8 +30,9 @@ class CreatePost {
       final size = await file.length();
       if (size > _maxBytes) throw ArgumentError('invalid_media');
       final ext = path.split('.').last.toLowerCase();
-      if (!_allowedExtensions.contains(ext))
+      if (!_allowedExtensions.contains(ext)) {
         throw ArgumentError('invalid_media');
+      }
     }
 
     await _repository.saveDraft(draft);

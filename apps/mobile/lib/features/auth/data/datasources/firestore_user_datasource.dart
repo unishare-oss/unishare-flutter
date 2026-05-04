@@ -35,8 +35,8 @@ class FirestoreUserDatasource {
     await _users.doc(uid).set({
       'name': name,
       'email': email,
-      if (photoUrl != null) 'photoUrl': photoUrl,
-      if (universityId != null) 'universityId': universityId,
+      'photoUrl': ?photoUrl,
+      'universityId': ?universityId,
       'role': 'student',
       'createdAt': FieldValue.serverTimestamp(),
       if (withConsent) 'consentGivenAt': FieldValue.serverTimestamp(),
@@ -50,7 +50,7 @@ class FirestoreUserDatasource {
   }) async {
     await _users.doc(uid).update({
       'departmentId': departmentId,
-      if (enrollmentYear != null) 'enrollmentYear': enrollmentYear,
+      'enrollmentYear': ?enrollmentYear,
     });
   }
 

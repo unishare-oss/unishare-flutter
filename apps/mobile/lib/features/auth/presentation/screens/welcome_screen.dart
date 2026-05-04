@@ -127,10 +127,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } on AuthException catch (e) {
       if (mounted) setState(() => _serverError = e.userMessage);
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(
           () => _serverError = 'Something went wrong. Please try again.',
         );
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -158,10 +159,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } on AuthException catch (e) {
       if (mounted) setState(() => _serverError = e.userMessage);
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(
           () => _serverError = 'Something went wrong. Please try again.',
         );
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -351,7 +353,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             // University dropdown
             universitiesAsync.when(
               data: (universities) => DropdownButtonFormField<String>(
-                value: _selectedUniversityId,
+                initialValue: _selectedUniversityId,
                 isExpanded: true,
                 hint: Text(
                   'No university',
