@@ -302,3 +302,8 @@ Summary:  4 files changed, 42 insertions(+), 29 deletions(-)
   [19:24] Edit: apps/mobile/ios/Runner/Info.plist
   [19:30] Edit: apps/mobile/pubspec.yaml
   [20:01] Edit: apps/mobile/pubspec.yaml
+  [20:22] Edit: apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+Files:
+  ~ apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+Summary:  1 file changed, 10 insertions(+), 2 deletions(-)
+

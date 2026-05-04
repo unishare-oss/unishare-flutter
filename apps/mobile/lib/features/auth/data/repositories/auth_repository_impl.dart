@@ -18,8 +18,16 @@ class AuthRepositoryImpl implements AuthRepository {
     return _auth.authStateChanges.asyncMap((firebaseUser) async {
       if (firebaseUser == null) return null;
       final model = await _firestore.getUser(firebaseUser.uid);
-      if (model == null) return null;
-      return model.toEntity();
+      // Fall back to Firebase Auth data if the Firestore document doesn't
+      // exist yet (new-user race condition) or was never created.
+      // departmentId=null triggers the academic profile prompt on first launch.
+      return model?.toEntity() ??
+          AppUser(
+            id: firebaseUser.uid,
+            name: firebaseUser.displayName ?? '',
+            email: firebaseUser.email ?? '',
+            photoUrl: firebaseUser.photoURL,
+          );
     });
   }
 
