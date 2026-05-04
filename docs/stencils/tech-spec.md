@@ -14,7 +14,8 @@ Copy the markdown below into `tech-specs/NNNN-slug.md` on the `main` branch and 
 **Status:** DRAFT  
 **Author:**  
 **Date:** YYYY-MM-DD  
-**Proposal:** [PROP-NNNN](../tech-proposals/nnnn-slug.md)
+**Proposal:** [PROP-NNNN](../tech-proposals/nnnn-slug.md)  
+**Approved by:** (fill in when approved)
 
 ---
 
