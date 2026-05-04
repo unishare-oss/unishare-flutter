@@ -4,6 +4,17 @@ Automated log of all Claude Code sessions.
 See `CLAUDE.md` for the logging convention.
 
 ---
+Date: 2026-05-04 00:00
+Member: Pyae Sone Shin Thant
+Agent: qa-engineer
+Task: Add Dependabot for pub packages and GitHub Actions, plus dependency review on PRs
+Prompt: Implement Dependabot for pub packages + Actions; Dependabot vulnerabilities flagged on push (2 on default branch)
+Outcome: Created .github/dependabot.yml (pub + github-actions, weekly) and .github/workflows/dependency-review.yml (blocks PRs with moderate+ vulnerabilities)
+Decisions: Used dependency-review-action on pull_request rather than push — the action only works against a diff so PR is the correct trigger; fail-on-severity set to moderate to catch meaningful issues without noise
+Handoff: After pushing, GitHub will scan the default branch and surface the 2 known vulnerabilities as Dependabot alerts in the Security tab; no code changes needed for that
+Review: PENDING
+
+---
 Date: 2026-04-30
 Member: Pyae Sone Shin Thant
 Agent: flutter-engineer (orchestrated via subagent-driven-development)
