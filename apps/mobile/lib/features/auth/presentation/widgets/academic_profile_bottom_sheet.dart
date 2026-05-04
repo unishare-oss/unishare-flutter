@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../providers/auth_repository_provider.dart';
 import '../providers/auth_state_provider.dart';
@@ -16,13 +18,21 @@ class AcademicProfileBottomSheet extends ConsumerStatefulWidget {
 class _AcademicProfileBottomSheetState
     extends ConsumerState<AcademicProfileBottomSheet> {
   String? _selectedDepartmentId;
-  int? _selectedEnrollmentYear;
+  final _yearController = TextEditingController();
   bool _isSaving = false;
 
-  static final List<int> _years = List.generate(
-    2030 - 2015 + 1,
-    (i) => 2015 + i,
-  );
+  @override
+  void dispose() {
+    _yearController.dispose();
+    super.dispose();
+  }
+
+  int? get _enrollmentYear {
+    final v = int.tryParse(_yearController.text.trim());
+    if (v == null) return null;
+    if (v < 2000 || v > 2030) return null;
+    return v;
+  }
 
   Future<void> _save() async {
     final authAsync = ref.read(authStateProvider);
@@ -36,7 +46,7 @@ class _AcademicProfileBottomSheetState
           .updateAcademicProfile(
             uid: user.id,
             departmentId: _selectedDepartmentId!,
-            enrollmentYear: _selectedEnrollmentYear,
+            enrollmentYear: _enrollmentYear,
           );
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
@@ -56,44 +66,51 @@ class _AcademicProfileBottomSheetState
     final departmentsAsync = ref.watch(departmentsProvider);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        24,
-        24,
-        24,
-        MediaQuery.of(context).viewInsets.bottom + 24,
-      ),
+      padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Complete your academic profile',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(false),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
+          // Title
           Text(
-            'Help us personalise your feed by adding your department.',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+            'Complete your profile',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 8),
+
+          // Subtitle
+          Text(
+            'Tell us a bit about your academic background. You can update this later in your profile.',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 14,
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.5,
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Department dropdown
           departmentsAsync.when(
             data: (departments) => DropdownButtonFormField<String>(
               initialValue: _selectedDepartmentId,
-              hint: const Text('Select department *'),
+              isExpanded: true,
+              hint: Text(
+                'Select your department',
+                style: GoogleFonts.spaceGrotesk(
+                  fontSize: 14,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -101,7 +118,14 @@ class _AcademicProfileBottomSheetState
               ),
               items: departments
                   .map(
-                    (d) => DropdownMenuItem(value: d.id, child: Text(d.name)),
+                    (d) => DropdownMenuItem(
+                      value: d.id,
+                      child: Text(
+                        d.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.spaceGrotesk(fontSize: 14),
+                      ),
+                    ),
                   )
                   .toList(),
               onChanged: (val) => setState(() => _selectedDepartmentId = val),
@@ -109,45 +133,80 @@ class _AcademicProfileBottomSheetState
             loading: () => const LinearProgressIndicator(),
             error: (e, st) => const Text('Failed to load departments'),
           ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<int>(
-            initialValue: _selectedEnrollmentYear,
-            hint: const Text('Enrollment year (optional)'),
+          const SizedBox(height: 12),
+
+          // Enrollment year text field
+          TextFormField(
+            controller: _yearController,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(4),
+            ],
+            style: GoogleFonts.spaceGrotesk(fontSize: 14),
             decoration: InputDecoration(
+              hintText: 'Enrollment year (e.g. 2023)',
+              hintStyle: GoogleFonts.spaceGrotesk(
+                fontSize: 14,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            items: _years
-                .map(
-                  (y) => DropdownMenuItem(value: y, child: Text(y.toString())),
-                )
-                .toList(),
-            onChanged: (val) => setState(() => _selectedEnrollmentYear = val),
+            onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: 24),
-          FilledButton(
-            onPressed: (_selectedDepartmentId != null && !_isSaving)
-                ? _save
-                : null,
-            child: _isSaving
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
+
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: TextButton(
+                  onPressed:
+                      _isSaving ? null : () => Navigator.of(context).pop(false),
+                  child: Text(
+                    'Do it later',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 14,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
-                  )
-                : const Text('Save'),
-          ),
-          const SizedBox(height: 8),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(
-              'Do it later',
-              style: TextStyle(color: theme.colorScheme.onSurfaceVariant),
-            ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: FilledButton(
+                  onPressed:
+                      (_selectedDepartmentId != null && !_isSaving)
+                          ? _save
+                          : null,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  child: _isSaving
+                      ? SizedBox(
+                          height: 18,
+                          width: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        )
+                      : Text(
+                          'Continue',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -156,12 +215,16 @@ class _AcademicProfileBottomSheetState
 }
 
 Future<void> showAcademicProfileBottomSheet(BuildContext context) async {
-  await showModalBottomSheet<bool>(
+  await showDialog<bool>(
     context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    barrierDismissible: false,
+    builder: (_) => Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 340),
+        child: const AcademicProfileBottomSheet(),
+      ),
     ),
-    builder: (_) => const AcademicProfileBottomSheet(),
   );
 }
