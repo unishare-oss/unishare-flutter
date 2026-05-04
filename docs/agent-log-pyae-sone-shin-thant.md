@@ -282,3 +282,7 @@ Files:
   ~ apps/mobile/lib/features/auth/presentation/widgets/unishare_logo.dart
 Summary:  4 files changed, 42 insertions(+), 29 deletions(-)
 
+
+2026-05-04
+  [15:08] Edit: apps/mobile/ios/Runner.xcodeproj/project.pbxproj
+  [15:10] Edit: apps/mobile/ios/Runner.xcodeproj/project.pbxproj
