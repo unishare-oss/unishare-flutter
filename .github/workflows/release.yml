@@ -40,7 +40,7 @@ jobs:
         run: flutter build web --release
 
       - name: Archive web build
-        run: zip -r web-release.zip apps/mobile/build/web
+        run: cd apps/mobile/build/web && zip -r $GITHUB_WORKSPACE/web-release.zip .
 
       - uses: actions/upload-artifact@v4
         with:
