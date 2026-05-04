@@ -10,16 +10,17 @@ Copy the markdown below into `tech-proposals/NNNN-slug.md` on the `main` branch 
 
 ````markdown
 ---
-id: PROP-NNNN
-title: "Short title describing the problem"
-status: DRAFT
-author: ""
-date: YYYY-MM-DD
+title: "NNNN: Title"
+description: "One-line summary of the proposal."
 ---
 
 # PROP-NNNN: Title
 
-**Status:** DRAFT | **Author:** | **Date:**
+**Status:** DRAFT  
+**Author:**  
+**Date:** YYYY-MM-DD  
+**Spec:** (pending approval)  
+**Approved by:** (fill in when accepted)
 
 ---
 
@@ -28,55 +29,27 @@ date: YYYY-MM-DD
 What is broken, missing, or suboptimal? Be specific.
 Include user impact and technical context.
 
-## Goals
+## Proposed Solution
 
-- What must the solution achieve?
+Describe the chosen approach and how it solves the problem.
 
-## Non-goals
+## Alternatives Considered
 
-- What is explicitly out of scope?
+### A — Title
 
-## Options
+Description. **Rejected:** reason.
 
-### Option A: Title
+### B — Title
 
-Description of the approach.
+Description. **Rejected:** reason.
 
-**Pros:**
--
+## Open Questions
 
-**Cons:**
--
+1. Question that must be resolved before this proposal is accepted.
 
-**Effort:** S / M / L
+## Acceptance Criteria
 
----
-
-### Option B: Title
-
-**Pros:**
--
-
-**Cons:**
--
-
-**Effort:** S / M / L
-
----
-
-## Recommendation
-
-**Chosen option:** Option X
-
-Why this option over the others? State the key deciding factor.
-
-## Open questions
-
-- [ ] Question that must be resolved before this proposal is accepted.
-
-## References
-
-- Links to related issues, PRs, ADRs, or external docs.
+- What the implementation must achieve (feeds directly into the tech spec).
 ````
 
 ---

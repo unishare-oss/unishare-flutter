@@ -10,17 +10,17 @@ Copy the markdown below into `tech-specs/NNNN-slug.md` on the `main` branch and 
 
 ````markdown
 ---
-id: SPEC-NNNN
-title: "Short title"
-status: DRAFT
-author: ""
-date: YYYY-MM-DD
-proposal: PROP-NNNN
+title: "NNNN: Title"
+description: "One-line summary of what is being built."
 ---
 
 # SPEC-NNNN: Title
 
-**Status:** DRAFT | **Author:** | **Date:** | **Proposal:** [NNNN](../tech-proposals/nnnn-slug.md)
+**Status:** DRAFT  
+**Author:**  
+**Date:** YYYY-MM-DD  
+**Proposal:** [PROP-NNNN](../tech-proposals/nnnn-slug.md)  
+**Approved by:** (fill in when approved)
 
 ---
 
