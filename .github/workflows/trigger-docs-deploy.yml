@@ -23,5 +23,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'deploy-docs.yml',
-              ref: 'docs'
+              ref: 'docs',
+              headers: { 'X-GitHub-Api-Version': '2022-11-28' }
             })
