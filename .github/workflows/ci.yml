@@ -65,10 +65,9 @@ jobs:
       - name: Upload coverage
         uses: codecov/codecov-action@v5
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: apps/mobile/coverage/lcov.info
           flags: flutter
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         continue-on-error: true
 
   build-web:

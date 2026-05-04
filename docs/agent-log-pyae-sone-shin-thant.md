@@ -307,3 +307,8 @@ Files:
   ~ apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
 Summary:  1 file changed, 10 insertions(+), 2 deletions(-)
 
+  [20:41] Edit: apps/mobile/test/unit/auth/fakes/fake_firebase_auth_datasource.dart
+  [20:41] Edit: apps/mobile/test/unit/auth/fakes/fake_firebase_auth_datasource.dart
+  [20:41] Edit: apps/mobile/test/unit/auth/auth_repository_impl_test.dart
+  [20:41] Edit: apps/mobile/test/unit/auth/auth_repository_impl_test.dart
+  [20:47] Edit: apps/mobile/test/unit/auth/fakes/fake_firebase_auth_datasource.dart

@@ -22,6 +22,44 @@ void main() {
       );
     });
 
+    tearDown(() => fakeAuth.closeAuthState());
+
+    group('authStateChanges', () {
+      test('emits AppUser from Firestore when doc exists', () async {
+        fakeFirestore.storedUsers['uid-123'] = AppUserModel(
+          id: 'uid-123',
+          name: 'Alice',
+          email: 'alice@example.com',
+        );
+        final future = repo.authStateChanges.first;
+        fakeAuth.emitAuthState(FakeFirebaseUser(uid: 'uid-123'));
+
+        final user = await future;
+        expect(user?.id, 'uid-123');
+        expect(user?.name, 'Alice');
+      });
+
+      test(
+        'falls back to Firebase Auth data when Firestore doc is missing',
+        () async {
+          final future = repo.authStateChanges.first;
+          fakeAuth.emitAuthState(FakeFirebaseUser(uid: 'uid-no-doc'));
+
+          final user = await future;
+          expect(user?.id, 'uid-no-doc');
+          expect(user?.departmentId, isNull);
+        },
+      );
+
+      test('emits null when signed out', () async {
+        final future = repo.authStateChanges.first;
+        fakeAuth.emitAuthState(null);
+
+        final user = await future;
+        expect(user, isNull);
+      });
+    });
+
     group('signInWithEmail', () {
       test(
         'returns AppUser mapped from Firebase user + Firestore doc',

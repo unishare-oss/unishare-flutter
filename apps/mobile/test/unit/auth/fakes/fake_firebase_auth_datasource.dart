@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/auth/data/datasources/firebase_auth_datasource.dart';
@@ -27,8 +29,12 @@ class FakeFirebaseAuthDatasource extends FirebaseAuthDatasource {
   AuthException? throwOnSignIn;
   int createUserCallCount = 0;
 
+  final _authStateController = StreamController<User?>.broadcast();
+  void emitAuthState(User? user) => _authStateController.add(user);
+  void closeAuthState() => _authStateController.close();
+
   @override
-  Stream<User?> get authStateChanges => const Stream.empty();
+  Stream<User?> get authStateChanges => _authStateController.stream;
 
   @override
   User? get currentUser => null;
