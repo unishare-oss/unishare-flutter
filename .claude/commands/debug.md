@@ -16,7 +16,7 @@ Example: `/debug Login screen crashes on back navigation after biometric prompt`
 
 - Restate the bug in your own words: what the user sees vs. what should happen
 - Identify the affected feature module and layer (data / domain / presentation)
-- Check `docs/agent-log.md` and recent commits for related changes
+- Check `docs/agent-log-<member>.md` and recent commits for related changes
 - Check if a previous session scratchpad in `docs/sessions/` covers this area
 
 ### 2. Reproduce

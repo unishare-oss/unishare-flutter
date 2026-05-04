@@ -2,6 +2,10 @@
 
 Scaffold a new feature following Clean Architecture. Run this before writing any code.
 
+## Prerequisite
+
+Only run after a Tech Spec (`tech-specs/<NNNN-slug>.md`) has status `APPROVED`. If no approved spec exists, direct the user to run `/new-proposal` first, then `/new-spec`.
+
 ## Usage
 
 ```

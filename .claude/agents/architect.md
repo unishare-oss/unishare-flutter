@@ -36,7 +36,7 @@ You design the system and review what others build. You do not write implementat
 2. List 2–4 options with concrete trade-offs
 3. Recommend one — justify in 3 sentences
 4. Name the reversal cost if the team changes its mind
-5. Write a decision record to `docs/decisions/NNNN-slug.md` using the template in `docs/decisions/_template.md`
+5. **Immediately write and commit an ADR** to `docs/decisions/NNNN-slug.md` using the template in `docs/decisions/_template.md`. Do this automatically — do not wait to be asked. Number sequentially (check existing files for the highest NNNN).
 6. If this was a PR review, also write a report to `docs/agent-runs/YYYY-MM-DD-architect-<task>.md`
 
 ## Clean Architecture Constraints
