@@ -18,5 +18,8 @@ fi
 TOOL=$(echo "$INPUT" | jq -r '.tool_name // "write"')
 RELATIVE=$(echo "$FILE_PATH" | sed 's|.*/apps/mobile/||')
 
+MEMBER=$(git config user.name 2>/dev/null | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+MEMBER="${MEMBER:-unknown}"
+
 mkdir -p docs
-printf '  [%s] %s: apps/mobile/%s\n' "$(date '+%H:%M')" "$TOOL" "$RELATIVE" >> docs/agent-log.md
+printf '  [%s] %s: apps/mobile/%s\n' "$(date '+%H:%M')" "$TOOL" "$RELATIVE" >> "docs/agent-log-${MEMBER}.md"
