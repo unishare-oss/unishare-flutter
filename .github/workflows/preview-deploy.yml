@@ -1,0 +1,60 @@
+name: Deploy Branch Preview
+
+on:
+  push:
+    branches-ignore: [main, docs]
+    paths:
+      - 'tech-specs/**'
+      - 'tech-proposals/**'
+      - 'docs/decisions/**'
+
+permissions:
+  contents: write
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs branch
+        uses: actions/checkout@v4
+        with:
+          ref: docs
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          cache: pip
+
+      - name: Install MkDocs Material
+        run: pip install -r requirements.txt
+
+      - name: Fetch docs content from branch
+        run: |
+          git fetch origin ${{ github.ref_name }}
+          for dir in tech-specs tech-proposals; do
+            if git ls-tree -r --name-only origin/${{ github.ref_name }} "$dir/" 2>/dev/null | grep -q .; then
+              git checkout origin/${{ github.ref_name }} -- "$dir/"
+              mkdir -p "docs/$dir"
+              cp -r "$dir/." "docs/$dir/"
+            fi
+          done
+          if git ls-tree -r --name-only origin/${{ github.ref_name }} docs/decisions/ 2>/dev/null | grep -q .; then
+            git checkout origin/${{ github.ref_name }} -- docs/decisions/
+          fi
+
+      - name: Generate index tables
+        run: python3 scripts/gen_indexes.py
+
+      - name: Build MkDocs site
+        run: |
+          BRANCH=${{ github.ref_name }}
+          mkdocs build --site-url "https://unishare-oss.github.io/unishare-flutter/previews/${BRANCH}/"
+
+      - name: Deploy preview to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          destination_dir: previews/${{ github.ref_name }}
+          keep_files: true
