@@ -55,16 +55,6 @@ dependencies:
   connectivity_plus: ^7.1.1
   file_picker: ^11.0.2
 
-# TODO: remove once connectivity_plus >7.1.1 is published to pub.dev
-# 7.1.1 uses NWPath.isUltraConstrained without @available guard, causing
-# "has no member" compile error on iOS. Fixed in commit 2b58cff.
-# Track: https://pub.dev/packages/connectivity_plus
-dependency_overrides:
-  connectivity_plus:
-    git:
-      url: https://github.com/fluttercommunity/plus_plugins.git
-      path: packages/connectivity_plus/connectivity_plus
-      ref: 2b58cffedd8ebce127deba10d2e389c3c3bfcb4b
 
 dev_dependencies:
   flutter_test:

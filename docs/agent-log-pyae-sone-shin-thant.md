@@ -301,3 +301,4 @@ Summary:  4 files changed, 42 insertions(+), 29 deletions(-)
   [19:24] Edit: apps/mobile/ios/Runner/Info.plist
   [19:24] Edit: apps/mobile/ios/Runner/Info.plist
   [19:30] Edit: apps/mobile/pubspec.yaml
+  [20:01] Edit: apps/mobile/pubspec.yaml

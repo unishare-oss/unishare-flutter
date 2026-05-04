@@ -151,6 +151,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # connectivity_plus 7.x uses NWPath.isUltraConstrained (added iOS 16.4 SDK / Xcode 14.3+)
+      # Explicitly select latest stable Xcode to guarantee the SDK is present.
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.x"
