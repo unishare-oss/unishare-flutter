@@ -10,17 +10,15 @@ Copy the markdown below into `docs/decisions/NNNN-slug.md` on the `main` branch 
 
 ````markdown
 ---
-id: "NNNN"
-title: "Short present-tense statement of the decision"
-status: PROPOSED
-date: YYYY-MM-DD
+title: "NNNN: Short present-tense statement of the decision"
+description: "One-line summary of the decision and its context."
 ---
 
 # NNNN — Title
 
+**Status:** PROPOSED  
+**Author:**  
 **Date:** YYYY-MM-DD
-**Status:** PROPOSED
-**Author:** [architect agent / member name]
 
 ## Problem
 
