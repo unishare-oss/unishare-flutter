@@ -1,6 +1,6 @@
 # Auth Feature Design
 
-**Status:** Approved  
+**Status:** APPROVED  
 **Author:** architect  
 **Date:** 2026-04-30  
 **Scope:** Firebase-native authentication for the Unishare Flutter app (separate product from the NestJS web platform)
