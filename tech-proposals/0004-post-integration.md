@@ -1,3 +1,8 @@
+---
+title: "PROP-0004: Post Integration"
+description: "Proposal for post creation write path with Firebase Storage upload and offline Hive draft queue."
+---
+
 # PROP-0004: Post Integration
 
 **Status:** ACCEPTED  

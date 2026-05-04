@@ -9,6 +9,11 @@ Copy the markdown below into `tech-specs/NNNN-slug.md` on the `main` branch and 
 ## Template
 
 ````markdown
+---
+title: "SPEC-NNNN: Title"
+description: "One-line summary of what is being built."
+---
+
 # SPEC-NNNN: Title
 
 **Status:** DRAFT  

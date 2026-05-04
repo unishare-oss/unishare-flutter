@@ -1,4 +1,9 @@
-# Navigation Design
+---
+title: "SPEC-0002: Navigation Design"
+description: "App-wide navigation shell — bottom nav, navigation rail, route structure, and upload FAB."
+---
+
+# SPEC-0002: Navigation Design
 
 **Status:** APPROVED  
 **Author:** architect  

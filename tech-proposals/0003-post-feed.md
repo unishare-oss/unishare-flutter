@@ -1,3 +1,8 @@
+---
+title: "PROP-0003: Post Feed"
+description: "Proposal for reverse-chronological post feed backed by Firestore with cursor-based pagination."
+---
+
 # PROP-0003: Post Feed
 
 **Status:** PROPOSED  

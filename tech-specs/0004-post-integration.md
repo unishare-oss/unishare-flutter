@@ -1,3 +1,8 @@
+---
+title: "SPEC-0004: Post Integration"
+description: "Full write path for post creation with media upload and offline draft queue."
+---
+
 # SPEC-0004: Post Integration
 
 **Status:** APPROVED  

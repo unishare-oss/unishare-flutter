@@ -9,6 +9,11 @@ Copy the markdown below into `tech-proposals/NNNN-slug.md` on the `main` branch 
 ## Template
 
 ````markdown
+---
+title: "PROP-NNNN: Title"
+description: "One-line summary of the proposal."
+---
+
 # PROP-NNNN: Title
 
 **Status:** DRAFT  
