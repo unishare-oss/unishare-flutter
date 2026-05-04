@@ -179,6 +179,6 @@ jobs:
         working-directory: apps/mobile/ios
         run: pod install
 
-      - name: Build iOS (no code sign)
+      - name: Build iOS (simulator)
         working-directory: apps/mobile
-        run: flutter build ios --debug --no-codesign
+        run: flutter build ios --simulator --debug
