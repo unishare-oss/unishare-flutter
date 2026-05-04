@@ -26,6 +26,9 @@ apps/mobile/docs/
 
 # Firebase CLI cache (local hosting emulator, deploy cache)
 .firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
 
 # GSD
 .planning/
