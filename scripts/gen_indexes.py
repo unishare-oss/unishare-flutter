@@ -83,10 +83,14 @@ def replace_table(index_path, header, rows, empty_row):
     print(f"  Updated {index_path} ({len(rows)} entries)")
 
 
+def strip_id_prefix(title):
+    return re.sub(r"^\d+:\s*", "", title) if title else title
+
+
 # --- Tech Proposals ---
 entries = collect(os.path.join(DOCS_DIR, "tech-proposals"))
 rows = [
-    f"| [{e['id']}]({fname}) | {e['title']} | {e['status']} | {e['date']} |"
+    f"| [{e['id']}]({fname}) | {strip_id_prefix(e['title'])} | {e['status']} | {e['date']} |"
     for fname, e in entries
 ]
 replace_table(
@@ -99,7 +103,7 @@ replace_table(
 # --- Tech Specs ---
 entries = collect(os.path.join(DOCS_DIR, "tech-specs"))
 rows = [
-    f"| [{e['id']}]({fname}) | {e['title']} | {e['status']} | {e['proposal']} |"
+    f"| [{e['id']}]({fname}) | {strip_id_prefix(e['title'])} | {e['status']} | {e['proposal']} |"
     for fname, e in entries
 ]
 replace_table(
@@ -112,7 +116,7 @@ replace_table(
 # --- Decisions ---
 entries = collect(os.path.join(DOCS_DIR, "decisions"))
 rows = [
-    f"| [{e['id']}]({fname}) | {e['title']} | {e['status']} | {e['date']} |"
+    f"| [{e['id']}]({fname}) | {strip_id_prefix(e['title'])} | {e['status']} | {e['date']} |"
     for fname, e in entries
 ]
 replace_table(
