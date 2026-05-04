@@ -22,4 +22,8 @@ MEMBER=$(git config user.name 2>/dev/null | tr ' ' '-' | tr '[:upper:]' '[:lower
 MEMBER="${MEMBER:-unknown}"
 
 mkdir -p docs
-printf '  [%s] %s: apps/mobile/%s\n' "$(date '+%H:%M')" "$TOOL" "$RELATIVE" >> "docs/agent-log-${MEMBER}.md"
+LOG="docs/agent-log-${MEMBER}.md"
+TODAY=$(date '+%Y-%m-%d')
+LAST_DATE=$(grep -o '^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' "$LOG" 2>/dev/null | tail -1)
+[ "$LAST_DATE" != "$TODAY" ] && printf '\n%s\n' "$TODAY" >> "$LOG"
+printf '  [%s] %s: apps/mobile/%s\n' "$(date '+%H:%M')" "$TOOL" "$RELATIVE" >> "$LOG"
