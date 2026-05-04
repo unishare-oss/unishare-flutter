@@ -35,13 +35,34 @@ chore: upgrade flutter to 3.24
 docs: add ADR for single-slot theming
 ```
 
+## First-time setup
+
+After cloning, run once from the repo root:
+
+```bash
+sh tools/setup.sh
+```
+
+This will:
+- Install the pre-commit hook (`dart format` + `dart analyze` on every commit)
+- Run `flutter pub get`
+- Run code generation
+
+Then obtain these files from a team member and place them at the paths shown:
+
+```
+apps/mobile/lib/firebase_options.dart
+apps/mobile/android/app/google-services.json
+apps/mobile/ios/Runner/GoogleService-Info.plist
+```
+
 ## Running the app
 
 All Flutter commands run from `apps/mobile/`:
 
 ```bash
 flutter pub get
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 flutter run -d chrome
 flutter test
 flutter analyze
@@ -61,7 +82,7 @@ dart format .
 Never edit `*.g.dart` or `*.freezed.dart` files directly. Regenerate with:
 
 ```bash
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 ```
 
 ## PR checklist

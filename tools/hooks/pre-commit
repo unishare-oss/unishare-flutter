@@ -1,3 +1,4 @@
 #!/bin/sh
 cd "$(git rev-parse --show-toplevel)/apps/mobile" || exit 1
 dart format . --set-exit-if-changed
+dart analyze --fatal-infos --fatal-warnings
