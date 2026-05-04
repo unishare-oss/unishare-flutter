@@ -297,3 +297,7 @@ Summary:  4 files changed, 42 insertions(+), 29 deletions(-)
 2026-05-04
   [15:08] Edit: apps/mobile/ios/Runner.xcodeproj/project.pbxproj
   [15:10] Edit: apps/mobile/ios/Runner.xcodeproj/project.pbxproj
+  [19:24] Edit: apps/mobile/android/app/src/main/AndroidManifest.xml
+  [19:24] Edit: apps/mobile/ios/Runner/Info.plist
+  [19:24] Edit: apps/mobile/ios/Runner/Info.plist
+  [19:30] Edit: apps/mobile/pubspec.yaml
