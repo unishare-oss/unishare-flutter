@@ -1,6 +1,6 @@
 ---
 id: "0003"
-title: "Use connectivity_plus and file_picker for post integration"
+title: "0003: Use connectivity_plus and file_picker for post integration"
 status: ACCEPTED
 date: 2026-05-03
 ---

@@ -10,7 +10,7 @@ Copy the markdown below into `tech-proposals/NNNN-slug.md` on the `main` branch 
 
 ````markdown
 ---
-title: "PROP-NNNN: Title"
+title: "NNNN: Title"
 description: "One-line summary of the proposal."
 ---
 

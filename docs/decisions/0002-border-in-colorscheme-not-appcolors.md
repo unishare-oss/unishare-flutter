@@ -1,6 +1,6 @@
 ---
 id: "0002"
-title: border token lives in ColorScheme.outline, not AppColors
+title: "0002: border token lives in ColorScheme.outline, not AppColors"
 status: ACCEPTED
 date: 2026-04-30
 ---

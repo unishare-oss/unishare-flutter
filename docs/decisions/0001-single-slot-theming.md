@@ -1,6 +1,6 @@
 ---
 id: "0001"
-title: Single-slot theming for 12-theme design system
+title: "0001: Single-slot theming for 12-theme design system"
 status: ACCEPTED
 date: 2026-04-30
 ---
