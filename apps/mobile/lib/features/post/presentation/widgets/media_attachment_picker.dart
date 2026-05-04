@@ -20,7 +20,7 @@ class MediaAttachmentPicker extends StatelessWidget {
   static const _exts = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
 
   Future<void> _pick(BuildContext context) async {
-    final result = await FilePicker.instance.pickFiles(
+    final result = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: _exts,
       allowMultiple: true,
