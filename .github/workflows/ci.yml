@@ -35,7 +35,7 @@ jobs:
           cache: true
 
       - name: Write Firebase options
-        run: echo "${{ secrets.FIREBASE_OPTIONS }}" > apps/mobile/lib/firebase_options.dart
+        run: printf '%s' "${{ secrets.FIREBASE_OPTIONS }}" > apps/mobile/lib/firebase_options.dart
 
       - name: Install dependencies
         working-directory: apps/mobile
@@ -81,7 +81,7 @@ jobs:
           cache: true
 
       - name: Write Firebase options
-        run: echo "${{ secrets.FIREBASE_OPTIONS }}" > apps/mobile/lib/firebase_options.dart
+        run: printf '%s' "${{ secrets.FIREBASE_OPTIONS }}" > apps/mobile/lib/firebase_options.dart
 
       - name: Install dependencies
         working-directory: apps/mobile
