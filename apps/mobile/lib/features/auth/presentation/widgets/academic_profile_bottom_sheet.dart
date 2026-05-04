@@ -163,8 +163,9 @@ class _AcademicProfileBottomSheetState
             children: [
               Expanded(
                 child: TextButton(
-                  onPressed:
-                      _isSaving ? null : () => Navigator.of(context).pop(false),
+                  onPressed: _isSaving
+                      ? null
+                      : () => Navigator.of(context).pop(false),
                   child: Text(
                     'Do it later',
                     style: GoogleFonts.spaceGrotesk(
@@ -177,10 +178,9 @@ class _AcademicProfileBottomSheetState
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton(
-                  onPressed:
-                      (_selectedDepartmentId != null && !_isSaving)
-                          ? _save
-                          : null,
+                  onPressed: (_selectedDepartmentId != null && !_isSaving)
+                      ? _save
+                      : null,
                   style: FilledButton.styleFrom(
                     backgroundColor: theme.colorScheme.primary,
                     shape: RoundedRectangleBorder(

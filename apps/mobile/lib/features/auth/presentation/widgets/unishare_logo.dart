@@ -37,7 +37,9 @@ class UnishareLogo extends StatelessWidget {
             style: GoogleFonts.spaceGrotesk(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
-              color: darkText ? const Color(0xFF1C1917) : const Color(0xFFF7F3EE),
+              color: darkText
+                  ? const Color(0xFF1C1917)
+                  : const Color(0xFFF7F3EE),
             ),
           ),
         ),

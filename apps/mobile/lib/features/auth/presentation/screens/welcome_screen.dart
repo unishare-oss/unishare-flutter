@@ -95,7 +95,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Something went wrong. Please try again.')),
+          const SnackBar(
+            content: Text('Something went wrong. Please try again.'),
+          ),
         );
       }
     } finally {
@@ -125,7 +127,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } on AuthException catch (e) {
       if (mounted) setState(() => _serverError = e.userMessage);
     } catch (_) {
-      if (mounted) setState(() => _serverError = 'Something went wrong. Please try again.');
+      if (mounted)
+        setState(
+          () => _serverError = 'Something went wrong. Please try again.',
+        );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -153,7 +158,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     } on AuthException catch (e) {
       if (mounted) setState(() => _serverError = e.userMessage);
     } catch (_) {
-      if (mounted) setState(() => _serverError = 'Something went wrong. Please try again.');
+      if (mounted)
+        setState(
+          () => _serverError = 'Something went wrong. Please try again.',
+        );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

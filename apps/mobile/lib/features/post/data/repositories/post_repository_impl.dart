@@ -37,9 +37,7 @@ class PostRepositoryImpl implements PostRepository {
 
   @override
   Future<List<PostDraft>> loadDraftQueue() async {
-    return draftBox.values
-        .map((m) => m.toEntity())
-        .toList()
+    return draftBox.values.map((m) => m.toEntity()).toList()
       ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
   }
 
@@ -73,15 +71,18 @@ class PostRepositoryImpl implements PostRepository {
         );
 
         // 2c. Update uploadedUrls and persist so the URL survives a crash.
-        final newUrls = Map<String, String>.from(current.uploadedUrls)..[path] = url;
+        final newUrls = Map<String, String>.from(current.uploadedUrls)
+          ..[path] = url;
         current = current.copyWith(uploadedUrls: newUrls);
         await saveDraft(current);
       } catch (e) {
         // 2d. Persist partial progress and rethrow.
-        await saveDraft(current.copyWith(
-          status: DraftStatus.error,
-          errorMessage: e.toString(),
-        ));
+        await saveDraft(
+          current.copyWith(
+            status: DraftStatus.error,
+            errorMessage: e.toString(),
+          ),
+        );
         rethrow;
       }
     }
@@ -104,10 +105,12 @@ class PostRepositoryImpl implements PostRepository {
       await removeDraft(draft.id);
     } catch (e) {
       // Step 6: leave draft in queue as queued so SyncDraftQueue can retry.
-      await saveDraft(current.copyWith(
-        uploadedUrls: current.uploadedUrls,
-        status: DraftStatus.queued,
-      ));
+      await saveDraft(
+        current.copyWith(
+          uploadedUrls: current.uploadedUrls,
+          status: DraftStatus.queued,
+        ),
+      );
       rethrow;
     }
   }

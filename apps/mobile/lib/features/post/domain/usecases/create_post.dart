@@ -9,9 +9,7 @@ class CreatePost {
   final PostRepository _repository;
 
   static const _maxBytes = 10 * 1024 * 1024; // 10 MB
-  static const _allowedExtensions = {
-    'jpg', 'jpeg', 'png', 'webp', 'pdf',
-  };
+  static const _allowedExtensions = {'jpg', 'jpeg', 'png', 'webp', 'pdf'};
 
   /// Validates [draft], saves it to the queue, then attempts to publish.
   ///
@@ -32,7 +30,8 @@ class CreatePost {
       final size = await file.length();
       if (size > _maxBytes) throw ArgumentError('invalid_media');
       final ext = path.split('.').last.toLowerCase();
-      if (!_allowedExtensions.contains(ext)) throw ArgumentError('invalid_media');
+      if (!_allowedExtensions.contains(ext))
+        throw ArgumentError('invalid_media');
     }
 
     await _repository.saveDraft(draft);

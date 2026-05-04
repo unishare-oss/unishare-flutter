@@ -44,9 +44,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
     ref.listen<CreatePostState>(createPostProvider, (_, next) {
       if (next is CreatePostPublished) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Post published!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Post published!')));
         context.pop();
         ref.read(createPostProvider.notifier).reset();
       }
@@ -165,7 +165,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                           enabled: !isSubmitting,
                           textInputAction: TextInputAction.done,
                           style: GoogleFonts.firaCode(
-                              fontSize: 13, color: _kFg),
+                            fontSize: 13,
+                            color: _kFg,
+                          ),
                           decoration: _dec('Add a tag…'),
                           onFieldSubmitted: _addTag,
                         ),
@@ -185,13 +187,14 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                       spacing: 6,
                       runSpacing: 6,
                       children: _tags
-                          .map((t) => _TagChip(
-                                label: t,
-                                onDelete: isSubmitting
-                                    ? null
-                                    : () =>
-                                        setState(() => _tags.remove(t)),
-                              ))
+                          .map(
+                            (t) => _TagChip(
+                              label: t,
+                              onDelete: isSubmitting
+                                  ? null
+                                  : () => setState(() => _tags.remove(t)),
+                            ),
+                          )
                           .toList(),
                     ),
                   ],
@@ -215,8 +218,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             decoration: const BoxDecoration(
               border: Border(top: BorderSide(color: _kBorder)),
             ),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Row(
               children: [
                 const DraftQueueIndicator(),
@@ -224,22 +226,22 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 SizedBox(
                   height: 40,
                   child: FilledButton(
-                    onPressed:
-                        (!_titleEmpty && !isSubmitting) ? _submit : null,
+                    onPressed: (!_titleEmpty && !isSubmitting) ? _submit : null,
                     style: FilledButton.styleFrom(
                       backgroundColor: _kPrimary,
                       foregroundColor: Colors.white,
-                      disabledBackgroundColor:
-                          _kPrimary.withValues(alpha: 0.4),
+                      disabledBackgroundColor: _kPrimary.withValues(alpha: 0.4),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6)),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                     ),
                     child: Text(
                       isSubmitting ? 'Publishing…' : 'Publish',
                       style: GoogleFonts.spaceGrotesk(
-                          fontSize: 14, fontWeight: FontWeight.w500),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
@@ -259,7 +261,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   }
 
   Future<void> _submit() async {
-    await ref.read(createPostProvider.notifier).submit(
+    await ref
+        .read(createPostProvider.notifier)
+        .submit(
           title: _titleCtrl.text.trim(),
           body: _bodyCtrl.text.trim(),
           tags: List.from(_tags),
@@ -268,28 +272,25 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   }
 
   InputDecoration _dec(String hint) => InputDecoration(
-        hintText: hint,
-        hintStyle:
-            GoogleFonts.spaceGrotesk(fontSize: 14, color: _kMuted),
-        filled: true,
-        fillColor: _kFill,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        isDense: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kBorder),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kBorder),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(6),
-          borderSide:
-              const BorderSide(color: _kPrimary, width: 1.5),
-        ),
-      );
+    hintText: hint,
+    hintStyle: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kMuted),
+    filled: true,
+    fillColor: _kFill,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    isDense: true,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(6),
+      borderSide: const BorderSide(color: _kBorder),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(6),
+      borderSide: const BorderSide(color: _kBorder),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(6),
+      borderSide: const BorderSide(color: _kPrimary, width: 1.5),
+    ),
+  );
 }
 
 class _Label extends StatelessWidget {
@@ -298,13 +299,13 @@ class _Label extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-        text,
-        style: GoogleFonts.spaceGrotesk(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: const Color(0xFF1C1917),
-        ),
-      );
+    text,
+    style: GoogleFonts.spaceGrotesk(
+      fontSize: 13,
+      fontWeight: FontWeight.w500,
+      color: const Color(0xFF1C1917),
+    ),
+  );
 }
 
 class _Banner extends StatelessWidget {
@@ -319,17 +320,17 @@ class _Banner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: border.withValues(alpha: 0.4)),
-        ),
-        child: Text(
-          message,
-          style: GoogleFonts.spaceGrotesk(fontSize: 13, color: fg),
-        ),
-      );
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: bg,
+      borderRadius: BorderRadius.circular(6),
+      border: Border.all(color: border.withValues(alpha: 0.4)),
+    ),
+    child: Text(
+      message,
+      style: GoogleFonts.spaceGrotesk(fontSize: 13, color: fg),
+    ),
+  );
 }
 
 class _TagChip extends StatelessWidget {
@@ -339,33 +340,31 @@ class _TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF7F3EE),
-          border: Border.all(color: const Color(0xFFE2DAD0)),
-          borderRadius: BorderRadius.circular(4),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF7F3EE),
+      border: Border.all(color: const Color(0xFFE2DAD0)),
+      borderRadius: BorderRadius.circular(4),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '#$label',
+          style: GoogleFonts.firaCode(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF8A837E),
+          ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '#$label',
-              style: GoogleFonts.firaCode(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF8A837E),
-              ),
-            ),
-            if (onDelete != null) ...[
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap: onDelete,
-                child: const Icon(Icons.close,
-                    size: 14, color: Color(0xFF8A837E)),
-              ),
-            ],
-          ],
-        ),
-      );
+        if (onDelete != null) ...[
+          const SizedBox(width: 4),
+          GestureDetector(
+            onTap: onDelete,
+            child: const Icon(Icons.close, size: 14, color: Color(0xFF8A837E)),
+          ),
+        ],
+      ],
+    ),
+  );
 }

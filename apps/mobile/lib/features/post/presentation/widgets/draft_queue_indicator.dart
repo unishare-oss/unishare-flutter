@@ -12,8 +12,9 @@ class DraftQueueIndicator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final queue = ref.watch(draftQueueProvider);
     final pending = queue
-        .where((d) =>
-            d.status == DraftStatus.queued || d.status == DraftStatus.idle)
+        .where(
+          (d) => d.status == DraftStatus.queued || d.status == DraftStatus.idle,
+        )
         .length;
 
     if (pending == 0) return const SizedBox.shrink();

@@ -57,7 +57,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required List<String> localMediaPaths,
   }) async {
     final useCase = ref.read(createPostUseCaseProvider);
-    final id = List.generate(20, (_) => _chars[_rand.nextInt(_chars.length)]).join();
+    final id = List.generate(
+      20,
+      (_) => _chars[_rand.nextInt(_chars.length)],
+    ).join();
 
     final draft = PostDraft(
       id: id,
@@ -89,9 +92,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         DraftStatus.published => CreatePostPublished(postId: result.id),
         DraftStatus.queued => CreatePostQueued(draftId: result.id),
         _ => CreatePostError(
-            message: result.errorMessage ?? 'Unknown error',
-            draft: result,
-          ),
+          message: result.errorMessage ?? 'Unknown error',
+          draft: result,
+        ),
       };
     } on ArgumentError catch (e) {
       state = CreatePostError(message: e.message.toString(), draft: draft);

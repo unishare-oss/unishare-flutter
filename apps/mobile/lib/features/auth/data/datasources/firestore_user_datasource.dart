@@ -58,7 +58,9 @@ class FirestoreUserDatasource {
     return Stream.fromFuture(
       _universities.get().then(
         (snap) => snap.docs
-            .map((doc) => (id: doc.id, name: doc.data()['name'] as String? ?? ''))
+            .map(
+              (doc) => (id: doc.id, name: doc.data()['name'] as String? ?? ''),
+            )
             .toList(),
       ),
     );
@@ -68,7 +70,9 @@ class FirestoreUserDatasource {
     return Stream.fromFuture(
       _departments.get().then(
         (snap) => snap.docs
-            .map((doc) => (id: doc.id, name: doc.data()['name'] as String? ?? ''))
+            .map(
+              (doc) => (id: doc.id, name: doc.data()['name'] as String? ?? ''),
+            )
             .toList(),
       ),
     );

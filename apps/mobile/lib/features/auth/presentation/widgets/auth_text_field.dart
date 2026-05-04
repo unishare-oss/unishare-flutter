@@ -69,7 +69,10 @@ class _AuthTextFieldState extends State<AuthTextField> {
           color: Theme.of(context).colorScheme.error,
         ),
         // Fixed 36×36 slot on every field keeps all heights identical.
-        suffixIconConstraints: const BoxConstraints.tightFor(width: 36, height: 36),
+        suffixIconConstraints: const BoxConstraints.tightFor(
+          width: 36,
+          height: 36,
+        ),
         suffixIcon:
             widget.suffixIcon ??
             (widget.obscureText

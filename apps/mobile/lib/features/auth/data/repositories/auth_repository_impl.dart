@@ -88,7 +88,12 @@ class AuthRepositoryImpl implements AuthRepository {
       withConsent: true,
     );
 
-    return AppUser(id: uid, name: name, email: email, universityId: universityId);
+    return AppUser(
+      id: uid,
+      name: name,
+      email: email,
+      universityId: universityId,
+    );
   }
 
   @override

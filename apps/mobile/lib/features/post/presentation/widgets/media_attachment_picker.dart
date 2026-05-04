@@ -41,7 +41,9 @@ class MediaAttachmentPicker extends StatelessWidget {
 
     if (skipped && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Some files exceeded 10 MB and were skipped')),
+        const SnackBar(
+          content: Text('Some files exceeded 10 MB and were skipped'),
+        ),
       );
     }
     onChanged(updated);
@@ -58,8 +60,9 @@ class MediaAttachmentPicker extends StatelessWidget {
             runSpacing: 6,
             children: paths.map((path) {
               final name = path.split('/').last;
-              final size =
-                  File(path).existsSync() ? File(path).lengthSync() : 0;
+              final size = File(path).existsSync()
+                  ? File(path).lengthSync()
+                  : 0;
               final kb = (size / 1024).toStringAsFixed(1);
               final tooLarge = size > _maxBytes;
               return _FileChip(
@@ -79,15 +82,17 @@ class MediaAttachmentPicker extends StatelessWidget {
         OutlinedButton.icon(
           onPressed: enabled ? () => _pick(context) : null,
           icon: const Icon(Icons.attach_file, size: 16),
-          label: Text('Add attachment',
-              style: GoogleFonts.spaceGrotesk(fontSize: 13)),
+          label: Text(
+            'Add attachment',
+            style: GoogleFonts.spaceGrotesk(fontSize: 13),
+          ),
           style: OutlinedButton.styleFrom(
             foregroundColor: const Color(0xFF6B6560),
             side: const BorderSide(color: Color(0xFFE2DAD0)),
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6)),
+              borderRadius: BorderRadius.circular(6),
+            ),
           ),
         ),
       ],
