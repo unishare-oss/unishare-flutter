@@ -1,15 +1,10 @@
----
-id: SPEC-0004
-title: "Post Integration"
-status: APPROVED
-author: architect
-date: 2026-05-03
-proposal: PROP-0004
----
-
 # SPEC-0004: Post Integration
 
-**Status:** APPROVED | **Author:** architect | **Date:** 2026-05-03 | **Proposal:** [PROP-0004](../tech-proposals/0004-post-integration.md) | **Approved by:** Slade (CTO) on 2026-05-03
+**Status:** APPROVED  
+**Author:** architect  
+**Date:** 2026-05-03  
+**Proposal:** [PROP-0004](../tech-proposals/0004-post-integration.md)  
+**Approved by:** Slade (CTO) on 2026-05-03
 
 ---
 

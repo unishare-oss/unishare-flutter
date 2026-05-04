@@ -9,17 +9,12 @@ Copy the markdown below into `tech-proposals/NNNN-slug.md` on the `main` branch 
 ## Template
 
 ````markdown
----
-id: PROP-NNNN
-title: "Short title describing the problem"
-status: DRAFT
-author: ""
-date: YYYY-MM-DD
----
-
 # PROP-NNNN: Title
 
-**Status:** DRAFT | **Author:** | **Date:**
+**Status:** DRAFT  
+**Author:**  
+**Date:** YYYY-MM-DD  
+**Spec:** (pending approval)
 
 ---
 

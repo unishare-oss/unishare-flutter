@@ -1,14 +1,10 @@
----
-id: PROP-0004
-title: "Post Integration"
-status: ACCEPTED
-author: architect
-date: 2026-05-03
----
-
 # PROP-0004: Post Integration
 
-**Status:** ACCEPTED | **Author:** architect | **Date:** 2026-05-03 | **Approved by:** Slade (CTO) on 2026-05-03
+**Status:** ACCEPTED  
+**Author:** architect  
+**Date:** 2026-05-03  
+**Spec:** [0004-post-integration](../tech-specs/0004-post-integration.md)  
+**Approved by:** Slade (CTO) on 2026-05-03
 
 ---
 

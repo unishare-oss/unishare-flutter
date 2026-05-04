@@ -1,6 +1,8 @@
 # Navigation Design
 
-**Status:** Approved
+**Status:** Approved  
+**Author:** architect  
+**Date:** 2026-04-30  
 **Scope:** App-wide navigation shell — bottom nav, navigation rail, route structure, and upload FAB
 
 ---

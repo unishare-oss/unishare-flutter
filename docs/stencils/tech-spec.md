@@ -9,18 +9,12 @@ Copy the markdown below into `tech-specs/NNNN-slug.md` on the `main` branch and 
 ## Template
 
 ````markdown
----
-id: SPEC-NNNN
-title: "Short title"
-status: DRAFT
-author: ""
-date: YYYY-MM-DD
-proposal: PROP-NNNN
----
-
 # SPEC-NNNN: Title
 
-**Status:** DRAFT | **Author:** | **Date:** | **Proposal:** [NNNN](../tech-proposals/nnnn-slug.md)
+**Status:** DRAFT  
+**Author:**  
+**Date:** YYYY-MM-DD  
+**Proposal:** [PROP-NNNN](../tech-proposals/nnnn-slug.md)
 
 ---
 
