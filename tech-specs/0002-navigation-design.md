@@ -1,5 +1,5 @@
 ---
-title: "SPEC-0002: Navigation Design"
+title: "0002: Navigation Design"
 description: "App-wide navigation shell — bottom nav, navigation rail, route structure, and upload FAB."
 ---
 

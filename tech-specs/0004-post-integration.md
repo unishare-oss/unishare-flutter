@@ -1,5 +1,5 @@
 ---
-title: "SPEC-0004: Post Integration"
+title: "0004: Post Integration"
 description: "Full write path for post creation with media upload and offline draft queue."
 ---
 

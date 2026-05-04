@@ -1,5 +1,5 @@
 ---
-title: "SPEC-0001: Auth Feature Design"
+title: "0001: Auth Feature Design"
 description: "Firebase-native authentication design for Unishare Flutter — Google sign-in, email/password, and guest browsing."
 ---
 

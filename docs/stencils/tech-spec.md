@@ -10,7 +10,7 @@ Copy the markdown below into `tech-specs/NNNN-slug.md` on the `main` branch and 
 
 ````markdown
 ---
-title: "SPEC-NNNN: Title"
+title: "NNNN: Title"
 description: "One-line summary of what is being built."
 ---
 
