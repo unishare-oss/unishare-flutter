@@ -1,0 +1,11 @@
+{
+  "name": "unishare-tools",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "seed": "node seed_firestore.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.8.0"
+  }
+}

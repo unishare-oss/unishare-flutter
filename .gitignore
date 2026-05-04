@@ -29,3 +29,8 @@ apps/mobile/docs/
 
 # GSD
 .planning/
+
+# Firebase service account keys
+tools/*service-account*.json
+tools/*serviceAccount*.json
+*-firebase-adminsdk-*.json
