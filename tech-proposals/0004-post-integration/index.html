@@ -9,14 +9,16 @@
         <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
       
       
-      
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0002-border-in-colorscheme-not-appcolors/">
-      
-      
-        <link rel="prev" href="../0001-single-slot-theming/">
+        <meta name="author" content="architect">
       
       
-        <link rel="next" href="../0003-post-integration-packages/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0004-post-integration/">
+      
+      
+        <link rel="prev" href="../0003-post-feed/">
+      
+      
+        <link rel="next" href="../../tech-specs/">
       
       
         
@@ -27,7 +29,7 @@
     
     
       
-        <title>border token lives in ColorScheme.outline, not AppColors - Unishare Engineering Docs</title>
+        <title>Post Integration - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0002-border-token-lives-in-colorschemeoutline-not-appcolors" class="md-skip">
+        <a href="#prop-0004-post-integration" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              border token lives in ColorScheme.outline, not AppColors
+              Post Integration
             
           </span>
         </div>
@@ -242,13 +244,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../decisions/" class="md-tabs__link">
           
   
   
@@ -284,11 +284,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../tech-proposals/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -396,31 +398,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -438,7 +435,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -456,7 +453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../decisions/" class="md-nav__link">
         
   
   
@@ -484,7 +481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-single-slot-theming/" class="md-nav__link">
+      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -516,44 +513,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    border token lives in ColorScheme.outline, not AppColors
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -576,81 +539,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options Considered
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reversal-cost" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reversal Cost
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -663,7 +551,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-post-integration-packages/" class="md-nav__link">
+      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -845,26 +733,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -882,7 +775,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -900,7 +793,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -928,7 +821,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
+      <a href="../0003-post-feed/" class="md-nav__link">
         
   
   
@@ -953,10 +846,44 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post Integration
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -979,6 +906,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-direct-firestore-write-with-optimistic-ui-and-hive-draft-queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Direct Firestore Write with Optimistic UI and Hive Draft Queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-firestore-pending-post-document-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Firestore "Pending Post" Document Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1207,10 +1259,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#options-considered" class="md-nav__link">
+  <a href="#goals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options Considered
+        Goals
       
     </span>
   </a>
@@ -1218,10 +1270,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
+  <a href="#non-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision
+        Non-goals
       
     </span>
   </a>
@@ -1229,10 +1281,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reversal-cost" class="md-nav__link">
+  <a href="#options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reversal Cost
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-direct-firestore-write-with-optimistic-ui-and-hive-draft-queue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A: Direct Firestore Write with Optimistic UI and Hive Draft Queue
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-firestore-pending-post-document-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B: Firestore "Pending Post" Document Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation
       
     </span>
   </a>
@@ -1240,10 +1331,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
+  <a href="#open-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Consequences
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
       
     </span>
   </a>
@@ -1267,7 +1369,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0002-border-in-colorscheme-not-appcolors.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0004-post-integration.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1275,50 +1377,101 @@
   
 
 
-<h1 id="0002-border-token-lives-in-colorschemeoutline-not-appcolors">0002 — border token lives in ColorScheme.outline, not AppColors<a class="headerlink" href="#0002-border-token-lives-in-colorschemeoutline-not-appcolors" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-30
-<strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect</p>
+<h1 id="prop-0004-post-integration">PROP-0004: Post Integration<a class="headerlink" href="#prop-0004-post-integration" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED | <strong>Author:</strong> architect | <strong>Date:</strong> 2026-05-03 | <strong>Approved by:</strong> Slade (CTO) on 2026-05-03</p>
+<hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p><code>AppColors</code> (ThemeExtension) initially carried a <code>border</code> field alongside <code>ColorScheme.outline</code>, both set to the same value in <code>AppTheme.build()</code>. This created two read paths for the same color token, risking drift and confusing callers about which to use.</p>
-<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Option</th>
-<th>Upside</th>
-<th>Downside</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Remove <code>border</code> from <code>AppColors</code>, use <code>colorScheme.outline</code></td>
-<td>Single source of truth, no drift</td>
-<td>Less discoverable — callers must know to use <code>colorScheme.outline</code></td>
-</tr>
-<tr>
-<td>2</td>
-<td>Keep <code>border</code> in <code>AppColors</code>, remove from <code>ColorScheme</code></td>
-<td>All custom tokens in one place</td>
-<td>Loses Material 3 <code>outline</code> semantics used by built-in widgets</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Keep both in sync</td>
-<td>No migration needed</td>
-<td>Duplicated state, drift risk remains</td>
-</tr>
-</tbody>
-</table>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen:</strong> Option 1 — Remove from <code>AppColors</code></p>
-<p><code>border</code> was removed from <code>AppColors</code>. Callers use <code>Theme.of(context).colorScheme.outline</code>. <code>AppColors</code> only carries tokens with no Material 3 ColorScheme equivalent: <code>amber*</code>, <code>success</code>, <code>info</code>, <code>muted</code>, <code>mutedForeground</code>, <code>surfaceDark</code>, <code>cardDark</code>, <code>textSecondary</code>, <code>textMuted</code>.</p>
-<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
-<p>Low — add <code>border</code> field back to <code>AppColors</code> and wire it in <code>AppTheme.build()</code>. One-line change per theme constant.</p>
-<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p>Single source of truth for border color. Built-in Material 3 widgets and custom widgets both read from the same <code>colorScheme.outline</code>. New engineers must know to reach for <code>colorScheme.outline</code> rather than an <code>AppColors</code> field.</p>
+<p>Students can browse the Unishare feed (established in PROP-0003) but have no mechanism to contribute content. There is no UI, no write path, and no offline-capable draft queue for creating posts. The Firestore schema from PROP-0003 defines the target shape of a published post:</p>
+<div class="highlight"><pre><span></span><code>posts/{postId}
+  authorId, authorName, authorAvatar   ← denormalized at write time
+  title, body
+  mediaUrls: string[]                  ← Firebase Storage download URLs
+  tags:      string[]
+  likesCount: int                       ← read-only from client perspective
+  createdAt, updatedAt: Timestamp
+</code></pre></div>
+<p>Every field except <code>likesCount</code> must be written by the client when a post is published. Until this write path exists, the feed is read-only and the core value proposition of peer content sharing cannot be exercised by any user.</p>
+<hr />
+<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Allow any authenticated student to author and publish a post (title, body, optional tags, optional media).</li>
+<li>Support attaching files or images that are uploaded to Firebase Storage; the resulting download URLs are stored in <code>mediaUrls</code> on the Firestore document.</li>
+<li>Enable offline drafting: a post started without connectivity must be persisted locally (Hive) and queued for publication when connectivity is restored.</li>
+<li>Write directly to Firestore (<code>posts/{postId}</code>) from the client — no Cloud Functions or REST intermediary in the publish path.</li>
+<li>Published posts must appear in the existing real-time feed immediately for all connected users, relying on Firestore's live listeners already established by PROP-0003.</li>
+</ul>
+<hr />
+<h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Cloud Functions for post creation or validation.</li>
+<li>NestJS or any REST API involvement in the write path.</li>
+<li>Post editing or deletion (separate proposal).</li>
+<li>Comment threads or reactions beyond the existing <code>likesCount</code> mechanism.</li>
+<li>Full-text search or content moderation at publish time.</li>
+<li>Admin or moderation tooling.</li>
+</ul>
+<hr />
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
+<h3 id="option-a-direct-firestore-write-with-optimistic-ui-and-hive-draft-queue">Option A: Direct Firestore Write with Optimistic UI and Hive Draft Queue<a class="headerlink" href="#option-a-direct-firestore-write-with-optimistic-ui-and-hive-draft-queue" title="Permanent link">&para;</a></h3>
+<p>The client is solely responsible for the entire publish sequence. When the user taps "Publish":</p>
+<ol>
+<li>Any attached media is uploaded to Firebase Storage; download URLs are collected.</li>
+<li>The client writes a new document to <code>posts/{postId}</code> with all fields populated, including the collected URLs and a denormalized snapshot of the author's display name and avatar from the current auth session.</li>
+<li>The presentation layer applies an optimistic update (prepends the new post to the local feed list) immediately, then reconciles once the Firestore write confirms.</li>
+</ol>
+<p>For the offline case, the draft is serialized to Hive before any network operation begins. On reconnect, a background sync worker reads queued drafts, executes the upload-then-write sequence in order, and removes each draft upon confirmed Firestore write.</p>
+<p><strong>Pros:</strong>
+- Minimal complexity — no new backend surface; write path is a single Firestore document write after Storage upload.
+- Aligns directly with the PROP-0003 schema; no bridging documents or status fields required.
+- Real-time propagation to other users is automatic via existing Firestore listeners.
+- Optimistic UI gives immediate feedback without waiting for round-trip latency.
+- Offline draft queue is self-contained in the client; Hive is already in the stack.</p>
+<p><strong>Cons:</strong>
+- Upload ordering is sequential per post (Storage upload must complete before Firestore write); a failed upload leaves no Firestore record but the local draft remains, requiring clear retry UX.
+- Client is trusted to write correct <code>authorId</code>, <code>authorName</code>, and <code>authorAvatar</code> values — Firestore Security Rules must enforce that <code>authorId == request.auth.uid</code> and that the client cannot spoof other users' content.
+- Partial failure state (Storage upload succeeded, Firestore write failed) must be handled explicitly in the draft queue — the stored draft must record which media URLs are already uploaded to avoid re-uploading.
+- No server-side validation of content (size, type, profanity) beyond Security Rules.</p>
+<p><strong>Effort:</strong> M</p>
+<hr />
+<h3 id="option-b-firestore-pending-post-document-pattern">Option B: Firestore "Pending Post" Document Pattern<a class="headerlink" href="#option-b-firestore-pending-post-document-pattern" title="Permanent link">&para;</a></h3>
+<p>The client writes to a separate <code>pendingPosts/{id}</code> collection with <code>status: "pending"</code> rather than directly to <code>posts/</code>. A reconciliation process — either a client-side reconnect handler or a lightweight scheduled Cloud Function — reads <code>pendingPosts</code> documents and promotes them to <code>posts/</code> once all media is confirmed uploaded.</p>
+<p><strong>Pros:</strong>
+- Clear, inspectable state machine: <code>draft → pending → published</code>. Each transition is a document field update.
+- Partial failure is explicit in the document (<code>status: "upload_failed"</code>, <code>status: "write_failed"</code>), making debugging and retry logic easier to reason about.
+- The <code>posts/</code> collection remains clean — no partially-formed documents ever appear in the feed.
+- Easier to extend later with server-side moderation: a Cloud Function could intercept <code>pending</code> documents before promotion.</p>
+<p><strong>Cons:</strong>
+- Requires maintaining a second collection (<code>pendingPosts</code>) with its own Security Rules, indexes, and cleanup strategy.
+- The promotion step is an additional async operation; if done client-side it reintroduces the same partial failure problem at the promotion boundary. If done via Cloud Function, that conflicts with the hard constraint ruling out Cloud Functions.
+- Real-time feed appearance is delayed until promotion completes, adding latency for the publishing user.
+- Significantly more code surface: state machine, reconciler, two-collection Security Rules, and cleanup jobs.
+- Cloud Functions are ruled out by project constraints, so the reconciler must be client-side — which largely negates the state-machine benefit.</p>
+<p><strong>Effort:</strong> L</p>
+<hr />
+<h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen option:</strong> Option A — Direct Firestore Write with Optimistic UI and Hive Draft Queue.</p>
+<p>The team has explicitly ruled out Cloud Functions, which removes the primary advantage of Option B: a server-side reconciler that can reliably promote pending documents. Without a server-side actor, Option B's state machine still runs on the client and inherits the same partial-failure risks as Option A, while adding a second collection and significantly more code. Option A fits the existing schema exactly — the <code>posts/{postId}</code> document written by the client is already the final, feed-visible document, so there is no promotion gap and real-time propagation is immediate. The partial-failure risk (Storage upload succeeded, Firestore write failed) is manageable by recording uploaded URLs in the local Hive draft before committing the Firestore write, giving the retry path idempotency without a server component.</p>
+<hr />
+<h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>[ ] <strong>Upload ordering</strong> — Should the client upload all media to Firebase Storage and collect all download URLs before writing the Firestore document, or should it write the document first with an empty <code>mediaUrls</code> and patch it after upload? Writing after upload is simpler (one atomic write) but leaves the post invisible in the feed until all media is transferred. Writing first with a patch allows the post to appear immediately with a loading placeholder, but introduces a window where the document exists without its media.</p>
+</li>
+<li>
+<p>[ ] <strong>Offline partial-upload recovery</strong> — If media upload succeeds but the subsequent Firestore write fails (e.g., connectivity drops between the two operations), the next retry must not re-upload already-transferred files. The Hive draft must record which Storage paths have been successfully uploaded so the retry path skips completed uploads. What is the canonical format for this upload-progress snapshot in the draft record?</p>
+</li>
+<li>
+<p>[ ] <strong>File size and type enforcement</strong> — Firebase Storage Security Rules can reject uploads by size and content type, but they cannot surface a user-friendly error message. Should the client enforce limits locally before attempting upload (fast feedback, but bypassable), and also rely on Storage Rules as the hard backstop? What are the agreed limits (e.g., max file size, allowed MIME types)?</p>
+</li>
+<li>
+<p>[ ] <strong>Author field staleness</strong> — PROP-0003 raised this for the feed; it is equally relevant here. If a user updates their display name or avatar between posts, older posts retain the stale snapshot. Is a background reconciliation job in scope for v1, or is the snapshot-at-write-time approach acceptable indefinitely?</p>
+</li>
+</ul>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>PROP-0003: Post Feed — <code>tech-proposals/0003-post-feed.md</code> (defines the <code>posts/{postId}</code> schema this proposal writes to)</li>
+</ul>
 
 
 

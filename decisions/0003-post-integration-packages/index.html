@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0002-border-in-colorscheme-not-appcolors/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0003-post-integration-packages/">
       
       
-        <link rel="prev" href="../0001-single-slot-theming/">
+        <link rel="prev" href="../0002-border-in-colorscheme-not-appcolors/">
       
       
-        <link rel="next" href="../0003-post-integration-packages/">
+        <link rel="next" href="../../stencils/adr/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>border token lives in ColorScheme.outline, not AppColors - Unishare Engineering Docs</title>
+        <title>Use connectivity_plus and file_picker for post integration - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0002-border-token-lives-in-colorschemeoutline-not-appcolors" class="md-skip">
+        <a href="#0003-use-connectivity_plus-and-file_picker-for-post-integration" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              border token lives in ColorScheme.outline, not AppColors
+              Use connectivity_plus and file_picker for post integration
             
           </span>
         </div>
@@ -516,6 +516,41 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    border token lives in ColorScheme.outline, not AppColors
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -535,7 +570,7 @@
   <span class="md-ellipsis">
     
   
-    border token lives in ColorScheme.outline, not AppColors
+    Use connectivity_plus and file_picker for post integration
   
 
     
@@ -560,7 +595,7 @@
   <span class="md-ellipsis">
     
   
-    border token lives in ColorScheme.outline, not AppColors
+    Use connectivity_plus and file_picker for post integration
   
 
     
@@ -651,41 +686,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0003-post-integration-packages/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Use connectivity_plus and file_picker for post integration
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
-  
-
-      </a>
     </li>
   
 
@@ -1267,7 +1267,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0002-border-in-colorscheme-not-appcolors.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0003-post-integration-packages.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1275,12 +1275,12 @@
   
 
 
-<h1 id="0002-border-token-lives-in-colorschemeoutline-not-appcolors">0002 — border token lives in ColorScheme.outline, not AppColors<a class="headerlink" href="#0002-border-token-lives-in-colorschemeoutline-not-appcolors" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-30
+<h1 id="0003-use-connectivity_plus-and-file_picker-for-post-integration">0003 — Use connectivity_plus and file_picker for post integration<a class="headerlink" href="#0003-use-connectivity_plus-and-file_picker-for-post-integration" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-05-03
 <strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect</p>
+<strong>Author:</strong> architect / Slade (CTO)</p>
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p><code>AppColors</code> (ThemeExtension) initially carried a <code>border</code> field alongside <code>ColorScheme.outline</code>, both set to the same value in <code>AppTheme.build()</code>. This created two read paths for the same color token, risking drift and confusing callers about which to use.</p>
+<p>SPEC-0004 (Post Integration) requires two new platform capabilities not yet in <code>pubspec.yaml</code>: (1) a real-time stream of network connectivity changes to trigger offline draft queue sync on reconnect, and (2) a file picker that supports all four media types the feature allows — JPEG, PNG, WebP, and PDF. Two candidate packages exist for each concern and a decision was needed before implementation could begin.</p>
 <h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1294,31 +1294,41 @@
 <tbody>
 <tr>
 <td>1</td>
-<td>Remove <code>border</code> from <code>AppColors</code>, use <code>colorScheme.outline</code></td>
-<td>Single source of truth, no drift</td>
-<td>Less discoverable — callers must know to use <code>colorScheme.outline</code></td>
+<td><code>connectivity_plus</code> (connectivity)</td>
+<td>Flutter Community standard; exposes <code>Stream&lt;ConnectivityResult&gt;</code> needed for reactive draft queue sync; supports iOS, Android, and Web</td>
+<td>Adds a dependency</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Keep <code>border</code> in <code>AppColors</code>, remove from <code>ColorScheme</code></td>
-<td>All custom tokens in one place</td>
-<td>Loses Material 3 <code>outline</code> semantics used by built-in widgets</td>
+<td><code>dart:io</code> / <code>InternetAddress.lookup</code> (connectivity)</td>
+<td>No new dependency</td>
+<td>One-shot check only — cannot stream connectivity changes; requires polling workaround for draft queue trigger</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Keep both in sync</td>
-<td>No migration needed</td>
-<td>Duplicated state, drift risk remains</td>
+<td><code>file_picker</code> (media selection)</td>
+<td>Picks files of any type from device storage — covers JPEG, PNG, WebP, and PDF in one package; single dependency</td>
+<td>Requires <code>NSPhotoLibraryUsageDescription</code> (iOS) and <code>READ_EXTERNAL_STORAGE</code> (Android) permission entries</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>image_picker</code> (media selection)</td>
+<td>Well-known; camera and gallery access</td>
+<td>Images only — cannot pick PDF files; would require a second package alongside for document support</td>
 </tr>
 </tbody>
 </table>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen:</strong> Option 1 — Remove from <code>AppColors</code></p>
-<p><code>border</code> was removed from <code>AppColors</code>. Callers use <code>Theme.of(context).colorScheme.outline</code>. <code>AppColors</code> only carries tokens with no Material 3 ColorScheme equivalent: <code>amber*</code>, <code>success</code>, <code>info</code>, <code>muted</code>, <code>mutedForeground</code>, <code>surfaceDark</code>, <code>cardDark</code>, <code>textSecondary</code>, <code>textMuted</code>.</p>
+<p><strong>Chosen:</strong> Option 1 (<code>connectivity_plus</code>) and Option 3 (<code>file_picker</code>).</p>
+<p><code>connectivity_plus</code> is the only option that delivers a live stream of connectivity state, which <code>DraftQueueNotifier</code> requires to automatically trigger <code>SyncDraftQueue</code> without polling. <code>file_picker</code> is the only single-package solution covering all four MIME types in scope (JPEG, PNG, WebP, PDF); using <code>image_picker</code> alone would leave PDF support unimplemented, and pairing it with a second package adds more dependency surface than <code>file_picker</code> alone. Both choices rely on the assumption that the app will continue to target iOS, Android, and Web — if Web support were dropped, native alternatives could be reconsidered.</p>
 <h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
-<p>Low — add <code>border</code> field back to <code>AppColors</code> and wire it in <code>AppTheme.build()</code>. One-line change per theme constant.</p>
+<p>Medium — both packages touch platform permission configuration (<code>Info.plist</code>, <code>AndroidManifest.xml</code>). Swapping either package would require updating permission entries, adjusting the datasource abstraction, and re-testing on both platforms.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p>Single source of truth for border color. Built-in Material 3 widgets and custom widgets both read from the same <code>colorScheme.outline</code>. New engineers must know to reach for <code>colorScheme.outline</code> rather than an <code>AppColors</code> field.</p>
+<ul>
+<li><strong>Easier:</strong> <code>DraftQueueNotifier</code> can subscribe to <code>connectivity_plus</code> stream directly with no polling timer; <code>MediaAttachmentPicker</code> handles all four MIME types with a single <code>FilePicker.platform.pickFiles</code> call.</li>
+<li><strong>Harder:</strong> Two platform permission strings must be added and localised if the app ever ships in languages other than English.</li>
+<li><strong>Follow-up required:</strong> Add <code>connectivity_plus</code> and <code>file_picker</code> to <code>pubspec.yaml</code>; add <code>NSPhotoLibraryUsageDescription</code> to <code>ios/Runner/Info.plist</code>; add <code>READ_EXTERNAL_STORAGE</code> permission to <code>android/app/src/main/AndroidManifest.xml</code>.</li>
+</ul>
 
 
 
