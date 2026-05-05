@@ -41,7 +41,6 @@ class ShellScaffold extends StatelessWidget {
     if (index == navigationShell.currentIndex) {
       final state = scrollTargetKeys[index].currentState;
       if (state is ScrollToTopTarget) {
-        // ignore: avoid_as
         (state as ScrollToTopTarget).scrollToTop();
       }
       return;
