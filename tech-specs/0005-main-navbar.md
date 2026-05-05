@@ -35,10 +35,10 @@ flowchart TD
     D --> G["/notifications — NotificationsScreen"]
     D --> H["/more — MoreScreen"]
 
-    H --> I[/profile]
-    H --> J[/saved]
-    H --> K[/departments]
-    H --> L[/requests]
+    H --> I["/profile"]
+    H --> J["/saved"]
+    H --> K["/departments"]
+    H --> L["/requests"]
 
     D -->|builder receives| M[StatefulNavigationShell]
     M -->|currentIndex| N[MainNavBar.activeIndex]
