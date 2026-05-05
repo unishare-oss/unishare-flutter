@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0004-shell-scroll-to-top-pattern/">
       
       
-        <link rel="prev" href="../tech-proposals/0005-main-navbar/">
+        <link rel="prev" href="../0003-post-integration-packages/">
       
       
-        <link rel="next" href="0001-auth-design/">
+        <link rel="next" href="../0005-global-key-state-cast-for-scroll-to-top/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Tech Specs - Unishare Engineering Docs</title>
+        <title>0004: GlobalKey mixin pattern for shell-triggered scroll-to-top - Unishare Engineering Docs</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tech-specs" class="md-skip">
+        <a href="#0004-globalkey-mixin-pattern-for-shell-triggered-scroll-to-top" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+    <a href="../.." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tech Specs
+              0004: GlobalKey mixin pattern for shell-triggered scroll-to-top
             
           </span>
         </div>
@@ -225,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../decisions/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -266,7 +268,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../stencils/adr/" class="md-tabs__link">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -286,7 +288,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../tech-proposals/" class="md-tabs__link">
+        <a href="../../tech-proposals/" class="md-tabs__link">
           
   
   
@@ -302,13 +304,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../tech-specs/" class="md-tabs__link">
           
   
   
@@ -342,7 +342,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+    <a href="../.." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -372,7 +372,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -396,26 +396,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -433,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -451,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -479,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -514,7 +519,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -549,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -581,10 +586,44 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: GlobalKey mixin pattern for shell-triggered scroll-to-top
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -607,6 +646,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -619,7 +733,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -706,7 +820,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/adr/" class="md-nav__link">
+      <a href="../../stencils/adr/" class="md-nav__link">
         
   
   
@@ -734,7 +848,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/tech-proposal/" class="md-nav__link">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
         
   
   
@@ -762,7 +876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/tech-spec/" class="md-nav__link">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
         
   
   
@@ -849,7 +963,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposals/" class="md-nav__link">
+      <a href="../../tech-proposals/" class="md-nav__link">
         
   
   
@@ -877,7 +991,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposals/0003-post-feed/" class="md-nav__link">
+      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
         
   
   
@@ -905,7 +1019,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposals/0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -933,7 +1047,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposals/0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-proposals/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -965,31 +1079,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1007,7 +1116,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1022,37 +1131,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tech Specs
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../tech-specs/" class="md-nav__link">
         
   
   
@@ -1068,48 +1150,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Index
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1122,7 +1162,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0001-auth-design/" class="md-nav__link">
+      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
         
   
   
@@ -1150,7 +1190,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0002-navigation-design/" class="md-nav__link">
+      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
         
   
   
@@ -1178,7 +1218,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1206,7 +1246,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-specs/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1261,10 +1301,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Problem
       
     </span>
   </a>
@@ -1272,10 +1312,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#index" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Index
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -1299,7 +1372,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0004-shell-scroll-to-top-pattern.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1307,56 +1380,69 @@
   
 
 
-<h1 id="tech-specs">Tech Specs<a class="headerlink" href="#tech-specs" title="Permanent link">&para;</a></h1>
-<p>A Tech Spec defines the <strong>implementation contract</strong> for an approved proposal — Clean Architecture layer breakdown, Firestore schema, Riverpod providers, acceptance criteria, and test plan. No code is written until the spec is approved.</p>
-<p>Use the <a href="../stencils/tech-spec/">Tech Spec stencil</a> to start a new one. Save specs to <code>tech-specs/</code> at the repo root on the <code>main</code> branch as <code>NNNN-slug.md</code> (e.g. <code>0001-auth-flow.md</code>). Number matches its proposal.</p>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>Proposal → approved → Spec (this page) → approved → Implementation → Review
-</code></pre></div>
-<p>Each spec must reference the proposal it expands.</p>
-<h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">&para;</a></h2>
+<h1 id="0004-globalkey-mixin-pattern-for-shell-triggered-scroll-to-top">0004 — GlobalKey mixin pattern for shell-triggered scroll-to-top<a class="headerlink" href="#0004-globalkey-mixin-pattern-for-shell-triggered-scroll-to-top" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-05-05<br />
+<strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> architect</p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>SPEC-0005 requires that tapping the already-active tab in <code>MainNavBar</code> scrolls the branch's content back to the top — a standard mobile convention. The <code>ShellScaffold</code> (the <code>StatefulShellRoute</code> builder widget) must trigger this scroll without importing or depending on any concrete tab screen class. Four tab screens — <code>FeedScreen</code>, <code>MyPostsScreen</code>, <code>NotificationsScreen</code>, <code>MoreScreen</code> — each owns its own <code>ScrollController</code>, and those screens are defined in separate feature packages. The shell must reach into the currently mounted tab screen and call <code>scrollToTop()</code> without coupling itself to any specific screen type.</p>
+<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>#</th>
-<th>Title</th>
-<th>Status</th>
-<th>Proposal</th>
+<th>Option</th>
+<th>Upside</th>
+<th>Downside</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="0001-auth-design/">0001</a></td>
-<td>Auth Feature Design</td>
-<td>APPROVED</td>
-<td>—</td>
+<td>1</td>
+<td><code>GlobalKey&lt;ScrollToTopTarget&gt;</code> where <code>ScrollToTopTarget</code> is a mixin on <code>State</code></td>
+<td>No Riverpod state; zero indirect coupling between shell and screen; key is allocated once at <code>static final</code> in <code>ShellScaffold</code> and survives hot reload; standard Flutter pattern for cross-widget imperative calls</td>
+<td>Each tab screen's <code>StatefulWidget</code> must use the shell-allocated key as its <code>key:</code> argument, meaning the screen cannot independently manage its own <code>Key</code>; the mixin pattern is unfamiliar to developers who have not encountered it before</td>
 </tr>
 <tr>
-<td><a href="0002-navigation-design/">0002</a></td>
-<td>Navigation Design</td>
-<td>APPROVED</td>
-<td>—</td>
+<td>2</td>
+<td><code>ScrollControllerRegistry</code> — a <code>keepAlive</code> Riverpod provider that maps <code>NavTab</code> → <code>ScrollController</code></td>
+<td>Familiar Riverpod pattern; shell reads the controller from the provider without needing a <code>GlobalKey</code>; testable with <code>ProviderScope</code> overrides</td>
+<td>The <code>ScrollController</code> lifecycle is owned by the screen's <code>State</code> but registered in a global provider — <code>dispose</code> ordering becomes fragile; a screen that disposes its controller before deregistering it leaves a stale entry in the registry; the Domain layer prohibition on framework imports does not apply here (this is Presentation), but the stale-controller risk is real</td>
 </tr>
 <tr>
-<td><a href="0004-post-integration/">0004</a></td>
-<td>Post Integration</td>
-<td>APPROVED</td>
-<td><a href="../tech-proposals/0004-post-integration/">PROP-0004</a></td>
+<td>3</td>
+<td><code>EventChannel</code> via a <code>StreamController&lt;NavTab&gt;</code> in a top-level provider — shell broadcasts a "scroll-to-top" event and each screen subscribes</td>
+<td>Fully decoupled; screens react to the stream independently</td>
+<td>Over-engineered for this use case; <code>StreamController</code> adds lifecycle complexity (cancel on dispose); the stream is a global side-channel that is harder to reason about in tests</td>
 </tr>
 <tr>
-<td><a href="0005-main-navbar/">0005</a></td>
-<td>Main Navigation Bar</td>
-<td>APPROVED</td>
-<td>PROP-0005</td>
+<td>4</td>
+<td>Callback prop drilling — <code>ShellScaffold</code> passes an <code>onScrollToTop</code> callback into each tab screen</td>
+<td>Explicit, no magic</td>
+<td><code>ShellScaffold</code> must import every tab screen class; tightly couples the shell to concrete feature types; breaks as new tabs are added</td>
 </tr>
 </tbody>
 </table>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen:</strong> Option 1 — <code>GlobalKey&lt;ScrollToTopTarget&gt;</code> with a <code>ScrollToTopTarget</code> mixin on <code>State</code>.</p>
+<p>The <code>GlobalKey&lt;T&gt;</code> pattern is the idiomatic Flutter mechanism for making imperative calls into a <code>State</code> object without coupling the caller to the concrete <code>State</code> type. Allocating the keys once at <code>static final</code> in <code>ShellScaffold</code> ensures they survive across rebuilds and hot reloads. The mixin is defined in <code>apps/mobile/lib/shared/widgets/scroll_to_top_target.dart</code> and depends only on <code>package:flutter/widgets.dart</code>, keeping the shared widget layer free of feature-specific imports. The trade-off — that each tab screen's <code>StatefulWidget</code> must accept the key as its <code>key:</code> argument — is documented in SPEC-0005 as an open question to be confirmed with the flutter-engineer before tab screen implementation begins.</p>
+<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
+<p>Low-to-medium. Switching to Option 2 (<code>ScrollControllerRegistry</code>) requires adding a Riverpod provider, updating each screen's <code>initState</code>/<code>dispose</code> to register/deregister, and updating <code>ShellScaffold._handleTabTap</code> to read from the provider. The <code>GlobalKey</code> parameters can be removed from each screen's constructor. No Firebase or domain changes are required.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Easier:</strong> Shell has zero imports of any tab screen class; adding a fifth tab in the future requires only extending <code>NavTab</code> and allocating one more <code>GlobalKey</code>.</li>
+<li><strong>Harder:</strong> Tab screens cannot be independently keyed by their callers; developers must understand that the <code>key:</code> argument is owned by the shell.</li>
+<li><strong>Follow-up required:</strong> The flutter-engineer must confirm the <code>key:</code> ownership constraint before implementing <code>FeedScreen</code> and peers. If the constraint is unacceptable, Option 2 is the fallback — raise a follow-up ADR before implementation.</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -1406,10 +1492,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

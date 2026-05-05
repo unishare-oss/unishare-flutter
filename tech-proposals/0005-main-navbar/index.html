@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Proposal for post creation write path with Firebase Storage upload and offline Hive draft queue.">
+        <meta name="description" content="Persistent 4-tab bottom navigation bar for authenticated users, integrated with GoRouter and matching the Figma design exactly.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0004-post-integration/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0005-main-navbar/">
       
       
-        <link rel="prev" href="../0003-post-feed/">
+        <link rel="prev" href="../0004-post-integration/">
       
       
-        <link rel="next" href="../0005-main-navbar/">
+        <link rel="next" href="../../tech-specs/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0004: Post Integration - Unishare Engineering Docs</title>
+        <title>0005: Main Navigation Bar - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0004-post-integration" class="md-skip">
+        <a href="#prop-0005-main-navigation-bar" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0004: Post Integration
+              0005: Main Navigation Bar
             
           </span>
         </div>
@@ -907,6 +907,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -926,7 +954,7 @@
   <span class="md-ellipsis">
     
   
-    0004: Post Integration
+    0005: Main Navigation Bar
   
 
     
@@ -944,7 +972,7 @@
   <span class="md-ellipsis">
     
   
-    0004: Post Integration
+    0005: Main Navigation Bar
   
 
     
@@ -1003,22 +1031,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
+  <a href="#proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options
+        Proposed Solution
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Options">
+    <nav class="md-nav" aria-label="Proposed Solution">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#option-a-direct-firestore-write-with-optimistic-ui-and-hive-draft-queue" class="md-nav__link">
+  <a href="#router-integration-statefulshellroute" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option A: Direct Firestore Write with Optimistic UI and Hive Draft Queue
+        Router integration — StatefulShellRoute
       
     </span>
   </a>
@@ -1026,10 +1054,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#option-b-firestore-pending-post-document-pattern" class="md-nav__link">
+  <a href="#bottom-bar-widget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option B: Firestore "Pending Post" Document Pattern
+        Bottom bar widget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auth-awareness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auth-awareness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#more-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MORE tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-tab-highlight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active-tab highlight
       
     </span>
   </a>
@@ -1042,13 +1103,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommendation" class="md-nav__link">
+  <a href="#alternatives-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommendation
+        Alternatives Considered
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-material-3-navigationbar-inside-statefulshellroute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Material 3 NavigationBar inside StatefulShellRoute
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-custom-painted-bottom-bar-proposed-solution-above" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Custom-painted bottom bar (proposed solution above)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-material-2-bottomnavigationbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Material 2 BottomNavigationBar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — IndexedStack with manual tab state (no StatefulShellRoute)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1056,7 +1167,7 @@
   <a href="#open-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Open questions
+        Open Questions
       
     </span>
   </a>
@@ -1064,10 +1175,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
+  <a href="#acceptance-criteria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        References
+        Acceptance Criteria
       
     </span>
   </a>
@@ -1078,34 +1189,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0005-main-navbar/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0005: Main Navigation Bar
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1377,22 +1460,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
+  <a href="#proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options
+        Proposed Solution
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Options">
+    <nav class="md-nav" aria-label="Proposed Solution">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#option-a-direct-firestore-write-with-optimistic-ui-and-hive-draft-queue" class="md-nav__link">
+  <a href="#router-integration-statefulshellroute" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option A: Direct Firestore Write with Optimistic UI and Hive Draft Queue
+        Router integration — StatefulShellRoute
       
     </span>
   </a>
@@ -1400,10 +1483,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#option-b-firestore-pending-post-document-pattern" class="md-nav__link">
+  <a href="#bottom-bar-widget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option B: Firestore "Pending Post" Document Pattern
+        Bottom bar widget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auth-awareness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auth-awareness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#more-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MORE tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-tab-highlight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active-tab highlight
       
     </span>
   </a>
@@ -1416,13 +1532,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommendation" class="md-nav__link">
+  <a href="#alternatives-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommendation
+        Alternatives Considered
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-material-3-navigationbar-inside-statefulshellroute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Material 3 NavigationBar inside StatefulShellRoute
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-custom-painted-bottom-bar-proposed-solution-above" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Custom-painted bottom bar (proposed solution above)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-material-2-bottomnavigationbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Material 2 BottomNavigationBar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — IndexedStack with manual tab state (no StatefulShellRoute)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1430,7 +1596,7 @@
   <a href="#open-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Open questions
+        Open Questions
       
     </span>
   </a>
@@ -1438,10 +1604,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
+  <a href="#acceptance-criteria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        References
+        Acceptance Criteria
       
     </span>
   </a>
@@ -1465,7 +1631,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0004-post-integration.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0005-main-navbar.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1473,104 +1639,181 @@
   
 
 
-<h1 id="prop-0004-post-integration">PROP-0004: Post Integration<a class="headerlink" href="#prop-0004-post-integration" title="Permanent link">&para;</a></h1>
+<h1 id="prop-0005-main-navigation-bar">PROP-0005: Main Navigation Bar<a class="headerlink" href="#prop-0005-main-navigation-bar" title="Permanent link">&para;</a></h1>
 <p><strong>Status:</strong> ACCEPTED<br />
 <strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-03<br />
-<strong>Spec:</strong> <a href="../../tech-specs/0004-post-integration/">0004-post-integration</a><br />
-<strong>Approved by:</strong> Slade (CTO) on 2026-05-03</p>
+<strong>Date:</strong> 2026-05-05<br />
+<strong>Spec:</strong> <a href="../../tech-specs/0005-main-navbar/">SPEC-0005</a><br />
+<strong>Approved by:</strong> Pyae Sone Shin Thant</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>Students can browse the Unishare feed (established in PROP-0003) but have no mechanism to contribute content. There is no UI, no write path, and no offline-capable draft queue for creating posts. The Firestore schema from PROP-0003 defines the target shape of a published post:</p>
-<div class="highlight"><pre><span></span><code>posts/{postId}
-  authorId, authorName, authorAvatar   ← denormalized at write time
-  title, body
-  mediaUrls: string[]                  ← Firebase Storage download URLs
-  tags:      string[]
-  likesCount: int                       ← read-only from client perspective
-  createdAt, updatedAt: Timestamp
-</code></pre></div>
-<p>Every field except <code>likesCount</code> must be written by the client when a post is published. Until this write path exists, the feed is read-only and the core value proposition of peer content sharing cannot be exercised by any user.</p>
+<p>The app currently has no persistent navigation surface for authenticated users. After sign-in, users land on a placeholder home screen with no mechanism to reach any core destination — Feed, My Posts, or Notifications are unreachable without manually typing deep-link URLs. The router serves three routes (<code>/welcome</code>, <code>/</code>, <code>/posts/create</code>) but nothing ties them into a navigable shell that persists across tab switches.</p>
+<p>All authenticated users are affected immediately upon sign-in. Until a main navbar exists, the app cannot be exercised as a product: the feed is reachable only because <code>/</code> happens to be the default redirect, and every other first-class destination is effectively hidden. Navigation is the prerequisite for every other feature; this is the highest-priority UX gap in the codebase.</p>
+<p>The Figma design specifies a <strong>4-tab bottom bar</strong>: FEED, POSTS, NOTIFS, MORE. The bar must be present on all authenticated, non-modal screens and absent from the auth flow (Welcome, Sign In, Sign Up) and from full-screen creation and detail flows (New Post steps 1–3, Post Details, Terms of Service, Privacy Policy).</p>
 <hr />
 <h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Allow any authenticated student to author and publish a post (title, body, optional tags, optional media).</li>
-<li>Support attaching files or images that are uploaded to Firebase Storage; the resulting download URLs are stored in <code>mediaUrls</code> on the Firestore document.</li>
-<li>Enable offline drafting: a post started without connectivity must be persisted locally (Hive) and queued for publication when connectivity is restored.</li>
-<li>Write directly to Firestore (<code>posts/{postId}</code>) from the client — no Cloud Functions or REST intermediary in the publish path.</li>
-<li>Published posts must appear in the existing real-time feed immediately for all connected users, relying on Firestore's live listeners already established by PROP-0003.</li>
+<li>Render a persistent 4-tab bottom bar on all authenticated shell screens.</li>
+<li>Match the Figma design tokens exactly: background <code>#f7f3ee</code>, active accent <code>#d97706</code>, Space Grotesk labels, border <code>#e2dad0</code>.</li>
+<li>Integrate cleanly with GoRouter so that deep links resolve to the correct tab and tab state is preserved across switches.</li>
+<li>Suppress the navbar entirely on auth screens and creation/detail flows — no conditional visibility hacks inside individual screens.</li>
+<li>Keep the Domain layer untouched — this is a Presentation-layer concern.</li>
 </ul>
 <hr />
 <h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Cloud Functions for post creation or validation.</li>
-<li>NestJS or any REST API involvement in the write path.</li>
-<li>Post editing or deletion (separate proposal).</li>
-<li>Comment threads or reactions beyond the existing <code>likesCount</code> mechanism.</li>
-<li>Full-text search or content moderation at publish time.</li>
-<li>Admin or moderation tooling.</li>
+<li>Navigation within a tab (sub-routes under FEED, POSTS, etc.) — that belongs to each feature's own spec.</li>
+<li>The content of the MORE tab destinations (Profile, Saved, Departments, Requests) — each destination is a separate feature spec.</li>
+<li>Push notification badge wiring — badge count on NOTIFS is deferred to a separate proposal (see Open Questions).</li>
+<li>Guest-mode partial access — treated as out-of-scope for v1 (see Open Questions).</li>
 </ul>
 <hr />
-<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
-<h3 id="option-a-direct-firestore-write-with-optimistic-ui-and-hive-draft-queue">Option A: Direct Firestore Write with Optimistic UI and Hive Draft Queue<a class="headerlink" href="#option-a-direct-firestore-write-with-optimistic-ui-and-hive-draft-queue" title="Permanent link">&para;</a></h3>
-<p>The client is solely responsible for the entire publish sequence. When the user taps "Publish":</p>
+<h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
+<p>Use Flutter's <strong><code>StatefulShellRoute</code></strong> (part of <code>go_router</code> 7+) with a <strong>custom-painted bottom bar widget</strong> that mirrors the Figma spec pixel-accurately.</p>
+<h3 id="router-integration-statefulshellroute">Router integration — <code>StatefulShellRoute</code><a class="headerlink" href="#router-integration-statefulshellroute" title="Permanent link">&para;</a></h3>
+<p><code>StatefulShellRoute</code> was introduced specifically to solve the tab-bar navigation problem in GoRouter. It wraps a set of branches, each backed by its own <code>Navigator</code> stack, and preserves scroll position and navigation state independently per branch when the user switches tabs. This matches standard mobile tab-bar expectations.</p>
+<p>The shell route sits at the root of the authenticated route tree. The <code>_RouterNotifier</code> continues to redirect unauthenticated users to <code>/welcome</code> before they can reach the shell. Because the shell is a named parent route, any deep link under <code>/feed</code>, <code>/posts</code>, <code>/notifications</code>, or <code>/more</code> resolves inside the correct branch automatically — no manual tab-index synchronization is needed.</p>
+<p>The four branches map to:</p>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>Branch root path</th>
+<th>Initial screen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FEED</td>
+<td><code>/feed</code></td>
+<td>Feed screen (from PROP-0003)</td>
+</tr>
+<tr>
+<td>POSTS</td>
+<td><code>/posts</code></td>
+<td>My Posts screen</td>
+</tr>
+<tr>
+<td>NOTIFS</td>
+<td><code>/notifications</code></td>
+<td>Notifications screen</td>
+</tr>
+<tr>
+<td>MORE</td>
+<td><code>/more</code></td>
+<td>More menu (see below)</td>
+</tr>
+</tbody>
+</table>
+<p>The existing <code>/</code> route is aliased to <code>/feed</code> via a redirect so existing deep links and the post-login redirect continue to work without breakage.</p>
+<p>Routes that must not show the navbar — Post Details, New Post steps 1–3, Terms of Service, Privacy Policy — are declared <strong>outside</strong> the <code>StatefulShellRoute</code> as top-level routes. They push modally or via standard navigation, which means the shell (and its bottom bar) is not in their widget tree at all. No per-screen <code>bottomNavigationBar: null</code> override is needed.</p>
+<p>Secondary destinations reachable from the MORE tab use paths nested under <code>/more</code> (e.g., <code>/more/profile</code>, <code>/more/saved</code>, <code>/more/departments</code>, <code>/more/requests</code>). They are registered as child routes on the MORE branch of the <code>StatefulShellRoute</code>, so the navbar remains visible when navigating into them and back-button behavior is handled by the branch's own <code>Navigator</code>.</p>
+<h3 id="bottom-bar-widget">Bottom bar widget<a class="headerlink" href="#bottom-bar-widget" title="Permanent link">&para;</a></h3>
+<p>Rather than using <code>NavigationBar</code> (Material 3) or <code>BottomNavigationBar</code> (Material 2), a <strong>custom widget</strong> is used. The Figma design does not follow Material Design conventions closely enough for either stock widget to reproduce it without fighting the theme. Specifically:</p>
+<ul>
+<li>The background color (<code>#f7f3ee</code>) is a warm off-white, not a Material surface.</li>
+<li>The top border (<code>#e2dad0</code>, 1 px) is a design-system token with no direct Material equivalent.</li>
+<li>Labels are uppercase, Space Grotesk, 11 px (Fira Code style, matching the project's tag convention) — not the default <code>NavigationBar</code> label style.</li>
+<li>The active indicator is an amber underline or tint, not Material's pill indicator.</li>
+</ul>
+<p>A custom widget avoids theme-fighting and guarantees pixel parity with Figma. The widget is a <code>Row</code> of four <code>InkWell</code>-wrapped tab items, each composed of a small icon and a label. The active tab receives the <code>#d97706</code> amber accent on both icon and label; inactive tabs use a muted foreground. The widget is stateless — it receives the current tab index and an <code>onTap</code> callback from the shell, which drives GoRouter navigation.</p>
+<h3 id="auth-awareness">Auth-awareness<a class="headerlink" href="#auth-awareness" title="Permanent link">&para;</a></h3>
+<p>The <code>_RouterNotifier</code> already redirects unauthenticated users away from <code>/</code> to <code>/welcome</code>. Because the <code>StatefulShellRoute</code> is declared inside the authenticated route tree, an unauthenticated user never reaches the shell and never sees the navbar. No additional auth check is needed inside the bar widget itself — the router is the single source of truth.</p>
+<h3 id="more-tab">MORE tab<a class="headerlink" href="#more-tab" title="Permanent link">&para;</a></h3>
+<p>The MORE tab navigates to a lightweight <strong>More screen</strong> (<code>/more</code>) that renders a scrollable list of secondary destinations: User Profile (<code>/more/profile</code>), Saved (<code>/more/saved</code>), Departments (<code>/more/departments</code>), Requests (<code>/more/requests</code>). This is preferred over a bottom sheet because:</p>
 <ol>
-<li>Any attached media is uploaded to Firebase Storage; download URLs are collected.</li>
-<li>The client writes a new document to <code>posts/{postId}</code> with all fields populated, including the collected URLs and a denormalized snapshot of the author's display name and avatar from the current auth session.</li>
-<li>The presentation layer applies an optimistic update (prepends the new post to the local feed list) immediately, then reconciles once the Firestore write confirms.</li>
+<li>A dedicated route is deep-linkable — <code>/more/profile</code> can be reached from a push notification without opening a sheet first.</li>
+<li>It composes cleanly with the <code>StatefulShellRoute</code> branch — the More branch has its own <code>Navigator</code> stack, so tapping into Profile and pressing Back returns to the More list without resetting other tabs.</li>
+<li>A bottom sheet would need to be dismissed and re-opened on every entry, breaking the "persistent shell" mental model.</li>
 </ol>
-<p>For the offline case, the draft is serialized to Hive before any network operation begins. On reconnect, a background sync worker reads queued drafts, executes the upload-then-write sequence in order, and removes each draft upon confirmed Firestore write.</p>
+<p>Secondary destinations use <code>/more/</code>-prefixed paths so they remain within the MORE branch navigator and the navbar stays visible.</p>
+<p>The More screen itself is minimal — it is a styled list of <code>ListTile</code>s. Its content is out of scope for this proposal.</p>
+<h3 id="active-tab-highlight">Active-tab highlight<a class="headerlink" href="#active-tab-highlight" title="Permanent link">&para;</a></h3>
+<p>GoRouter exposes the current location via <code>GoRouterState</code>. The shell's <code>builder</code> receives a <code>navigationShell</code> parameter that includes the current branch index. The custom bar widget receives this index as <code>activeIndex</code> and applies the amber accent (<code>#d97706</code>) to the corresponding tab's icon and label. No external state management (Riverpod provider) is needed for the tab index — GoRouter owns that state.</p>
+<hr />
+<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<h3 id="a-material-3-navigationbar-inside-statefulshellroute">A — Material 3 <code>NavigationBar</code> inside <code>StatefulShellRoute</code><a class="headerlink" href="#a-material-3-navigationbar-inside-statefulshellroute" title="Permanent link">&para;</a></h3>
+<p>Flutter's <code>NavigationBar</code> widget (Material 3) provides built-in semantics, animated indicators, badge support, and keyboard navigation out of the box. Paired with <code>StatefulShellRoute</code> it handles the GoRouter integration correctly.</p>
 <p><strong>Pros:</strong>
-- Minimal complexity — no new backend surface; write path is a single Firestore document write after Storage upload.
-- Aligns directly with the PROP-0003 schema; no bridging documents or status fields required.
-- Real-time propagation to other users is automatic via existing Firestore listeners.
-- Optimistic UI gives immediate feedback without waiting for round-trip latency.
-- Offline draft queue is self-contained in the client; Hive is already in the stack.</p>
+- Zero custom painting — widget is maintained by the Flutter team.
+- Built-in <code>Badge</code> support for notification counts.
+- Accessibility labels and semantics are correct by default.
+- Significantly less code than a custom widget.</p>
 <p><strong>Cons:</strong>
-- Upload ordering is sequential per post (Storage upload must complete before Firestore write); a failed upload leaves no Firestore record but the local draft remains, requiring clear retry UX.
-- Client is trusted to write correct <code>authorId</code>, <code>authorName</code>, and <code>authorAvatar</code> values — Firestore Security Rules must enforce that <code>authorId == request.auth.uid</code> and that the client cannot spoof other users' content.
-- Partial failure state (Storage upload succeeded, Firestore write failed) must be handled explicitly in the draft queue — the stored draft must record which media URLs are already uploaded to avoid re-uploading.
-- No server-side validation of content (size, type, profanity) beyond Security Rules.</p>
-<p><strong>Effort:</strong> M</p>
+- Reproducing the Figma design requires overriding nearly every <code>NavigationBarThemeData</code> token: indicator color, background color, label style, icon size, height. The cumulative theme override is fragile and harder to maintain than a bespoke widget.
+- The animated pill indicator is a Material 3 affordance that does not exist in the Figma design; suppressing it cleanly requires a transparent <code>indicatorColor</code>, which can cause rendering artifacts in some Flutter versions.
+- Uppercase 11 px Space Grotesk labels conflict with <code>NavigationBar</code>'s default label treatment; forcing this through <code>labelTextStyle</code> is possible but adds theme complexity.</p>
+<p><strong>Effort:</strong> S (widget) + M (theme fight) = M overall. Risk of pixel drift against Figma over future Flutter upgrades.</p>
+<p><strong>Verdict:</strong> Not recommended. The theme-override surface is large enough that a custom widget would be cleaner in the long run.</p>
 <hr />
-<h3 id="option-b-firestore-pending-post-document-pattern">Option B: Firestore "Pending Post" Document Pattern<a class="headerlink" href="#option-b-firestore-pending-post-document-pattern" title="Permanent link">&para;</a></h3>
-<p>The client writes to a separate <code>pendingPosts/{id}</code> collection with <code>status: "pending"</code> rather than directly to <code>posts/</code>. A reconciliation process — either a client-side reconnect handler or a lightweight scheduled Cloud Function — reads <code>pendingPosts</code> documents and promotes them to <code>posts/</code> once all media is confirmed uploaded.</p>
+<h3 id="b-custom-painted-bottom-bar-proposed-solution-above">B — Custom-painted bottom bar (proposed solution above)<a class="headerlink" href="#b-custom-painted-bottom-bar-proposed-solution-above" title="Permanent link">&para;</a></h3>
+<p>Fully hand-crafted <code>Row</code> of tab items built from <code>InkWell</code>, <code>Icon</code>, and <code>Text</code>. No dependency on Material <code>NavigationBar</code> or <code>BottomNavigationBar</code>.</p>
 <p><strong>Pros:</strong>
-- Clear, inspectable state machine: <code>draft → pending → published</code>. Each transition is a document field update.
-- Partial failure is explicit in the document (<code>status: "upload_failed"</code>, <code>status: "write_failed"</code>), making debugging and retry logic easier to reason about.
-- The <code>posts/</code> collection remains clean — no partially-formed documents ever appear in the feed.
-- Easier to extend later with server-side moderation: a Cloud Function could intercept <code>pending</code> documents before promotion.</p>
+- Exact pixel control — every color, spacing, and typography token comes directly from the project's design system with no theme override indirection.
+- Isolated from Material widget changes in future Flutter upgrades — the widget's appearance is determined entirely by the project's token constants.
+- Easy to extend with custom affordances (e.g., animated underline, pulse on new notification) without working against a widget's internal state machine.</p>
 <p><strong>Cons:</strong>
-- Requires maintaining a second collection (<code>pendingPosts</code>) with its own Security Rules, indexes, and cleanup strategy.
-- The promotion step is an additional async operation; if done client-side it reintroduces the same partial failure problem at the promotion boundary. If done via Cloud Function, that conflicts with the hard constraint ruling out Cloud Functions.
-- Real-time feed appearance is delayed until promotion completes, adding latency for the publishing user.
-- Significantly more code surface: state machine, reconciler, two-collection Security Rules, and cleanup jobs.
-- Cloud Functions are ruled out by project constraints, so the reconciler must be client-side — which largely negates the state-machine benefit.</p>
-<p><strong>Effort:</strong> L</p>
+- No built-in accessibility semantics — <code>Semantics</code> wrappers must be added manually.
+- Badge support must be implemented from scratch.
+- More initial code than Option A.</p>
+<p><strong>Effort:</strong> M. Most of the code is mechanical; the design tokens are already defined.</p>
+<p><strong>Verdict:</strong> Recommended. The extra upfront code is justified by long-term fidelity and freedom from theme-fighting.</p>
 <hr />
-<h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen option:</strong> Option A — Direct Firestore Write with Optimistic UI and Hive Draft Queue.</p>
-<p>The team has explicitly ruled out Cloud Functions, which removes the primary advantage of Option B: a server-side reconciler that can reliably promote pending documents. Without a server-side actor, Option B's state machine still runs on the client and inherits the same partial-failure risks as Option A, while adding a second collection and significantly more code. Option A fits the existing schema exactly — the <code>posts/{postId}</code> document written by the client is already the final, feed-visible document, so there is no promotion gap and real-time propagation is immediate. The partial-failure risk (Storage upload succeeded, Firestore write failed) is manageable by recording uploaded URLs in the local Hive draft before committing the Firestore write, giving the retry path idempotency without a server component.</p>
+<h3 id="c-material-2-bottomnavigationbar">C — Material 2 <code>BottomNavigationBar</code><a class="headerlink" href="#c-material-2-bottomnavigationbar" title="Permanent link">&para;</a></h3>
+<p>The older Material 2 widget, available without enabling <code>useMaterial3: true</code>. Some teams use it because it is well-understood and has stable behavior across Flutter versions.</p>
+<p><strong>Pros:</strong>
+- Familiar API — most Flutter developers know it.
+- Stable, no active churn in the Flutter framework.</p>
+<p><strong>Cons:</strong>
+- Material 2 is in maintenance mode; the Flutter team recommends migrating to Material 3 <code>NavigationBar</code>.
+- The Figma design clearly does not follow Material 2 conventions (background color, label treatment, no ripple, amber accent) — the same theme-fighting problem as Option A applies here, arguably more so because M2's theming is less granular.
+- No <code>StatefulShellRoute</code>-specific drawbacks, but the widget itself is the wrong starting point for this design.</p>
+<p><strong>Effort:</strong> S (widget) + L (theme fight) = L overall.</p>
+<p><strong>Verdict:</strong> Ruled out. Deprecated direction and the heaviest customization burden of the three options.</p>
 <hr />
-<h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<h3 id="d-indexedstack-with-manual-tab-state-no-statefulshellroute">D — <code>IndexedStack</code> with manual tab state (no <code>StatefulShellRoute</code>)<a class="headerlink" href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" title="Permanent link">&para;</a></h3>
+<p>Manage tab state inside a single <code>Scaffold</code> using an <code>IndexedStack</code> of four subtrees, with a manually maintained <code>currentIndex</code> Riverpod provider. GoRouter would treat the entire shell as a single route.</p>
+<p><strong>Pros:</strong>
+- Conceptually simple — no need to understand <code>StatefulShellRoute</code>.
+- Tab state is in a Riverpod provider, which is easy to test and observe.</p>
+<p><strong>Cons:</strong>
+- Deep-link compatibility is severely degraded. If a push notification deep-links to <code>/notifications/123</code>, GoRouter has no mechanism to set the active tab index — the app lands on the wrong tab or the home route. Workarounds require listening to <code>GoRouter.routeInformationProvider</code> and manually syncing with the index provider, which is exactly the problem <code>StatefulShellRoute</code> was designed to solve.
+- <code>IndexedStack</code> keeps all four tab subtrees in the widget tree simultaneously, increasing memory overhead regardless of which tabs have been visited.
+- Tab-level <code>Navigator</code> stacks are not isolated — navigating within one tab and then switching tabs resets back-stack state unexpectedly.</p>
+<p><strong>Effort:</strong> M (but produces an inferior result).</p>
+<p><strong>Verdict:</strong> Ruled out. Deep-link compatibility is a hard requirement, and this approach cannot satisfy it without significant fragile workarounds.</p>
+<hr />
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>MORE tab: bottom sheet vs dedicated screen</strong> — The proposed solution recommends a dedicated <code>/more</code> route with secondary destinations at <code>/more/profile</code>, <code>/more/saved</code>, etc. A bottom sheet alternative would be lighter but not deep-linkable. <strong>Resolved: dedicated <code>/more</code> screen with <code>/more/*</code> child paths.</strong> No team decision needed.</p>
+</li>
+<li>
+<p><strong>Guest-mode navbar</strong> — The <code>_RouterNotifier</code> currently tracks <code>guestModeProvider</code>. Should a guest-mode user see the navbar with certain tabs disabled (e.g., POSTS and NOTIFS are authentication-gated), or should guest mode always redirect to <code>/welcome</code>? v1 scope and behavior must be agreed before implementation.</p>
+</li>
+<li>
+<p><strong>NOTIFS badge count</strong> — The Figma design implies a badge on the NOTIFS tab when unread notifications exist. Should this count come from a Firestore real-time listener (accurate but adds a persistent listener per session) or from a client-side counter incremented locally (cheap but drifts)? This likely warrants its own proposal but the answer affects whether the navbar widget needs to accept a <code>badgeCount</code> parameter from day one.</p>
+</li>
+<li>
+<p><strong>Tab-switch animation</strong> — The Figma file does not specify a transition between tabs. Should switching tabs use Flutter's default (instant swap with no animation), a fade, or a slide? An explicit decision prevents inconsistency across platform (iOS vs. Android).</p>
+</li>
+<li>
+<p><strong>Back-gesture behavior on Android</strong> — When the user is on a non-FEED tab and presses the Android back button, should the app navigate to the FEED tab or exit the app? GoRouter's <code>StatefulShellRoute</code> does not standardize this — the behavior must be specified and implemented explicitly.</p>
+</li>
+</ol>
+<hr />
+<h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>
-<p>[ ] <strong>Upload ordering</strong> — Should the client upload all media to Firebase Storage and collect all download URLs before writing the Firestore document, or should it write the document first with an empty <code>mediaUrls</code> and patch it after upload? Writing after upload is simpler (one atomic write) but leaves the post invisible in the feed until all media is transferred. Writing first with a patch allows the post to appear immediately with a loading placeholder, but introduces a window where the document exists without its media.</p>
-</li>
-<li>
-<p>[ ] <strong>Offline partial-upload recovery</strong> — If media upload succeeds but the subsequent Firestore write fails (e.g., connectivity drops between the two operations), the next retry must not re-upload already-transferred files. The Hive draft must record which Storage paths have been successfully uploaded so the retry path skips completed uploads. What is the canonical format for this upload-progress snapshot in the draft record?</p>
-</li>
-<li>
-<p>[ ] <strong>File size and type enforcement</strong> — Firebase Storage Security Rules can reject uploads by size and content type, but they cannot surface a user-friendly error message. Should the client enforce limits locally before attempting upload (fast feedback, but bypassable), and also rely on Storage Rules as the hard backstop? What are the agreed limits (e.g., max file size, allowed MIME types)?</p>
-</li>
-<li>
-<p>[ ] <strong>Author field staleness</strong> — PROP-0003 raised this for the feed; it is equally relevant here. If a user updates their display name or avatar between posts, older posts retain the stale snapshot. Is a background reconciliation job in scope for v1, or is the snapshot-at-write-time approach acceptable indefinitely?</p>
-</li>
-</ul>
-<hr />
-<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li>PROP-0003: Post Feed — <code>tech-proposals/0003-post-feed.md</code> (defines the <code>posts/{postId}</code> schema this proposal writes to)</li>
+<li>Authenticated users see a persistent 4-tab bottom bar (FEED, POSTS, NOTIFS, MORE) on all shell screens after sign-in.</li>
+<li>The navbar is completely absent from: Welcome, Sign In, Sign Up, New Post (all steps), Post Details, Terms of Service, and Privacy Policy screens.</li>
+<li>Tapping each tab navigates to the correct branch root; tapping an already-active tab scrolls the branch's content to the top (standard mobile convention).</li>
+<li>Deep-linking to any route under <code>/feed</code>, <code>/posts</code>, <code>/notifications</code>, or <code>/more</code> resolves in the correct tab with the bar reflecting the correct active state.</li>
+<li>Tab navigation state is preserved independently per branch: navigating into a sub-screen on POSTS and switching to FEED, then switching back to POSTS, returns the user to the same sub-screen (not the branch root).</li>
+<li>The bottom bar's visual output matches the Figma design tokens: background <code>#f7f3ee</code>, active accent <code>#d97706</code>, inactive foreground muted, top border <code>#e2dad0</code> 1 px, Space Grotesk labels uppercase 11 px.</li>
+<li><code>flutter analyze</code> reports zero errors or warnings on all new code.</li>
+<li>Every new screen introduced under the shell has a corresponding widget test asserting the navbar is present and the correct tab is active.</li>
+<li>Auth-flow screens have a widget test asserting the navbar is absent.</li>
+<li>The implementation introduces no new pub.dev dependencies beyond the packages already in <code>pubspec.yaml</code>.</li>
 </ul>
 
 

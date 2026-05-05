@@ -6,35 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="ADR-0004 prescribed GlobalKey<ScrollToTopTarget>, but Dart's type system prohibits it when the mixin has no on-constraint. Implementation uses GlobalKey<State> with a guarded is-cast instead.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0005-global-key-state-cast-for-scroll-to-top/">
       
       
-        <link rel="prev" href="../tech-proposals/0005-main-navbar/">
+        <link rel="prev" href="../0004-shell-scroll-to-top-pattern/">
       
       
-        <link rel="next" href="0001-auth-design/">
+        <link rel="next" href="../../stencils/adr/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Tech Specs - Unishare Engineering Docs</title>
+        <title>0005: GlobalKey<State> with runtime cast replaces GlobalKey<ScrollToTopTarget> - Unishare Engineering Docs</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tech-specs" class="md-skip">
+        <a href="#0005-globalkey-with-runtime-cast-replaces-globalkey" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+    <a href="../.." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tech Specs
+              0005: GlobalKey<State> with runtime cast replaces GlobalKey<ScrollToTopTarget>
             
           </span>
         </div>
@@ -225,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../decisions/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -266,7 +268,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../stencils/adr/" class="md-tabs__link">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -286,7 +288,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../tech-proposals/" class="md-tabs__link">
+        <a href="../../tech-proposals/" class="md-tabs__link">
           
   
   
@@ -302,13 +304,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../tech-specs/" class="md-tabs__link">
           
   
   
@@ -342,7 +342,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+    <a href="../.." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -372,7 +372,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -396,26 +396,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -433,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -451,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -479,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -514,7 +519,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -549,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -584,7 +589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -616,10 +621,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: GlobalKey<State> with runtime cast replaces GlobalKey<ScrollToTopTarget>
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -635,6 +667,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -706,7 +813,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/adr/" class="md-nav__link">
+      <a href="../../stencils/adr/" class="md-nav__link">
         
   
   
@@ -734,7 +841,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/tech-proposal/" class="md-nav__link">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
         
   
   
@@ -762,7 +869,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/tech-spec/" class="md-nav__link">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
         
   
   
@@ -849,7 +956,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposals/" class="md-nav__link">
+      <a href="../../tech-proposals/" class="md-nav__link">
         
   
   
@@ -877,7 +984,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposals/0003-post-feed/" class="md-nav__link">
+      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
         
   
   
@@ -905,7 +1012,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposals/0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -933,7 +1040,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposals/0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-proposals/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -965,31 +1072,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1007,7 +1109,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1022,37 +1124,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tech Specs
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../tech-specs/" class="md-nav__link">
         
   
   
@@ -1068,48 +1143,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Index
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1122,7 +1155,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0001-auth-design/" class="md-nav__link">
+      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
         
   
   
@@ -1150,7 +1183,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0002-navigation-design/" class="md-nav__link">
+      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
         
   
   
@@ -1178,7 +1211,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1206,7 +1239,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-specs/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1261,10 +1294,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Problem
       
     </span>
   </a>
@@ -1272,10 +1305,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#index" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Index
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -1299,7 +1365,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0005-global-key-state-cast-for-scroll-to-top.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1307,56 +1373,79 @@
   
 
 
-<h1 id="tech-specs">Tech Specs<a class="headerlink" href="#tech-specs" title="Permanent link">&para;</a></h1>
-<p>A Tech Spec defines the <strong>implementation contract</strong> for an approved proposal — Clean Architecture layer breakdown, Firestore schema, Riverpod providers, acceptance criteria, and test plan. No code is written until the spec is approved.</p>
-<p>Use the <a href="../stencils/tech-spec/">Tech Spec stencil</a> to start a new one. Save specs to <code>tech-specs/</code> at the repo root on the <code>main</code> branch as <code>NNNN-slug.md</code> (e.g. <code>0001-auth-flow.md</code>). Number matches its proposal.</p>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>Proposal → approved → Spec (this page) → approved → Implementation → Review
+<h1 id="0005-globalkey-with-runtime-cast-replaces-globalkey">0005 — GlobalKey<State> with runtime cast replaces GlobalKey<ScrollToTopTarget><a class="headerlink" href="#0005-globalkey-with-runtime-cast-replaces-globalkey" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> flutter-engineer<br />
+<strong>Date:</strong> 2026-05-05<br />
+<strong>Amends:</strong> <a href="../0004-shell-scroll-to-top-pattern/">ADR-0004</a></p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>ADR-0004 specified <code>GlobalKey&lt;ScrollToTopTarget&gt;</code> as the mechanism for <code>ShellScaffold</code> to trigger scroll-to-top on a tab screen's <code>State</code>. During implementation of SPEC-0005 this was found to be invalid Dart.</p>
+<p><code>GlobalKey&lt;T&gt;</code> has a type bound <code>T extends State&lt;StatefulWidget&gt;</code>. For <code>GlobalKey&lt;ScrollToTopTarget&gt;</code> to satisfy that bound, <code>ScrollToTopTarget</code> must extend <code>State&lt;StatefulWidget&gt;</code>. Adding <code>on State&lt;StatefulWidget&gt;</code> to the mixin declaration achieves this in theory, but produces a compile error in practice:</p>
+<div class="highlight"><pre><span></span><code>error: The class &#39;_FeedScreenState&#39; can&#39;t implement both
+  &#39;State&lt;FeedScreen&gt;&#39; and &#39;State&lt;StatefulWidget&gt;&#39;
+  because the type arguments are different.
 </code></pre></div>
-<p>Each spec must reference the proposal it expands.</p>
-<h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">&para;</a></h2>
+<p>Dart does not allow a class to implement two instantiations of the same generic interface (<code>State&lt;FeedScreen&gt;</code> and <code>State&lt;StatefulWidget&gt;</code>) simultaneously. Since every tab screen's <code>State</code> already extends <code>State&lt;SpecificScreen&gt;</code>, adding the <code>on State&lt;StatefulWidget&gt;</code> constraint to <code>ScrollToTopTarget</code> is incompatible with any concrete <code>State</code> subclass.</p>
+<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>#</th>
-<th>Title</th>
-<th>Status</th>
-<th>Proposal</th>
+<th>Option</th>
+<th>Upside</th>
+<th>Downside</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="0001-auth-design/">0001</a></td>
-<td>Auth Feature Design</td>
-<td>APPROVED</td>
-<td>—</td>
+<td>1</td>
+<td><code>GlobalKey&lt;State&gt;</code> + guarded <code>is ScrollToTopTarget</code> cast</td>
+<td>Compiles; retains zero coupling between shell and concrete screen types; identical runtime safety to the typed key</td>
+<td>Key type is less descriptive; a developer reading <code>GlobalKey&lt;State&gt;</code> cannot tell it expects a <code>ScrollToTopTarget</code> without reading the call site</td>
 </tr>
 <tr>
-<td><a href="0002-navigation-design/">0002</a></td>
-<td>Navigation Design</td>
-<td>APPROVED</td>
-<td>—</td>
+<td>2</td>
+<td><code>ScrollControllerRegistry</code> Riverpod provider (ADR-0004 Option 2)</td>
+<td>Familiar pattern; no casting</td>
+<td>Stale-controller risk on <code>dispose</code>; more moving parts; identified as fallback in ADR-0004</td>
 </tr>
 <tr>
-<td><a href="0004-post-integration/">0004</a></td>
-<td>Post Integration</td>
-<td>APPROVED</td>
-<td><a href="../tech-proposals/0004-post-integration/">PROP-0004</a></td>
-</tr>
-<tr>
-<td><a href="0005-main-navbar/">0005</a></td>
-<td>Main Navigation Bar</td>
-<td>APPROVED</td>
-<td>PROP-0005</td>
+<td>3</td>
+<td><code>GlobalKey&lt;ScrollToTopMixin&gt;</code> where <code>ScrollToTopMixin</code> is a separate abstract <code>State</code> subclass (not a mixin)</td>
+<td>Satisfies the type bound</td>
+<td>Requires all tab screens to extend a base class rather than mixin in behaviour; forces single-inheritance; more invasive change</td>
 </tr>
 </tbody>
 </table>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen:</strong> Option 1 — <code>GlobalKey&lt;State&gt;</code> with a guarded runtime cast.</p>
+<p><code>ShellScaffold.scrollTargetKeys</code> is declared as <code>List&lt;GlobalKey&lt;State&gt;&gt;</code>. In <code>_handleTabTap</code>, after confirming the same-index tap, the shell calls:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">final</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scrollTargetKeys</span><span class="p">[</span><span class="n">index</span><span class="p">].</span><span class="n">currentState</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">state</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">ScrollToTopTarget</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="p">(</span><span class="n">state</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">ScrollToTopTarget</span><span class="p">).</span><span class="n">scrollToTop</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>is</code> check makes the cast safe (null is excluded; wrong type is excluded). The explicit cast <code>as ScrollToTopTarget</code> is required because Dart's flow-type promotion does not apply when <code>state</code> is typed as <code>State?</code> and <code>ScrollToTopTarget</code> has no <code>on</code> constraint — the intersection type <code>State &amp; ScrollToTopTarget</code> is not promoted automatically by this version of the Dart analyzer.</p>
+<p><code>ScrollToTopTarget</code> stays as a plain mixin (no <code>on</code> constraint) so tab screen <code>State</code> classes can mix it in alongside their existing <code>extends State&lt;SpecificScreen&gt;</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">_FeedScreenState</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">State</span><span class="o">&lt;</span><span class="n">FeedScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">with</span><span class="w"> </span><span class="n">ScrollToTopTarget</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">…</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
+<p>Low. Switching to Option 2 (<code>ScrollControllerRegistry</code>) requires: adding one Riverpod provider, updating each tab screen's <code>initState</code>/<code>dispose</code>, and removing the <code>GlobalKey</code> parameters from screen constructors. No Firebase or domain changes needed.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Easier:</strong> <code>ScrollToTopTarget</code> mixin remains usable by any <code>State</code> subclass without inheritance constraints.</li>
+<li><strong>Harder:</strong> The key type <code>GlobalKey&lt;State&gt;</code> doesn't self-document its expected <code>currentState</code> type; add a doc comment on <code>scrollTargetKeys</code> explaining the contract (done in <code>shell_scaffold.dart</code>).</li>
+<li><strong>ADR-0004 status:</strong> ADR-0004 remains <code>ACCEPTED</code> as the architectural pattern (GlobalKey + mixin for shell-triggered scroll). This ADR amends the specific type used — the intent and trade-offs in ADR-0004 are unchanged.</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -1406,10 +1495,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
