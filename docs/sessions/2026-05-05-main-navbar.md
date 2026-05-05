@@ -32,7 +32,7 @@ Relevant docs:
 
 ## Handoff
 
-**To:** flutter-engineer (or architect for review)  
-**Done:** All skeleton files created; folder structure complete; `scroll_to_top_target.dart`, `main_nav_bar.dart` (stub), `shell_scaffold.dart` (stub) written  
-**Not done:** `router.dart` not yet modified; `MainNavBar` and `ShellScaffold` not implemented; no tests written  
-**Watch out for:** `NavTab` enum must be in `router.dart` — both `shell_scaffold.dart` and `main_nav_bar.dart` import it from there. Don't move it.
+**To:** architect (for PR review)  
+**Done:** SPEC-0005 fully implemented — `ShellScaffold`, `MainNavBar`, `MoreScreen` route fix, 26 new widget/integration tests. `flutter analyze` clean, 62/62 tests pass.  
+**Key implementation note:** `GlobalKey<ScrollToTopTarget>` (as specified in ADR-0004) is not valid Dart — see [ADR-0005](../decisions/0005-global-key-state-cast-for-scroll-to-top.md). Implementation uses `GlobalKey<State>` + guarded `is ScrollToTopTarget` cast in `ShellScaffold._handleTabTap`.  
+**Watch out for:** `NavTab` enum must stay in `router.dart` — both `shell_scaffold.dart` and `main_nav_bar.dart` import it from there. Don't move it.
