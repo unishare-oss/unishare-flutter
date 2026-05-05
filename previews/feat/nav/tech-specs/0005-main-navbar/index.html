@@ -1644,29 +1644,29 @@
 <hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
-    A[GoRouter] --&gt; B[/welcome - WelcomeScreen]
-    A --&gt; C[/posts/create - CreatePostScreen]
-    A --&gt; D[StatefulShellRoute\nbuilder: ShellScaffold]
+    A[GoRouter] --&gt; B["/welcome — WelcomeScreen"]
+    A --&gt; C["/posts/create — CreatePostScreen"]
+    A --&gt; D["StatefulShellRoute — ShellScaffold"]
 
-    D --&gt; E[Branch 0: /feed\nFeedScreen]
-    D --&gt; F[Branch 1: /posts\nMyPostsScreen]
-    D --&gt; G[Branch 2: /notifications\nNotificationsScreen]
-    D --&gt; H[Branch 3: /more\nMoreScreen]
+    D --&gt; E["/feed — FeedScreen"]
+    D --&gt; F["/posts — MyPostsScreen"]
+    D --&gt; G["/notifications — NotificationsScreen"]
+    D --&gt; H["/more — MoreScreen"]
 
-    H --&gt; I[child: /profile]
-    H --&gt; J[child: /saved]
-    H --&gt; K[child: /departments]
-    H --&gt; L[child: /requests]
+    H --&gt; I[/profile]
+    H --&gt; J[/saved]
+    H --&gt; K[/departments]
+    H --&gt; L[/requests]
 
     D --&gt;|builder receives| M[StatefulNavigationShell]
     M --&gt;|currentIndex| N[MainNavBar.activeIndex]
     M --&gt;|goBranch| N2[MainNavBar.onTap]
 
-    subgraph Redirect rules in _RouterNotifier
-        R1[/ → /feed]
-        R2[unknown path → /feed]
-        R3[unauthenticated → /welcome]
-        R4[authenticated on /welcome → /feed]
+    subgraph Redirects in _RouterNotifier
+        R1["/ -- /feed"]
+        R2["unknown path -- /feed"]
+        R3["unauthenticated -- /welcome"]
+        R4["authed on /welcome -- /feed"]
     end</code></pre>
 <hr />
 <h2 id="file-map">File Map<a class="headerlink" href="#file-map" title="Permanent link">&para;</a></h2>
