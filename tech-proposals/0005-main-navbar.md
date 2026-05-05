@@ -8,7 +8,7 @@ description: "Persistent 4-tab bottom navigation bar for authenticated users, in
 **Status:** ACCEPTED  
 **Author:** architect  
 **Date:** 2026-05-05  
-**Spec:** (pending)  
+**Spec:** [SPEC-0005](../tech-specs/0005-main-navbar.md)  
 **Approved by:** Pyae Sone Shin Thant
 
 ---
