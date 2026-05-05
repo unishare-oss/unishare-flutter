@@ -26,29 +26,29 @@ No new pub.dev dependencies are introduced.
 
 ```mermaid
 flowchart TD
-    A[GoRouter] --> B[/welcome - WelcomeScreen]
-    A --> C[/posts/create - CreatePostScreen]
-    A --> D[StatefulShellRoute\nbuilder: ShellScaffold]
+    A[GoRouter] --> B["/welcome — WelcomeScreen"]
+    A --> C["/posts/create — CreatePostScreen"]
+    A --> D["StatefulShellRoute — ShellScaffold"]
 
-    D --> E[Branch 0: /feed\nFeedScreen]
-    D --> F[Branch 1: /posts\nMyPostsScreen]
-    D --> G[Branch 2: /notifications\nNotificationsScreen]
-    D --> H[Branch 3: /more\nMoreScreen]
+    D --> E["/feed — FeedScreen"]
+    D --> F["/posts — MyPostsScreen"]
+    D --> G["/notifications — NotificationsScreen"]
+    D --> H["/more — MoreScreen"]
 
-    H --> I[child: /profile]
-    H --> J[child: /saved]
-    H --> K[child: /departments]
-    H --> L[child: /requests]
+    H --> I[/profile]
+    H --> J[/saved]
+    H --> K[/departments]
+    H --> L[/requests]
 
     D -->|builder receives| M[StatefulNavigationShell]
     M -->|currentIndex| N[MainNavBar.activeIndex]
     M -->|goBranch| N2[MainNavBar.onTap]
 
-    subgraph Redirect rules in _RouterNotifier
-        R1[/ → /feed]
-        R2[unknown path → /feed]
-        R3[unauthenticated → /welcome]
-        R4[authenticated on /welcome → /feed]
+    subgraph Redirects in _RouterNotifier
+        R1["/ -- /feed"]
+        R2["unknown path -- /feed"]
+        R3["unauthenticated -- /welcome"]
+        R4["authed on /welcome -- /feed"]
     end
 ```
 
