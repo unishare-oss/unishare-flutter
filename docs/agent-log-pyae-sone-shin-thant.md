@@ -337,3 +337,5 @@ Review: PENDING
   [14:52] Write: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
   [14:52] Write: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
   [14:52] Write: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [15:11] Edit: apps/mobile/lib/shared/widgets/scroll_to_top_target.dart
+  [15:15] Edit: apps/mobile/lib/features/more/presentation/screens/more_screen.dart
