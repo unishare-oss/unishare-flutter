@@ -1,0 +1,2333 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="StatefulShellRoute-based 4-tab bottom navigation bar for authenticated users with custom-painted widget, Android back-button handling, and tap-to-scroll-to-top contract.">
+      
+      
+      
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feat/nav/tech-specs/0005-main-navbar/">
+      
+      
+        <link rel="prev" href="../0004-post-integration/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>0005: Main Navigation Bar - Unishare Engineering Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spec-0005-main-navigation-bar" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Unishare Engineering Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              0005: Main Navigation Bar
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unishare-oss/unishare-flutter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unishare-oss/unishare-flutter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Unishare Engineering Docs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../decisions/" class="md-tabs__link">
+          
+  
+  
+  Decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
+          
+  
+  
+  Stencils
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tech-proposals/" class="md-tabs__link">
+          
+  
+  
+  Tech proposals
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Tech specs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Unishare Engineering Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unishare-oss/unishare-flutter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unishare-oss/unishare-flutter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unishare Engineering Docs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Decision Records
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Single-slot theming for 12-theme design system
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: border token lives in ColorScheme.outline, not AppColors
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Use connectivity_plus and file_picker for post integration
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: GlobalKey mixin pattern for shell-triggered scroll-to-top
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stencils
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stencils
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposal Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Spec Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech proposals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech proposals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Post Feed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0005-main-navbar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-auth-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Auth Feature Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-navigation-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: Navigation Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API Contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#navtab-enum-appsmobilelibcorerouterrouterdart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NavTab enum — apps/mobile/lib/core/router/router.dart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mainnavbar-appsmobilelibsharedwidgetsmain_nav_bardart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MainNavBar — apps/mobile/lib/shared/widgets/main_nav_bar.dart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shellscaffold-appsmobilelibcoreroutershell_scaffolddart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShellScaffold — apps/mobile/lib/core/router/shell_scaffold.dart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scrolltotoptarget-mixin-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ScrollToTopTarget mixin contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#router-modifications-appsmobilelibcorerouterrouterdart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Router modifications — apps/mobile/lib/core/router/router.dart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Router modifications — apps/mobile/lib/core/router/router.dart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#redirect-additions-to-_routernotifierredirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redirect additions to _RouterNotifier.redirect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statefulshellroute-declaration-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StatefulShellRoute declaration structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tab-screen-skeleton-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tab screen skeleton pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tab-screen-constructor-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tab screen constructor contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#morescreen-appsmobilelibfeaturesmorepresentationscreensmore_screendart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MoreScreen — apps/mobile/lib/features/more/presentation/screens/more_screen.dart
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API Contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#navtab-enum-appsmobilelibcorerouterrouterdart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NavTab enum — apps/mobile/lib/core/router/router.dart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mainnavbar-appsmobilelibsharedwidgetsmain_nav_bardart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MainNavBar — apps/mobile/lib/shared/widgets/main_nav_bar.dart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shellscaffold-appsmobilelibcoreroutershell_scaffolddart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShellScaffold — apps/mobile/lib/core/router/shell_scaffold.dart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scrolltotoptarget-mixin-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ScrollToTopTarget mixin contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#router-modifications-appsmobilelibcorerouterrouterdart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Router modifications — apps/mobile/lib/core/router/router.dart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Router modifications — apps/mobile/lib/core/router/router.dart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#redirect-additions-to-_routernotifierredirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redirect additions to _RouterNotifier.redirect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statefulshellroute-declaration-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        StatefulShellRoute declaration structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tab-screen-skeleton-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tab screen skeleton pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tab-screen-constructor-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tab screen constructor contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#morescreen-appsmobilelibfeaturesmorepresentationscreensmore_screendart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MoreScreen — apps/mobile/lib/features/more/presentation/screens/more_screen.dart
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of Scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0005-main-navbar.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="spec-0005-main-navigation-bar">SPEC-0005: Main Navigation Bar<a class="headerlink" href="#spec-0005-main-navigation-bar" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> APPROVED<br />
+<strong>Author:</strong> architect<br />
+<strong>Date:</strong> 2026-05-05<br />
+<strong>Proposal:</strong> <a href="../../tech-proposals/0005-main-navbar/">PROP-0005</a><br />
+<strong>Approved by:</strong> Pyae Sone Shin Thant</p>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This spec covers the complete implementation of the authenticated navigation shell for Unishare. The shell wraps four tab branches — FEED, POSTS, NOTIFS, MORE — inside a <code>StatefulShellRoute</code> declared within the authenticated route tree. A custom-painted <code>MainNavBar</code> widget renders the bottom bar. The existing <code>_RouterNotifier</code> is extended to redirect <code>/</code> to <code>/feed</code> and unknown routes to <code>/feed</code>. An Android back-button override navigates to FEED from any non-FEED branch before allowing the system exit. A <code>ScrollController</code>-based tap-to-scroll-to-top contract is defined here for use by each tab screen's own spec.</p>
+<p>No new pub.dev dependencies are introduced.</p>
+<hr />
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A[GoRouter] --&gt; B[/welcome - WelcomeScreen]
+    A --&gt; C[/posts/create - CreatePostScreen]
+    A --&gt; D[StatefulShellRoute\nbuilder: ShellScaffold]
+
+    D --&gt; E[Branch 0: /feed\nFeedScreen]
+    D --&gt; F[Branch 1: /posts\nMyPostsScreen]
+    D --&gt; G[Branch 2: /notifications\nNotificationsScreen]
+    D --&gt; H[Branch 3: /more\nMoreScreen]
+
+    H --&gt; I[child: /profile]
+    H --&gt; J[child: /saved]
+    H --&gt; K[child: /departments]
+    H --&gt; L[child: /requests]
+
+    D --&gt;|builder receives| M[StatefulNavigationShell]
+    M --&gt;|currentIndex| N[MainNavBar.activeIndex]
+    M --&gt;|goBranch| N2[MainNavBar.onTap]
+
+    subgraph Redirect rules in _RouterNotifier
+        R1[/ → /feed]
+        R2[unknown path → /feed]
+        R3[unauthenticated → /welcome]
+        R4[authenticated on /welcome → /feed]
+    end</code></pre>
+<hr />
+<h2 id="file-map">File Map<a class="headerlink" href="#file-map" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Path</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/lib/core/router/router.dart</code></td>
+<td>Replace <code>_HomeScreen</code> <code>GoRoute</code> with <code>StatefulShellRoute</code>; add 4 branches with their child routes; extend <code>_RouterNotifier.redirect</code> to map <code>/</code> → <code>/feed</code> and any unrecognised path → <code>/feed</code>; wire <code>PopScope</code> Android back-button behavior inside <code>ShellScaffold</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/core/router/shell_scaffold.dart</code></td>
+<td><code>ShellScaffold</code> widget — wraps <code>StatefulNavigationShell</code> in a <code>Scaffold</code>, owns <code>PopScope</code> for Android back handling, passes <code>navigationShell.currentIndex</code> and <code>navigationShell.goBranch</code> to <code>MainNavBar</code>, detects same-index tap and fires scroll-to-top</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/shared/widgets/main_nav_bar.dart</code></td>
+<td>Custom 4-tab bottom bar; accepts <code>activeIndex</code>, <code>onTap</code>, <code>notificationsBadgeCount</code>; reads active accent from theme tokens; no internal state</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/shared/widgets/scroll_to_top_target.dart</code></td>
+<td><code>ScrollToTopTarget</code> mixin on <code>State</code>; exposes <code>scrollController</code> getter and <code>scrollToTop()</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart</code></td>
+<td>FEED tab skeleton — <code>AppBar</code> + placeholder body; implements <code>ScrollToTopTarget</code>; content filled in by SPEC-0003</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart</code></td>
+<td>POSTS tab skeleton — <code>AppBar</code> + placeholder body; implements <code>ScrollToTopTarget</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart</code></td>
+<td>NOTIFS tab skeleton — <code>AppBar</code> + placeholder body; implements <code>ScrollToTopTarget</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/more/presentation/screens/more_screen.dart</code></td>
+<td>MORE tab — scrollable <code>ListView.builder</code> with 4 destination tiles; implements <code>ScrollToTopTarget</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart</code></td>
+<td>User Profile skeleton — <code>AppBar("Profile")</code> + placeholder body; teammate fills in content</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart</code></td>
+<td>Saved Posts skeleton — <code>AppBar("Saved")</code> + placeholder body</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart</code></td>
+<td>Departments skeleton — <code>AppBar("Departments")</code> + placeholder body</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart</code></td>
+<td>Requests skeleton — <code>AppBar("Requests")</code> + placeholder body</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="api-contracts">API Contracts<a class="headerlink" href="#api-contracts" title="Permanent link">&para;</a></h2>
+<h3 id="navtab-enum-appsmobilelibcorerouterrouterdart"><code>NavTab</code> enum — <code>apps/mobile/lib/core/router/router.dart</code><a class="headerlink" href="#navtab-enum-appsmobilelibcorerouterrouterdart" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">enum</span><span class="w"> </span><span class="n">NavTab</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">feed</span><span class="p">,</span>
+<span class="w">  </span><span class="n">posts</span><span class="p">,</span>
+<span class="w">  </span><span class="n">notifs</span><span class="p">,</span>
+<span class="w">  </span><span class="n">more</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kt">String</span><span class="w"> </span><span class="kd">get</span><span class="w"> </span><span class="n">rootPath</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="nl">feed:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/feed&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="nl">posts:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/posts&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="nl">notifs:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/notifications&#39;</span><span class="p">;</span>
+<span class="w">      </span><span class="k">case</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="nl">more:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/more&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="kd">get</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">indexOf</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>NavTab</code> is used by both <code>router.dart</code> (to keep branch declaration and index mapping in one place) and by <code>main_nav_bar.dart</code> (to build the tab items). It lives in <code>router.dart</code> because it is inseparable from the branch-index contract; if the tab order changes, <code>NavTab.values</code> ordering changes in lockstep.</p>
+<hr />
+<h3 id="mainnavbar-appsmobilelibsharedwidgetsmain_nav_bardart"><code>MainNavBar</code> — <code>apps/mobile/lib/shared/widgets/main_nav_bar.dart</code><a class="headerlink" href="#mainnavbar-appsmobilelibsharedwidgetsmain_nav_bardart" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MainNavBar</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatelessWidget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">MainNavBar</span><span class="p">({</span>
+<span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">activeIndex</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">onTap</span><span class="p">,</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">notificationsBadgeCount</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="c1">/// Zero-based index of the currently active branch.</span>
+<span class="w">  </span><span class="c1">/// Must match [NavTab.index] for each tab.</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">activeIndex</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">/// Called with the new branch index when a tab item is tapped.</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">ValueChanged</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onTap</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">/// Reserved for future badge wiring to the notifications collection.</span>
+<span class="w">  </span><span class="c1">/// When null, no badge is rendered on the NOTIFS tab.</span>
+<span class="w">  </span><span class="c1">/// When non-null and &gt; 0, a badge overlay is shown on the NOTIFS icon.</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="o">?</span><span class="w"> </span><span class="n">notificationsBadgeCount</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Implementation by flutter-engineer.</span>
+<span class="w">    </span><span class="c1">// Must read color tokens from Theme.of(context).extension&lt;AppColors&gt;()</span>
+<span class="w">    </span><span class="c1">// and typography from AppTypography. No hardcoded hex literals.</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">UnimplementedError</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">/// Describes a single tab item rendered inside [MainNavBar].</span>
+<span class="c1">/// Internal to main_nav_bar.dart — not exported.</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">_NavTabItem</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatelessWidget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">_NavTabItem</span><span class="p">({</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">tab</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">isActive</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">onTap</span><span class="p">,</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">badgeCount</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">NavTab</span><span class="w"> </span><span class="n">tab</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isActive</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">VoidCallback</span><span class="w"> </span><span class="n">onTap</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="o">?</span><span class="w"> </span><span class="n">badgeCount</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">UnimplementedError</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Visual contract (read from existing tokens — do not hardcode):</strong></p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Color source</th>
+<th>Token field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bar background</td>
+<td><code>AppThemeData.background</code></td>
+<td><code>#f7f3ee</code> in unishare theme</td>
+</tr>
+<tr>
+<td>Top border</td>
+<td><code>AppThemeData.border</code></td>
+<td><code>#e2dad0</code> in unishare theme</td>
+</tr>
+<tr>
+<td>Active icon + label</td>
+<td><code>AppThemeData.amber</code></td>
+<td><code>#d97706</code> in unishare theme</td>
+</tr>
+<tr>
+<td>Inactive icon + label</td>
+<td><code>AppThemeData.textMuted</code></td>
+<td><code>#8a837e</code> in unishare theme</td>
+</tr>
+</tbody>
+</table>
+<p>Label style: Space Grotesk, uppercase, 11 px, letter-spacing 0.55 px. Use <code>AppTypography.textTheme(color).labelSmall?.copyWith(...)</code> — do not construct <code>GoogleFonts.spaceGrotesk</code> directly.</p>
+<p>Tab icons (use <code>Icons</code> constants from Flutter's material library):</p>
+<table>
+<thead>
+<tr>
+<th>Tab</th>
+<th>Icon constant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FEED</td>
+<td><code>Icons.home_outlined</code> / <code>Icons.home</code></td>
+</tr>
+<tr>
+<td>POSTS</td>
+<td><code>Icons.article_outlined</code> / <code>Icons.article</code></td>
+</tr>
+<tr>
+<td>NOTIFS</td>
+<td><code>Icons.notifications_outlined</code> / <code>Icons.notifications</code></td>
+</tr>
+<tr>
+<td>MORE</td>
+<td><code>Icons.menu</code></td>
+</tr>
+</tbody>
+</table>
+<p>Active tab uses the filled variant; inactive uses the outlined variant.</p>
+<p>Each tab item must have a <code>Semantics</code> widget with <code>label</code> set to the tab name and <code>button: true</code> for accessibility.</p>
+<hr />
+<h3 id="shellscaffold-appsmobilelibcoreroutershell_scaffolddart"><code>ShellScaffold</code> — <code>apps/mobile/lib/core/router/shell_scaffold.dart</code><a class="headerlink" href="#shellscaffold-appsmobilelibcoreroutershell_scaffolddart" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">ShellScaffold</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatelessWidget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">({</span>
+<span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">navigationShell</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">StatefulNavigationShell</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">/// Global keys used by [ShellScaffold] to call [ScrollController.animateTo]</span>
+<span class="w">  </span><span class="c1">/// when the already-active tab is tapped.</span>
+<span class="w">  </span><span class="c1">///</span>
+<span class="w">  </span><span class="c1">/// Each tab screen owns its own [ScrollController] and registers it against</span>
+<span class="w">  </span><span class="c1">/// the key matching its [NavTab.index]. The shell calls the controller only</span>
+<span class="w">  </span><span class="c1">/// if it is attached and has clients.</span>
+<span class="w">  </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">scrollTargetKeys</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">List</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span><span class="n">NavTab</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">length</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;</span><span class="p">());</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">UnimplementedError</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>PopScope</code> behavior (Android back button):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Inside ShellScaffold.build — conceptual structure only,</span>
+<span class="c1">// not full implementation code.</span>
+<span class="n">PopScope</span><span class="p">(</span>
+<span class="w">  </span><span class="nl">canPop:</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">currentIndex</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="n">feed</span><span class="p">.</span><span class="n">index</span><span class="p">,</span>
+<span class="w">  </span><span class="nl">onPopInvokedWithResult:</span><span class="w"> </span><span class="p">(</span><span class="n">didPop</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">didPop</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">currentIndex</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="n">feed</span><span class="p">.</span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">goBranch</span><span class="p">(</span>
+<span class="w">        </span><span class="n">NavTab</span><span class="p">.</span><span class="n">feed</span><span class="p">.</span><span class="n">index</span><span class="p">,</span>
+<span class="w">        </span><span class="nl">initialLocation:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// When branch index == 0 and canPop == true, the system handles the pop</span>
+<span class="w">    </span><span class="c1">// (exits the app on Android).</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nl">child:</span><span class="w"> </span><span class="n">Scaffold</span><span class="p">(</span>
+<span class="w">    </span><span class="nl">body:</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">,</span>
+<span class="w">    </span><span class="nl">bottomNavigationBar:</span><span class="w"> </span><span class="n">MainNavBar</span><span class="p">(</span>
+<span class="w">      </span><span class="nl">activeIndex:</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">currentIndex</span><span class="p">,</span>
+<span class="w">      </span><span class="nl">onTap:</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_handleTabTap</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">),</span>
+<span class="w">    </span><span class="p">),</span>
+<span class="w">  </span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Same-index tap (scroll-to-top) behavior:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">_handleTabTap</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">StatefulNavigationShell</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">currentIndex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">.</span><span class="n">scrollTargetKeys</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+<span class="w">    </span><span class="n">key</span><span class="p">.</span><span class="n">currentState</span><span class="o">?</span><span class="p">.</span><span class="n">scrollToTop</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">goBranch</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h3 id="scrolltotoptarget-mixin-contract"><code>ScrollToTopTarget</code> mixin contract<a class="headerlink" href="#scrolltotoptarget-mixin-contract" title="Permanent link">&para;</a></h3>
+<p>Each tab screen's root <code>State</code> class must implement this interface so the shell can trigger the scroll without depending on any concrete screen class:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">/// Mixin for the root [State] of a tab branch screen.</span>
+<span class="c1">/// The screen registers its [ScrollController] and exposes [scrollToTop]</span>
+<span class="c1">/// so [ShellScaffold] can animate to the top without knowing which screen</span>
+<span class="c1">/// is currently mounted.</span>
+<span class="c1">///</span>
+<span class="c1">/// Usage in a tab screen:</span>
+<span class="c1">///   class _FeedScreenState extends ConsumerState&lt;FeedScreen&gt;</span>
+<span class="c1">///       with ScrollToTopTarget {</span>
+<span class="c1">///     final ScrollController _scrollController = ScrollController();</span>
+<span class="c1">///</span>
+<span class="c1">///     @override</span>
+<span class="c1">///     ScrollController get scrollController =&gt; _scrollController;</span>
+<span class="c1">///</span>
+<span class="c1">///     @override</span>
+<span class="c1">///     void dispose() {</span>
+<span class="c1">///       _scrollController.dispose();</span>
+<span class="c1">///       super.dispose();</span>
+<span class="c1">///     }</span>
+<span class="c1">///   }</span>
+<span class="kd">mixin</span><span class="w"> </span><span class="nc">ScrollToTopTarget</span><span class="w"> </span><span class="kd">on</span><span class="w"> </span><span class="n">State</span><span class="o">&lt;</span><span class="n">StatefulWidget</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">ScrollController</span><span class="w"> </span><span class="kd">get</span><span class="w"> </span><span class="n">scrollController</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">scrollToTop</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">scrollController</span><span class="p">.</span><span class="n">hasClients</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">scrollController</span><span class="p">.</span><span class="n">animateTo</span><span class="p">(</span>
+<span class="w">        </span><span class="m">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nl">duration:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Duration</span><span class="p">(</span><span class="nl">milliseconds:</span><span class="w"> </span><span class="m">300</span><span class="p">),</span>
+<span class="w">        </span><span class="nl">curve:</span><span class="w"> </span><span class="n">Curves</span><span class="p">.</span><span class="n">easeInOut</span><span class="p">,</span>
+<span class="w">      </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>ScrollToTopTarget</code> lives at <code>apps/mobile/lib/shared/widgets/scroll_to_top_target.dart</code>. It is a pure Dart mixin on <code>State</code> — no framework imports beyond <code>package:flutter/widgets.dart</code>.</p>
+<p>The <code>GlobalKey&lt;ScrollToTopTarget&gt;</code> pattern requires <code>ShellScaffold.scrollTargetKeys[index]</code> to reference the same key instance that the screen uses when it creates its <code>StatefulWidget</code>. Each tab screen accepts its key from the shell; the shell allocates the keys once at <code>static final</code> level so they survive hot reload.</p>
+<hr />
+<h3 id="router-modifications-appsmobilelibcorerouterrouterdart">Router modifications — <code>apps/mobile/lib/core/router/router.dart</code><a class="headerlink" href="#router-modifications-appsmobilelibcorerouterrouterdart" title="Permanent link">&para;</a></h3>
+<h4 id="redirect-additions-to-_routernotifierredirect">Redirect additions to <code>_RouterNotifier.redirect</code><a class="headerlink" href="#redirect-additions-to-_routernotifierredirect" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">redirect</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">GoRouterState</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">authAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">authStateProvider</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">isGuest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">guestModeProvider</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">isAuthenticated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">authAsync</span><span class="p">.</span><span class="n">hasValue</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">authAsync</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">authRoutes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;/welcome&#39;</span><span class="p">};</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">currentPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">uri</span><span class="p">.</span><span class="n">path</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// 1. No session + not guest → force /welcome</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isAuthenticated</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">isGuest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">authRoutes</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">currentPath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/welcome&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 2. Authenticated on an auth route → go to /feed</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isAuthenticated</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">authRoutes</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">currentPath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/feed&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 3. Legacy root redirect → /feed</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">currentPath</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/feed&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="c1">// 4. Unknown path (not matched by any route) → /feed</span>
+<span class="w">  </span><span class="c1">// GoRouter calls redirect before route matching for 404-like paths.</span>
+<span class="w">  </span><span class="c1">// The shell branches cover /feed, /posts, /notifications, /more and their</span>
+<span class="w">  </span><span class="c1">// children. All other authenticated paths that are not declared as top-level</span>
+<span class="w">  </span><span class="c1">// routes fall here.</span>
+<span class="w">  </span><span class="c1">// NOTE: GoRouter also has an errorBuilder for truly unmatched routes;</span>
+<span class="w">  </span><span class="c1">// this redirect handles the case where a stale deep link resolves to an</span>
+<span class="w">  </span><span class="c1">// authenticated path that no longer exists.</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">knownPrefixes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s1">&#39;/feed&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;/posts&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;/notifications&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;/more&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;/profile&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;/saved&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;/departments&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;/requests&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="s1">&#39;/welcome&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">isKnown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">knownPrefixes</span><span class="p">.</span><span class="n">any</span><span class="p">((</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">currentPath</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="n">p</span><span class="p">));</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isKnown</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/feed&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="statefulshellroute-declaration-structure"><code>StatefulShellRoute</code> declaration structure<a class="headerlink" href="#statefulshellroute-declaration-structure" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">StatefulShellRoute</span><span class="p">.</span><span class="n">indexedStack</span><span class="p">(</span>
+<span class="w">  </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">(</span>
+<span class="w">    </span><span class="nl">navigationShell:</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">,</span>
+<span class="w">  </span><span class="p">),</span>
+<span class="w">  </span><span class="nl">branches:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="c1">// Branch 0 — FEED</span>
+<span class="w">    </span><span class="n">StatefulShellBranch</span><span class="p">(</span>
+<span class="w">      </span><span class="nl">routes:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="n">GoRoute</span><span class="p">(</span>
+<span class="w">          </span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/feed&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">FeedScreen</span><span class="p">(</span>
+<span class="w">            </span><span class="nl">scrollKey:</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">.</span><span class="n">scrollTargetKeys</span><span class="p">[</span><span class="n">NavTab</span><span class="p">.</span><span class="n">feed</span><span class="p">.</span><span class="n">index</span><span class="p">],</span>
+<span class="w">          </span><span class="p">),</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">),</span>
+<span class="w">    </span><span class="c1">// Branch 1 — POSTS</span>
+<span class="w">    </span><span class="n">StatefulShellBranch</span><span class="p">(</span>
+<span class="w">      </span><span class="nl">routes:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="n">GoRoute</span><span class="p">(</span>
+<span class="w">          </span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/posts&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">MyPostsScreen</span><span class="p">(</span>
+<span class="w">            </span><span class="nl">scrollKey:</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">.</span><span class="n">scrollTargetKeys</span><span class="p">[</span><span class="n">NavTab</span><span class="p">.</span><span class="n">posts</span><span class="p">.</span><span class="n">index</span><span class="p">],</span>
+<span class="w">          </span><span class="p">),</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">),</span>
+<span class="w">    </span><span class="c1">// Branch 2 — NOTIFS</span>
+<span class="w">    </span><span class="n">StatefulShellBranch</span><span class="p">(</span>
+<span class="w">      </span><span class="nl">routes:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="n">GoRoute</span><span class="p">(</span>
+<span class="w">          </span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/notifications&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NotificationsScreen</span><span class="p">(</span>
+<span class="w">            </span><span class="nl">scrollKey:</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">.</span><span class="n">scrollTargetKeys</span><span class="p">[</span><span class="n">NavTab</span><span class="p">.</span><span class="n">notifs</span><span class="p">.</span><span class="n">index</span><span class="p">],</span>
+<span class="w">          </span><span class="p">),</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">),</span>
+<span class="w">    </span><span class="c1">// Branch 3 — MORE</span>
+<span class="w">    </span><span class="n">StatefulShellBranch</span><span class="p">(</span>
+<span class="w">      </span><span class="nl">routes:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="n">GoRoute</span><span class="p">(</span>
+<span class="w">          </span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/more&#39;</span><span class="p">,</span>
+<span class="w">          </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">MoreScreen</span><span class="p">(</span>
+<span class="w">            </span><span class="nl">scrollKey:</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">.</span><span class="n">scrollTargetKeys</span><span class="p">[</span><span class="n">NavTab</span><span class="p">.</span><span class="n">more</span><span class="p">.</span><span class="n">index</span><span class="p">],</span>
+<span class="w">          </span><span class="p">),</span>
+<span class="w">          </span><span class="nl">routes:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/profile&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ProfilePlaceholderScreen</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/saved&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">SavedPlaceholderScreen</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/departments&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DepartmentsPlaceholderScreen</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/requests&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">RequestsPlaceholderScreen</span><span class="p">()),</span>
+<span class="w">          </span><span class="p">],</span>
+<span class="w">        </span><span class="p">),</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">    </span><span class="p">),</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Each destination under the MORE branch is a <strong>named skeleton screen</strong> in its own file. Teammates pick up each file and flesh it out independently. All four follow the same pattern — an <code>AppBar</code> with the page title and a centred placeholder body — and are <code>StatelessWidget</code>s (no scroll-to-top needed; they are sub-destinations, not tab roots).</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Pattern for each skeleton screen (ProfileScreen shown as example):</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">ProfileScreen</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatelessWidget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">ProfileScreen</span><span class="p">({</span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">});</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Scaffold</span><span class="p">(</span>
+<span class="w">      </span><span class="nl">appBar:</span><span class="w"> </span><span class="n">AppBar</span><span class="p">(</span><span class="nl">title:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Profile&#39;</span><span class="p">)),</span>
+<span class="w">      </span><span class="nl">body:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Center</span><span class="p">(</span><span class="nl">child:</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Coming soon&#39;</span><span class="p">)),</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The router imports each by name — no anonymous lambdas for navigable destinations.</p>
+<p><code>/posts/create</code> remains a top-level <code>GoRoute</code> outside the shell — <code>CreatePostScreen</code> must not render the navbar.</p>
+<hr />
+<h3 id="tab-screen-skeleton-pattern">Tab screen skeleton pattern<a class="headerlink" href="#tab-screen-skeleton-pattern" title="Permanent link">&para;</a></h3>
+<p>All four tab-root screens (FEED, POSTS, NOTIFS, MORE) ship as skeletons so teammates can navigate to them immediately and fill in content independently. Because they are tab roots they must be <code>StatefulWidget</code>s (the <code>ScrollToTopTarget</code> mixin attaches to <code>State</code>), but the build output is intentionally minimal until the feature spec for each screen is implemented:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Pattern for each tab skeleton (MyPostsScreen shown as example):</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">MyPostsScreen</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatefulWidget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">MyPostsScreen</span><span class="p">({</span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">scrollKey</span><span class="p">})</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">super</span><span class="p">(</span><span class="nl">key:</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">State</span><span class="o">&lt;</span><span class="n">MyPostsScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">createState</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_MyPostsScreenState</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">_MyPostsScreenState</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">State</span><span class="o">&lt;</span><span class="n">MyPostsScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">with</span><span class="w"> </span><span class="n">ScrollToTopTarget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">ScrollController</span><span class="w"> </span><span class="n">_scrollController</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ScrollController</span><span class="p">();</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">ScrollController</span><span class="w"> </span><span class="kd">get</span><span class="w"> </span><span class="n">scrollController</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_scrollController</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">dispose</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_scrollController</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span>
+<span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Scaffold</span><span class="p">(</span>
+<span class="w">      </span><span class="nl">appBar:</span><span class="w"> </span><span class="n">AppBar</span><span class="p">(</span><span class="nl">title:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;My Posts&#39;</span><span class="p">)),</span>
+<span class="w">      </span><span class="nl">body:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Center</span><span class="p">(</span><span class="nl">child:</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Coming soon&#39;</span><span class="p">)),</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Apply the same pattern for <code>FeedScreen</code> ("Feed"), <code>NotificationsScreen</code> ("Notifications"), and <code>MoreScreen</code> (which renders the destination list instead of "Coming soon").</p>
+<hr />
+<h3 id="tab-screen-constructor-contract">Tab screen constructor contract<a class="headerlink" href="#tab-screen-constructor-contract" title="Permanent link">&para;</a></h3>
+<p>Each tab screen must accept a <code>scrollKey</code> parameter so the shell can attach its <code>GlobalKey</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Applies to: FeedScreen, MyPostsScreen, NotificationsScreen, MoreScreen</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">FeedScreen</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatefulWidget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">FeedScreen</span><span class="p">({</span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">scrollKey</span><span class="p">});</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">State</span><span class="o">&lt;</span><span class="n">FeedScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">createState</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_FeedScreenState</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">_FeedScreenState</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">State</span><span class="o">&lt;</span><span class="n">FeedScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">with</span><span class="w"> </span><span class="n">ScrollToTopTarget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">ScrollController</span><span class="w"> </span><span class="n">_scrollController</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ScrollController</span><span class="p">();</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">ScrollController</span><span class="w"> </span><span class="kd">get</span><span class="w"> </span><span class="n">scrollController</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_scrollController</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">initState</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">initState</span><span class="p">();</span>
+<span class="w">    </span><span class="c1">// No explicit key registration needed — GlobalKey&lt;ScrollToTopTarget&gt;</span>
+<span class="w">    </span><span class="c1">// resolves through the widget tree because this State mixes in</span>
+<span class="w">    </span><span class="c1">// ScrollToTopTarget, which is the type parameter of the GlobalKey.</span>
+<span class="w">    </span><span class="c1">// The flutter-engineer must ensure this State class is the direct</span>
+<span class="w">    </span><span class="c1">// State of the widget that widget.scrollKey is assigned to via the</span>
+<span class="w">    </span><span class="c1">// key: parameter on the StatefulWidget.</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">dispose</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_scrollController</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span>
+<span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">UnimplementedError</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Note: the <code>GlobalKey&lt;ScrollToTopTarget&gt;</code> must be passed as the <code>key:</code> argument to the <code>StatefulWidget</code>, not stored as a separate field. The shell resolves <code>key.currentState</code> to get the <code>ScrollToTopTarget</code> mixin methods.</p>
+<hr />
+<h3 id="morescreen-appsmobilelibfeaturesmorepresentationscreensmore_screendart"><code>MoreScreen</code> — <code>apps/mobile/lib/features/more/presentation/screens/more_screen.dart</code><a class="headerlink" href="#morescreen-appsmobilelibfeaturesmorepresentationscreensmore_screendart" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MoreScreen</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatefulWidget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">MoreScreen</span><span class="p">({</span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">scrollKey</span><span class="p">});</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">State</span><span class="o">&lt;</span><span class="n">MoreScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">createState</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_MoreScreenState</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">_MoreScreenState</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">State</span><span class="o">&lt;</span><span class="n">MoreScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">with</span><span class="w"> </span><span class="n">ScrollToTopTarget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">ScrollController</span><span class="w"> </span><span class="n">_scrollController</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ScrollController</span><span class="p">();</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">ScrollController</span><span class="w"> </span><span class="kd">get</span><span class="w"> </span><span class="n">scrollController</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_scrollController</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">dispose</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">_scrollController</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span>
+<span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">UnimplementedError</span><span class="p">();</span>
+<span class="w">    </span><span class="c1">// Must render a ListView.builder (not ListView) containing exactly</span>
+<span class="w">    </span><span class="c1">// 4 ListTile items navigating to:</span>
+<span class="w">    </span><span class="c1">//   context.go(&#39;/profile&#39;)</span>
+<span class="w">    </span><span class="c1">//   context.go(&#39;/saved&#39;)</span>
+<span class="w">    </span><span class="c1">//   context.go(&#39;/departments&#39;)</span>
+<span class="w">    </span><span class="c1">//   context.go(&#39;/requests&#39;)</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>MoreScreen.build</code> must use <code>ListView.builder</code> — unbounded <code>ListView</code> is prohibited by the project conventions.</p>
+<hr />
+<h2 id="test-plan">Test Plan<a class="headerlink" href="#test-plan" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test file</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apps/mobile/test/widget/shared/widgets/main_nav_bar_test.dart</code></td>
+<td>Correct tab renders as active at each index (0–3); amber accent color applied to active icon and label; inactive tabs use muted color; <code>onTap</code> fires with the correct index for each tab; badge widget is present when <code>notificationsBadgeCount</code> is non-null and &gt; 0; badge is absent when <code>notificationsBadgeCount</code> is null; <code>Semantics</code> label is present on each tab item</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/core/router/shell_router_test.dart</code></td>
+<td><code>MainNavBar</code> is present in the widget tree on <code>/feed</code>, <code>/posts</code>, <code>/notifications</code>, <code>/more</code>; <code>MainNavBar</code> is absent on <code>/welcome</code>; <code>MainNavBar</code> is absent on <code>/posts/create</code>; navigating to an unknown path redirects to <code>/feed</code>; <code>PopScope</code> on non-FEED branch intercepts back press and navigates to FEED; <code>PopScope</code> on FEED branch allows system pop; tapping the active tab calls <code>scrollToTop</code> on the registered <code>ScrollToTopTarget</code></td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/more/more_screen_test.dart</code></td>
+<td>All 4 destination <code>ListTile</code> items render with correct labels; tapping <code>/profile</code> tile calls <code>context.go('/profile')</code>; tapping <code>/saved</code> tile calls <code>context.go('/saved')</code>; tapping <code>/departments</code> tile calls <code>context.go('/departments')</code>; tapping <code>/requests</code> tile calls <code>context.go('/requests')</code></td>
+</tr>
+</tbody>
+</table>
+<p>All tests use <code>pumpWidget</code> with a <code>ProviderScope</code> wrapping a <code>MaterialApp.router</code> seeded with an authenticated <code>authStateProvider</code> stub. No real Firebase calls.</p>
+<hr />
+<h2 id="out-of-scope">Out of Scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Content of FEED, POSTS, and NOTIFS tab screens — each is covered by its own spec.</li>
+<li>Content of <code>/profile</code>, <code>/saved</code>, <code>/departments</code>, <code>/requests</code> destinations — separate feature specs.</li>
+<li>NOTIFS badge wiring to the <code>notifications</code> Firestore collection — the <code>notificationsBadgeCount</code> parameter is reserved but always passed as <code>null</code> until a separate proposal covers real-time badge counts.</li>
+<li>Guest-mode partial access — unauthenticated and guest users are redirected to <code>/welcome</code> by <code>_RouterNotifier</code> and never reach the shell.</li>
+<li>Tab-switch transition animations — instant swap only; no fade or slide.</li>
+<li>Web-specific responsive layout (sidebar navigation rail) — deferred; the <code>StatefulShellRoute</code> builder can be extended to switch to a <code>NavigationRail</code> layout based on <code>MediaQuery</code> width in a future spec.</li>
+<li>Adaptive breakpoint logic from SPEC-0002 — that spec's <code>NavigationRail</code> approach is superseded by this spec for the mobile implementation. SPEC-0002 is not deleted but is not implemented in this iteration.</li>
+</ul>
+<hr />
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] <strong><code>GlobalKey&lt;ScrollToTopTarget&gt;</code> resolution</strong> — The pattern requires that the <code>StatefulWidget</code> passed <code>scrollKey</code> uses it as its <code>key:</code> argument. This means the <code>FeedScreen</code> (and peers) cannot independently manage their own <code>Key</code>. The flutter-engineer must confirm this is acceptable or propose an alternative (e.g., a <code>ScrollControllerRegistry</code> Riverpod provider) before implementing the tab screens. This must be resolved before SPEC-0003 implementation begins.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
