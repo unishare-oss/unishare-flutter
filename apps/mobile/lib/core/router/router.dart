@@ -85,16 +85,14 @@ class _RouterNotifier extends ChangeNotifier {
     }
 
     // 4. Unknown path → /feed
-    const knownPrefixes = {
-      '/welcome',
-      '/feed',
-      '/posts',
-      '/notifications',
-      '/more',
-    };
-    final isKnown = knownPrefixes.any(
-      (p) => currentPath == p || currentPath.startsWith('$p/'),
-    );
+    // authRoutes covers /welcome as exact-match only (no child routes exist).
+    // knownPrefixes covers shell branches and their nested children.
+    const knownPrefixes = {'/feed', '/posts', '/notifications', '/more'};
+    final isKnown =
+        authRoutes.contains(currentPath) ||
+        knownPrefixes.any(
+          (p) => currentPath == p || currentPath.startsWith('$p/'),
+        );
     if (!isKnown) {
       return '/feed';
     }

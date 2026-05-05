@@ -122,7 +122,7 @@ void main() {
         (w) =>
             w is Semantics &&
             w.properties.button == true &&
-            w.properties.label == 'FEED',
+            w.properties.label == 'Feed',
       );
       expect(feedTab, findsOneWidget);
       await tester.tap(feedTab);

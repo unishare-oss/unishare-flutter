@@ -74,14 +74,12 @@ void main() {
     testWidgets('onTap fires with correct index for each tab', (tester) async {
       final tapped = <int>[];
       await tester.pumpWidget(_buildSubject(onTap: tapped.add));
-      final buttons = find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.button == true,
-      );
+      final tabLabels = ['Feed', 'Posts', 'Notifications', 'More'];
       for (int i = 0; i < NavTab.values.length; i++) {
         tapped.clear();
-        await tester.tap(buttons.at(i));
+        await tester.tap(find.bySemanticsLabel(tabLabels[i]));
         await tester.pump();
-        expect(tapped, [i], reason: 'Tab $i should fire onTap with index $i');
+        expect(tapped, [i], reason: '"${tabLabels[i]}" should fire onTap($i)');
       }
     });
 
@@ -106,14 +104,16 @@ void main() {
       expect(find.byType(Badge), findsOneWidget);
     });
 
-    testWidgets('each tab item has Semantics label', (tester) async {
+    testWidgets('each tab item has sentence-case Semantics label', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildSubject());
       final labels = tester
           .widgetList<Semantics>(find.byType(Semantics))
           .where((s) => s.properties.button == true)
           .map((s) => s.properties.label)
           .toSet();
-      expect(labels, containsAll(['FEED', 'POSTS', 'NOTIFS', 'MORE']));
+      expect(labels, containsAll(['Feed', 'Posts', 'Notifications', 'More']));
     });
   });
 }

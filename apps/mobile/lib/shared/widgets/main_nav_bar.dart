@@ -96,6 +96,20 @@ class _NavTabItem extends StatelessWidget {
     }
   }
 
+  // Sentence case so screen readers pronounce the full word, not spell it out.
+  String get _semanticsLabel {
+    switch (tab) {
+      case NavTab.feed:
+        return 'Feed';
+      case NavTab.posts:
+        return 'Posts';
+      case NavTab.notifs:
+        return 'Notifications';
+      case NavTab.more:
+        return 'More';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = isActive ? colors.amber : colors.textMuted;
@@ -112,7 +126,7 @@ class _NavTabItem extends StatelessWidget {
     }
 
     return Semantics(
-      label: _label,
+      label: _semanticsLabel,
       button: true,
       selected: isActive,
       excludeSemantics: true,
