@@ -571,10 +571,10 @@ class _MoreScreenState extends State<MoreScreen> with ScrollToTopTarget {
     throw UnimplementedError();
     // Must render a ListView.builder (not ListView) containing exactly
     // 4 ListTile items navigating to:
-    //   context.go('/profile')
-    //   context.go('/saved')
-    //   context.go('/departments')
-    //   context.go('/requests')
+    //   context.go('/more/profile')
+    //   context.go('/more/saved')
+    //   context.go('/more/departments')
+    //   context.go('/more/requests')
   }
 }
 ```
@@ -589,7 +589,7 @@ class _MoreScreenState extends State<MoreScreen> with ScrollToTopTarget {
 |-----------|--------|
 | `apps/mobile/test/widget/shared/widgets/main_nav_bar_test.dart` | Correct tab renders as active at each index (0–3); amber accent color applied to active icon and label; inactive tabs use muted color; `onTap` fires with the correct index for each tab; badge widget is present when `notificationsBadgeCount` is non-null and > 0; badge is absent when `notificationsBadgeCount` is null; `Semantics` label is present on each tab item |
 | `apps/mobile/test/widget/core/router/shell_router_test.dart` | `MainNavBar` is present in the widget tree on `/feed`, `/posts`, `/notifications`, `/more`; `MainNavBar` is absent on `/welcome`; `MainNavBar` is absent on `/posts/create`; navigating to an unknown path redirects to `/feed`; `PopScope` on non-FEED branch intercepts back press and navigates to FEED; `PopScope` on FEED branch allows system pop; tapping the active tab calls `scrollToTop` on the registered `ScrollToTopTarget` |
-| `apps/mobile/test/widget/features/more/more_screen_test.dart` | All 4 destination `ListTile` items render with correct labels; tapping `/profile` tile calls `context.go('/profile')`; tapping `/saved` tile calls `context.go('/saved')`; tapping `/departments` tile calls `context.go('/departments')`; tapping `/requests` tile calls `context.go('/requests')` |
+| `apps/mobile/test/widget/features/more/more_screen_test.dart` | All 4 destination `ListTile` items render with correct labels; tapping Profile tile navigates to `/more/profile`; tapping Saved tile navigates to `/more/saved`; tapping Departments tile navigates to `/more/departments`; tapping Requests tile navigates to `/more/requests` |
 
 All tests use `pumpWidget` with a `ProviderScope` wrapping a `MaterialApp.router` seeded with an authenticated `authStateProvider` stub. No real Firebase calls.
 
@@ -600,7 +600,7 @@ All tests use `pumpWidget` with a `ProviderScope` wrapping a `MaterialApp.router
 - Content of FEED, POSTS, and NOTIFS tab screens — each is covered by its own spec.
 - Content of `/profile`, `/saved`, `/departments`, `/requests` destinations — separate feature specs.
 - NOTIFS badge wiring to the `notifications` Firestore collection — the `notificationsBadgeCount` parameter is reserved but always passed as `null` until a separate proposal covers real-time badge counts.
-- Guest-mode partial access — unauthenticated and guest users are redirected to `/welcome` by `_RouterNotifier` and never reach the shell.
+- Guest-mode partial access — unauthenticated (non-guest) users are redirected to `/welcome`. Guest users (`guestModeProvider == true`) are allowed into the shell with read-only access to `/feed`; gating specific actions (e.g. creating a post) is left to individual feature specs.
 - Tab-switch transition animations — instant swap only; no fade or slide.
 - Web-specific responsive layout (sidebar navigation rail) — deferred; the `StatefulShellRoute` builder can be extended to switch to a `NavigationRail` layout based on `MediaQuery` width in a future spec.
 - Adaptive breakpoint logic from SPEC-0002 — that spec's `NavigationRail` approach is superseded by this spec for the mobile implementation. SPEC-0002 is not deleted but is not implemented in this iteration.

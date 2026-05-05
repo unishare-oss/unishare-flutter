@@ -344,3 +344,9 @@ Review: PENDING
   [16:13] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
   [16:13] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
   [16:13] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [16:42] Edit: apps/mobile/lib/core/router/router.dart
+  [16:42] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [16:42] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [16:42] Write: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [16:42] Edit: apps/mobile/test/widget/shared/widgets/main_nav_bar_test.dart
+  [16:43] Edit: apps/mobile/test/widget/shared/widgets/main_nav_bar_test.dart
