@@ -1,5 +1,9 @@
 # Main Navigation Bar Implementation Plan
 
+> **STATUS: IMPLEMENTED — superseded in two areas by ADR-0005.**
+> - Tasks 1 & 2 describe migrating to `GlobalKey<ScrollToTopTarget>`. This was attempted but does not compile — Dart's `GlobalKey<T extends State<StatefulWidget>>` type bound cannot be satisfied by a mixin. The actual implementation keeps `GlobalKey<State>` throughout and uses a guarded `is ScrollToTopTarget` cast in `ShellScaffold._handleTabTap`. See `docs/decisions/0005-global-key-state-cast-for-scroll-to-top.md`.
+> - Do NOT follow Tasks 1–2 for future work. The shipped code is correct.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Implement the authenticated 4-tab navigation shell (SPEC-0005) — wire `ShellScaffold`, `MainNavBar`, `ScrollToTopTarget`, and the tab screen constructors, then cover with widget tests.

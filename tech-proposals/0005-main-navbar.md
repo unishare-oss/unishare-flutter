@@ -65,7 +65,7 @@ The existing `/` route is aliased to `/feed` via a redirect so existing deep lin
 
 Routes that must not show the navbar — Post Details, New Post steps 1–3, Terms of Service, Privacy Policy — are declared **outside** the `StatefulShellRoute` as top-level routes. They push modally or via standard navigation, which means the shell (and its bottom bar) is not in their widget tree at all. No per-screen `bottomNavigationBar: null` override is needed.
 
-Secondary destinations reachable from the MORE tab use **top-level paths** (e.g., `/profile`, `/saved`, `/departments`, `/requests`) rather than paths nested under `/more`. They are registered as child routes on the MORE branch of the `StatefulShellRoute`, so the navbar remains visible when navigating into them and back-button behavior is handled by the branch's own `Navigator` — but the URL is clean and directly deep-linkable without the `/more` prefix.
+Secondary destinations reachable from the MORE tab use paths nested under `/more` (e.g., `/more/profile`, `/more/saved`, `/more/departments`, `/more/requests`). They are registered as child routes on the MORE branch of the `StatefulShellRoute`, so the navbar remains visible when navigating into them and back-button behavior is handled by the branch's own `Navigator`.
 
 ### Bottom bar widget
 
@@ -84,13 +84,13 @@ The `_RouterNotifier` already redirects unauthenticated users away from `/` to `
 
 ### MORE tab
 
-The MORE tab navigates to a lightweight **More screen** (`/more`) that renders a scrollable list of secondary destinations: User Profile (`/profile`), Saved (`/saved`), Departments (`/departments`), Requests (`/requests`). This is preferred over a bottom sheet because:
+The MORE tab navigates to a lightweight **More screen** (`/more`) that renders a scrollable list of secondary destinations: User Profile (`/more/profile`), Saved (`/more/saved`), Departments (`/more/departments`), Requests (`/more/requests`). This is preferred over a bottom sheet because:
 
-1. A dedicated route is deep-linkable — `/profile` can be reached from a push notification without opening a sheet first.
+1. A dedicated route is deep-linkable — `/more/profile` can be reached from a push notification without opening a sheet first.
 2. It composes cleanly with the `StatefulShellRoute` branch — the More branch has its own `Navigator` stack, so tapping into Profile and pressing Back returns to the More list without resetting other tabs.
 3. A bottom sheet would need to be dismissed and re-opened on every entry, breaking the "persistent shell" mental model.
 
-Secondary destinations use top-level path segments (not prefixed with `/more/`) so URLs remain clean and bookmarkable.
+Secondary destinations use `/more/`-prefixed paths so they remain within the MORE branch navigator and the navbar stays visible.
 
 The More screen itself is minimal — it is a styled list of `ListTile`s. Its content is out of scope for this proposal.
 
@@ -183,7 +183,7 @@ Manage tab state inside a single `Scaffold` using an `IndexedStack` of four subt
 
 ## Open Questions
 
-1. **MORE tab: bottom sheet vs dedicated screen** — The proposed solution recommends a dedicated `/more` route with secondary destinations at top-level paths (`/profile`, `/saved`, etc.). A bottom sheet alternative would be lighter but not deep-linkable. **Resolved: dedicated `/more` screen with top-level child paths.** No team decision needed.
+1. **MORE tab: bottom sheet vs dedicated screen** — The proposed solution recommends a dedicated `/more` route with secondary destinations at `/more/profile`, `/more/saved`, etc. A bottom sheet alternative would be lighter but not deep-linkable. **Resolved: dedicated `/more` screen with `/more/*` child paths.** No team decision needed.
 
 2. **Guest-mode navbar** — The `_RouterNotifier` currently tracks `guestModeProvider`. Should a guest-mode user see the navbar with certain tabs disabled (e.g., POSTS and NOTIFS are authentication-gated), or should guest mode always redirect to `/welcome`? v1 scope and behavior must be agreed before implementation.
 
