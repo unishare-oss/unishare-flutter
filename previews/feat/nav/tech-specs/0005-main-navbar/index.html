@@ -2253,10 +2253,10 @@
 <span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">UnimplementedError</span><span class="p">();</span>
 <span class="w">    </span><span class="c1">// Must render a ListView.builder (not ListView) containing exactly</span>
 <span class="w">    </span><span class="c1">// 4 ListTile items navigating to:</span>
-<span class="w">    </span><span class="c1">//   context.go(&#39;/profile&#39;)</span>
-<span class="w">    </span><span class="c1">//   context.go(&#39;/saved&#39;)</span>
-<span class="w">    </span><span class="c1">//   context.go(&#39;/departments&#39;)</span>
-<span class="w">    </span><span class="c1">//   context.go(&#39;/requests&#39;)</span>
+<span class="w">    </span><span class="c1">//   context.go(&#39;/more/profile&#39;)</span>
+<span class="w">    </span><span class="c1">//   context.go(&#39;/more/saved&#39;)</span>
+<span class="w">    </span><span class="c1">//   context.go(&#39;/more/departments&#39;)</span>
+<span class="w">    </span><span class="c1">//   context.go(&#39;/more/requests&#39;)</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -2281,7 +2281,7 @@
 </tr>
 <tr>
 <td><code>apps/mobile/test/widget/features/more/more_screen_test.dart</code></td>
-<td>All 4 destination <code>ListTile</code> items render with correct labels; tapping <code>/profile</code> tile calls <code>context.go('/profile')</code>; tapping <code>/saved</code> tile calls <code>context.go('/saved')</code>; tapping <code>/departments</code> tile calls <code>context.go('/departments')</code>; tapping <code>/requests</code> tile calls <code>context.go('/requests')</code></td>
+<td>All 4 destination <code>ListTile</code> items render with correct labels; tapping Profile tile navigates to <code>/more/profile</code>; tapping Saved tile navigates to <code>/more/saved</code>; tapping Departments tile navigates to <code>/more/departments</code>; tapping Requests tile navigates to <code>/more/requests</code></td>
 </tr>
 </tbody>
 </table>
@@ -2292,7 +2292,7 @@
 <li>Content of FEED, POSTS, and NOTIFS tab screens — each is covered by its own spec.</li>
 <li>Content of <code>/profile</code>, <code>/saved</code>, <code>/departments</code>, <code>/requests</code> destinations — separate feature specs.</li>
 <li>NOTIFS badge wiring to the <code>notifications</code> Firestore collection — the <code>notificationsBadgeCount</code> parameter is reserved but always passed as <code>null</code> until a separate proposal covers real-time badge counts.</li>
-<li>Guest-mode partial access — unauthenticated and guest users are redirected to <code>/welcome</code> by <code>_RouterNotifier</code> and never reach the shell.</li>
+<li>Guest-mode partial access — unauthenticated (non-guest) users are redirected to <code>/welcome</code>. Guest users (<code>guestModeProvider == true</code>) are allowed into the shell with read-only access to <code>/feed</code>; gating specific actions (e.g. creating a post) is left to individual feature specs.</li>
 <li>Tab-switch transition animations — instant swap only; no fade or slide.</li>
 <li>Web-specific responsive layout (sidebar navigation rail) — deferred; the <code>StatefulShellRoute</code> builder can be extended to switch to a <code>NavigationRail</code> layout based on <code>MediaQuery</code> width in a future spec.</li>
 <li>Adaptive breakpoint logic from SPEC-0002 — that spec's <code>NavigationRail</code> approach is superseded by this spec for the mobile implementation. SPEC-0002 is not deleted but is not implemented in this iteration.</li>
