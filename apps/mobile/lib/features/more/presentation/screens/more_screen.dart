@@ -26,7 +26,11 @@ class _MoreScreenState extends State<MoreScreen> with ScrollToTopTarget {
   static const _destinations = [
     (label: 'Profile', route: '/more/profile', icon: Icons.person_outline),
     (label: 'Saved', route: '/more/saved', icon: Icons.bookmark_outline),
-    (label: 'Departments', route: '/more/departments', icon: Icons.school_outlined),
+    (
+      label: 'Departments',
+      route: '/more/departments',
+      icon: Icons.school_outlined,
+    ),
     (label: 'Requests', route: '/more/requests', icon: Icons.inbox_outlined),
   ];
 

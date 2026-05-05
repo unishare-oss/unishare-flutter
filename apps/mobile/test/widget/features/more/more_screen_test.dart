@@ -14,12 +14,25 @@ void main() {
       routes: [
         GoRoute(
           path: '/more',
-          builder: (_, __) => MoreScreen(scrollKey: scrollKey),
+          builder: (ctx, _) => MoreScreen(scrollKey: scrollKey),
           routes: [
-            GoRoute(path: 'profile', builder: (_, __) => const Scaffold(body: Text('Profile page'))),
-            GoRoute(path: 'saved', builder: (_, __) => const Scaffold(body: Text('Saved page'))),
-            GoRoute(path: 'departments', builder: (_, __) => const Scaffold(body: Text('Departments page'))),
-            GoRoute(path: 'requests', builder: (_, __) => const Scaffold(body: Text('Requests page'))),
+            GoRoute(
+              path: 'profile',
+              builder: (ctx, _) => const Scaffold(body: Text('Profile page')),
+            ),
+            GoRoute(
+              path: 'saved',
+              builder: (ctx, _) => const Scaffold(body: Text('Saved page')),
+            ),
+            GoRoute(
+              path: 'departments',
+              builder: (ctx, _) =>
+                  const Scaffold(body: Text('Departments page')),
+            ),
+            GoRoute(
+              path: 'requests',
+              builder: (ctx, _) => const Scaffold(body: Text('Requests page')),
+            ),
           ],
         ),
       ],
@@ -45,7 +58,9 @@ void main() {
     expect(find.text('Requests'), findsOneWidget);
   });
 
-  testWidgets('tapping Profile tile navigates to /more/profile', (tester) async {
+  testWidgets('tapping Profile tile navigates to /more/profile', (
+    tester,
+  ) async {
     await tester.pumpWidget(buildSubject());
     await tester.pumpAndSettle();
     await tester.tap(find.text('Profile'));
@@ -61,7 +76,9 @@ void main() {
     expect(find.text('Saved page'), findsOneWidget);
   });
 
-  testWidgets('tapping Departments tile navigates to /more/departments', (tester) async {
+  testWidgets('tapping Departments tile navigates to /more/departments', (
+    tester,
+  ) async {
     await tester.pumpWidget(buildSubject());
     await tester.pumpAndSettle();
     await tester.tap(find.text('Departments'));
@@ -69,7 +86,9 @@ void main() {
     expect(find.text('Departments page'), findsOneWidget);
   });
 
-  testWidgets('tapping Requests tile navigates to /more/requests', (tester) async {
+  testWidgets('tapping Requests tile navigates to /more/requests', (
+    tester,
+  ) async {
     await tester.pumpWidget(buildSubject());
     await tester.pumpAndSettle();
     await tester.tap(find.text('Requests'));

@@ -42,7 +42,9 @@ class MainNavBar extends StatelessWidget {
                   tab: tab,
                   isActive: index == activeIndex,
                   onTap: () => onTap(index),
-                  badgeCount: tab == NavTab.notifs ? notificationsBadgeCount : null,
+                  badgeCount: tab == NavTab.notifs
+                      ? notificationsBadgeCount
+                      : null,
                   colors: colors,
                 ),
               );
@@ -98,19 +100,14 @@ class _NavTabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isActive ? colors.amber : colors.textMuted;
-    final labelStyle = AppTypography.textTheme(color).labelSmall?.copyWith(
-      fontSize: 11,
-      letterSpacing: 0.55,
-      color: color,
-    );
+    final labelStyle = AppTypography.textTheme(
+      color,
+    ).labelSmall?.copyWith(fontSize: 11, letterSpacing: 0.55, color: color);
 
     Widget iconWidget = Icon(_icon, color: color, size: 24);
 
     if (tab == NavTab.notifs && badgeCount != null && badgeCount! > 0) {
-      iconWidget = Badge(
-        label: Text('$badgeCount'),
-        child: iconWidget,
-      );
+      iconWidget = Badge(label: Text('$badgeCount'), child: iconWidget);
     }
 
     return Semantics(

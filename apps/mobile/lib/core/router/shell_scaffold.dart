@@ -21,10 +21,7 @@ class ShellScaffold extends StatelessWidget {
       canPop: navigationShell.currentIndex == NavTab.feed.index,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop && navigationShell.currentIndex != NavTab.feed.index) {
-          navigationShell.goBranch(
-            NavTab.feed.index,
-            initialLocation: true,
-          );
+          navigationShell.goBranch(NavTab.feed.index, initialLocation: true);
         }
       },
       child: Scaffold(
