@@ -35,10 +35,10 @@ flowchart TD
     D --> G["/notifications — NotificationsScreen"]
     D --> H["/more — MoreScreen"]
 
-    H --> I["/profile"]
-    H --> J["/saved"]
-    H --> K["/departments"]
-    H --> L["/requests"]
+    H --> I["/more/profile"]
+    H --> J["/more/saved"]
+    H --> K["/more/departments"]
+    H --> L["/more/requests"]
 
     D -->|builder receives| M[StatefulNavigationShell]
     M -->|currentIndex| N[MainNavBar.activeIndex]
@@ -202,8 +202,11 @@ class ShellScaffold extends StatelessWidget {
   /// Each tab screen owns its own [ScrollController] and registers it against
   /// the key matching its [NavTab.index]. The shell calls the controller only
   /// if it is attached and has clients.
-  static final List<GlobalKey<ScrollToTopTarget>> scrollTargetKeys =
-      List.generate(NavTab.values.length, (_) => GlobalKey<ScrollToTopTarget>());
+  // ADR-0005: GlobalKey<ScrollToTopTarget> does not compile because mixins cannot
+  // satisfy the State<StatefulWidget> type bound on GlobalKey<T>. Use
+  // GlobalKey<State> and guard the cast at the call site.
+  static final List<GlobalKey<State>> scrollTargetKeys =
+      List.generate(NavTab.values.length, (_) => GlobalKey<State>());
 
   @override
   Widget build(BuildContext context) {
@@ -218,7 +221,9 @@ class ShellScaffold extends StatelessWidget {
 // Inside ShellScaffold.build — conceptual structure only,
 // not full implementation code.
 PopScope(
-  canPop: navigationShell.currentIndex == NavTab.feed.index,
+  // true when GoRouter has a nested route to pop (e.g. /more/profile → /more)
+  // OR when already on FEED root (system pop exits the app on Android).
+  canPop: navigationShell.currentIndex == NavTab.feed.index || context.canPop(),
   onPopInvokedWithResult: (didPop, result) {
     if (!didPop && navigationShell.currentIndex != NavTab.feed.index) {
       navigationShell.goBranch(
@@ -226,8 +231,6 @@ PopScope(
         initialLocation: true,
       );
     }
-    // When branch index == 0 and canPop == true, the system handles the pop
-    // (exits the app on Android).
   },
   child: Scaffold(
     body: navigationShell,
@@ -245,7 +248,12 @@ PopScope(
 void _handleTabTap(int index, StatefulNavigationShell navigationShell) {
   if (index == navigationShell.currentIndex) {
     final key = ShellScaffold.scrollTargetKeys[index];
-    key.currentState?.scrollToTop();
+    final state = key.currentState;
+    // ADR-0005: guarded cast because GlobalKey<State> cannot be typed as
+    // GlobalKey<ScrollToTopTarget> at the declaration site.
+    if (state is ScrollToTopTarget) {
+      (state as ScrollToTopTarget).scrollToTop();
+    }
     return;
   }
   navigationShell.goBranch(index);
@@ -295,7 +303,9 @@ mixin ScrollToTopTarget on State<StatefulWidget> {
 
 `ScrollToTopTarget` lives at `apps/mobile/lib/shared/widgets/scroll_to_top_target.dart`. It is a pure Dart mixin on `State` — no framework imports beyond `package:flutter/widgets.dart`.
 
-The `GlobalKey<ScrollToTopTarget>` pattern requires `ShellScaffold.scrollTargetKeys[index]` to reference the same key instance that the screen uses when it creates its `StatefulWidget`. Each tab screen accepts its key from the shell; the shell allocates the keys once at `static final` level so they survive hot reload.
+> **ADR-0005:** `GlobalKey<ScrollToTopTarget>` does not compile — Dart's `GlobalKey<T extends State<StatefulWidget>>` type bound cannot be satisfied by a mixin. The implementation uses `GlobalKey<State>` throughout, with a guarded `is ScrollToTopTarget` cast at the call site in `ShellScaffold._handleTabTap`. See `docs/decisions/0005-global-key-state-cast-for-scroll-to-top.md`.
+
+Each tab screen accepts its key from the shell; the shell allocates the keys once at `static final` level so they survive hot reload.
 
 ---
 
@@ -339,18 +349,18 @@ String? redirect(BuildContext context, GoRouterState state) {
   // NOTE: GoRouter also has an errorBuilder for truly unmatched routes;
   // this redirect handles the case where a stale deep link resolves to an
   // authenticated path that no longer exists.
-  final knownPrefixes = {
+  const knownPrefixes = {
+    '/welcome',
     '/feed',
     '/posts',
     '/notifications',
     '/more',
-    '/profile',
-    '/saved',
-    '/departments',
-    '/requests',
-    '/welcome',
   };
-  final isKnown = knownPrefixes.any((p) => currentPath.startsWith(p));
+  // Exact segment match — prevents /feed-typo from matching /feed.
+  // /more covers all sub-routes (/more/profile, /more/saved, etc.).
+  final isKnown = knownPrefixes.any(
+    (p) => currentPath == p || currentPath.startsWith('$p/'),
+  );
   if (!isKnown) {
     return '/feed';
   }
@@ -409,10 +419,11 @@ StatefulShellRoute.indexedStack(
             scrollKey: ShellScaffold.scrollTargetKeys[NavTab.more.index],
           ),
           routes: [
-            GoRoute(path: '/profile', builder: (context, state) => const ProfilePlaceholderScreen()),
-            GoRoute(path: '/saved', builder: (context, state) => const SavedPlaceholderScreen()),
-            GoRoute(path: '/departments', builder: (context, state) => const DepartmentsPlaceholderScreen()),
-            GoRoute(path: '/requests', builder: (context, state) => const RequestsPlaceholderScreen()),
+            // Relative paths — full GoRouter URLs are /more/profile etc.
+            GoRoute(path: 'profile', builder: (context, state) => const ProfileScreen()),
+            GoRoute(path: 'saved', builder: (context, state) => const SavedScreen()),
+            GoRoute(path: 'departments', builder: (context, state) => const DepartmentsScreen()),
+            GoRoute(path: 'requests', builder: (context, state) => const RequestsScreen()),
           ],
         ),
       ],
@@ -453,7 +464,7 @@ All four tab-root screens (FEED, POSTS, NOTIFS, MORE) ship as skeletons so teamm
 class MyPostsScreen extends StatefulWidget {
   const MyPostsScreen({required this.scrollKey}) : super(key: scrollKey);
 
-  final GlobalKey<ScrollToTopTarget> scrollKey;
+  final GlobalKey<State> scrollKey; // ADR-0005: typed as GlobalKey<State>
 
   @override
   State<MyPostsScreen> createState() => _MyPostsScreenState();
@@ -494,7 +505,7 @@ Each tab screen must accept a `scrollKey` parameter so the shell can attach its 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key, required this.scrollKey});
 
-  final GlobalKey<ScrollToTopTarget> scrollKey;
+  final GlobalKey<State> scrollKey; // ADR-0005: typed as GlobalKey<State>
 
   @override
   State<FeedScreen> createState() => _FeedScreenState();
@@ -509,12 +520,9 @@ class _FeedScreenState extends State<FeedScreen> with ScrollToTopTarget {
   @override
   void initState() {
     super.initState();
-    // No explicit key registration needed — GlobalKey<ScrollToTopTarget>
-    // resolves through the widget tree because this State mixes in
-    // ScrollToTopTarget, which is the type parameter of the GlobalKey.
-    // The flutter-engineer must ensure this State class is the direct
-    // State of the widget that widget.scrollKey is assigned to via the
-    // key: parameter on the StatefulWidget.
+    // No explicit key registration needed. The shell holds a GlobalKey<State>
+    // (ADR-0005) and calls key.currentState; at the call site it guards with
+    // `is ScrollToTopTarget` before calling scrollToTop().
   }
 
   @override
@@ -530,7 +538,7 @@ class _FeedScreenState extends State<FeedScreen> with ScrollToTopTarget {
 }
 ```
 
-Note: the `GlobalKey<ScrollToTopTarget>` must be passed as the `key:` argument to the `StatefulWidget`, not stored as a separate field. The shell resolves `key.currentState` to get the `ScrollToTopTarget` mixin methods.
+Note: the key must be passed as the `key:` argument to the `StatefulWidget`, not stored as a separate field. The shell resolves `key.currentState` and casts to `ScrollToTopTarget` (guarded `is` check) to call `scrollToTop()`. See ADR-0005.
 
 ---
 
@@ -540,7 +548,7 @@ Note: the `GlobalKey<ScrollToTopTarget>` must be passed as the `key:` argument t
 class MoreScreen extends StatefulWidget {
   const MoreScreen({super.key, required this.scrollKey});
 
-  final GlobalKey<ScrollToTopTarget> scrollKey;
+  final GlobalKey<State> scrollKey; // ADR-0005: typed as GlobalKey<State>
 
   @override
   State<MoreScreen> createState() => _MoreScreenState();
