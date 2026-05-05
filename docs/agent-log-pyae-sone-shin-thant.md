@@ -312,3 +312,15 @@ Summary:  1 file changed, 10 insertions(+), 2 deletions(-)
   [20:41] Edit: apps/mobile/test/unit/auth/auth_repository_impl_test.dart
   [20:41] Edit: apps/mobile/test/unit/auth/auth_repository_impl_test.dart
   [20:47] Edit: apps/mobile/test/unit/auth/fakes/fake_firebase_auth_datasource.dart
+
+---
+Date: 2026-05-05 00:00
+Member: Pyae Sone Shin Thant
+Agent: architect
+Task: Write Tech Proposal 0005 — Main Navigation Bar
+Prompt: /new-proposal — write main navbar based on the figma, should exist in pages that are in figma.
+
+Outcome: Wrote tech-proposals/0005-main-navbar.md (DRAFT). 4-tab bottom bar (FEED, POSTS, NOTIFS, MORE) with StatefulShellRoute + custom-painted widget. MORE branch destinations use top-level paths (/profile, /saved, /departments, /requests).
+Decisions: Recommended custom-painted bar over Material NavigationBar due to Figma token divergence; StatefulShellRoute for GoRouter integration; dedicated /more screen (not bottom sheet) for deep-linkability; secondary destinations at top-level paths per user preference.
+Handoff: Proposal is DRAFT — team must review and move to PROPOSED before spec can begin. Run /new-spec 0005-main-navbar once approved.
+Review: PENDING
