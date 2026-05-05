@@ -350,3 +350,9 @@ Review: PENDING
   [16:42] Write: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [16:42] Edit: apps/mobile/test/widget/shared/widgets/main_nav_bar_test.dart
   [16:43] Edit: apps/mobile/test/widget/shared/widgets/main_nav_bar_test.dart
+  [16:55] Write: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  [16:55] Write: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [16:55] Write: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [16:55] Write: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [16:55] Write: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [16:55] Write: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
