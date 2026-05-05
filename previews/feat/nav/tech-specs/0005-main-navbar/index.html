@@ -1681,10 +1681,10 @@
     D --&gt; G["/notifications — NotificationsScreen"]
     D --&gt; H["/more — MoreScreen"]
 
-    H --&gt; I["/profile"]
-    H --&gt; J["/saved"]
-    H --&gt; K["/departments"]
-    H --&gt; L["/requests"]
+    H --&gt; I["/more/profile"]
+    H --&gt; J["/more/saved"]
+    H --&gt; K["/more/departments"]
+    H --&gt; L["/more/requests"]
 
     D --&gt;|builder receives| M[StatefulNavigationShell]
     M --&gt;|currentIndex| N[MainNavBar.activeIndex]
@@ -1925,8 +1925,11 @@
 <span class="w">  </span><span class="c1">/// Each tab screen owns its own [ScrollController] and registers it against</span>
 <span class="w">  </span><span class="c1">/// the key matching its [NavTab.index]. The shell calls the controller only</span>
 <span class="w">  </span><span class="c1">/// if it is attached and has clients.</span>
-<span class="w">  </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">scrollTargetKeys</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">List</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span><span class="n">NavTab</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">length</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">  </span><span class="c1">// ADR-0005: GlobalKey&lt;ScrollToTopTarget&gt; does not compile because mixins cannot</span>
+<span class="w">  </span><span class="c1">// satisfy the State&lt;StatefulWidget&gt; type bound on GlobalKey&lt;T&gt;. Use</span>
+<span class="w">  </span><span class="c1">// GlobalKey&lt;State&gt; and guard the cast at the call site.</span>
+<span class="w">  </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">State</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">scrollTargetKeys</span><span class="w"> </span><span class="o">=</span>
+<span class="w">      </span><span class="n">List</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span><span class="n">NavTab</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">length</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">State</span><span class="o">&gt;</span><span class="p">());</span>
 
 <span class="w">  </span><span class="nd">@override</span>
 <span class="w">  </span><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -1938,7 +1941,9 @@
 <div class="highlight"><pre><span></span><code><span class="c1">// Inside ShellScaffold.build — conceptual structure only,</span>
 <span class="c1">// not full implementation code.</span>
 <span class="n">PopScope</span><span class="p">(</span>
-<span class="w">  </span><span class="nl">canPop:</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">currentIndex</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="n">feed</span><span class="p">.</span><span class="n">index</span><span class="p">,</span>
+<span class="w">  </span><span class="c1">// true when GoRouter has a nested route to pop (e.g. /more/profile → /more)</span>
+<span class="w">  </span><span class="c1">// OR when already on FEED root (system pop exits the app on Android).</span>
+<span class="w">  </span><span class="nl">canPop:</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">currentIndex</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="n">feed</span><span class="p">.</span><span class="n">index</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">canPop</span><span class="p">(),</span>
 <span class="w">  </span><span class="nl">onPopInvokedWithResult:</span><span class="w"> </span><span class="p">(</span><span class="n">didPop</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">didPop</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">currentIndex</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">NavTab</span><span class="p">.</span><span class="n">feed</span><span class="p">.</span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">goBranch</span><span class="p">(</span>
@@ -1946,8 +1951,6 @@
 <span class="w">        </span><span class="nl">initialLocation:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">      </span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="c1">// When branch index == 0 and canPop == true, the system handles the pop</span>
-<span class="w">    </span><span class="c1">// (exits the app on Android).</span>
 <span class="w">  </span><span class="p">},</span>
 <span class="w">  </span><span class="nl">child:</span><span class="w"> </span><span class="n">Scaffold</span><span class="p">(</span>
 <span class="w">    </span><span class="nl">body:</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">,</span>
@@ -1962,7 +1965,12 @@
 <div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="n">_handleTabTap</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">StatefulNavigationShell</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">currentIndex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">.</span><span class="n">scrollTargetKeys</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
-<span class="w">    </span><span class="n">key</span><span class="p">.</span><span class="n">currentState</span><span class="o">?</span><span class="p">.</span><span class="n">scrollToTop</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">key</span><span class="p">.</span><span class="n">currentState</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// ADR-0005: guarded cast because GlobalKey&lt;State&gt; cannot be typed as</span>
+<span class="w">    </span><span class="c1">// GlobalKey&lt;ScrollToTopTarget&gt; at the declaration site.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">state</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">ScrollToTopTarget</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="p">(</span><span class="n">state</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">ScrollToTopTarget</span><span class="p">).</span><span class="n">scrollToTop</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="w">    </span><span class="k">return</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="w">  </span><span class="n">navigationShell</span><span class="p">.</span><span class="n">goBranch</span><span class="p">(</span><span class="n">index</span><span class="p">);</span>
@@ -2005,7 +2013,10 @@
 <span class="p">}</span>
 </code></pre></div>
 <p><code>ScrollToTopTarget</code> lives at <code>apps/mobile/lib/shared/widgets/scroll_to_top_target.dart</code>. It is a pure Dart mixin on <code>State</code> — no framework imports beyond <code>package:flutter/widgets.dart</code>.</p>
-<p>The <code>GlobalKey&lt;ScrollToTopTarget&gt;</code> pattern requires <code>ShellScaffold.scrollTargetKeys[index]</code> to reference the same key instance that the screen uses when it creates its <code>StatefulWidget</code>. Each tab screen accepts its key from the shell; the shell allocates the keys once at <code>static final</code> level so they survive hot reload.</p>
+<blockquote>
+<p><strong>ADR-0005:</strong> <code>GlobalKey&lt;ScrollToTopTarget&gt;</code> does not compile — Dart's <code>GlobalKey&lt;T extends State&lt;StatefulWidget&gt;&gt;</code> type bound cannot be satisfied by a mixin. The implementation uses <code>GlobalKey&lt;State&gt;</code> throughout, with a guarded <code>is ScrollToTopTarget</code> cast at the call site in <code>ShellScaffold._handleTabTap</code>. See <code>docs/decisions/0005-global-key-state-cast-for-scroll-to-top.md</code>.</p>
+</blockquote>
+<p>Each tab screen accepts its key from the shell; the shell allocates the keys once at <code>static final</code> level so they survive hot reload.</p>
 <hr />
 <h3 id="router-modifications-appsmobilelibcorerouterrouterdart">Router modifications — <code>apps/mobile/lib/core/router/router.dart</code><a class="headerlink" href="#router-modifications-appsmobilelibcorerouterrouterdart" title="Permanent link">&para;</a></h3>
 <h4 id="redirect-additions-to-_routernotifierredirect">Redirect additions to <code>_RouterNotifier.redirect</code><a class="headerlink" href="#redirect-additions-to-_routernotifierredirect" title="Permanent link">&para;</a></h4>
@@ -2044,18 +2055,18 @@
 <span class="w">  </span><span class="c1">// NOTE: GoRouter also has an errorBuilder for truly unmatched routes;</span>
 <span class="w">  </span><span class="c1">// this redirect handles the case where a stale deep link resolves to an</span>
 <span class="w">  </span><span class="c1">// authenticated path that no longer exists.</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">knownPrefixes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">knownPrefixes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s1">&#39;/welcome&#39;</span><span class="p">,</span>
 <span class="w">    </span><span class="s1">&#39;/feed&#39;</span><span class="p">,</span>
 <span class="w">    </span><span class="s1">&#39;/posts&#39;</span><span class="p">,</span>
 <span class="w">    </span><span class="s1">&#39;/notifications&#39;</span><span class="p">,</span>
 <span class="w">    </span><span class="s1">&#39;/more&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;/profile&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;/saved&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;/departments&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;/requests&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">&#39;/welcome&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="p">};</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">isKnown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">knownPrefixes</span><span class="p">.</span><span class="n">any</span><span class="p">((</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">currentPath</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="n">p</span><span class="p">));</span>
+<span class="w">  </span><span class="c1">// Exact segment match — prevents /feed-typo from matching /feed.</span>
+<span class="w">  </span><span class="c1">// /more covers all sub-routes (/more/profile, /more/saved, etc.).</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">isKnown</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">knownPrefixes</span><span class="p">.</span><span class="n">any</span><span class="p">(</span>
+<span class="w">    </span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">currentPath</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">currentPath</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">$</span><span class="n">p</span><span class="s1">/&#39;</span><span class="p">),</span>
+<span class="w">  </span><span class="p">);</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isKnown</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/feed&#39;</span><span class="p">;</span>
 <span class="w">  </span><span class="p">}</span>
@@ -2111,10 +2122,11 @@
 <span class="w">            </span><span class="nl">scrollKey:</span><span class="w"> </span><span class="n">ShellScaffold</span><span class="p">.</span><span class="n">scrollTargetKeys</span><span class="p">[</span><span class="n">NavTab</span><span class="p">.</span><span class="n">more</span><span class="p">.</span><span class="n">index</span><span class="p">],</span>
 <span class="w">          </span><span class="p">),</span>
 <span class="w">          </span><span class="nl">routes:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/profile&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ProfilePlaceholderScreen</span><span class="p">()),</span>
-<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/saved&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">SavedPlaceholderScreen</span><span class="p">()),</span>
-<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/departments&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DepartmentsPlaceholderScreen</span><span class="p">()),</span>
-<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/requests&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">RequestsPlaceholderScreen</span><span class="p">()),</span>
+<span class="w">            </span><span class="c1">// Relative paths — full GoRouter URLs are /more/profile etc.</span>
+<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;profile&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ProfileScreen</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;saved&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">SavedScreen</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;departments&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DepartmentsScreen</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">GoRoute</span><span class="p">(</span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;requests&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">RequestsScreen</span><span class="p">()),</span>
 <span class="w">          </span><span class="p">],</span>
 <span class="w">        </span><span class="p">),</span>
 <span class="w">      </span><span class="p">],</span>
@@ -2145,7 +2157,7 @@
 <span class="kd">class</span><span class="w"> </span><span class="nc">MyPostsScreen</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatefulWidget</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">MyPostsScreen</span><span class="p">({</span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">scrollKey</span><span class="p">})</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">super</span><span class="p">(</span><span class="nl">key:</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">);</span>
 
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">State</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span><span class="w"> </span><span class="c1">// ADR-0005: typed as GlobalKey&lt;State&gt;</span>
 
 <span class="w">  </span><span class="nd">@override</span>
 <span class="w">  </span><span class="n">State</span><span class="o">&lt;</span><span class="n">MyPostsScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">createState</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_MyPostsScreenState</span><span class="p">();</span>
@@ -2180,7 +2192,7 @@
 <span class="kd">class</span><span class="w"> </span><span class="nc">FeedScreen</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatefulWidget</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">FeedScreen</span><span class="p">({</span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">scrollKey</span><span class="p">});</span>
 
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">State</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span><span class="w"> </span><span class="c1">// ADR-0005: typed as GlobalKey&lt;State&gt;</span>
 
 <span class="w">  </span><span class="nd">@override</span>
 <span class="w">  </span><span class="n">State</span><span class="o">&lt;</span><span class="n">FeedScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">createState</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_FeedScreenState</span><span class="p">();</span>
@@ -2195,12 +2207,9 @@
 <span class="w">  </span><span class="nd">@override</span>
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">initState</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">initState</span><span class="p">();</span>
-<span class="w">    </span><span class="c1">// No explicit key registration needed — GlobalKey&lt;ScrollToTopTarget&gt;</span>
-<span class="w">    </span><span class="c1">// resolves through the widget tree because this State mixes in</span>
-<span class="w">    </span><span class="c1">// ScrollToTopTarget, which is the type parameter of the GlobalKey.</span>
-<span class="w">    </span><span class="c1">// The flutter-engineer must ensure this State class is the direct</span>
-<span class="w">    </span><span class="c1">// State of the widget that widget.scrollKey is assigned to via the</span>
-<span class="w">    </span><span class="c1">// key: parameter on the StatefulWidget.</span>
+<span class="w">    </span><span class="c1">// No explicit key registration needed. The shell holds a GlobalKey&lt;State&gt;</span>
+<span class="w">    </span><span class="c1">// (ADR-0005) and calls key.currentState; at the call site it guards with</span>
+<span class="w">    </span><span class="c1">// `is ScrollToTopTarget` before calling scrollToTop().</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="nd">@override</span>
@@ -2215,13 +2224,13 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Note: the <code>GlobalKey&lt;ScrollToTopTarget&gt;</code> must be passed as the <code>key:</code> argument to the <code>StatefulWidget</code>, not stored as a separate field. The shell resolves <code>key.currentState</code> to get the <code>ScrollToTopTarget</code> mixin methods.</p>
+<p>Note: the key must be passed as the <code>key:</code> argument to the <code>StatefulWidget</code>, not stored as a separate field. The shell resolves <code>key.currentState</code> and casts to <code>ScrollToTopTarget</code> (guarded <code>is</code> check) to call <code>scrollToTop()</code>. See ADR-0005.</p>
 <hr />
 <h3 id="morescreen-appsmobilelibfeaturesmorepresentationscreensmore_screendart"><code>MoreScreen</code> — <code>apps/mobile/lib/features/more/presentation/screens/more_screen.dart</code><a class="headerlink" href="#morescreen-appsmobilelibfeaturesmorepresentationscreensmore_screendart" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">MoreScreen</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatefulWidget</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">MoreScreen</span><span class="p">({</span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">scrollKey</span><span class="p">});</span>
 
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">ScrollToTopTarget</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">GlobalKey</span><span class="o">&lt;</span><span class="n">State</span><span class="o">&gt;</span><span class="w"> </span><span class="n">scrollKey</span><span class="p">;</span><span class="w"> </span><span class="c1">// ADR-0005: typed as GlobalKey&lt;State&gt;</span>
 
 <span class="w">  </span><span class="nd">@override</span>
 <span class="w">  </span><span class="n">State</span><span class="o">&lt;</span><span class="n">MoreScreen</span><span class="o">&gt;</span><span class="w"> </span><span class="n">createState</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_MoreScreenState</span><span class="p">();</span>

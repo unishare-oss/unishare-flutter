@@ -1707,7 +1707,7 @@
 </table>
 <p>The existing <code>/</code> route is aliased to <code>/feed</code> via a redirect so existing deep links and the post-login redirect continue to work without breakage.</p>
 <p>Routes that must not show the navbar — Post Details, New Post steps 1–3, Terms of Service, Privacy Policy — are declared <strong>outside</strong> the <code>StatefulShellRoute</code> as top-level routes. They push modally or via standard navigation, which means the shell (and its bottom bar) is not in their widget tree at all. No per-screen <code>bottomNavigationBar: null</code> override is needed.</p>
-<p>Secondary destinations reachable from the MORE tab use <strong>top-level paths</strong> (e.g., <code>/profile</code>, <code>/saved</code>, <code>/departments</code>, <code>/requests</code>) rather than paths nested under <code>/more</code>. They are registered as child routes on the MORE branch of the <code>StatefulShellRoute</code>, so the navbar remains visible when navigating into them and back-button behavior is handled by the branch's own <code>Navigator</code> — but the URL is clean and directly deep-linkable without the <code>/more</code> prefix.</p>
+<p>Secondary destinations reachable from the MORE tab use paths nested under <code>/more</code> (e.g., <code>/more/profile</code>, <code>/more/saved</code>, <code>/more/departments</code>, <code>/more/requests</code>). They are registered as child routes on the MORE branch of the <code>StatefulShellRoute</code>, so the navbar remains visible when navigating into them and back-button behavior is handled by the branch's own <code>Navigator</code>.</p>
 <h3 id="bottom-bar-widget">Bottom bar widget<a class="headerlink" href="#bottom-bar-widget" title="Permanent link">&para;</a></h3>
 <p>Rather than using <code>NavigationBar</code> (Material 3) or <code>BottomNavigationBar</code> (Material 2), a <strong>custom widget</strong> is used. The Figma design does not follow Material Design conventions closely enough for either stock widget to reproduce it without fighting the theme. Specifically:</p>
 <ul>
@@ -1720,13 +1720,13 @@
 <h3 id="auth-awareness">Auth-awareness<a class="headerlink" href="#auth-awareness" title="Permanent link">&para;</a></h3>
 <p>The <code>_RouterNotifier</code> already redirects unauthenticated users away from <code>/</code> to <code>/welcome</code>. Because the <code>StatefulShellRoute</code> is declared inside the authenticated route tree, an unauthenticated user never reaches the shell and never sees the navbar. No additional auth check is needed inside the bar widget itself — the router is the single source of truth.</p>
 <h3 id="more-tab">MORE tab<a class="headerlink" href="#more-tab" title="Permanent link">&para;</a></h3>
-<p>The MORE tab navigates to a lightweight <strong>More screen</strong> (<code>/more</code>) that renders a scrollable list of secondary destinations: User Profile (<code>/profile</code>), Saved (<code>/saved</code>), Departments (<code>/departments</code>), Requests (<code>/requests</code>). This is preferred over a bottom sheet because:</p>
+<p>The MORE tab navigates to a lightweight <strong>More screen</strong> (<code>/more</code>) that renders a scrollable list of secondary destinations: User Profile (<code>/more/profile</code>), Saved (<code>/more/saved</code>), Departments (<code>/more/departments</code>), Requests (<code>/more/requests</code>). This is preferred over a bottom sheet because:</p>
 <ol>
-<li>A dedicated route is deep-linkable — <code>/profile</code> can be reached from a push notification without opening a sheet first.</li>
+<li>A dedicated route is deep-linkable — <code>/more/profile</code> can be reached from a push notification without opening a sheet first.</li>
 <li>It composes cleanly with the <code>StatefulShellRoute</code> branch — the More branch has its own <code>Navigator</code> stack, so tapping into Profile and pressing Back returns to the More list without resetting other tabs.</li>
 <li>A bottom sheet would need to be dismissed and re-opened on every entry, breaking the "persistent shell" mental model.</li>
 </ol>
-<p>Secondary destinations use top-level path segments (not prefixed with <code>/more/</code>) so URLs remain clean and bookmarkable.</p>
+<p>Secondary destinations use <code>/more/</code>-prefixed paths so they remain within the MORE branch navigator and the navbar stays visible.</p>
 <p>The More screen itself is minimal — it is a styled list of <code>ListTile</code>s. Its content is out of scope for this proposal.</p>
 <h3 id="active-tab-highlight">Active-tab highlight<a class="headerlink" href="#active-tab-highlight" title="Permanent link">&para;</a></h3>
 <p>GoRouter exposes the current location via <code>GoRouterState</code>. The shell's <code>builder</code> receives a <code>navigationShell</code> parameter that includes the current branch index. The custom bar widget receives this index as <code>activeIndex</code> and applies the amber accent (<code>#d97706</code>) to the corresponding tab's icon and label. No external state management (Riverpod provider) is needed for the tab index — GoRouter owns that state.</p>
@@ -1786,7 +1786,7 @@
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>MORE tab: bottom sheet vs dedicated screen</strong> — The proposed solution recommends a dedicated <code>/more</code> route with secondary destinations at top-level paths (<code>/profile</code>, <code>/saved</code>, etc.). A bottom sheet alternative would be lighter but not deep-linkable. <strong>Resolved: dedicated <code>/more</code> screen with top-level child paths.</strong> No team decision needed.</p>
+<p><strong>MORE tab: bottom sheet vs dedicated screen</strong> — The proposed solution recommends a dedicated <code>/more</code> route with secondary destinations at <code>/more/profile</code>, <code>/more/saved</code>, etc. A bottom sheet alternative would be lighter but not deep-linkable. <strong>Resolved: dedicated <code>/more</code> screen with <code>/more/*</code> child paths.</strong> No team decision needed.</p>
 </li>
 <li>
 <p><strong>Guest-mode navbar</strong> — The <code>_RouterNotifier</code> currently tracks <code>guestModeProvider</code>. Should a guest-mode user see the navbar with certain tabs disabled (e.g., POSTS and NOTIFS are authentication-gated), or should guest mode always redirect to <code>/welcome</code>? v1 scope and behavior must be agreed before implementation.</p>
