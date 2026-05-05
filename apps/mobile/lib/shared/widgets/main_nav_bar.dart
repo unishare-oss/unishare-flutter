@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
-import '../theme/app_typography.dart';
 import '../../core/router/router.dart';
 
 class MainNavBar extends StatelessWidget {
@@ -100,9 +99,11 @@ class _NavTabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isActive ? colors.amber : colors.textMuted;
-    final labelStyle = AppTypography.textTheme(
-      color,
-    ).labelSmall?.copyWith(fontSize: 11, letterSpacing: 0.55, color: color);
+    final labelStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
+      fontSize: 11,
+      letterSpacing: 0.55,
+      color: color,
+    );
 
     Widget iconWidget = Icon(_icon, color: color, size: 24);
 
@@ -113,7 +114,9 @@ class _NavTabItem extends StatelessWidget {
     return Semantics(
       label: _label,
       button: true,
+      selected: isActive,
       excludeSemantics: true,
+      onTap: onTap,
       child: GestureDetector(
         onTap: onTap,
         behavior: HitTestBehavior.opaque,
