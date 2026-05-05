@@ -36,7 +36,7 @@ Widget _buildApp({bool authenticated = true}) {
       draftQueueProvider.overrideWithValue(<PostDraft>[]),
     ],
     child: Consumer(
-      builder: (_, ref, __) => MaterialApp.router(
+      builder: (ctx, ref, child) => MaterialApp.router(
         theme: AppTheme.build(AppThemes.unishare),
         routerConfig: ref.watch(routerProvider),
       ),
@@ -76,7 +76,9 @@ void main() {
       expect(find.byType(MainNavBar), findsOneWidget);
     });
 
-    testWidgets('MainNavBar absent on /welcome (unauthenticated)', (tester) async {
+    testWidgets('MainNavBar absent on /welcome (unauthenticated)', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildApp(authenticated: false));
       await tester.pumpAndSettle();
       expect(find.byType(MainNavBar), findsNothing);
@@ -117,7 +119,10 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
       final feedTab = find.byWidgetPredicate(
-        (w) => w is Semantics && w.properties.button == true && w.properties.label == 'FEED',
+        (w) =>
+            w is Semantics &&
+            w.properties.button == true &&
+            w.properties.label == 'FEED',
       );
       expect(feedTab, findsOneWidget);
       await tester.tap(feedTab);

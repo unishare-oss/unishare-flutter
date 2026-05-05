@@ -27,7 +27,8 @@ void main() {
   group('MainNavBar', () {
     testWidgets('renders 4 Semantics button items', (tester) async {
       await tester.pumpWidget(_buildSubject());
-      final buttons = tester.widgetList<Semantics>(find.byType(Semantics))
+      final buttons = tester
+          .widgetList<Semantics>(find.byType(Semantics))
           .where((s) => s.properties.button == true)
           .toList();
       expect(buttons.length, 4);
@@ -38,12 +39,16 @@ void main() {
       expect(find.byIcon(Icons.home), findsOneWidget);
     });
 
-    testWidgets('active tab at index 1 shows filled article icon', (tester) async {
+    testWidgets('active tab at index 1 shows filled article icon', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildSubject(activeIndex: 1));
       expect(find.byIcon(Icons.article), findsOneWidget);
     });
 
-    testWidgets('active tab at index 2 shows filled notifications icon', (tester) async {
+    testWidgets('active tab at index 2 shows filled notifications icon', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildSubject(activeIndex: 2));
       expect(find.byIcon(Icons.notifications), findsOneWidget);
     });
@@ -80,24 +85,31 @@ void main() {
       }
     });
 
-    testWidgets('badge absent when notificationsBadgeCount is null', (tester) async {
+    testWidgets('badge absent when notificationsBadgeCount is null', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildSubject());
       expect(find.byType(Badge), findsNothing);
     });
 
-    testWidgets('badge absent when notificationsBadgeCount is 0', (tester) async {
+    testWidgets('badge absent when notificationsBadgeCount is 0', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildSubject(notificationsBadgeCount: 0));
       expect(find.byType(Badge), findsNothing);
     });
 
-    testWidgets('badge present when notificationsBadgeCount > 0', (tester) async {
+    testWidgets('badge present when notificationsBadgeCount > 0', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildSubject(notificationsBadgeCount: 3));
       expect(find.byType(Badge), findsOneWidget);
     });
 
     testWidgets('each tab item has Semantics label', (tester) async {
       await tester.pumpWidget(_buildSubject());
-      final labels = tester.widgetList<Semantics>(find.byType(Semantics))
+      final labels = tester
+          .widgetList<Semantics>(find.byType(Semantics))
           .where((s) => s.properties.button == true)
           .map((s) => s.properties.label)
           .toSet();
