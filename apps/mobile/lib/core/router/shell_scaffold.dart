@@ -18,7 +18,10 @@ class ShellScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: navigationShell.currentIndex == NavTab.feed.index,
+      // Allow pop when GoRouter has a route to pop (e.g. /more/profile → /more)
+      // or when already on FEED root (system pop exits the app on Android).
+      canPop:
+          navigationShell.currentIndex == NavTab.feed.index || context.canPop(),
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop && navigationShell.currentIndex != NavTab.feed.index) {
           navigationShell.goBranch(NavTab.feed.index, initialLocation: true);
