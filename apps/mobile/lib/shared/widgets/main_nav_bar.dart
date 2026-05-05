@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_colors.dart';
+import '../theme/app_typography.dart';
+import '../../core/router/router.dart';
+
 class MainNavBar extends StatelessWidget {
   const MainNavBar({
     super.key,
@@ -17,10 +21,114 @@ class MainNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO(flutter-engineer): implement per SPEC-0005.
-    // Read colors from Theme.of(context).extension<AppColors>() — no hardcoded hex.
-    // Read typography from AppTypography — no direct GoogleFonts calls.
-    // Build a Row of _NavTabItem for each NavTab.values entry.
-    throw UnimplementedError();
+    final colors = Theme.of(context).extension<AppColors>()!;
+    final barBg = Theme.of(context).scaffoldBackgroundColor;
+    final borderColor = Theme.of(context).dividerColor;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: barBg,
+        border: Border(top: BorderSide(color: borderColor)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 56,
+          child: Row(
+            children: NavTab.values.map((tab) {
+              final index = tab.index;
+              return Expanded(
+                child: _NavTabItem(
+                  tab: tab,
+                  isActive: index == activeIndex,
+                  onTap: () => onTap(index),
+                  badgeCount: tab == NavTab.notifs ? notificationsBadgeCount : null,
+                  colors: colors,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavTabItem extends StatelessWidget {
+  const _NavTabItem({
+    required this.tab,
+    required this.isActive,
+    required this.onTap,
+    required this.colors,
+    this.badgeCount,
+  });
+
+  final NavTab tab;
+  final bool isActive;
+  final VoidCallback onTap;
+  final AppColors colors;
+  final int? badgeCount;
+
+  IconData get _icon {
+    switch (tab) {
+      case NavTab.feed:
+        return isActive ? Icons.home : Icons.home_outlined;
+      case NavTab.posts:
+        return isActive ? Icons.article : Icons.article_outlined;
+      case NavTab.notifs:
+        return isActive ? Icons.notifications : Icons.notifications_outlined;
+      case NavTab.more:
+        return Icons.menu;
+    }
+  }
+
+  String get _label {
+    switch (tab) {
+      case NavTab.feed:
+        return 'FEED';
+      case NavTab.posts:
+        return 'POSTS';
+      case NavTab.notifs:
+        return 'NOTIFS';
+      case NavTab.more:
+        return 'MORE';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isActive ? colors.amber : colors.textMuted;
+    final labelStyle = AppTypography.textTheme(color).labelSmall?.copyWith(
+      fontSize: 11,
+      letterSpacing: 0.55,
+      color: color,
+    );
+
+    Widget iconWidget = Icon(_icon, color: color, size: 24);
+
+    if (tab == NavTab.notifs && badgeCount != null && badgeCount! > 0) {
+      iconWidget = Badge(
+        label: Text('$badgeCount'),
+        child: iconWidget,
+      );
+    }
+
+    return Semantics(
+      label: _label,
+      button: true,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            iconWidget,
+            const SizedBox(height: 2),
+            Text(_label, style: labelStyle),
+          ],
+        ),
+      ),
+    );
   }
 }
