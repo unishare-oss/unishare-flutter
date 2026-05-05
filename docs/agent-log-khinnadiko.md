@@ -1,0 +1,10 @@
+---
+Date: 2026-05-06 00:00
+Member: khinnadiko
+Agent: architect
+Task: Write Tech Proposal PROP-0006 for the post-detail-page feature
+Prompt: Write a Tech Proposal for the post-detail-page feature (PROP-0006). The app has a post feed (PROP-0003) with PostCard widgets but tapping a card has no destination. Students need a dedicated screen to read full post content, see all attachments, and interact (comments, likes). The screen must also serve as a deep-link destination for push notifications and shared URLs. UI must match Figma exactly. Evaluate multiple options (pass Post via GoRouter extra, always fetch fresh, hybrid optimistic + stream) and recommend the best fit. Write to tech-proposals/0006-post-detail-page.md.
+Outcome: Wrote tech-proposals/0006-post-detail-page.md (PROP-0006, status DRAFT) and docs/decisions/0006-post-detail-data-loading-strategy.md (ADR-0006, status PROPOSED). No code was written.
+Decisions: Recommended Option C (hybrid seed-then-stream): GoRouter extra carries the Post entity for warm-start instant render; postDetailProvider simultaneously opens a Firestore snapshots() stream for live updates; cold-start path falls back cleanly to stream-only with a skeleton loader. Rejected Option A (extra-only) because it breaks cold-start deep links. Rejected Option B (always fetch) because it adds a visible spinner on the dominant warm-start path and provides no live updates. Introduced a comments subcollection (posts/{postId}/comments) and three new domain use cases (WatchPost, WatchComments, AddComment) and one new entity (Comment). ToggleLike delegates to the existing likes subcollection; likesCount remains Cloud-Function-owned.
+Handoff: Tech spec author (architect) must first audit the Figma file (node-id=0-1) to enumerate new vs existing design-system components before writing SPEC-0006. Seven open questions in PROP-0006 must be resolved before the spec is finalized — most critical are the Figma component audit (Q1), like-state provider design (Q4), and deep-link URL scheme (Q5). Flutter engineer implements against the approved spec only.
+Review: PENDING
