@@ -324,3 +324,16 @@ Outcome: Wrote tech-proposals/0005-main-navbar.md (DRAFT). 4-tab bottom bar (FEE
 Decisions: Recommended custom-painted bar over Material NavigationBar due to Figma token divergence; StatefulShellRoute for GoRouter integration; dedicated /more screen (not bottom sheet) for deep-linkability; secondary destinations at top-level paths per user preference.
 Handoff: Proposal is DRAFT — team must review and move to PROPOSED before spec can begin. Run /new-spec 0005-main-navbar once approved.
 Review: PENDING
+
+2026-05-05
+  [14:39] Write: apps/mobile/lib/shared/widgets/scroll_to_top_target.dart
+  [14:39] Write: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [14:39] Write: apps/mobile/lib/core/router/shell_scaffold.dart
+  [14:39] Write: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [14:39] Write: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  [14:40] Write: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [14:52] Write: apps/mobile/lib/features/more/presentation/screens/more_screen.dart
+  [14:52] Write: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:52] Write: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [14:52] Write: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [14:52] Write: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
