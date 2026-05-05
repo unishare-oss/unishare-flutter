@@ -10,11 +10,6 @@ on:
       - '.github/workflows/ci.yml'
   pull_request:
     branches: [main]
-    paths:
-      - 'apps/**'
-      - 'packages/**'
-      - 'pubspec.yaml'
-      - '.github/workflows/ci.yml'
 
 permissions:
   contents: read
