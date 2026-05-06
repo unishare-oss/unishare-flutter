@@ -132,7 +132,6 @@ class FeedScreen extends ConsumerStatefulWidget {
 class _FeedScreenState extends ConsumerState<FeedScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  int _selectedNavIndex = 0;
   List<String> _activeTagFilters = const [];
 
   @override
@@ -201,7 +200,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F3EE),
-      bottomNavigationBar: _buildBottomNav(),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverToBoxAdapter(child: _buildAppBar()),
@@ -311,86 +309,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     );
   }
 
-  // -------------------------------------------------------------------------
-  // Bottom navigation
-  // -------------------------------------------------------------------------
-
-  Widget _buildBottomNav() {
-    if (_isGuest) return _buildGuestBottomNav();
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedNavIndex,
-      selectedItemColor: _kOrange,
-      unselectedItemColor: _kTextMuted,
-      selectedLabelStyle: const TextStyle(fontSize: 10),
-      unselectedLabelStyle: const TextStyle(fontSize: 10),
-      backgroundColor: Colors.white,
-      elevation: 8,
-      onTap: (index) => setState(() => _selectedNavIndex = index),
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(
-            _selectedNavIndex == 0 ? Icons.grid_view : Icons.grid_view_outlined,
-          ),
-          label: 'FEED',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            _selectedNavIndex == 1 ? Icons.article : Icons.article_outlined,
-          ),
-          label: 'POSTS',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            _selectedNavIndex == 2
-                ? Icons.notifications
-                : Icons.notifications_outlined,
-          ),
-          label: 'NOTIFS',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.more_horiz),
-          label: 'MORE',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGuestBottomNav() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedNavIndex,
-      selectedItemColor: _kOrange,
-      unselectedItemColor: _kTextMuted,
-      selectedLabelStyle: const TextStyle(fontSize: 10),
-      unselectedLabelStyle: const TextStyle(fontSize: 10),
-      backgroundColor: Colors.white,
-      elevation: 8,
-      onTap: (index) {
-        if (index == 2) {
-          context.go('/welcome');
-          return;
-        }
-        setState(() => _selectedNavIndex = index);
-      },
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(
-            _selectedNavIndex == 0 ? Icons.grid_view : Icons.grid_view_outlined,
-          ),
-          label: 'FEED',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.bookmark_border),
-          label: 'SAVED',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.login),
-          label: 'SIGN IN',
-        ),
-      ],
-    );
-  }
 }
 
 // ---------------------------------------------------------------------------
