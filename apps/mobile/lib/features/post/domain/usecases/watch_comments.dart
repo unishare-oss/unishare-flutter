@@ -1,4 +1,4 @@
-// TODO(flutter-engineer): implement per SPEC-0006
+// Pure Dart — zero Flutter or Firebase imports.
 
 import '../entities/comment.dart';
 import '../repositories/comment_repository.dart';

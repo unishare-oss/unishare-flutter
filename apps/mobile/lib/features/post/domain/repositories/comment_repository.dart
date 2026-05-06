@@ -1,4 +1,4 @@
-// TODO(flutter-engineer): implement per SPEC-0006
+// Pure Dart — zero Flutter or Firebase imports.
 
 import '../entities/comment.dart';
 
@@ -7,7 +7,8 @@ abstract interface class CommentRepository {
   /// Ordered by createdAt ascending. Flat list — no threading in v1.
   Stream<List<Comment>> watchComments(String postId);
 
-  /// Writes a new comment to posts/{postId}/comments.
-  /// [body] must be trimmed and non-empty; AddComment use case enforces this.
+  /// Writes a new comment document to posts/{postId}/comments.
+  /// [body] must be trimmed and non-empty; the use case enforces this.
+  /// Sets authorId, authorName, authorAvatar from the current Firebase Auth user.
   Future<void> addComment(String postId, String body);
 }

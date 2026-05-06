@@ -26,10 +26,8 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
-  Stream<Post> watchPost(String postId) {
-    // TODO(flutter-engineer): implement per SPEC-0006 — delegate to PostFirestoreDatasource.watchPost
-    throw UnimplementedError('TODO(flutter-engineer): implement per SPEC-0006');
-  }
+  Stream<Post> watchPost(String postId) =>
+      firestoreDatasource.watchPost(postId);
 
   @override
   Future<void> saveDraft(PostDraft draft) async {
@@ -99,11 +97,18 @@ class PostRepositoryImpl implements PostRepository {
         .map((p) => current.uploadedUrls[p]!)
         .toList();
 
+    // Step 3b: derive mediaTypes from file extensions.
+    final mediaTypes = paths
+        .where((p) => current.uploadedUrls.containsKey(p))
+        .map(_mediaTypeFromPath)
+        .toList();
+
     // Step 4 & 5: write to Firestore, remove draft on success.
     try {
       await firestoreDatasource.createPost(
         draft: current,
         mediaUrls: mediaUrls,
+        mediaTypes: mediaTypes,
         authorName: user.displayName ?? '',
         authorAvatar: user.photoURL ?? '',
       );
@@ -118,6 +123,26 @@ class PostRepositoryImpl implements PostRepository {
         ),
       );
       rethrow;
+    }
+  }
+
+  /// Derives a media type string from a local file path extension.
+  static String _mediaTypeFromPath(String path) {
+    final ext = path.split('.').last.toLowerCase();
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'webp':
+        return 'image';
+      case 'pdf':
+        return 'pdf';
+      case 'mp4':
+      case 'mov':
+      case 'avi':
+        return 'video';
+      default:
+        return 'image'; // safe fallback
     }
   }
 }

@@ -1,19 +1,24 @@
-// TODO(flutter-engineer): implement per SPEC-0006
-// Run: dart run build_runner build --delete-conflicting-outputs
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../core/converters/timestamp_converter.dart';
 import '../../domain/entities/comment.dart';
 
 part 'comment_dto.freezed.dart';
 part 'comment_dto.g.dart';
 
+/// Custom JSON converter that handles Firestore [Timestamp] ↔ [DateTime].
+class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
+  const TimestampConverter();
+
+  @override
+  DateTime fromJson(Timestamp ts) => ts.toDate();
+
+  @override
+  Timestamp toJson(DateTime dt) => Timestamp.fromDate(dt);
+}
+
 @freezed
 abstract class CommentDto with _$CommentDto {
-  const CommentDto._();
-
   const factory CommentDto({
     required String id,
     required String authorId,
@@ -25,7 +30,9 @@ abstract class CommentDto with _$CommentDto {
 
   factory CommentDto.fromJson(Map<String, dynamic> json) =>
       _$CommentDtoFromJson(json);
+}
 
+extension CommentDtoMapper on CommentDto {
   Comment toEntity() => Comment(
     id: id,
     authorId: authorId,

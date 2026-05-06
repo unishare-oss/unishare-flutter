@@ -1,19 +1,48 @@
-// TODO(flutter-engineer): implement per SPEC-0006
-// Imports needed when implementing:
-//   import 'package:cloud_firestore/cloud_firestore.dart';
-//   import 'package:firebase_auth/firebase_auth.dart';
-//   import '../models/comment_dto.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/entities/comment.dart';
+import '../models/comment_dto.dart';
 
 class CommentFirestoreDatasource {
-  /// Streams posts/{postId}/comments ordered by createdAt ascending.
+  final _firestore = FirebaseFirestore.instance;
+
   Stream<List<Comment>> watchComments(String postId) {
-    throw UnimplementedError('TODO(flutter-engineer): implement per SPEC-0006');
+    return _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .orderBy('createdAt', descending: false)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => CommentDto.fromJson({
+                  'id': doc.id,
+                  ...doc.data(),
+                }).toEntity(),
+              )
+              .toList(),
+        );
   }
 
-  /// Writes a new comment document to posts/{postId}/comments.
-  Future<void> addComment(String postId, String body) {
-    throw UnimplementedError('TODO(flutter-engineer): implement per SPEC-0006');
+  Future<void> addComment(String postId, String body) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) throw StateError('not_authenticated');
+
+    final ref = _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc();
+
+    await ref.set({
+      'id': ref.id,
+      'authorId': user.uid,
+      'authorName': user.displayName ?? '',
+      'authorAvatar': user.photoURL ?? '',
+      'body': body,
+      'createdAt': Timestamp.now(),
+    });
   }
 }

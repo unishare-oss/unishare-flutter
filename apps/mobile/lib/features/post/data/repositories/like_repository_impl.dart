@@ -1,19 +1,48 @@
-// TODO(flutter-engineer): implement per SPEC-0006
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/repositories/like_repository.dart';
 
 class LikeRepositoryImpl implements LikeRepository {
-  // Inject FirebaseFirestore and FirebaseAuth at construction time.
-  // Do NOT access Firebase singletons directly here — pass via constructor
-  // so the repository remains testable.
+  LikeRepositoryImpl({
+    required FirebaseFirestore firestore,
+    required FirebaseAuth auth,
+  }) : _firestore = firestore,
+       _auth = auth;
+
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
   @override
-  Future<void> toggleLike(String postId) {
-    throw UnimplementedError('TODO(flutter-engineer): implement per SPEC-0006');
+  Future<void> toggleLike(String postId) async {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) throw StateError('not_authenticated');
+
+    final ref = _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(uid);
+
+    final snap = await ref.get();
+    if (snap.exists) {
+      await ref.delete();
+    } else {
+      await ref.set({'createdAt': Timestamp.now()});
+    }
   }
 
   @override
   Stream<bool> watchLikeStatus(String postId) {
-    throw UnimplementedError('TODO(flutter-engineer): implement per SPEC-0006');
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return Stream.value(false);
+
+    return _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(uid)
+        .snapshots()
+        .map((snap) => snap.exists);
   }
 }

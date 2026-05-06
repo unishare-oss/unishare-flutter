@@ -9,8 +9,10 @@ import '../../features/departments/presentation/screens/departments_screen.dart'
 import '../../features/feed/presentation/screens/feed_screen.dart';
 import '../../features/more/presentation/screens/more_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/post/domain/entities/post.dart';
 import '../../features/post/presentation/screens/create_post_screen.dart';
 import '../../features/post/presentation/screens/my_posts_screen.dart';
+import '../../features/post/presentation/screens/post_detail_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/requests/presentation/screens/requests_screen.dart';
 import '../../features/saved/presentation/screens/saved_screen.dart';
@@ -122,6 +124,14 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/posts/create',
         builder: (context, state) => const CreatePostScreen(),
+      ),
+      GoRoute(
+        path: '/posts/:postId',
+        builder: (context, state) {
+          final postId = state.pathParameters['postId']!;
+          final seed = state.extra as Post?;
+          return PostDetailScreen(postId: postId, seed: seed);
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
