@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
@@ -36,6 +37,7 @@ class _FakeRepo implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
+    Map<String, Uint8List>? fileDataOverride,
   }) async {
     publishCalled = true;
     if (shouldThrowOnPublish) throw Exception('network error');

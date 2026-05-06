@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,7 +27,8 @@ class _StubRepo implements PostRepository {
   Future<List<PostDraft>> loadDraftQueue() async => [];
   @override
   Future<void> publishDraft(PostDraft draft,
-      {void Function(double)? onProgress}) async {}
+      {void Function(double)? onProgress,
+      Map<String, Uint8List>? fileDataOverride}) async {}
 }
 
 // Fake DraftQueueNotifier that never touches Hive.
