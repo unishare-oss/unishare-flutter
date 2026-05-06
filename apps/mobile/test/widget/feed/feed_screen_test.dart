@@ -6,10 +6,10 @@ import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
-import 'package:unishare_mobile/features/post_feed/presentation/screens/feed_screen.dart';
-import 'package:unishare_mobile/features/post_feed/presentation/widgets/feed_empty_state_widget.dart';
-import 'package:unishare_mobile/features/post_feed/presentation/widgets/filter_picker_widget.dart';
-import 'package:unishare_mobile/features/post_feed/presentation/widgets/post_card_widget.dart';
+import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
+import 'package:unishare_mobile/features/feed/presentation/widgets/feed_empty_state_widget.dart';
+import 'package:unishare_mobile/features/feed/presentation/widgets/filter_picker_widget.dart';
+import 'package:unishare_mobile/features/feed/presentation/widgets/post_card_widget.dart';
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
@@ -69,7 +69,7 @@ Widget _buildSubject({bool guestMode = false}) {
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
-      home: const FeedScreen(),
+      home: FeedScreen(scrollKey: GlobalKey()),
     ),
   );
 }
@@ -121,18 +121,6 @@ void main() {
       expect(find.byType(PostCardWidget), findsAtLeastNWidgets(4));
     });
 
-    testWidgets('renders logged-in bottom nav with FEED POSTS NOTIFS MORE', (
-      tester,
-    ) async {
-      await tester.pumpWidget(_buildSubject());
-      await tester.pump();
-
-      expect(find.byType(BottomNavigationBar), findsOneWidget);
-      expect(find.text('FEED'), findsOneWidget);
-      expect(find.text('POSTS'), findsOneWidget);
-      expect(find.text('NOTIFS'), findsOneWidget);
-      expect(find.text('MORE'), findsOneWidget);
-    });
 
     testWidgets('shows create-post button for logged-in user', (tester) async {
       await tester.pumpWidget(_buildSubject());
@@ -256,16 +244,6 @@ void main() {
   });
 
   group('FeedScreen — guest mode', () {
-    testWidgets('shows FEED SAVED SIGN IN bottom nav for guest', (
-      tester,
-    ) async {
-      await tester.pumpWidget(_buildSubject(guestMode: true));
-      await tester.pump();
-
-      expect(find.text('FEED'), findsOneWidget);
-      expect(find.text('SAVED'), findsOneWidget);
-      expect(find.text('SIGN IN'), findsOneWidget);
-    });
 
     testWidgets('hides create-post button for guest user', (tester) async {
       await tester.pumpWidget(_buildSubject(guestMode: true));
