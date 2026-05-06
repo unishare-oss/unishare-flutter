@@ -140,7 +140,9 @@ GoRouter router(Ref ref) {
             routes: [
               GoRoute(
                 path: '/feed',
-                builder: (context, state) => const FeedScreen(),
+                builder: (context, state) => FeedScreen(
+                  scrollKey: ShellScaffold.scrollTargetKeys[NavTab.feed.index],
+                ),
               ),
             ],
           ),
