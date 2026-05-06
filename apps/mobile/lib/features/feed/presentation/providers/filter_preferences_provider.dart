@@ -4,12 +4,14 @@ import 'package:unishare_mobile/features/feed/domain/entities/post_filter_prefer
 
 part 'filter_preferences_provider.g.dart';
 
-// TODO: wire preferencesRepositoryProvider and currentUserProvider
+// Deferred to the data-layer phase alongside PreferencesRepositoryImpl.
+// Requires currentUserProvider and preferencesRepositoryProvider, neither of
+// which is implemented yet. Not read by any UI — activeTagFiltersProvider
+// handles session-local filter state in the meantime.
 @riverpod
 class FilterPreferencesNotifier extends _$FilterPreferencesNotifier {
   @override
   Future<PostFilterPreferences> build() async {
-    // TODO: read uid from currentUserProvider
     // final uid = ref.read(currentUserProvider).requireValue.uid;
     // final useCase = GetFilterPreferences(ref.read(preferencesRepositoryProvider));
     // return useCase.call(uid);
@@ -17,7 +19,7 @@ class FilterPreferencesNotifier extends _$FilterPreferencesNotifier {
   }
 
   Future<void> save(List<String> selectedTags) async {
-    // TODO: implement save — call SaveFilterPreferences use case then update state
+    // Call SaveFilterPreferences use case then invalidate self.
     throw UnimplementedError();
   }
 

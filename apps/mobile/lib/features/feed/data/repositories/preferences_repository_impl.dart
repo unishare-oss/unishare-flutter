@@ -1,14 +1,16 @@
 import 'package:unishare_mobile/features/feed/domain/entities/post_filter_preferences.dart';
 import 'package:unishare_mobile/features/feed/domain/repositories/preferences_repository.dart';
 
-// TODO: inject PreferencesFirestoreDatasource
+// Deferred to the data-layer phase. Requires:
+//   1. PreferencesFirestoreDatasource injected via constructor
+//   2. getFilterPreferences: return PostFilterPreferences.empty() when doc is missing
+//   3. saveFilterPreferences: merge-write so unrelated fields are preserved
+// Not consumed by any provider yet — FilterPreferencesNotifier is also stubbed.
 class PreferencesRepositoryImpl implements PreferencesRepository {
   const PreferencesRepositoryImpl();
 
   @override
   Future<PostFilterPreferences> getFilterPreferences(String uid) {
-    // TODO: delegate to PreferencesFirestoreDatasource
-    // Return PostFilterPreferences.empty() when document does not exist
     throw UnimplementedError();
   }
 
@@ -17,7 +19,6 @@ class PreferencesRepositoryImpl implements PreferencesRepository {
     String uid,
     PostFilterPreferences preferences,
   ) {
-    // TODO: delegate to PreferencesFirestoreDatasource using merge-write
     throw UnimplementedError();
   }
 }
