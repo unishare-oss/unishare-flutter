@@ -2,7 +2,7 @@
 
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../features/post/data/models/post_draft_model.dart';
+import 'package:unishare_mobile/features/post/data/models/post_draft_model.dart';
 
 Future<void> initPostDraftBox() async {
   Hive.registerAdapter(PostDraftModelAdapter());

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../shared/widgets/main_nav_bar.dart';
-import '../../shared/widgets/scroll_to_top_target.dart';
-import 'router.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
+import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
+import 'package:unishare_mobile/core/router/router.dart';
 
 class ShellScaffold extends StatelessWidget {
   const ShellScaffold({super.key, required this.navigationShell});

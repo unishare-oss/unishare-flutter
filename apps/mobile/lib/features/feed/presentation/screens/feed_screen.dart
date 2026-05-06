@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../auth/presentation/providers/auth_state_provider.dart';
-import '../../../auth/presentation/widgets/academic_profile_dialog.dart';
-import '../../../../shared/widgets/scroll_to_top_target.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/widgets/academic_profile_dialog.dart';
+import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
 // Resets on cold start — same session-guard behaviour as the old _HomeScreen.
 bool _academicProfileSessionDismissed = false;

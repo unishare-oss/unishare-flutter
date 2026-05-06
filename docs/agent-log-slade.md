@@ -33,3 +33,208 @@ Files:
   ? apps/mobile/lib/core/storage/post_draft_box.dart (untracked)
   ? apps/mobile/lib/features/post/ (untracked)
 
+
+2026-05-05
+  [12:59] Edit: apps/mobile/lib/core/router/router.dart
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+Summary:  1 file changed, 6 insertions(+), 4 deletions(-)
+
+  [13:06] Edit: apps/mobile/lib/main.dart
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  2 files changed, 8 insertions(+), 4 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  2 files changed, 8 insertions(+), 4 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  2 files changed, 8 insertions(+), 4 deletions(-)
+
+  [13:09] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
+
+  [14:58] Write: apps/mobile/lib/features/post/domain/entities/code_snippet.dart
+  [14:59] Write: apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  [14:59] Write: apps/mobile/lib/features/post/domain/entities/post.dart
+  [14:59] Write: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [14:59] Write: apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  [14:59] Write: apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  [15:00] Write: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [15:00] Write: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:00] Write: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [15:00] Write: apps/mobile/lib/features/post/presentation/widgets/type_step.dart
+  [15:01] Write: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [15:01] Write: apps/mobile/lib/features/post/presentation/widgets/details_step.dart
+  [15:01] Write: apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
+  [15:02] Write: apps/mobile/lib/features/post/presentation/widgets/code_snippet_widget.dart
+  [15:02] Write: apps/mobile/lib/features/post/presentation/widgets/files_step.dart
+  [15:03] Write: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [15:06] Write: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [15:06] Write: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [15:07] Write: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [15:07] Write: apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+  [15:07] Write: apps/mobile/test/widget/features/post/widgets/details_step_test.dart
+  [15:07] Write: apps/mobile/test/widget/features/post/widgets/files_step_test.dart
+  [15:07] Write: apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  [15:08] Edit: apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
+  [15:08] Edit: apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
+  [15:08] Edit: apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
+  [15:08] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [15:08] Edit: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [15:09] Edit: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [15:09] Edit: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [15:09] Edit: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [15:09] Write: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [15:09] Write: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [15:10] Write: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [15:10] Write: apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  [15:12] Write: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [15:14] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  ~ apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  ~ apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  ~ apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  ~ apps/mobile/lib/features/post/domain/entities/post.dart
+  ~ apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+  ? apps/mobile/lib/features/post/domain/entities/code_snippet.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/code_snippet_widget.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/course_step.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/details_step.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/files_step.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/type_step.dart (untracked)
+  ? apps/mobile/test/unit/features/ (untracked)
+  ? apps/mobile/test/widget/features/ (untracked)
+Summary:  11 files changed, 647 insertions(+), 303 deletions(-)
+
+  [20:24] Edit: apps/mobile/ios/Runner/Info.plist
+  [20:24] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  ~ apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  ~ apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  ~ apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  ~ apps/mobile/lib/features/post/domain/entities/post.dart
+  ~ apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/main.dart
+  ? apps/mobile/lib/features/post/domain/entities/code_snippet.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/code_snippet_widget.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/course_step.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/details_step.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/files_step.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/widgets/type_step.dart (untracked)
+  ? apps/mobile/test/unit/features/ (untracked)
+  ? apps/mobile/test/widget/features/ (untracked)
+Summary:  11 files changed, 646 insertions(+), 303 deletions(-)
+

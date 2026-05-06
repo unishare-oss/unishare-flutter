@@ -1,21 +1,29 @@
 ---
 title: "0004: Post Integration"
-description: "Full write path for post creation with media upload and offline draft queue."
+description: "Full write path for post creation via a 4-step wizard with media upload and offline draft queue."
 ---
 
 # SPEC-0004: Post Integration
 
-**Status:** APPROVED  
+**Status:** REVISED  
 **Author:** architect  
-**Date:** 2026-05-03  
+**Date:** 2026-05-05  
 **Proposal:** [PROP-0004](../tech-proposals/0004-post-integration.md)  
-**Approved by:** Slade (CTO) on 2026-05-03
+**Approved by:** Slade (CTO) on 2026-05-03  
+**Revised:** 2026-05-05 — updated to match Figma design (node ids 12:1868–12:2339); original single-form design replaced with 4-step wizard.
 
 ---
 
 ## Overview
 
-This spec describes the complete write path for post creation in Unishare. Students can currently read the feed (established by PROP-0003) but have no mechanism to author or publish content. SPEC-0004 adds a guarded `/posts/create` route that collects title, body, tags, and optional media attachments. All media is uploaded to Firebase Storage first; the resulting download URLs are collected before a single atomic Firestore document write to `posts/{postId}`. If the device is offline when the user taps Publish, the full draft — including any already-uploaded Storage URLs — is persisted to a Hive queue and auto-published on the next connectivity event. No Cloud Functions are introduced; the entire write path runs on the client.
+This spec describes the complete write path for post creation in Unishare. Students can currently read the feed but have no mechanism to author or publish content. SPEC-0004 adds a guarded `/posts/create` route that guides the user through a **4-step wizard**:
+
+1. **Type** — choose content category (Lecture Note / Assignment; Past Exam is unavailable v1)
+2. **Course** — select academic year and course from Firestore reference data
+3. **Details** — title, description, posting identity (named/anonymous), semester, module number, external URL, tags
+4. **Files** — optional file uploads (max 50 MB each) and/or an inline code snippet with language and filename
+
+All media is uploaded to Firebase Storage first; the resulting download URLs are collected before a single atomic Firestore document write to `posts/{postId}`. If the device is offline when the user taps Submit, the full draft is persisted to a Hive queue and auto-published on the next connectivity event. No Cloud Functions are introduced; the entire write path runs on the client.
 
 ---
 
@@ -24,10 +32,11 @@ This spec describes the complete write path for post creation in Unishare. Stude
 ```mermaid
 flowchart TD
     subgraph Presentation
-        CPS[CreatePostScreen]
-        MAP[MediaAttachmentPicker]
+        CPS[CreatePostScreen\n4-step wizard]
+        FUW[FileUploadWidget]
+        CSW[CodeSnippetWidget]
         DQI[DraftQueueIndicator]
-        CPP[CreatePostProvider]
+        CPP[CreatePostProvider\nAsyncNotifier]
         DQP[DraftQueueProvider]
     end
 
@@ -53,7 +62,8 @@ flowchart TD
     end
 
     CPS --> CPP
-    CPS --> MAP
+    CPS --> FUW
+    CPS --> CSW
     DQI --> DQP
     CPP --> CP
     DQP --> SDQ
@@ -75,88 +85,131 @@ The Domain layer holds zero Flutter or Firebase imports. `PostRepository` and bo
 
 ---
 
+## Wizard steps
+
+| Step | Screen name (Figma) | Required inputs | Next enabled when |
+|---|---|---|---|
+| 1 | TypeStep | `postType` | one type selected |
+| 2 | CourseStep | `year`, `courseId` | both dropdowns selected |
+| 3 | DetailsStep | `title`, `description`, `semester`, `moduleNumber` | all required fields non-empty |
+| 4 | FilesStep | files / snippet (optional) | always (Submit enabled) |
+
+---
+
 ## File map
 
 | Action | Path | Responsibility |
 |---|---|---|
-| Create | `lib/features/post/domain/entities/post_draft.dart` | Pure Dart offline draft entity; holds `DraftStatus` enum |
-| Create | `lib/features/post/domain/entities/post.dart` | Published post entity (read by feed; authoritative shape from PROP-0003) |
-| Modify | `lib/features/post/domain/repositories/post_repository.dart` | Add `createPost` method; may already exist from PROP-0003 — extend it |
-| Create | `lib/features/post/domain/usecases/create_post.dart` | Validates draft, delegates upload + write to repository, handles offline queue |
-| Create | `lib/features/post/domain/usecases/sync_draft_queue.dart` | Drains Hive queue on reconnect; delegates each draft through `createPost` logic |
-| Create | `lib/features/post/data/datasources/post_firestore_datasource.dart` | Writes one atomic document to `posts/{postId}` via `cloud_firestore` |
-| Create | `lib/features/post/data/datasources/post_storage_datasource.dart` | Uploads a single file to `posts/{uid}/{filename}` and returns download URL |
-| Create | `lib/features/post/data/models/post_draft_model.dart` | Hive-serializable model mirroring `PostDraft`; generated `TypeAdapter` |
-| Modify | `lib/features/post/data/repositories/post_repository_impl.dart` | Implement `createPost`; orchestrate storage uploads then Firestore write; persist/remove Hive drafts |
-| Create | `lib/features/post/presentation/screens/create_post_screen.dart` | Form: title (required), body, tags, media picker; submit triggers `CreatePostProvider` |
-| Create | `lib/features/post/presentation/widgets/media_attachment_picker.dart` | Displays selected files, enforces 10 MB / MIME limits, opens file/image picker |
-| Create | `lib/features/post/presentation/widgets/draft_queue_indicator.dart` | Badge or banner showing count of pending queued drafts |
-| Create | `lib/features/post/presentation/providers/create_post_provider.dart` | Riverpod `AsyncNotifier`; exposes `CreatePostState`; calls `CreatePost` use case |
-| Create | `lib/features/post/presentation/providers/draft_queue_provider.dart` | Watches Hive queue box; reacts to connectivity; triggers `SyncDraftQueue` |
-| Modify | `lib/core/router/router.dart` | Add `/posts/create` `GoRoute`; redirect to `/welcome` when unauthenticated |
-| Create | `lib/core/storage/post_draft_box.dart` | Opens and exposes the `draft_queue` Hive box; registers `PostDraftModelAdapter` |
-| Modify | `lib/main.dart` | Call `postDraftBox.init()` after `Hive.initFlutter()` to register adapter and open box |
-| Modify | `firestore.rules` | Add `posts` collection rule: `allow create` when `request.auth != null && request.resource.data.authorId == request.auth.uid` |
-| Create | `storage.rules` | Restrict `posts/{uid}/{file}`: `allow write` when `request.auth.uid == uid && request.resource.size <= 10 * 1024 * 1024 && request.resource.contentType.matches('image/jpeg\|image/png\|image/webp\|application/pdf')` |
+| Create | `lib/features/post/domain/entities/post_draft.dart` | Pure Dart wizard draft entity; holds `PostType`, `DraftStatus`, `PostingIdentity` enums |
+| Create | `lib/features/post/domain/entities/post.dart` | Published post entity (authoritative shape for feed) |
+| Create | `lib/features/post/domain/entities/code_snippet.dart` | Inline code snippet value object: language, filename, content |
+| Modify | `lib/features/post/domain/repositories/post_repository.dart` | Add `createPost` and draft queue methods; preserve existing `watchFeed` |
+| Create | `lib/features/post/domain/usecases/create_post.dart` | Validates draft, delegates upload + write, handles offline queue |
+| Create | `lib/features/post/domain/usecases/sync_draft_queue.dart` | Drains Hive queue on reconnect |
+| Create | `lib/features/post/data/datasources/post_firestore_datasource.dart` | Writes atomic document to `posts/{postId}` |
+| Create | `lib/features/post/data/datasources/post_storage_datasource.dart` | Uploads single file to `posts/{uid}/{filename}`, returns download URL |
+| Create | `lib/features/post/data/models/post_draft_model.dart` | Hive-serializable model mirroring `PostDraft`; manual `TypeAdapter` |
+| Modify | `lib/features/post/data/repositories/post_repository_impl.dart` | Orchestrate storage uploads then Firestore write; persist/remove Hive drafts |
+| Create | `lib/features/post/presentation/screens/create_post_screen.dart` | 4-step `PageView` wizard with `StepIndicator` and `StepNav` |
+| Create | `lib/features/post/presentation/widgets/type_step.dart` | Step 1: content type selection cards |
+| Create | `lib/features/post/presentation/widgets/course_step.dart` | Step 2: year + course dropdowns |
+| Create | `lib/features/post/presentation/widgets/details_step.dart` | Step 3: title, description, identity, semester, module, URL, tags |
+| Create | `lib/features/post/presentation/widgets/files_step.dart` | Step 4: file drop zone + code snippet panel |
+| Create | `lib/features/post/presentation/widgets/file_upload_widget.dart` | Displays selected files, enforces 50 MB limit |
+| Create | `lib/features/post/presentation/widgets/code_snippet_widget.dart` | Language dropdown, filename input, code textarea |
+| Create | `lib/features/post/presentation/widgets/draft_queue_indicator.dart` | Badge showing count of pending queued drafts |
+| Create | `lib/features/post/presentation/providers/create_post_provider.dart` | `AsyncNotifier` holding `CreatePostState`; calls `CreatePost` use case |
+| Create | `lib/features/post/presentation/providers/draft_queue_provider.dart` | Watches Hive queue; reacts to connectivity; triggers `SyncDraftQueue` |
+| Modify | `lib/core/router/router.dart` | `/posts/create` `GoRoute` (redirect guard already covers unauthenticated users) |
+| Create | `lib/core/storage/post_draft_box.dart` | Opens `draft_queue` Hive box; registers `PostDraftModelAdapter` |
+| Modify | `lib/main.dart` | Call `initPostDraftBox()` after `Hive.initFlutter()` |
+| Modify | `firestore.rules` | `posts` collection create/read rules |
+| Create | `storage.rules` | `posts/{uid}/{file}` write rule (50 MB, allowed MIME types) |
 
 ---
 
 ## API contracts
+
+### Enums
+
+```dart
+enum PostType { lectureNote, assignment }
+
+enum DraftStatus { idle, uploading, publishing, published, queued, error }
+
+enum PostingIdentity { named, anonymous }
+```
+
+### Domain entity — `CodeSnippet`
+
+```dart
+// lib/features/post/domain/entities/code_snippet.dart
+
+class CodeSnippet {
+  const CodeSnippet({
+    required this.language,
+    required this.filename,
+    required this.content,
+  });
+
+  final String language;   // e.g. "TypeScript"
+  final String filename;   // without extension, e.g. "snippet"
+  final String content;
+}
+```
 
 ### Domain entity — `PostDraft`
 
 ```dart
 // lib/features/post/domain/entities/post_draft.dart
 
-enum DraftStatus { idle, uploading, publishing, published, queued, error }
-
 class PostDraft {
   const PostDraft({
     required this.id,
+    required this.postType,
+    required this.year,
+    required this.courseId,
     required this.title,
-    required this.body,
-    required this.tags,
+    required this.description,
+    required this.postingIdentity,
+    required this.semester,
+    required this.moduleNumber,
     required this.localMediaPaths,
     required this.uploadedUrls,
     required this.createdAt,
+    this.externalUrl,
+    this.tags = const [],
+    this.codeSnippet,
     this.status = DraftStatus.idle,
     this.errorMessage,
   });
 
-  /// Stable identifier used as the Firestore document ID and Hive key.
   final String id;
+  final PostType postType;
 
-  /// Required. Publish is blocked when empty.
+  // Step 2
+  final int year;           // e.g. 2
+  final String courseId;    // Firestore reference data ID
+
+  // Step 3
   final String title;
+  final String description;
+  final PostingIdentity postingIdentity;
+  final int semester;       // 1 or 2
+  final String moduleNumber;
+  final String? externalUrl;
+  final List<String> tags;  // max 5
 
-  /// Optional.
-  final String body;
-
-  final List<String> tags;
-
-  /// Absolute local file-system paths selected by the user, in insertion order.
+  // Step 4
   final List<String> localMediaPaths;
-
-  /// Maps localPath → Firebase Storage download URL for files already uploaded.
-  /// On retry, any localPath present in this map is skipped in the upload loop.
-  final Map<String, String> uploadedUrls;
+  final Map<String, String> uploadedUrls; // localPath → Storage download URL
+  final CodeSnippet? codeSnippet;
 
   final DateTime createdAt;
-
   final DraftStatus status;
-
-  /// Non-null only when status == DraftStatus.error.
   final String? errorMessage;
 
-  PostDraft copyWith({
-    String? title,
-    String? body,
-    List<String>? tags,
-    List<String>? localMediaPaths,
-    Map<String, String>? uploadedUrls,
-    DraftStatus? status,
-    String? errorMessage,
-  });
+  PostDraft copyWith({ ... });
 }
 ```
 
@@ -171,52 +224,56 @@ class Post {
     required this.authorId,
     required this.authorName,
     required this.authorAvatar,
+    required this.postType,
+    required this.year,
+    required this.courseId,
     required this.title,
-    required this.body,
+    required this.description,
+    required this.postingIdentity,
+    required this.semester,
+    required this.moduleNumber,
     required this.mediaUrls,
     required this.tags,
     required this.likesCount,
     required this.createdAt,
     required this.updatedAt,
+    this.externalUrl,
+    this.codeSnippetUrl,
   });
 
   final String id;
   final String authorId;
-  final String authorName;
-  final String authorAvatar;
+  final String authorName;   // empty string when anonymous
+  final String authorAvatar; // empty string when anonymous
+  final PostType postType;
+  final int year;
+  final String courseId;
   final String title;
-  final String body;
+  final String description;
+  final PostingIdentity postingIdentity;
+  final int semester;
+  final String moduleNumber;
   final List<String> mediaUrls;
   final List<String> tags;
   final int likesCount;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? externalUrl;
+  final String? codeSnippetUrl; // Storage download URL for uploaded snippet file
 }
 ```
 
-### Domain repository interface — `PostRepository` additions
+### Domain repository interface additions
 
 ```dart
-// lib/features/post/domain/repositories/post_repository.dart
-
 abstract interface class PostRepository {
-  // --- existing methods from PROP-0003 (preserved) ---
+  // --- existing (preserved) ---
   Stream<List<Post>> watchFeed({int limit = 20});
 
   // --- new for SPEC-0004 ---
-
-  /// Persists [draft] to the local Hive queue.
   Future<void> saveDraft(PostDraft draft);
-
-  /// Removes the draft with [draftId] from the local Hive queue.
   Future<void> removeDraft(String draftId);
-
-  /// Returns all drafts currently in the Hive queue, ordered by createdAt.
   Future<List<PostDraft>> loadDraftQueue();
-
-  /// Uploads media for [draft], writes the Firestore document, and removes the
-  /// draft from the Hive queue on success. Throws on unrecoverable failure;
-  /// updates [onProgress] with fraction [0.0, 1.0] during upload.
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double progress)? onProgress,
@@ -227,17 +284,12 @@ abstract interface class PostRepository {
 ### Domain use case — `CreatePost`
 
 ```dart
-// lib/features/post/domain/usecases/create_post.dart
-
 class CreatePost {
   const CreatePost(this._repository);
-
   final PostRepository _repository;
 
-  /// Validates [draft], saves it to the queue, then attempts to publish.
-  /// Returns the same [draft] with status updated to [DraftStatus.published]
-  /// on success, or [DraftStatus.queued] when offline,
-  /// or [DraftStatus.error] on unrecoverable failure.
+  /// Validates [draft], saves to queue, then attempts to publish.
+  /// Returns draft with updated status: published, queued, or error.
   Future<PostDraft> call({
     required PostDraft draft,
     required bool isConnected,
@@ -246,24 +298,20 @@ class CreatePost {
 }
 ```
 
-Validation rules enforced inside `call`:
-- `draft.title.trim().isNotEmpty` — throws `ArgumentError('title_required')` otherwise.
-- Each `localMediaPaths` entry must resolve to a file whose size is at most 10 MB and whose MIME type is one of `image/jpeg`, `image/png`, `image/webp`, `application/pdf`. Throws `ArgumentError('invalid_media')` on first violation.
-- When `isConnected == false`, the method saves to the Hive queue and returns the draft with `status = DraftStatus.queued` without attempting any network call.
+Validation rules:
+- `draft.title.trim().isNotEmpty` — throws `ArgumentError('title_required')`
+- `draft.description.trim().isNotEmpty` — throws `ArgumentError('description_required')`
+- `draft.moduleNumber.trim().isNotEmpty` — throws `ArgumentError('module_required')`
+- Each `localMediaPaths` entry must resolve to a file ≤ 50 MB. Throws `ArgumentError('file_too_large')` on first violation.
+- When `isConnected == false`, saves to Hive queue and returns `DraftStatus.queued` without any network call.
 
 ### Domain use case — `SyncDraftQueue`
 
 ```dart
-// lib/features/post/domain/usecases/sync_draft_queue.dart
-
 class SyncDraftQueue {
   const SyncDraftQueue(this._repository);
-
   final PostRepository _repository;
 
-  /// Loads all queued drafts and attempts to publish each in createdAt order.
-  /// Emits each draft's updated [PostDraft] as it transitions.
-  /// Stops processing on the first unrecoverable error to preserve ordering.
   Stream<PostDraft> call();
 }
 ```
@@ -271,11 +319,7 @@ class SyncDraftQueue {
 ### Presentation state — `CreatePostState`
 
 ```dart
-// lib/features/post/presentation/providers/create_post_provider.dart
-
-sealed class CreatePostState {
-  const CreatePostState();
-}
+sealed class CreatePostState { const CreatePostState(); }
 
 final class CreatePostIdle extends CreatePostState {
   const CreatePostIdle();
@@ -283,8 +327,7 @@ final class CreatePostIdle extends CreatePostState {
 
 final class CreatePostUploading extends CreatePostState {
   const CreatePostUploading({required this.progress});
-  /// Upload fraction in [0.0, 1.0].
-  final double progress;
+  final double progress; // [0.0, 1.0]
 }
 
 final class CreatePostPublishing extends CreatePostState {
@@ -311,29 +354,19 @@ final class CreatePostError extends CreatePostState {
 ### Riverpod notifier signatures
 
 ```dart
-// lib/features/post/presentation/providers/create_post_provider.dart
-
 @riverpod
 class CreatePostNotifier extends _$CreatePostNotifier {
   @override
-  CreatePostState build();
+  CreatePostState build() => const CreatePostIdle();
 
-  Future<void> submit({
-    required String title,
-    required String body,
-    required List<String> tags,
-    required List<String> localMediaPaths,
-  });
-
+  Future<void> submit({required PostDraft draft});
   void reset();
 }
-
-// lib/features/post/presentation/providers/draft_queue_provider.dart
 
 @riverpod
 class DraftQueueNotifier extends _$DraftQueueNotifier {
   @override
-  List<PostDraft> build();
+  List<PostDraft> build() => [];
 
   Future<void> sync();
 }
@@ -347,21 +380,29 @@ Collection: `posts`
 
 ```
 posts/{postId}
-  authorId:     string   — must equal request.auth.uid (Security Rules enforce)
-  authorName:   string   — denormalized from FirebaseAuth.currentUser.displayName at write time
-  authorAvatar: string   — denormalized from FirebaseAuth.currentUser.photoURL at write time; may be empty string
-  title:        string   — non-empty, validated client-side and by Rules (size > 0)
-  body:         string   — may be empty
-  mediaUrls:    string[] — Firebase Storage download URLs; empty array when no attachments
-  tags:         string[] — may be empty
-  likesCount:   int      — written as 0 at creation; incremented by separate interactions feature (out of scope)
-  createdAt:    Timestamp
-  updatedAt:    Timestamp — same value as createdAt on initial write; reserved for future edit path
+  authorId:        string   — request.auth.uid
+  authorName:      string   — FirebaseAuth displayName; empty string when anonymous
+  authorAvatar:    string   — FirebaseAuth photoURL; empty string when anonymous
+  postingIdentity: string   — "named" | "anonymous"
+  postType:        string   — "lectureNote" | "assignment"
+  year:            int
+  courseId:        string
+  title:           string   — non-empty
+  description:     string   — non-empty
+  semester:        int      — 1 or 2
+  moduleNumber:    string
+  externalUrl:     string?  — null when not provided
+  mediaUrls:       string[] — Storage download URLs; empty array when none
+  codeSnippetUrl:  string?  — Storage download URL for snippet file; null when none
+  tags:            string[] — up to 5 items; may be empty
+  likesCount:      int      — written as 0 at creation
+  createdAt:       Timestamp
+  updatedAt:       Timestamp — same as createdAt on initial write
 ```
 
-Indexes: no new composite indexes required. The feed query from PROP-0003 (`collectionGroup('posts').orderBy('createdAt', descending: true)`) already covers the read pattern. A per-author query (`where('authorId', isEqualTo: uid).orderBy('createdAt')`) will require a composite index — add `posts | authorId ASC, createdAt ASC` to `firestore.indexes.json` in this spec's scope.
+Indexes: add `posts | authorId ASC, createdAt ASC` to `firestore.indexes.json`.
 
-Storage path convention: `posts/{uid}/{uuid}-{filename}` where `uuid` is a client-generated v4 UUID. This scopes each user's uploads to a predictable path that Security Rules can match on `uid`.
+Storage path convention: `posts/{uid}/{uuid}-{filename}`
 
 ---
 
@@ -376,8 +417,10 @@ match /posts/{postId} {
                 && request.resource.data.authorId == request.auth.uid
                 && request.resource.data.title is string
                 && request.resource.data.title.size() > 0
+                && request.resource.data.description is string
+                && request.resource.data.description.size() > 0
                 && request.resource.data.likesCount == 0;
-  allow update, delete: if false; // edit/delete out of scope for v1
+  allow update, delete: if false;
 }
 ```
 
@@ -388,62 +431,72 @@ match /posts/{uid}/{fileName} {
   allow read: if request.auth != null;
   allow write: if request.auth != null
                && request.auth.uid == uid
-               && request.resource.size <= 10 * 1024 * 1024
+               && request.resource.size <= 50 * 1024 * 1024
                && request.resource.contentType.matches(
-                    'image/jpeg|image/png|image/webp|application/pdf'
+                    'image/jpeg|image/png|image/webp|application/pdf|text/plain'
                   );
 }
 ```
+
+`text/plain` covers uploaded code snippet files.
 
 ---
 
 ## Hive draft queue
 
-Box name: `draft_queue`
-
-Key: `PostDraft.id` (string)
-
-`PostDraftModel` mirrors all `PostDraft` fields with Hive type annotations. The `DraftStatus` enum is stored as its integer index. The `uploadedUrls` map is stored as a `Map<String, String>` (Hive natively supports this).
+Box name: `draft_queue`  
+Key: `PostDraft.id`  
+`typeId: 1` — engineer must verify no existing model claims this ID.
 
 ```dart
-// lib/features/post/data/models/post_draft_model.dart
-// (manual Hive TypeAdapter — no Freezed, to avoid generated file conflicts)
-
 @HiveType(typeId: 1)
 class PostDraftModel extends HiveObject {
-  @HiveField(0) late String id;
-  @HiveField(1) late String title;
-  @HiveField(2) late String body;
-  @HiveField(3) late List<String> tags;
-  @HiveField(4) late List<String> localMediaPaths;
-  @HiveField(5) late Map<String, String> uploadedUrls;
-  @HiveField(6) late DateTime createdAt;
-  @HiveField(7) late int statusIndex; // DraftStatus.index
-  @HiveField(8) String? errorMessage;
+  @HiveField(0)  late String id;
+  @HiveField(1)  late int postTypeIndex;
+  @HiveField(2)  late int year;
+  @HiveField(3)  late String courseId;
+  @HiveField(4)  late String title;
+  @HiveField(5)  late String description;
+  @HiveField(6)  late int postingIdentityIndex;
+  @HiveField(7)  late int semester;
+  @HiveField(8)  late String moduleNumber;
+  @HiveField(9)  String? externalUrl;
+  @HiveField(10) late List<String> tags;
+  @HiveField(11) late List<String> localMediaPaths;
+  @HiveField(12) late Map<String, String> uploadedUrls;
+  @HiveField(13) late DateTime createdAt;
+  @HiveField(14) late int statusIndex;
+  @HiveField(15) String? errorMessage;
+  @HiveField(16) String? codeSnippetLanguage;
+  @HiveField(17) String? codeSnippetFilename;
+  @HiveField(18) String? codeSnippetContent;
 
   PostDraft toEntity();
   static PostDraftModel fromEntity(PostDraft draft);
 }
 ```
 
-`typeId: 1` is reserved for `PostDraftModel`. The engineer must verify that no existing Hive model in the codebase already uses `typeId: 1` before assigning it.
+---
 
-Registration call in `lib/core/storage/post_draft_box.dart`:
+## Upload sequencing and partial-recovery algorithm
 
-```dart
-Future<void> initPostDraftBox() async {
-  Hive.registerAdapter(PostDraftModelAdapter());
-  await Hive.openBox<PostDraftModel>('draft_queue');
-}
-```
+`PostRepositoryImpl.publishDraft` must follow this sequence:
 
-Called in `main.dart` immediately after `Hive.initFlutter()`.
+1. Load `draft.uploadedUrls` (may be partially populated from a prior attempt).
+2. For each path in `draft.localMediaPaths`, in order:
+   a. If `draft.uploadedUrls.containsKey(path)`, skip — already uploaded.
+   b. Call `PostStorageDatasource.upload(localPath, uid)` → download URL.
+   c. On success, update `draft.uploadedUrls[path] = url` and persist to Hive.
+   d. On failure, persist partial `uploadedUrls`, set `DraftStatus.error`, rethrow.
+3. If `draft.codeSnippet != null`, upload snippet content as `text/plain` to `posts/{uid}/{uuid}-{filename}.{ext}`. Store the download URL in the Firestore document as `codeSnippetUrl`.
+4. Derive `mediaUrls` from `draft.uploadedUrls.values`.
+5. Call `PostFirestoreDatasource.createPost(...)` with the complete payload.
+6. On success, call `removeDraft(draft.id)`.
+7. On Firestore failure, leave draft in Hive with `DraftStatus.queued`.
 
 ---
 
 ## GoRouter route
-
-Add to the `routes` list in `lib/core/router/router.dart`:
 
 ```dart
 GoRoute(
@@ -452,24 +505,7 @@ GoRoute(
 ),
 ```
 
-The existing `_RouterNotifier.redirect` already redirects unauthenticated users to `/welcome` for all non-auth routes, so no additional guard is needed in the route definition itself. The engineer must confirm this redirect logic covers `/posts/create` before closing the PR.
-
----
-
-## Upload sequencing and partial-recovery algorithm
-
-The `PostRepositoryImpl.publishDraft` implementation must follow this sequence exactly:
-
-1. Load `draft.uploadedUrls` (may be partially populated from a prior attempt).
-2. For each path in `draft.localMediaPaths`, in order:
-   a. If `draft.uploadedUrls.containsKey(path)`, skip — already uploaded.
-   b. Otherwise, call `PostStorageDatasource.upload(localPath, uid)` to obtain a download URL.
-   c. On success, update `draft.uploadedUrls[path] = downloadUrl` and persist the updated draft to Hive (so the URL survives a crash).
-   d. On failure, update Hive with partial `uploadedUrls`, update `draft.status = DraftStatus.error`, and rethrow.
-3. Once all uploads are complete, derive `mediaUrls` from `draft.uploadedUrls.values`.
-4. Call `PostFirestoreDatasource.createPost(...)` with the complete document payload.
-5. On Firestore write success, call `PostRepository.removeDraft(draft.id)`.
-6. On Firestore write failure, leave the draft in the Hive queue with `status = DraftStatus.queued` so `SyncDraftQueue` will retry with the already-uploaded URLs.
+The existing `_RouterNotifier.redirect` already redirects unauthenticated users to `/welcome` for all non-auth routes — no additional guard needed.
 
 ---
 
@@ -477,34 +513,37 @@ The `PostRepositoryImpl.publishDraft` implementation must follow this sequence e
 
 | Test file | Covers |
 |---|---|
-| `test/unit/features/post/domain/usecases/create_post_test.dart` | `CreatePost.call` — title validation throws when empty; valid draft with connectivity publishes; valid draft without connectivity is queued; media MIME/size validation rejects invalid files |
-| `test/unit/features/post/domain/usecases/sync_draft_queue_test.dart` | `SyncDraftQueue.call` — empty queue emits nothing; single queued draft is published and removed; second draft is skipped when first fails unrecoverably; emits DraftStatus transitions in order |
-| `test/unit/features/post/data/repositories/post_repository_impl_upload_test.dart` | Upload-ordering logic — already-uploaded paths are skipped (idempotency); Hive draft is updated with partial `uploadedUrls` after each successful file; Firestore write is not called until all uploads complete |
-| `test/unit/features/post/data/repositories/post_repository_impl_recovery_test.dart` | Partial-upload recovery — draft with one pre-populated `uploadedUrls` entry only uploads the remaining files; on Storage failure mid-sequence, existing URLs are preserved in Hive |
-| `test/widget/features/post/screens/create_post_screen_test.dart` | Submit button is disabled when title field is empty; submit button is enabled when title is non-empty; tapping submit with no connectivity transitions to Queued chip; error banner appears when provider state is `CreatePostError` |
-| `test/widget/features/post/widgets/media_attachment_picker_test.dart` | Displays zero items by default; shows a chip for each added file; displays file size warning when a file exceeds 10 MB; remove button clears the file from the list |
-| `test/widget/features/post/widgets/draft_queue_indicator_test.dart` | Renders nothing when queue is empty; shows correct count badge when queue has items; badge updates reactively when queue changes |
+| `test/unit/features/post/domain/usecases/create_post_test.dart` | title/description/module validation throws; valid draft with connectivity publishes; offline draft is queued; file > 50 MB is rejected |
+| `test/unit/features/post/domain/usecases/sync_draft_queue_test.dart` | empty queue emits nothing; single draft publishes and is removed; second draft skipped when first fails; status transitions emitted in order |
+| `test/unit/features/post/data/repositories/post_repository_impl_upload_test.dart` | already-uploaded paths are skipped; Hive updated after each file; Firestore not called until all uploads complete; snippet uploaded before Firestore write |
+| `test/unit/features/post/data/repositories/post_repository_impl_recovery_test.dart` | partial uploadedUrls only re-uploads missing files; on Storage failure existing URLs preserved |
+| `test/widget/features/post/screens/create_post_screen_test.dart` | Next disabled on step 1 until type selected; Next disabled on step 2 until year+course selected; Next disabled on step 3 until required fields filled; Submit always enabled on step 4; Back navigates to previous step |
+| `test/widget/features/post/widgets/type_step_test.dart` | tapping Lecture Note highlights card; tapping Assignment highlights card; Past Exam card is disabled |
+| `test/widget/features/post/widgets/details_step_test.dart` | anonymous toggle hides author name in preview; tag input accepts up to 5 tags; 6th tag is rejected |
+| `test/widget/features/post/widgets/files_step_test.dart` | file > 50 MB shows size warning; code snippet panel shows language dropdown and filename input; empty snippet is not uploaded |
+| `test/widget/features/post/widgets/draft_queue_indicator_test.dart` | renders nothing when queue empty; shows correct count; updates reactively |
 
 ---
 
 ## Out of scope
 
 - Post editing or deletion.
-- Comment threads, reactions, or likes beyond the existing `likesCount` field (which is written as `0` at creation and never modified by this feature).
-- Full-text search, content moderation, or spam filtering at publish time.
-- Cloud Functions involvement in the write path.
-- NestJS or REST API involvement in the write path.
-- Background reconciliation of stale author display name or avatar on existing posts.
-- Admin or moderation tooling.
-- Video or audio media types (only JPEG, PNG, WebP, and PDF are in scope).
-- Push notifications triggered by a new post.
+- Past Exam type (marked "Unavailable" in design — reserved for a future spec).
+- Comment threads, reactions, or likes beyond the initial `likesCount: 0` write.
+- Full-text search, content moderation, or spam filtering.
+- Cloud Functions in the write path.
+- Video or audio media types.
+- Push notifications on new post.
 - Draft sharing across devices (Hive is local-only).
+- Background sync of stale author display name or avatar.
 
 ---
 
 ## Open questions
 
-- [ ] **Hive typeId assignment** — Confirm that `typeId: 1` is not already claimed by another Hive model in the project (only the `settings` box is known at spec time). The flutter-engineer must audit existing registered adapters before assigning the ID.
-- [ ] **`post_repository.dart` pre-existence** — PROP-0003 may have scaffolded a `PostRepository` interface for the read path. The engineer must determine whether to extend an existing file or create a new one, and must not break the feed's `watchFeed` stream in doing so.
-- [x] **Connectivity detection package** — **Resolved:** use `connectivity_plus`. Provides a real-time `Stream<ConnectivityResult>` needed to trigger `SyncDraftQueue` on reconnect. Add to `pubspec.yaml`; no platform permission entries required.
-- [x] **File picker package** — **Resolved:** use `file_picker`. Covers all four required MIME types (JPEG, PNG, WebP, PDF) in a single package. `image_picker` is camera/gallery only and cannot pick PDF files. Add to `pubspec.yaml`; add `NSPhotoLibraryUsageDescription` to `Info.plist` and `READ_EXTERNAL_STORAGE` to `AndroidManifest.xml`.
+- [ ] **Hive typeId** — confirm `typeId: 1` is not already claimed.
+- [ ] **`post_repository.dart` pre-existence** — determine whether to extend existing file from PROP-0003 or create new; must not break `watchFeed`.
+- [ ] **Course reference data shape** — confirm Firestore path and field names for year/course dropdowns (seeded by `tools/seed_firestore.js`).
+- [ ] **Semester values** — confirm whether semester is always 1 or 2, or can vary by university.
+- [x] **Connectivity package** — `connectivity_plus`.
+- [x] **File picker package** — `file_picker`.

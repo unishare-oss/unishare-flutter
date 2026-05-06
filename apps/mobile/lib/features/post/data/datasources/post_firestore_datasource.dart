@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 class PostFirestoreDatasource {
   final _firestore = FirebaseFirestore.instance;
@@ -11,6 +11,7 @@ class PostFirestoreDatasource {
     required List<String> mediaUrls,
     required String authorName,
     required String authorAvatar,
+    String? codeSnippetUrl,
   }) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) throw StateError('not_authenticated');
@@ -20,9 +21,17 @@ class PostFirestoreDatasource {
       'authorId': uid,
       'authorName': authorName,
       'authorAvatar': authorAvatar,
+      'postingIdentity': draft.postingIdentity.name,
+      'postType': draft.postType.name,
+      'year': draft.year,
+      'courseId': draft.courseId,
       'title': draft.title,
-      'body': draft.body,
+      'description': draft.description,
+      'semester': draft.semester,
+      'moduleNumber': draft.moduleNumber,
+      'externalUrl': draft.externalUrl,
       'mediaUrls': mediaUrls,
+      'codeSnippetUrl': codeSnippetUrl,
       'tags': draft.tags,
       'likesCount': 0,
       'createdAt': now,

@@ -356,3 +356,66 @@ Review: PENDING
   [16:55] Write: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
   [16:55] Write: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
   [16:55] Write: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+
+2026-05-06
+  [13:07] Write: apps/mobile/lib/features/post/data/datasources/upload_file_stub.dart
+  [13:07] Write: apps/mobile/lib/features/post/data/datasources/upload_file_io.dart
+  [13:07] Write: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [13:08] Edit: apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  [13:09] Edit: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [13:09] Edit: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [13:09] Edit: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [13:09] Edit: apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  [13:09] Edit: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [13:09] Edit: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [13:09] Edit: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [13:09] Edit: apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  [13:11] Edit: apps/mobile/lib/features/post/presentation/widgets/details_step.dart
+  [13:11] Edit: apps/mobile/lib/features/post/presentation/widgets/details_step.dart
+  [13:12] Write: apps/mobile/test/widget/features/profile/screens/profile_screen_test.dart
+  [13:12] Write: apps/mobile/test/widget/features/saved/screens/saved_screen_test.dart
+  [13:12] Write: apps/mobile/test/widget/features/departments/screens/departments_screen_test.dart
+  [13:12] Write: apps/mobile/test/widget/features/requests/screens/requests_screen_test.dart
+  [13:13] Edit: apps/mobile/.gitignore
+  [13:25] Edit: apps/mobile/analysis_options.yaml
+  [13:29] Edit: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [13:29] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [13:32] Edit: apps/mobile/pubspec.yaml
+  [13:33] Edit: apps/mobile/pubspec.yaml
+  [13:45] Edit: apps/mobile/.gitignore
+  [14:28] Write: apps/mobile/lib/features/post/data/datasources/upload_file_io.dart
+  [14:28] Write: apps/mobile/lib/features/post/data/datasources/upload_file_stub.dart
+  [14:29] Write: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [14:44] Write: apps/mobile/.vscode/launch.json
+  [14:45] Edit: apps/mobile/.gitignore
+  [14:47] Edit: apps/mobile/.vscode/launch.json
+  [14:52] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [14:52] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [14:56] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [14:59] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Files:
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Summary:  1 file changed, 3 insertions(+), 1 deletion(-)
+
+Files:
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Summary:  1 file changed, 3 insertions(+), 1 deletion(-)
+
+  [15:02] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [15:02] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [15:04] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Files:
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Summary:  1 file changed, 3 insertions(+), 1 deletion(-)
+
+  [15:05] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+Files:
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+Summary:  2 files changed, 10 insertions(+), 8 deletions(-)
+
+  [15:08] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [15:11] Edit: apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
+  [15:12] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  [15:12] Edit: apps/mobile/lib/features/post/presentation/widgets/type_step.dart
+  [15:13] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
