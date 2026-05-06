@@ -61,7 +61,12 @@ class _RouterNotifier extends ChangeNotifier {
     final authAsync = _ref.read(authStateProvider);
     final isGuest = _ref.read(guestModeProvider);
 
-    final isAuthenticated = authAsync.hasValue && authAsync.value != null;
+    // Hold all redirects while Firebase is still restoring the session.
+    // Without this, every deep link fires before auth resolves and the user
+    // lands on /welcome, losing the original URL intent.
+    if (!authAsync.hasValue) return null;
+
+    final isAuthenticated = authAsync.value != null;
 
     const authRoutes = {'/welcome'};
     final currentPath = state.uri.path;
