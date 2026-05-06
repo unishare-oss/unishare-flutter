@@ -54,6 +54,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   connectivity_plus: ^7.1.1
   file_picker: ^11.0.2
+  pdfrx: ^2.3.0
 
 
 dev_dependencies:
