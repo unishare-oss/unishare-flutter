@@ -1,9 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+import 'upload_file_stub.dart'
+    if (dart.library.io) 'upload_file_io.dart';
 
 class PostStorageDatasource {
   final _storage = FirebaseStorage.instance;
@@ -14,10 +16,9 @@ class PostStorageDatasource {
     String uid, {
     void Function(double progress)? onProgress,
   }) async {
-    final file = File(localPath);
     final filename = localPath.split('/').last;
     final ref = _storage.ref('posts/$uid/${_newId()}-$filename');
-    final task = ref.putFile(file);
+    final task = buildUploadTask(ref, localPath);
     return _trackAndReturn(task, ref, onProgress);
   }
 
