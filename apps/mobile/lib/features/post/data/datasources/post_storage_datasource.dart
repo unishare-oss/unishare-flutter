@@ -52,8 +52,9 @@ class PostStorageDatasource {
     StreamSubscription? sub;
     if (onProgress != null) {
       sub = task.snapshotEvents.listen((snap) {
-        if (snap.totalBytes > 0)
+        if (snap.totalBytes > 0) {
           onProgress(snap.bytesTransferred / snap.totalBytes);
+        }
       });
     }
     try {

@@ -25,10 +25,12 @@ class CreatePost {
     Map<String, Uint8List>? fileDataOverride,
   }) async {
     if (draft.title.trim().isEmpty) throw ArgumentError('title_required');
-    if (draft.description.trim().isEmpty)
+    if (draft.description.trim().isEmpty) {
       throw ArgumentError('description_required');
-    if (draft.moduleNumber.trim().isEmpty)
+    }
+    if (draft.moduleNumber.trim().isEmpty) {
       throw ArgumentError('module_required');
+    }
 
     await _repository.saveDraft(draft);
 
