@@ -33,6 +33,10 @@
          <lastmod>2026-05-06</lastmod>
     </url>
     <url>
+         <loc>https://unishare-oss.github.io/unishare-flutter/decisions/0006-post-detail-data-loading-strategy/</loc>
+         <lastmod>2026-05-06</lastmod>
+    </url>
+    <url>
          <loc>https://unishare-oss.github.io/unishare-flutter/stencils/adr/</loc>
          <lastmod>2026-05-06</lastmod>
     </url>
@@ -65,6 +69,10 @@
          <lastmod>2026-05-06</lastmod>
     </url>
     <url>
+         <loc>https://unishare-oss.github.io/unishare-flutter/tech-proposals/0006-post-detail-page/</loc>
+         <lastmod>2026-05-06</lastmod>
+    </url>
+    <url>
          <loc>https://unishare-oss.github.io/unishare-flutter/tech-specs/</loc>
          <lastmod>2026-05-06</lastmod>
     </url>
@@ -86,6 +94,10 @@
     </url>
     <url>
          <loc>https://unishare-oss.github.io/unishare-flutter/tech-specs/0005-main-navbar/</loc>
+         <lastmod>2026-05-06</lastmod>
+    </url>
+    <url>
+         <loc>https://unishare-oss.github.io/unishare-flutter/tech-specs/0006-post-detail-page/</loc>
          <lastmod>2026-05-06</lastmod>
     </url>
 </urlset>

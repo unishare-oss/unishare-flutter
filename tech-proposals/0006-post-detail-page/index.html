@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Proposal for server-side tag filtering on the post feed using Firestore array-contains-any queries, with Hive offline cache support.">
+        <meta name="description" content="Proposal for a dedicated post-detail screen that renders full post content, attachments, and social interactions, and serves as the deep-link target for push notifications and shared URLs.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0005-feed-filtering-tags/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0006-post-detail-page/">
       
       
-        <link rel="prev" href="../0004-post-integration/">
+        <link rel="prev" href="../0005-main-navbar/">
       
       
-        <link rel="next" href="../0005-main-navbar/">
+        <link rel="next" href="../../tech-specs/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0005: Feed Filtering by Tags - Unishare Engineering Docs</title>
+        <title>0006: Post Detail Page - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0005-feed-filtering-by-tags" class="md-skip">
+        <a href="#prop-0006-post-detail-page" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0005: Feed Filtering by Tags
+              0006: Post Detail Page
             
           </span>
         </div>
@@ -991,37 +991,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0005: Feed Filtering by Tags
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
         
   
   
@@ -1037,164 +1010,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#non-goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Non-goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Options">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#option-a-firestore-array-contains-any-query-on-tags-field-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option A — Firestore array-contains-any Query on tags Field (Recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#option-b-fan-out-writes-to-per-tag-sub-collections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option B — Fan-out Writes to Per-Tag Sub-Collections
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#option-c-composite-index-on-a-flat-primarytag-field" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Option C — Composite Index on a Flat primaryTag Field
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rejected-approaches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rejected Approaches
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommendation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1232,10 +1047,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0006-post-detail-page/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1251,6 +1093,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gorouter-route" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GoRouter route
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data loading strategy (hybrid)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comments-subcollection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comments subcollection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#like-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Like interaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figma-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Figma compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Pass Post via GoRouter extra, no Firestore fetch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Always fetch post fresh from Firestore by ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1556,44 +1584,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#goals" class="md-nav__link">
+  <a href="#proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Goals
+        Proposed Solution
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#non-goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Non-goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Options">
+    <nav class="md-nav" aria-label="Proposed Solution">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#option-a-firestore-array-contains-any-query-on-tags-field-recommended" class="md-nav__link">
+  <a href="#gorouter-route" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option A — Firestore array-contains-any Query on tags Field (Recommended)
+        GoRouter route
       
     </span>
   </a>
@@ -1601,10 +1607,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#option-b-fan-out-writes-to-per-tag-sub-collections" class="md-nav__link">
+  <a href="#clean-architecture-layers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option B — Fan-out Writes to Per-Tag Sub-Collections
+        Clean Architecture layers
       
     </span>
   </a>
@@ -1612,10 +1618,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#option-c-composite-index-on-a-flat-primarytag-field" class="md-nav__link">
+  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Option C — Composite Index on a Flat primaryTag Field
+        Data loading strategy (hybrid)
       
     </span>
   </a>
@@ -1623,10 +1629,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#rejected-approaches" class="md-nav__link">
+  <a href="#comments-subcollection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rejected Approaches
+        Comments subcollection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#like-interaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Like interaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#figma-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Figma compliance
       
     </span>
   </a>
@@ -1639,13 +1667,52 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommendation" class="md-nav__link">
+  <a href="#alternatives-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommendation
+        Alternatives Considered
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Pass Post via GoRouter extra, no Firestore fetch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Always fetch post fresh from Firestore by ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1671,17 +1738,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        References
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1699,7 +1755,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0005-feed-filtering-tags.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0006-post-detail-page.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1707,138 +1763,219 @@
   
 
 
-<h1 id="prop-0005-feed-filtering-by-tags">PROP-0005: Feed Filtering by Tags<a class="headerlink" href="#prop-0005-feed-filtering-by-tags" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> APPROVED<br />
-<strong>Author:</strong> Sudakarn<br />
-<strong>Date:</strong> 2026-05-05<br />
-<strong>Spec:</strong> <a href="../../tech-specs/0005-feed-filtering-tags/">SPEC-0005</a><br />
-<strong>Approved by:</strong> Sudakarn</p>
+<h1 id="prop-0006-post-detail-page">PROP-0006: Post Detail Page<a class="headerlink" href="#prop-0006-post-detail-page" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED
+<strong>Author:</strong> architect<br />
+<strong>Date:</strong> 2026-05-06<br />
+<strong>Spec:</strong> (pending approval)<br />
+<strong>Approved by:</strong></p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>Every authenticated student currently sees the entire global <code>posts</code> feed, ordered by recency, regardless of their university, department, or enrolled subjects. A student enrolled in three subjects — say, Computer Networks, Database Systems, and Software Engineering — still scrolls through posts tagged for Accounting, Biology, and every other discipline on the platform. As the content volume grows, the signal-to-noise ratio collapses.</p>
-<p>Concrete impact today:</p>
-<ul>
-<li>A student following 3 subjects sees 100% of posts from all departments. If 30 departments each contribute equal volume, only ~10% of the feed is relevant.</li>
-<li>There is no way to surface "posts for my courses only," forcing students to abandon the feed entirely or rely on word-of-mouth sharing.</li>
-<li>Without relevance filtering, the feed's value proposition — peer content discovery — erodes at exactly the moment it becomes most needed (mid-semester, when content volume peaks).</li>
-</ul>
-<p>The <code>posts/{postId}</code> schema already carries a <code>tags: string[]</code> field (established in PROP-0003). New posts written via the PROP-0004 write path populate <code>tags</code> at creation time. This means server-side filtering can be implemented without touching any existing document — no backfill is required for posts written after PROP-0004 shipped. Posts predating PROP-0004 with empty <code>tags</code> arrays will simply not appear in filtered results, which is the correct behavior (unclassified content should not pollute a subject-filtered view).</p>
-<hr />
-<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
+<p>The feed screen (PROP-0003) renders a scrollable list of <code>PostCard</code> widgets, but tapping a card has no destination. The <code>PostCard</code> tap handler is a no-op. Students have no way to read a post's full body, view all attached media, see comments, or like a post — the primary interaction surface of the app is unreachable.</p>
+<p>Beyond the tap-from-feed path, the detail screen must function as a <strong>standalone deep-link target</strong>. Push notifications and shared URLs reference a post by its Firestore document ID (e.g., <code>https://unishare.app/posts/abc123</code>), and the screen must render correctly when the app is cold-started directly into that route — meaning it cannot depend on feed state being populated in memory.</p>
+<p>Two structural concerns compound the data-loading problem:</p>
 <ol>
-<li>A student can select one or more tags (e.g., subject codes or department slugs) and receive only posts matching at least one of those tags — filtered server-side, not in memory.</li>
-<li>Filtered results support the same cursor-based pagination as the unfiltered feed (PROP-0003) — no regression in scroll behavior.</li>
-<li>The last-applied filter set persists across app restarts (stored locally) so the student does not re-select tags on every session.</li>
-<li>The filtered feed's first page is available offline via the existing Hive cache layer without requiring a live Firestore connection.</li>
-<li>The solution stays within the Firestore free tier: no reads beyond what pagination already performs, no Cloud Functions, no third-party search services.</li>
+<li>The feed's <code>postFeedProvider</code> loads posts in pages. A post the user taps may be on page 1 of the current session or may have been obtained by a completely different session (deep link). Feed data is therefore unreliable as a sole source.</li>
+<li><code>likesCount</code> on the post document is updated by a Cloud Function, not by the client. A snapshot from the feed may be stale by the time the user opens the detail screen, particularly for popular posts. The detail screen should reflect live counts.</li>
 </ol>
+<p>The UI must reproduce the Figma design exactly (https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare?node-id=0-1). The Figma introduces components — comments list, like button affordance, attachment carousel — that may not exist yet in the shared design system and must be audited before implementation begins.</p>
 <hr />
-<h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
+<h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
+<p>Use <strong>Option C — Hybrid: optimistic display from feed data, then stream live updates from Firestore</strong>.</p>
+<h3 id="gorouter-route">GoRouter route<a class="headerlink" href="#gorouter-route" title="Permanent link">&para;</a></h3>
+<p>Declare <code>/posts/:postId</code> as a top-level route <strong>outside</strong> the <code>StatefulShellRoute</code> shell (following the same pattern established in PROP-0005 for New Post steps and Post Details). This means the navbar is automatically absent, and the route is reachable from both the feed tap and a cold-start deep link with no conditional logic.</p>
+<div class="highlight"><pre><span></span><code>/posts/:postId   →   PostDetailScreen(postId: postId)
+</code></pre></div>
+<p>The <code>PostCard</code> tap handler calls <code>context.push('/posts/${post.id}', extra: post)</code>. GoRouter's <code>extra</code> carries the already-loaded <code>Post</code> entity for the warm-start case. For the cold-start case (deep link, push notification), <code>extra</code> is <code>null</code> — the screen falls back to fetching by ID.</p>
+<h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Addition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>domain/entities/Comment</code></td>
+<td>Pure Dart entity: <code>id</code>, <code>authorId</code>, <code>authorName</code>, <code>authorAvatar</code>, <code>body</code>, <code>createdAt</code></td>
+</tr>
+<tr>
+<td><code>domain/repositories/PostRepository</code></td>
+<td>New method: <code>Stream&lt;Post&gt; watchPost(String postId)</code></td>
+</tr>
+<tr>
+<td><code>domain/repositories/CommentRepository</code></td>
+<td>New interface: <code>Stream&lt;List&lt;Comment&gt;&gt; watchComments(String postId)</code>, <code>Future&lt;void&gt; addComment(String postId, String body)</code></td>
+</tr>
+<tr>
+<td><code>domain/usecases/WatchPost</code></td>
+<td>Wraps <code>PostRepository.watchPost</code></td>
+</tr>
+<tr>
+<td><code>domain/usecases/WatchComments</code></td>
+<td>Wraps <code>CommentRepository.watchComments</code></td>
+</tr>
+<tr>
+<td><code>domain/usecases/AddComment</code></td>
+<td>Validates body non-empty, delegates to <code>CommentRepository</code></td>
+</tr>
+<tr>
+<td><code>domain/usecases/ToggleLike</code></td>
+<td>Writes/removes <code>posts/{postId}/likes/{userId}</code>, server-side <code>likesCount</code> is managed by Cloud Function</td>
+</tr>
+<tr>
+<td><code>data/datasources/PostFirestoreDataSource</code></td>
+<td>Add <code>watchPost(String postId)</code> — <code>snapshots()</code> stream on <code>posts/{postId}</code></td>
+</tr>
+<tr>
+<td><code>data/datasources/CommentFirestoreDataSource</code></td>
+<td>Stream on <code>posts/{postId}/comments</code> ordered by <code>createdAt</code> ascending</td>
+</tr>
+<tr>
+<td><code>data/models/CommentDto</code></td>
+<td>Freezed + <code>fromJson</code>/<code>toJson</code></td>
+</tr>
+<tr>
+<td><code>data/repositories/CommentRepositoryImpl</code></td>
+<td>Maps <code>CommentDto</code> → <code>Comment</code> entity</td>
+</tr>
+<tr>
+<td><code>presentation/providers/postDetailProvider</code></td>
+<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;Post&gt;</code></td>
+</tr>
+<tr>
+<td><code>presentation/providers/commentsProvider</code></td>
+<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;List&lt;Comment&gt;&gt;</code></td>
+</tr>
+<tr>
+<td><code>presentation/screens/PostDetailScreen</code></td>
+<td>Full-screen layout per Figma</td>
+</tr>
+<tr>
+<td><code>presentation/widgets/CommentTile</code></td>
+<td>Single comment row</td>
+</tr>
+<tr>
+<td><code>presentation/widgets/AttachmentCarousel</code></td>
+<td>Horizontal media strip using <code>CachedNetworkImage</code></td>
+</tr>
+<tr>
+<td><code>presentation/widgets/LikeButton</code></td>
+<td>Stateless button; receives <code>isLiked</code> + <code>count</code> + <code>onTap</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="data-loading-strategy-hybrid">Data loading strategy (hybrid)<a class="headerlink" href="#data-loading-strategy-hybrid" title="Permanent link">&para;</a></h3>
+<p><code>postDetailProvider</code> is a family provider keyed on <code>postId</code>. On construction:</p>
+<ol>
+<li>If GoRouter <code>extra</code> carries a <code>Post</code> object, the provider emits it immediately as the initial value (zero-latency render).</li>
+<li>Simultaneously, <code>WatchPost(postId)</code> opens a Firestore <code>snapshots()</code> stream. When the first snapshot arrives it supersedes the seed value, and subsequent snapshots update live (e.g., <code>likesCount</code> incremented by Cloud Function).</li>
+</ol>
+<p>For the cold-start / deep-link case, there is no seed from <code>extra</code>, so the provider starts in <code>AsyncValue.loading()</code> and populates once the first Firestore snapshot arrives. The screen shows a skeleton loader during this window.</p>
+<p>This design satisfies both the warm-start (instant render from feed cache) and cold-start (fetch by ID) cases without branching logic in the presentation layer — the provider handles the difference internally.</p>
+<h3 id="comments-subcollection">Comments subcollection<a class="headerlink" href="#comments-subcollection" title="Permanent link">&para;</a></h3>
+<p>Comments are stored in <code>posts/{postId}/comments/{commentId}</code> — a new subcollection not present in PROP-0003's schema. The detail screen opens a real-time stream (<code>watchComments</code>) and appends new comments as they arrive. Adding a comment writes directly to this subcollection; <code>commentsCount</code> denormalization on the post document is deferred (see Open Questions).</p>
+<h3 id="like-interaction">Like interaction<a class="headerlink" href="#like-interaction" title="Permanent link">&para;</a></h3>
+<p><code>ToggleLike</code> checks <code>posts/{postId}/likes/{currentUserId}</code> for existence. If absent, it creates the document; if present, it deletes it. <code>likesCount</code> on the post is maintained exclusively by a Cloud Function — the client never writes it directly. The <code>LikeButton</code> widget performs an optimistic local toggle on tap and reconciles with the live stream when the Cloud Function updates <code>likesCount</code>.</p>
+<h3 id="figma-compliance">Figma compliance<a class="headerlink" href="#figma-compliance" title="Permanent link">&para;</a></h3>
+<p>The implementation must reproduce the Figma layout exactly. Before the flutter-engineer begins, the architect must audit the Figma node (<code>node-id=0-1</code>) and enumerate every UI component on the Post Detail screen. Any component not already present in <code>apps/mobile/lib/shared/widgets/</code> or the design system (<code>packages/</code>) must be listed in the tech spec as a new widget to build. No Material defaults should be used for components that Figma specifies with custom tokens.</p>
+<hr />
+<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<h3 id="a-pass-post-via-gorouter-extra-no-firestore-fetch">A — Pass Post via GoRouter <code>extra</code>, no Firestore fetch<a class="headerlink" href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" title="Permanent link">&para;</a></h3>
+<p>The <code>PostCard</code> tap passes the full <code>Post</code> entity in GoRouter <code>extra</code>. The detail screen reads this object and renders it directly — no network call on open. The existing <code>postFeedProvider</code> is the sole data source.</p>
+<p><strong>Pros:</strong></p>
 <ul>
-<li>Free-text search within post bodies or titles — this requires a dedicated search index and is a separate proposal.</li>
-<li>Paid or external search services (Algolia, Typesense, Elastic, or equivalents).</li>
-<li>Back-filling <code>tags</code> on posts that predate PROP-0004 — existing untagged posts are intentionally excluded from filtered results.</li>
-<li>AI-based or collaborative-filtering recommendation systems.</li>
-<li>Tag management or curation (creating, renaming, or deleting canonical tags) — that is an admin feature outside this scope.</li>
-<li>Filtering by criteria other than tags (e.g., date range, author, media type).</li>
+<li>Instant render with zero additional Firestore reads.</li>
+<li>No new domain use case or repository method needed for data loading.</li>
+<li>Simplest possible implementation.</li>
 </ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Breaks on cold start. Deep links and push notifications provide only a <code>postId</code> in the URL path — <code>extra</code> is <code>null</code>. The screen has no fallback, so cold-start users see an error or blank screen.</li>
+<li>Data goes stale immediately. <code>likesCount</code>, <code>commentsCount</code> (if added), and <code>body</code> edits are frozen at the moment the feed loaded. A post with 200 likes shows the cached 150 from the feed snapshot.</li>
+<li>Comments are entirely unavailable — there is no <code>comments</code> field on the <code>Post</code> entity; comments live in a subcollection that the feed never fetches.</li>
+<li>Tightly couples the detail screen's data contract to the feed's load order, making the detail screen non-standalone.</li>
+</ul>
+<p><strong>Effort:</strong> XS (implementation) but produces a product that is broken for deep-link users.</p>
+<p><strong>Rejected:</strong> Cannot satisfy the deep-link requirement, which is a hard constraint. Data staleness is also unacceptable for social interaction counts.</p>
 <hr />
-<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
-<h3 id="option-a-firestore-array-contains-any-query-on-tags-field-recommended">Option A — Firestore <code>array-contains-any</code> Query on <code>tags</code> Field (Recommended)<a class="headerlink" href="#option-a-firestore-array-contains-any-query-on-tags-field-recommended" title="Permanent link">&para;</a></h3>
-<p>Firestore supports the <code>array-contains-any</code> operator, which returns documents where the <code>tags</code> array contains at least one value from a provided list (up to 30 values per query). When the user selects a filter set, the repository swaps the unfiltered feed query for a filtered one:</p>
-<div class="highlight"><pre><span></span><code>posts
-  .where(&#39;tags&#39;, arrayContainsAny: selectedTags)
-  .orderBy(&#39;createdAt&#39;, descending: true)
-  .limit(pageSize)
-</code></pre></div>
-<p>A composite Firestore index on <code>(tags array-contains, createdAt desc)</code> is required and can be declared in <code>firestore.indexes.json</code> — it is free to create and free to query within the existing free tier read quota. No new collections, no writes beyond what already occurs.</p>
-<p>The domain layer <code>PostRepository</code> interface gains a single optional parameter:</p>
-<div class="highlight"><pre><span></span><code>getPostFeed({int page, int pageSize, List&lt;String&gt; tagFilter})
-</code></pre></div>
-<p>When <code>tagFilter</code> is empty, the existing unfiltered query runs. When non-empty, the filtered query runs. The presentation layer passes the current filter selection from a Riverpod provider holding the user's preferences. Filter preferences are persisted in Hive under a well-known key so they survive app restarts.</p>
-<p>For offline support, the first page of the filtered feed is cached to Hive the same way the unfiltered feed is cached today. On reconnect, the cache is refreshed.</p>
-<p><strong>Pros:</strong>
-- Zero schema migration — exploits the <code>tags</code> field that already exists on new posts.
-- Native Firestore operator — no extra infrastructure, no new collections, no Cloud Functions.
-- Pagination and cursor logic from PROP-0003 are reused unchanged; only the query predicate changes.
-- Composite index is declared in source control (<code>firestore.indexes.json</code>) and deployed with <code>firebase deploy --only firestore:indexes</code>.
-- Stays entirely within the free tier: one composite index, same read count per page as today.
-- The 30-value limit on <code>array-contains-any</code> is generous for a subject/department tag list.</p>
-<p><strong>Cons:</strong>
-- Firestore does not allow <code>array-contains-any</code> combined with a second <code>array-contains</code> or <code>array-contains-any</code> clause in the same query — so filtering on two independent tag dimensions simultaneously (e.g., department AND subject type) would require a client-side merge of two queries. For v1, single-dimension filtering is sufficient.
-- If a user selects more than 30 tags, the query must be split into batches and the results client-merged. This is unlikely in practice (students follow a small number of subjects) but must be handled gracefully.
-- Unindexed <code>tags</code> values on old posts (pre-PROP-0004) mean those posts are invisible in filtered results. This is acceptable per the Non-goals but must be communicated to users.</p>
-<p><strong>Effort:</strong> S</p>
+<h3 id="b-always-fetch-post-fresh-from-firestore-by-id">B — Always fetch post fresh from Firestore by ID<a class="headerlink" href="#b-always-fetch-post-fresh-from-firestore-by-id" title="Permanent link">&para;</a></h3>
+<p>Ignore <code>extra</code> entirely. Every time the detail screen opens, <code>postDetailProvider</code> issues a one-shot <code>get()</code> call on <code>posts/{postId}</code>. Comments are fetched separately.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Uniform code path for warm-start and cold-start — no conditional branching on <code>extra</code>.</li>
+<li>Data is fresh at open time regardless of how the screen was reached.</li>
+<li>Simpler provider implementation than the hybrid stream approach.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Visible loading spinner on every tap from the feed, even when the post data is already in memory. On a slow connection this creates a noticeable and unnecessary delay — the user just tapped a card they could already read in the feed.</li>
+<li>A one-shot <code>get()</code> does not update after open. <code>likesCount</code> incremented by a Cloud Function while the user is reading the post is not reflected. The user must leave and re-enter to see updated counts.</li>
+<li>No real-time comments — new comments posted by others while the user reads do not appear without a manual refresh.</li>
+<li>Firestore billing: one extra document read per detail screen open, even for posts already in Firestore's local cache from the feed query.</li>
+</ul>
+<p><strong>Effort:</strong> S. Straightforward <code>FutureProvider.family</code> implementation.</p>
+<p><strong>Rejected:</strong> The unnecessary loading spinner on feed taps degrades UX for the most common path. Lack of live updates makes social interactions (likes, comments) feel unresponsive. The hybrid approach adds only marginal complexity for substantially better UX.</p>
 <hr />
-<h3 id="option-b-fan-out-writes-to-per-tag-sub-collections">Option B — Fan-out Writes to Per-Tag Sub-Collections<a class="headerlink" href="#option-b-fan-out-writes-to-per-tag-sub-collections" title="Permanent link">&para;</a></h3>
-<p>At post creation time, the write path (PROP-0004) additionally writes a reference document into one or more <code>tags/{tagId}/posts/{postId}</code> sub-collections. The feed for a given tag is then a simple ordered query on that sub-collection:</p>
-<div class="highlight"><pre><span></span><code>tags/{tagId}/posts
-  .orderBy(&#39;createdAt&#39;, descending: true)
-  .limit(pageSize)
-</code></pre></div>
-<p>Multi-tag queries merge the results of multiple sub-collection queries client-side, de-duplicate by <code>postId</code>, and re-sort by <code>createdAt</code>.</p>
-<p><strong>Pros:</strong>
-- Per-tag queries are simple ordered reads with no composite index.
-- Sub-collection isolation means reads for one tag do not touch documents from unrelated tags.
-- Scales to arbitrarily large tag populations without the 30-value operator limit.</p>
-<p><strong>Cons:</strong>
-- Every post write fans out to N sub-collection writes (one per tag). A post with 5 tags costs 6 Firestore writes instead of 1, which is significant at free-tier write limits.
-- Multi-tag "OR" queries require parallel sub-collection reads followed by client-side merge-sort — added latency and complexity that Option A avoids entirely.
-- Pagination across merged results is non-trivial: cursor positions differ per sub-collection, requiring per-collection cursors to be tracked and reconciled.
-- Post deletion or update must fan-out to all sub-collection references — a partial failure leaves stale references that show deleted posts.
-- Requires schema changes to the write path (PROP-0004) that has already shipped; the fan-out logic must be added retroactively.</p>
-<p><strong>Effort:</strong> L</p>
-<hr />
-<h3 id="option-c-composite-index-on-a-flat-primarytag-field">Option C — Composite Index on a Flat <code>primaryTag</code> Field<a class="headerlink" href="#option-c-composite-index-on-a-flat-primarytag-field" title="Permanent link">&para;</a></h3>
-<p>Rather than <code>array-contains-any</code> on the full <code>tags</code> array, require each post to declare exactly one <code>primaryTag</code> (e.g., the first element of <code>tags</code>). A simple <code>==</code> equality filter on <code>primaryTag</code> combined with <code>orderBy('createdAt', desc)</code> uses a standard composite index. Multi-tag "OR" is handled by issuing one query per selected tag in parallel and merging results client-side.</p>
-<p><strong>Pros:</strong>
-- <code>==</code> + <code>orderBy</code> composite indexes are simpler than array-contains indexes.
-- Each per-tag query is independent and unambiguous; no operator limitations.</p>
-<p><strong>Cons:</strong>
-- Requires adding a <code>primaryTag</code> field to the schema — a migration is needed for all existing posts, which is explicitly ruled out by the project constraints.
-- Forces a single canonical tag per post, discarding the multi-tag richness already in the <code>tags</code> array.
-- Parallel queries per selected tag multiply read costs and merge complexity in exactly the same way as Option B.</p>
-<p><strong>Effort:</strong> M (but immediately disqualified by the schema migration constraint)</p>
-<hr />
-<h3 id="rejected-approaches">Rejected Approaches<a class="headerlink" href="#rejected-approaches" title="Permanent link">&para;</a></h3>
-<p><strong>External search services (Algolia, Typesense, Meilisearch):</strong> Ruled out explicitly by the product owner. These services require paid plans beyond trivial data volumes, add a sync pipeline from Firestore, and introduce operational dependencies outside the Firebase-native stack.</p>
-<p><strong>Client-side filtering (download all, filter in memory):</strong> Ruled out explicitly. Downloading the entire <code>posts</code> collection to filter in the client does not scale beyond a few hundred posts, wastes bandwidth, and violates the free-tier read constraint. It also makes offline support impossible without caching the entire corpus.</p>
-<p><strong>Schema migration / backfill:</strong> Ruled out explicitly. Any approach requiring <code>tags</code> to be retroactively written to pre-PROP-0004 posts is out of scope.</p>
-<hr />
-<h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen option:</strong> Option A — Firestore <code>array-contains-any</code> Query on <code>tags</code> Field.</p>
-<p>Option A is the only approach that satisfies all three hard constraints simultaneously: it requires no schema migration (the <code>tags</code> field already exists), it is free-tier compatible (one composite index, same read budget as today), and it supports offline via the Hive cache layer without additional infrastructure. Option B achieves similar query simplicity at the cost of multiplied write operations and a substantially more complex pagination model; that complexity is not justified when <code>array-contains-any</code> already handles the multi-tag OR case natively. Option C is immediately disqualified by the migration constraint. The 30-tag operator limit is not a practical concern for the student use case (typical subject selection is 3–8 tags), and the single-dimension filtering limitation is an acceptable v1 constraint.</p>
+<h3 id="c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended">C — Hybrid: optimistic display from feed data, then stream live updates (recommended)<a class="headerlink" href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" title="Permanent link">&para;</a></h3>
+<p>Described fully in Proposed Solution above.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Instant render on feed tap (seed from <code>extra</code>) with no spinner for the common path.</li>
+<li>Correct cold-start behavior (falls back to Firestore fetch when <code>extra</code> is absent).</li>
+<li>Live updates via <code>snapshots()</code> stream keep <code>likesCount</code> and post content current throughout the session.</li>
+<li>Real-time comments via subcollection stream — new comments appear without refresh.</li>
+<li>Single provider interface for both cases — presentation layer is unaware of whether data came from <code>extra</code> or Firestore.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Slightly more complex provider implementation: the provider must accept an optional seed value and merge it with an incoming stream.</li>
+<li>Opens a persistent Firestore listener per active detail screen, which consumes one Firestore connection slot. This is negligible at current scale but worth monitoring.</li>
+<li><code>extra</code> carries a Dart object, which is not serializable by GoRouter's URL-based state restoration. If the OS kills the app and restores it to the detail screen, <code>extra</code> will be null and the screen will fall back to the Firestore fetch path — this is correct behavior but must be documented and tested.</li>
+</ul>
+<p><strong>Effort:</strong> M. The stream-seeding pattern in Riverpod requires a <code>StreamProvider.family</code> with a custom build step or an <code>AsyncNotifier</code> that combines seed + stream.</p>
+<p><strong>Recommended.</strong> The warm-start path is the dominant user flow (tapping from feed), so eliminating its loading spinner is the highest-impact UX win. The cold-start fallback is architecturally clean and correct. Real-time updates are table stakes for a social feature.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>Tag taxonomy ownership</strong> — Who defines the canonical set of tags students can select? If tags are free-form strings entered by post authors, the filter UI cannot enumerate them reliably; if they are drawn from a curated reference collection (e.g., <code>universities/{uniId}/courses/{courseId}</code>), the UI can present a structured picker. Which model is authoritative? This must be decided before the spec defines the filter UI component and the tag validation in the write path.</p>
+<p><strong>Figma audit: new components</strong> — The Figma design at <code>node-id=0-1</code> must be inspected before the tech spec is written. Which UI components on the Post Detail screen (comment input bar, attachment carousel, like button, author chip, tag list) are already in the shared design system versus net-new widgets? The tech spec cannot be written without this inventory.</p>
 </li>
 <li>
-<p><strong>Filter persistence scope</strong> — Should the selected filter set be per-device (Hive, local only) or per-account (synced to a <code>users/{uid}/preferences</code> Firestore document so the same filter applies when the student switches devices)? Per-account sync adds a Firestore read/write on login but provides a consistent experience across devices; per-device is simpler but forces re-selection on each new install.</p>
+<p><strong>Comments subcollection schema</strong> — Does the <code>comments</code> subcollection need a <code>likesCount</code> or nested reply structure (threaded comments), or is it a flat list for v1? The answer changes the Firestore schema and domain entity design.</p>
 </li>
 <li>
-<p><strong>Empty-result UX contract</strong> — When a student's selected tags return zero posts (e.g., a newly created course tag with no content yet), what does the feed show? An empty state with a prompt to broaden the filter, or a fallback to the unfiltered feed? This decision affects the repository interface (should it return an empty list or fall back transparently?) and must be resolved before the spec defines the use case behavior.</p>
+<p><strong><code>commentsCount</code> denormalization</strong> — Should the <code>posts/{postId}</code> document carry a <code>commentsCount</code> field (updated by Cloud Function) for display on <code>PostCard</code> in the feed, or is the count shown only on the detail screen (where the full subcollection is streamed)? If needed on the feed card, a Cloud Function trigger on <code>comments</code> subcollection writes must be added.</p>
 </li>
 <li>
-<p><strong>Tag count ceiling</strong> — The <code>array-contains-any</code> operator accepts up to 30 values. If a student can theoretically select more than 30 tags, the repository must split the query into batches and merge results. Should the UI enforce a maximum (e.g., 10 selected tags) to avoid this complexity, or should the data layer handle batching transparently? The spec must define which layer owns this constraint.</p>
+<p><strong>Like state for the current user</strong> — The <code>LikeButton</code> must know whether the current user has already liked the post. The <code>posts/{postId}/likes/{userId}</code> document must be checked on screen open. Does this happen inside <code>WatchPost</code> (Firestore rules permitting a sub-read from the use case), or does <code>postDetailProvider</code> issue a separate existence check and pass <code>isLiked</code> as a field alongside the <code>Post</code>? A <code>userLikeStatusProvider</code> family keyed on <code>postId</code> may be the cleanest separation.</p>
+</li>
+<li>
+<p><strong>Deep-link URL scheme</strong> — Push notifications from FCM and shared URLs must resolve to <code>/posts/:postId</code>. Is the path <code>/posts/:postId</code> the canonical deep-link path, or does the backend/notification service use a different scheme (e.g., <code>/p/:postId</code>, <code>unishare://post/:postId</code>)? The GoRouter route must match exactly.</p>
+</li>
+<li>
+<p><strong>Comment input and auth gate</strong> — Can unauthenticated (guest-mode) users view the detail screen read-only, with the comment input and like button disabled? Or does the detail route require authentication (redirect to <code>/welcome</code> if no session)? The current <code>_RouterNotifier</code> must be extended or the detail screen must handle this locally.</p>
+</li>
+<li>
+<p><strong>Attachment rendering</strong> — <code>mediaUrls</code> on the post document is a <code>string[]</code>. Are all entries image URLs, or can they include PDF or video links? The <code>AttachmentCarousel</code> widget design depends on whether it must handle heterogeneous media types or can assume images-only for v1.</p>
 </li>
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Selecting one or more tags in the filter UI causes the feed to show only posts whose <code>tags</code> array contains at least one of the selected values, with filtering applied server-side (verified by confirming the Firestore query predicate, not just the rendered list).</li>
-<li>Filtered feed pagination works correctly: scrolling to the end of the list fetches the next page of filtered results without duplicates or gaps, using the same cursor mechanism as the unfiltered feed.</li>
-<li>The selected filter set survives app restart — reopening the app presents the feed already filtered to the previously selected tags without requiring re-selection.</li>
-<li>When no filter is selected (empty tag set), the feed behaves identically to the existing unfiltered feed from PROP-0003 — no regression in behavior or performance.</li>
-<li>The first page of the filtered feed is available in offline mode (Hive cache) when the device has no connectivity, with a visible indicator distinguishing cached from live results.</li>
-</ul>
-<hr />
-<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
-<ul>
-<li>PROP-0003: Post Feed — <code>tech-proposals/0003-post-feed.md</code> (defines the <code>posts/{postId}</code> schema and pagination model this proposal extends)</li>
-<li>PROP-0004: Post Integration — <code>tech-proposals/0004-post-integration.md</code> (defines the write path that populates <code>tags</code> on new posts)</li>
-<li>Firestore query limitations: <a href="https://firebase.google.com/docs/firestore/query-data/queries#query_limitations">https://firebase.google.com/docs/firestore/query-data/queries#query_limitations</a></li>
+<li>Tapping a <code>PostCard</code> in the feed navigates to <code>/posts/:postId</code> and renders the full post without a loading spinner (warm-start path).</li>
+<li>Cold-starting the app via a deep link to <code>/posts/:postId</code> renders a skeleton loader, then the full post once the Firestore snapshot arrives.</li>
+<li>The detail screen's visual layout matches the Figma design exactly — pixel-level fidelity is required for all components specified in the design.</li>
+<li><code>likesCount</code> displayed on the detail screen updates in real time when the Cloud Function increments it (no manual refresh required).</li>
+<li>The like button reflects the current user's like state on open and toggles correctly; optimistic local toggle is reconciled when the stream updates.</li>
+<li>Comments load from <code>posts/{postId}/comments</code> in ascending <code>createdAt</code> order and new comments from other users appear without refresh while the screen is open.</li>
+<li>Submitting a comment writes to the <code>comments</code> subcollection and appears in the list within one Firestore round-trip.</li>
+<li>The navbar (PROP-0005 shell) is absent from the Post Detail screen — the route is declared outside <code>StatefulShellRoute</code>.</li>
+<li>Android back button and iOS swipe-back return the user to the previous screen (feed or notification inbox) correctly.</li>
+<li>All new domain entities, repository interfaces, and use cases are pure Dart — zero Flutter or Firebase imports.</li>
+<li><code>flutter analyze</code> reports zero issues on all new code.</li>
+<li>Every new screen and widget has a corresponding widget test; the cold-start path has a unit test for <code>postDetailProvider</code> behavior when <code>extra</code> is null.</li>
 </ul>
 
 
