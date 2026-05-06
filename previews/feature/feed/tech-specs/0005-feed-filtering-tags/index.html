@@ -1912,11 +1912,11 @@
 
 
 <h1 id="spec-0005-feed-filtering-by-tags">SPEC-0005: Feed Filtering by Tags<a class="headerlink" href="#spec-0005-feed-filtering-by-tags" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> DRAFT<br />
+<p><strong>Status:</strong> APPROVED<br />
 <strong>Author:</strong> Sudakarn<br />
 <strong>Date:</strong> 2026-05-05<br />
 <strong>Proposal:</strong> <a href="../../tech-proposals/0005-feed-filtering-tags/">PROP-0005</a><br />
-<strong>Approved by:</strong> (fill in when approved)</p>
+<strong>Approved by:</strong> Sudakarn</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>This spec defines the complete implementation for server-side tag filtering on the Unishare post feed. A student can open a filter picker, select one or more curated tags drawn from a Firestore reference collection, and receive only posts whose <code>tags</code> array contains at least one of the selected values — filtered by Firestore, not in memory. The active filter set is persisted to <code>users/{uid}/preferences</code> in Firestore so it survives app restarts and syncs across devices. The first page of the filtered feed is cached to Hive so it is available offline. When a filter returns zero posts, a dedicated empty-state widget is shown — there is no silent fallback to the unfiltered feed. The domain layer gains two new interfaces (<code>TagRepository</code>, <code>PostFilterPreferences</code> entity) and three new use cases; the existing <code>PostRepository</code> interface is extended with a <code>tagFilter</code> parameter; the existing feed screen is modified, not replaced.</p>
