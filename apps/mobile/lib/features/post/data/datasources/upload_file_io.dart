@@ -1,6 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
-import 'package:firebase_storage/firebase_storage.dart';
-
-UploadTask buildUploadTask(Reference ref, String localPath) =>
-    ref.putFile(File(localPath));
+Future<Uint8List> readFileBytes(String localPath) =>
+    File(localPath).readAsBytes();

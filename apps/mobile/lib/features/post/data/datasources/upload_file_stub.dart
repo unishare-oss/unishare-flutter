@@ -1,6 +1,5 @@
-import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:typed_data';
 
-UploadTask buildUploadTask(Reference ref, String localPath) =>
-    throw UnsupportedError(
-      'File-path upload is not supported on web — use uploadBytes() instead.',
-    );
+Future<Uint8List> readFileBytes(String localPath) => throw UnsupportedError(
+  'File-path reads are not supported on web — pass bytes directly.',
+);
