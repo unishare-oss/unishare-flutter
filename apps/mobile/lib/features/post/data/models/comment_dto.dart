@@ -27,11 +27,11 @@ abstract class CommentDto with _$CommentDto {
       _$CommentDtoFromJson(json);
 
   Comment toEntity() => Comment(
-        id: id,
-        authorId: authorId,
-        authorName: authorName,
-        authorAvatar: authorAvatar,
-        body: body,
-        createdAt: createdAt,
-      );
+    id: id,
+    authorId: authorId,
+    authorName: authorName,
+    authorAvatar: authorAvatar,
+    body: body,
+    createdAt: createdAt,
+  );
 }

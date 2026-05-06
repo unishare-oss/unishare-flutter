@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/post.dart';
 
 class PostDetailScreen extends StatelessWidget {
-  const PostDetailScreen({
-    super.key,
-    required this.postId,
-    this.seed,
-  });
+  const PostDetailScreen({super.key, required this.postId, this.seed});
 
   final String postId;
 
