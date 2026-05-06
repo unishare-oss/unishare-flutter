@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Full write path for post creation with media upload and offline draft queue.">
+        <meta name="description" content="Full write path for post creation via a 4-step wizard with media upload and offline draft queue.">
       
       
       
@@ -1191,6 +1191,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#wizard-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wizard steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#file-map" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1212,6 +1223,28 @@
   
     <nav class="md-nav" aria-label="API contracts">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enums
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-entity-codesnippet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain entity — CodeSnippet
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#domain-entity-postdraft" class="md-nav__link">
@@ -1236,10 +1269,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#domain-repository-interface-postrepository-additions" class="md-nav__link">
+  <a href="#domain-repository-interface-additions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domain repository interface — PostRepository additions
+        Domain repository interface additions
       
     </span>
   </a>
@@ -1357,10 +1390,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
+  <a href="#upload-sequencing-and-partial-recovery-algorithm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GoRouter route
+        Upload sequencing and partial-recovery algorithm
       
     </span>
   </a>
@@ -1368,10 +1401,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upload-sequencing-and-partial-recovery-algorithm" class="md-nav__link">
+  <a href="#gorouter-route" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upload sequencing and partial-recovery algorithm
+        GoRouter route
       
     </span>
   </a>
@@ -1504,6 +1537,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#wizard-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wizard steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#file-map" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1525,6 +1569,28 @@
   
     <nav class="md-nav" aria-label="API contracts">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enums
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-entity-codesnippet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain entity — CodeSnippet
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#domain-entity-postdraft" class="md-nav__link">
@@ -1549,10 +1615,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#domain-repository-interface-postrepository-additions" class="md-nav__link">
+  <a href="#domain-repository-interface-additions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domain repository interface — PostRepository additions
+        Domain repository interface additions
       
     </span>
   </a>
@@ -1670,10 +1736,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
+  <a href="#upload-sequencing-and-partial-recovery-algorithm" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GoRouter route
+        Upload sequencing and partial-recovery algorithm
       
     </span>
   </a>
@@ -1681,10 +1747,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upload-sequencing-and-partial-recovery-algorithm" class="md-nav__link">
+  <a href="#gorouter-route" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upload sequencing and partial-recovery algorithm
+        GoRouter route
       
     </span>
   </a>
@@ -1750,22 +1816,31 @@
 
 
 <h1 id="spec-0004-post-integration">SPEC-0004: Post Integration<a class="headerlink" href="#spec-0004-post-integration" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> APPROVED<br />
+<p><strong>Status:</strong> REVISED<br />
 <strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-03<br />
+<strong>Date:</strong> 2026-05-05<br />
 <strong>Proposal:</strong> <a href="../../tech-proposals/0004-post-integration/">PROP-0004</a><br />
-<strong>Approved by:</strong> Slade (CTO) on 2026-05-03</p>
+<strong>Approved by:</strong> Slade (CTO) on 2026-05-03<br />
+<strong>Revised:</strong> 2026-05-05 — updated to match Figma design (node ids 12:1868–12:2339); original single-form design replaced with 4-step wizard.</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>This spec describes the complete write path for post creation in Unishare. Students can currently read the feed (established by PROP-0003) but have no mechanism to author or publish content. SPEC-0004 adds a guarded <code>/posts/create</code> route that collects title, body, tags, and optional media attachments. All media is uploaded to Firebase Storage first; the resulting download URLs are collected before a single atomic Firestore document write to <code>posts/{postId}</code>. If the device is offline when the user taps Publish, the full draft — including any already-uploaded Storage URLs — is persisted to a Hive queue and auto-published on the next connectivity event. No Cloud Functions are introduced; the entire write path runs on the client.</p>
+<p>This spec describes the complete write path for post creation in Unishare. Students can currently read the feed but have no mechanism to author or publish content. SPEC-0004 adds a guarded <code>/posts/create</code> route that guides the user through a <strong>4-step wizard</strong>:</p>
+<ol>
+<li><strong>Type</strong> — choose content category (Lecture Note / Assignment; Past Exam is unavailable v1)</li>
+<li><strong>Course</strong> — select academic year and course from Firestore reference data</li>
+<li><strong>Details</strong> — title, description, posting identity (named/anonymous), semester, module number, external URL, tags</li>
+<li><strong>Files</strong> — optional file uploads (max 50 MB each) and/or an inline code snippet with language and filename</li>
+</ol>
+<p>All media is uploaded to Firebase Storage first; the resulting download URLs are collected before a single atomic Firestore document write to <code>posts/{postId}</code>. If the device is offline when the user taps Submit, the full draft is persisted to a Hive queue and auto-published on the next connectivity event. No Cloud Functions are introduced; the entire write path runs on the client.</p>
 <hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     subgraph Presentation
-        CPS[CreatePostScreen]
-        MAP[MediaAttachmentPicker]
+        CPS[CreatePostScreen\n4-step wizard]
+        FUW[FileUploadWidget]
+        CSW[CodeSnippetWidget]
         DQI[DraftQueueIndicator]
-        CPP[CreatePostProvider]
+        CPP[CreatePostProvider\nAsyncNotifier]
         DQP[DraftQueueProvider]
     end
 
@@ -1791,7 +1866,8 @@
     end
 
     CPS --&gt; CPP
-    CPS --&gt; MAP
+    CPS --&gt; FUW
+    CPS --&gt; CSW
     DQI --&gt; DQP
     CPP --&gt; CP
     DQP --&gt; SDQ
@@ -1809,6 +1885,44 @@
     DQP --&gt; CN</code></pre>
 <p>The Domain layer holds zero Flutter or Firebase imports. <code>PostRepository</code> and both use cases depend only on pure Dart types. The Data layer owns all Firebase SDK calls. The Presentation layer wires Riverpod providers to Domain use cases; it never imports from <code>data/</code> directly.</p>
 <hr />
+<h2 id="wizard-steps">Wizard steps<a class="headerlink" href="#wizard-steps" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Screen name (Figma)</th>
+<th>Required inputs</th>
+<th>Next enabled when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>TypeStep</td>
+<td><code>postType</code></td>
+<td>one type selected</td>
+</tr>
+<tr>
+<td>2</td>
+<td>CourseStep</td>
+<td><code>year</code>, <code>courseId</code></td>
+<td>both dropdowns selected</td>
+</tr>
+<tr>
+<td>3</td>
+<td>DetailsStep</td>
+<td><code>title</code>, <code>description</code>, <code>semester</code>, <code>moduleNumber</code></td>
+<td>all required fields non-empty</td>
+</tr>
+<tr>
+<td>4</td>
+<td>FilesStep</td>
+<td>files / snippet (optional)</td>
+<td>always (Submit enabled)</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="file-map">File map<a class="headerlink" href="#file-map" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1822,154 +1936,204 @@
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/domain/entities/post_draft.dart</code></td>
-<td>Pure Dart offline draft entity; holds <code>DraftStatus</code> enum</td>
+<td>Pure Dart wizard draft entity; holds <code>PostType</code>, <code>DraftStatus</code>, <code>PostingIdentity</code> enums</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/domain/entities/post.dart</code></td>
-<td>Published post entity (read by feed; authoritative shape from PROP-0003)</td>
+<td>Published post entity (authoritative shape for feed)</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>lib/features/post/domain/entities/code_snippet.dart</code></td>
+<td>Inline code snippet value object: language, filename, content</td>
 </tr>
 <tr>
 <td>Modify</td>
 <td><code>lib/features/post/domain/repositories/post_repository.dart</code></td>
-<td>Add <code>createPost</code> method; may already exist from PROP-0003 — extend it</td>
+<td>Add <code>createPost</code> and draft queue methods; preserve existing <code>watchFeed</code></td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/domain/usecases/create_post.dart</code></td>
-<td>Validates draft, delegates upload + write to repository, handles offline queue</td>
+<td>Validates draft, delegates upload + write, handles offline queue</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/domain/usecases/sync_draft_queue.dart</code></td>
-<td>Drains Hive queue on reconnect; delegates each draft through <code>createPost</code> logic</td>
+<td>Drains Hive queue on reconnect</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/data/datasources/post_firestore_datasource.dart</code></td>
-<td>Writes one atomic document to <code>posts/{postId}</code> via <code>cloud_firestore</code></td>
+<td>Writes atomic document to <code>posts/{postId}</code></td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/data/datasources/post_storage_datasource.dart</code></td>
-<td>Uploads a single file to <code>posts/{uid}/{filename}</code> and returns download URL</td>
+<td>Uploads single file to <code>posts/{uid}/{filename}</code>, returns download URL</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/data/models/post_draft_model.dart</code></td>
-<td>Hive-serializable model mirroring <code>PostDraft</code>; generated <code>TypeAdapter</code></td>
+<td>Hive-serializable model mirroring <code>PostDraft</code>; manual <code>TypeAdapter</code></td>
 </tr>
 <tr>
 <td>Modify</td>
 <td><code>lib/features/post/data/repositories/post_repository_impl.dart</code></td>
-<td>Implement <code>createPost</code>; orchestrate storage uploads then Firestore write; persist/remove Hive drafts</td>
+<td>Orchestrate storage uploads then Firestore write; persist/remove Hive drafts</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/presentation/screens/create_post_screen.dart</code></td>
-<td>Form: title (required), body, tags, media picker; submit triggers <code>CreatePostProvider</code></td>
+<td>4-step <code>PageView</code> wizard with <code>StepIndicator</code> and <code>StepNav</code></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/presentation/widgets/media_attachment_picker.dart</code></td>
-<td>Displays selected files, enforces 10 MB / MIME limits, opens file/image picker</td>
+<td><code>lib/features/post/presentation/widgets/type_step.dart</code></td>
+<td>Step 1: content type selection cards</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>lib/features/post/presentation/widgets/course_step.dart</code></td>
+<td>Step 2: year + course dropdowns</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>lib/features/post/presentation/widgets/details_step.dart</code></td>
+<td>Step 3: title, description, identity, semester, module, URL, tags</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>lib/features/post/presentation/widgets/files_step.dart</code></td>
+<td>Step 4: file drop zone + code snippet panel</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>lib/features/post/presentation/widgets/file_upload_widget.dart</code></td>
+<td>Displays selected files, enforces 50 MB limit</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>lib/features/post/presentation/widgets/code_snippet_widget.dart</code></td>
+<td>Language dropdown, filename input, code textarea</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/presentation/widgets/draft_queue_indicator.dart</code></td>
-<td>Badge or banner showing count of pending queued drafts</td>
+<td>Badge showing count of pending queued drafts</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/presentation/providers/create_post_provider.dart</code></td>
-<td>Riverpod <code>AsyncNotifier</code>; exposes <code>CreatePostState</code>; calls <code>CreatePost</code> use case</td>
+<td><code>AsyncNotifier</code> holding <code>CreatePostState</code>; calls <code>CreatePost</code> use case</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/features/post/presentation/providers/draft_queue_provider.dart</code></td>
-<td>Watches Hive queue box; reacts to connectivity; triggers <code>SyncDraftQueue</code></td>
+<td>Watches Hive queue; reacts to connectivity; triggers <code>SyncDraftQueue</code></td>
 </tr>
 <tr>
 <td>Modify</td>
 <td><code>lib/core/router/router.dart</code></td>
-<td>Add <code>/posts/create</code> <code>GoRoute</code>; redirect to <code>/welcome</code> when unauthenticated</td>
+<td><code>/posts/create</code> <code>GoRoute</code> (redirect guard already covers unauthenticated users)</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>lib/core/storage/post_draft_box.dart</code></td>
-<td>Opens and exposes the <code>draft_queue</code> Hive box; registers <code>PostDraftModelAdapter</code></td>
+<td>Opens <code>draft_queue</code> Hive box; registers <code>PostDraftModelAdapter</code></td>
 </tr>
 <tr>
 <td>Modify</td>
 <td><code>lib/main.dart</code></td>
-<td>Call <code>postDraftBox.init()</code> after <code>Hive.initFlutter()</code> to register adapter and open box</td>
+<td>Call <code>initPostDraftBox()</code> after <code>Hive.initFlutter()</code></td>
 </tr>
 <tr>
 <td>Modify</td>
 <td><code>firestore.rules</code></td>
-<td>Add <code>posts</code> collection rule: <code>allow create</code> when <code>request.auth != null &amp;&amp; request.resource.data.authorId == request.auth.uid</code></td>
+<td><code>posts</code> collection create/read rules</td>
 </tr>
 <tr>
 <td>Create</td>
 <td><code>storage.rules</code></td>
-<td>Restrict <code>posts/{uid}/{file}</code>: <code>allow write</code> when <code>request.auth.uid == uid &amp;&amp; request.resource.size &lt;= 10 * 1024 * 1024 &amp;&amp; request.resource.contentType.matches('image/jpeg\|image/png\|image/webp\|application/pdf')</code></td>
+<td><code>posts/{uid}/{file}</code> write rule (50 MB, allowed MIME types)</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="api-contracts">API contracts<a class="headerlink" href="#api-contracts" title="Permanent link">&para;</a></h2>
-<h3 id="domain-entity-postdraft">Domain entity — <code>PostDraft</code><a class="headerlink" href="#domain-entity-postdraft" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/domain/entities/post_draft.dart</span>
+<h3 id="enums">Enums<a class="headerlink" href="#enums" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">enum</span><span class="w"> </span><span class="n">PostType</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">lectureNote</span><span class="p">,</span><span class="w"> </span><span class="n">assignment</span><span class="w"> </span><span class="p">}</span>
 
 <span class="n">enum</span><span class="w"> </span><span class="n">DraftStatus</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">idle</span><span class="p">,</span><span class="w"> </span><span class="n">uploading</span><span class="p">,</span><span class="w"> </span><span class="n">publishing</span><span class="p">,</span><span class="w"> </span><span class="n">published</span><span class="p">,</span><span class="w"> </span><span class="n">queued</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="p">}</span>
+
+<span class="n">enum</span><span class="w"> </span><span class="n">PostingIdentity</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">named</span><span class="p">,</span><span class="w"> </span><span class="n">anonymous</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<h3 id="domain-entity-codesnippet">Domain entity — <code>CodeSnippet</code><a class="headerlink" href="#domain-entity-codesnippet" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/domain/entities/code_snippet.dart</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">CodeSnippet</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">CodeSnippet</span><span class="p">({</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">language</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">filename</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">content</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">language</span><span class="p">;</span><span class="w">   </span><span class="c1">// e.g. &quot;TypeScript&quot;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">filename</span><span class="p">;</span><span class="w">   </span><span class="c1">// without extension, e.g. &quot;snippet&quot;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">content</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="domain-entity-postdraft">Domain entity — <code>PostDraft</code><a class="headerlink" href="#domain-entity-postdraft" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/domain/entities/post_draft.dart</span>
 
 <span class="kd">class</span><span class="w"> </span><span class="nc">PostDraft</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">PostDraft</span><span class="p">({</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">postType</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">year</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">courseId</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">body</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">tags</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">description</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">postingIdentity</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">semester</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">moduleNumber</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">localMediaPaths</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">uploadedUrls</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">createdAt</span><span class="p">,</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">externalUrl</span><span class="p">,</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">codeSnippet</span><span class="p">,</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DraftStatus</span><span class="p">.</span><span class="n">idle</span><span class="p">,</span>
 <span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">errorMessage</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 
-<span class="w">  </span><span class="c1">/// Stable identifier used as the Firestore document ID and Hive key.</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">PostType</span><span class="w"> </span><span class="n">postType</span><span class="p">;</span>
 
-<span class="w">  </span><span class="c1">/// Required. Publish is blocked when empty.</span>
+<span class="w">  </span><span class="c1">// Step 2</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">year</span><span class="p">;</span><span class="w">           </span><span class="c1">// e.g. 2</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">courseId</span><span class="p">;</span><span class="w">    </span><span class="c1">// Firestore reference data ID</span>
+
+<span class="w">  </span><span class="c1">// Step 3</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">PostingIdentity</span><span class="w"> </span><span class="n">postingIdentity</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">semester</span><span class="p">;</span><span class="w">       </span><span class="c1">// 1 or 2</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">moduleNumber</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">externalUrl</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">;</span><span class="w">  </span><span class="c1">// max 5</span>
 
-<span class="w">  </span><span class="c1">/// Optional.</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">body</span><span class="p">;</span>
-
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">;</span>
-
-<span class="w">  </span><span class="c1">/// Absolute local file-system paths selected by the user, in insertion order.</span>
+<span class="w">  </span><span class="c1">// Step 4</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">localMediaPaths</span><span class="p">;</span>
-
-<span class="w">  </span><span class="c1">/// Maps localPath → Firebase Storage download URL for files already uploaded.</span>
-<span class="w">  </span><span class="c1">/// On retry, any localPath present in this map is skipped in the upload loop.</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uploadedUrls</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uploadedUrls</span><span class="p">;</span><span class="w"> </span><span class="c1">// localPath → Storage download URL</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">CodeSnippet</span><span class="o">?</span><span class="w"> </span><span class="n">codeSnippet</span><span class="p">;</span>
 
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="p">;</span>
-
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DraftStatus</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
-
-<span class="w">  </span><span class="c1">/// Non-null only when status == DraftStatus.error.</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">errorMessage</span><span class="p">;</span>
 
-<span class="w">  </span><span class="n">PostDraft</span><span class="w"> </span><span class="n">copyWith</span><span class="p">({</span>
-<span class="w">    </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">title</span><span class="p">,</span>
-<span class="w">    </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">body</span><span class="p">,</span>
-<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">tags</span><span class="p">,</span>
-<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">localMediaPaths</span><span class="p">,</span>
-<span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">uploadedUrls</span><span class="p">,</span>
-<span class="w">    </span><span class="n">DraftStatus</span><span class="o">?</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
-<span class="w">    </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">errorMessage</span><span class="p">,</span>
-<span class="w">  </span><span class="p">});</span>
+<span class="w">  </span><span class="n">PostDraft</span><span class="w"> </span><span class="n">copyWith</span><span class="p">({</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">});</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="domain-entity-post">Domain entity — <code>Post</code><a class="headerlink" href="#domain-entity-post" title="Permanent link">&para;</a></h3>
@@ -1981,49 +2145,53 @@
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">authorId</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">authorName</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">authorAvatar</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">postType</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">year</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">courseId</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">body</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">description</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">postingIdentity</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">semester</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">moduleNumber</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">mediaUrls</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">tags</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">likesCount</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">createdAt</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">updatedAt</span><span class="p">,</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">externalUrl</span><span class="p">,</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">codeSnippetUrl</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">authorId</span><span class="p">;</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">authorName</span><span class="p">;</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">authorAvatar</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">authorName</span><span class="p">;</span><span class="w">   </span><span class="c1">// empty string when anonymous</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">authorAvatar</span><span class="p">;</span><span class="w"> </span><span class="c1">// empty string when anonymous</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">PostType</span><span class="w"> </span><span class="n">postType</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">year</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">courseId</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">body</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">PostingIdentity</span><span class="w"> </span><span class="n">postingIdentity</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">semester</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">moduleNumber</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mediaUrls</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">likesCount</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="p">;</span>
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">updatedAt</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">externalUrl</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">codeSnippetUrl</span><span class="p">;</span><span class="w"> </span><span class="c1">// Storage download URL for uploaded snippet file</span>
 <span class="p">}</span>
 </code></pre></div>
-<h3 id="domain-repository-interface-postrepository-additions">Domain repository interface — <code>PostRepository</code> additions<a class="headerlink" href="#domain-repository-interface-postrepository-additions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/domain/repositories/post_repository.dart</span>
-
-<span class="kd">abstract</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">PostRepository</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">// --- existing methods from PROP-0003 (preserved) ---</span>
+<h3 id="domain-repository-interface-additions">Domain repository interface additions<a class="headerlink" href="#domain-repository-interface-additions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">abstract</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">PostRepository</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// --- existing (preserved) ---</span>
 <span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">watchFeed</span><span class="p">({</span><span class="kt">int</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">});</span>
 
 <span class="w">  </span><span class="c1">// --- new for SPEC-0004 ---</span>
-
-<span class="w">  </span><span class="c1">/// Persists [draft] to the local Hive queue.</span>
 <span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">saveDraft</span><span class="p">(</span><span class="n">PostDraft</span><span class="w"> </span><span class="n">draft</span><span class="p">);</span>
-
-<span class="w">  </span><span class="c1">/// Removes the draft with [draftId] from the local Hive queue.</span>
 <span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">removeDraft</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">draftId</span><span class="p">);</span>
-
-<span class="w">  </span><span class="c1">/// Returns all drafts currently in the Hive queue, ordered by createdAt.</span>
 <span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">PostDraft</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">loadDraftQueue</span><span class="p">();</span>
-
-<span class="w">  </span><span class="c1">/// Uploads media for [draft], writes the Firestore document, and removes the</span>
-<span class="w">  </span><span class="c1">/// draft from the Hive queue on success. Throws on unrecoverable failure;</span>
-<span class="w">  </span><span class="c1">/// updates [onProgress] with fraction [0.0, 1.0] during upload.</span>
 <span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">publishDraft</span><span class="p">(</span>
 <span class="w">    </span><span class="n">PostDraft</span><span class="w"> </span><span class="n">draft</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="kt">Function</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">progress</span><span class="p">)</span><span class="o">?</span><span class="w"> </span><span class="n">onProgress</span><span class="p">,</span>
@@ -2031,17 +2199,12 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="domain-use-case-createpost">Domain use case — <code>CreatePost</code><a class="headerlink" href="#domain-use-case-createpost" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/domain/usecases/create_post.dart</span>
-
-<span class="kd">class</span><span class="w"> </span><span class="nc">CreatePost</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">CreatePost</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">CreatePost</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">_repository</span><span class="p">);</span>
-
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">PostRepository</span><span class="w"> </span><span class="n">_repository</span><span class="p">;</span>
 
-<span class="w">  </span><span class="c1">/// Validates [draft], saves it to the queue, then attempts to publish.</span>
-<span class="w">  </span><span class="c1">/// Returns the same [draft] with status updated to [DraftStatus.published]</span>
-<span class="w">  </span><span class="c1">/// on success, or [DraftStatus.queued] when offline,</span>
-<span class="w">  </span><span class="c1">/// or [DraftStatus.error] on unrecoverable failure.</span>
+<span class="w">  </span><span class="c1">/// Validates [draft], saves to queue, then attempts to publish.</span>
+<span class="w">  </span><span class="c1">/// Returns draft with updated status: published, queued, or error.</span>
 <span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="n">PostDraft</span><span class="o">&gt;</span><span class="w"> </span><span class="n">call</span><span class="p">({</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">PostDraft</span><span class="w"> </span><span class="n">draft</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isConnected</span><span class="p">,</span>
@@ -2049,30 +2212,22 @@
 <span class="w">  </span><span class="p">});</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Validation rules enforced inside <code>call</code>:
-- <code>draft.title.trim().isNotEmpty</code> — throws <code>ArgumentError('title_required')</code> otherwise.
-- Each <code>localMediaPaths</code> entry must resolve to a file whose size is at most 10 MB and whose MIME type is one of <code>image/jpeg</code>, <code>image/png</code>, <code>image/webp</code>, <code>application/pdf</code>. Throws <code>ArgumentError('invalid_media')</code> on first violation.
-- When <code>isConnected == false</code>, the method saves to the Hive queue and returns the draft with <code>status = DraftStatus.queued</code> without attempting any network call.</p>
+<p>Validation rules:
+- <code>draft.title.trim().isNotEmpty</code> — throws <code>ArgumentError('title_required')</code>
+- <code>draft.description.trim().isNotEmpty</code> — throws <code>ArgumentError('description_required')</code>
+- <code>draft.moduleNumber.trim().isNotEmpty</code> — throws <code>ArgumentError('module_required')</code>
+- Each <code>localMediaPaths</code> entry must resolve to a file ≤ 50 MB. Throws <code>ArgumentError('file_too_large')</code> on first violation.
+- When <code>isConnected == false</code>, saves to Hive queue and returns <code>DraftStatus.queued</code> without any network call.</p>
 <h3 id="domain-use-case-syncdraftqueue">Domain use case — <code>SyncDraftQueue</code><a class="headerlink" href="#domain-use-case-syncdraftqueue" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/domain/usecases/sync_draft_queue.dart</span>
-
-<span class="kd">class</span><span class="w"> </span><span class="nc">SyncDraftQueue</span><span class="w"> </span><span class="p">{</span>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span><span class="w"> </span><span class="nc">SyncDraftQueue</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">SyncDraftQueue</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">_repository</span><span class="p">);</span>
-
 <span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">PostRepository</span><span class="w"> </span><span class="n">_repository</span><span class="p">;</span>
 
-<span class="w">  </span><span class="c1">/// Loads all queued drafts and attempts to publish each in createdAt order.</span>
-<span class="w">  </span><span class="c1">/// Emits each draft&#39;s updated [PostDraft] as it transitions.</span>
-<span class="w">  </span><span class="c1">/// Stops processing on the first unrecoverable error to preserve ordering.</span>
 <span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">PostDraft</span><span class="o">&gt;</span><span class="w"> </span><span class="n">call</span><span class="p">();</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="presentation-state-createpoststate">Presentation state — <code>CreatePostState</code><a class="headerlink" href="#presentation-state-createpoststate" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/presentation/providers/create_post_provider.dart</span>
-
-<span class="n">sealed</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">CreatePostState</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">CreatePostState</span><span class="p">();</span>
-<span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="n">sealed</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">CreatePostState</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">CreatePostState</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
 
 <span class="kd">final</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">CreatePostIdle</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">CreatePostState</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">CreatePostIdle</span><span class="p">();</span>
@@ -2080,8 +2235,7 @@
 
 <span class="kd">final</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">CreatePostUploading</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">CreatePostState</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">CreatePostUploading</span><span class="p">({</span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">progress</span><span class="p">});</span>
-<span class="w">  </span><span class="c1">/// Upload fraction in [0.0, 1.0].</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">progress</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">progress</span><span class="p">;</span><span class="w"> </span><span class="c1">// [0.0, 1.0]</span>
 <span class="p">}</span>
 
 <span class="kd">final</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">CreatePostPublishing</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">CreatePostState</span><span class="w"> </span><span class="p">{</span>
@@ -2105,29 +2259,19 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="riverpod-notifier-signatures">Riverpod notifier signatures<a class="headerlink" href="#riverpod-notifier-signatures" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/presentation/providers/create_post_provider.dart</span>
-
-<span class="nd">@riverpod</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@riverpod</span>
 <span class="kd">class</span><span class="w"> </span><span class="nc">CreatePostNotifier</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">_$CreatePostNotifier</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nd">@override</span>
-<span class="w">  </span><span class="n">CreatePostState</span><span class="w"> </span><span class="n">build</span><span class="p">();</span>
+<span class="w">  </span><span class="n">CreatePostState</span><span class="w"> </span><span class="n">build</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">CreatePostIdle</span><span class="p">();</span>
 
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">submit</span><span class="p">({</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">body</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">localMediaPaths</span><span class="p">,</span>
-<span class="w">  </span><span class="p">});</span>
-
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">submit</span><span class="p">({</span><span class="kd">required</span><span class="w"> </span><span class="n">PostDraft</span><span class="w"> </span><span class="n">draft</span><span class="p">});</span>
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">reset</span><span class="p">();</span>
 <span class="p">}</span>
-
-<span class="c1">// lib/features/post/presentation/providers/draft_queue_provider.dart</span>
 
 <span class="nd">@riverpod</span>
 <span class="kd">class</span><span class="w"> </span><span class="nc">DraftQueueNotifier</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">_$DraftQueueNotifier</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nd">@override</span>
-<span class="w">  </span><span class="n">List</span><span class="o">&lt;</span><span class="n">PostDraft</span><span class="o">&gt;</span><span class="w"> </span><span class="n">build</span><span class="p">();</span>
+<span class="w">  </span><span class="n">List</span><span class="o">&lt;</span><span class="n">PostDraft</span><span class="o">&gt;</span><span class="w"> </span><span class="n">build</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[];</span>
 
 <span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="kd">sync</span><span class="p">();</span>
 <span class="p">}</span>
@@ -2136,19 +2280,27 @@
 <h2 id="firestore-schema">Firestore schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h2>
 <p>Collection: <code>posts</code></p>
 <div class="highlight"><pre><span></span><code>posts/{postId}
-  authorId:     string   — must equal request.auth.uid (Security Rules enforce)
-  authorName:   string   — denormalized from FirebaseAuth.currentUser.displayName at write time
-  authorAvatar: string   — denormalized from FirebaseAuth.currentUser.photoURL at write time; may be empty string
-  title:        string   — non-empty, validated client-side and by Rules (size &gt; 0)
-  body:         string   — may be empty
-  mediaUrls:    string[] — Firebase Storage download URLs; empty array when no attachments
-  tags:         string[] — may be empty
-  likesCount:   int      — written as 0 at creation; incremented by separate interactions feature (out of scope)
-  createdAt:    Timestamp
-  updatedAt:    Timestamp — same value as createdAt on initial write; reserved for future edit path
+  authorId:        string   — request.auth.uid
+  authorName:      string   — FirebaseAuth displayName; empty string when anonymous
+  authorAvatar:    string   — FirebaseAuth photoURL; empty string when anonymous
+  postingIdentity: string   — &quot;named&quot; | &quot;anonymous&quot;
+  postType:        string   — &quot;lectureNote&quot; | &quot;assignment&quot;
+  year:            int
+  courseId:        string
+  title:           string   — non-empty
+  description:     string   — non-empty
+  semester:        int      — 1 or 2
+  moduleNumber:    string
+  externalUrl:     string?  — null when not provided
+  mediaUrls:       string[] — Storage download URLs; empty array when none
+  codeSnippetUrl:  string?  — Storage download URL for snippet file; null when none
+  tags:            string[] — up to 5 items; may be empty
+  likesCount:      int      — written as 0 at creation
+  createdAt:       Timestamp
+  updatedAt:       Timestamp — same as createdAt on initial write
 </code></pre></div>
-<p>Indexes: no new composite indexes required. The feed query from PROP-0003 (<code>collectionGroup('posts').orderBy('createdAt', descending: true)</code>) already covers the read pattern. A per-author query (<code>where('authorId', isEqualTo: uid).orderBy('createdAt')</code>) will require a composite index — add <code>posts | authorId ASC, createdAt ASC</code> to <code>firestore.indexes.json</code> in this spec's scope.</p>
-<p>Storage path convention: <code>posts/{uid}/{uuid}-{filename}</code> where <code>uuid</code> is a client-generated v4 UUID. This scopes each user's uploads to a predictable path that Security Rules can match on <code>uid</code>.</p>
+<p>Indexes: add <code>posts | authorId ASC, createdAt ASC</code> to <code>firestore.indexes.json</code>.</p>
+<p>Storage path convention: <code>posts/{uid}/{uuid}-{filename}</code></p>
 <hr />
 <h2 id="security-rules">Security rules<a class="headerlink" href="#security-rules" title="Permanent link">&para;</a></h2>
 <h3 id="firestorerules-addition"><code>firestore.rules</code> addition<a class="headerlink" href="#firestorerules-addition" title="Permanent link">&para;</a></h3>
@@ -2158,8 +2310,10 @@
                 &amp;&amp; request.resource.data.authorId == request.auth.uid
                 &amp;&amp; request.resource.data.title is string
                 &amp;&amp; request.resource.data.title.size() &gt; 0
+                &amp;&amp; request.resource.data.description is string
+                &amp;&amp; request.resource.data.description.size() &gt; 0
                 &amp;&amp; request.resource.data.likesCount == 0;
-  allow update, delete: if false; // edit/delete out of scope for v1
+  allow update, delete: if false;
 }
 </code></pre></div>
 <h3 id="storagerules-addition"><code>storage.rules</code> addition<a class="headerlink" href="#storagerules-addition" title="Permanent link">&para;</a></h3>
@@ -2167,68 +2321,68 @@
   allow read: if request.auth != null;
   allow write: if request.auth != null
                &amp;&amp; request.auth.uid == uid
-               &amp;&amp; request.resource.size &lt;= 10 * 1024 * 1024
+               &amp;&amp; request.resource.size &lt;= 50 * 1024 * 1024
                &amp;&amp; request.resource.contentType.matches(
-                    &#39;image/jpeg|image/png|image/webp|application/pdf&#39;
+                    &#39;image/jpeg|image/png|image/webp|application/pdf|text/plain&#39;
                   );
 }
 </code></pre></div>
+<p><code>text/plain</code> covers uploaded code snippet files.</p>
 <hr />
 <h2 id="hive-draft-queue">Hive draft queue<a class="headerlink" href="#hive-draft-queue" title="Permanent link">&para;</a></h2>
-<p>Box name: <code>draft_queue</code></p>
-<p>Key: <code>PostDraft.id</code> (string)</p>
-<p><code>PostDraftModel</code> mirrors all <code>PostDraft</code> fields with Hive type annotations. The <code>DraftStatus</code> enum is stored as its integer index. The <code>uploadedUrls</code> map is stored as a <code>Map&lt;String, String&gt;</code> (Hive natively supports this).</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/post/data/models/post_draft_model.dart</span>
-<span class="c1">// (manual Hive TypeAdapter — no Freezed, to avoid generated file conflicts)</span>
-
-<span class="nd">@HiveType</span><span class="p">(</span><span class="nl">typeId:</span><span class="w"> </span><span class="m">1</span><span class="p">)</span>
+<p>Box name: <code>draft_queue</code><br />
+Key: <code>PostDraft.id</code><br />
+<code>typeId: 1</code> — engineer must verify no existing model claims this ID.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@HiveType</span><span class="p">(</span><span class="nl">typeId:</span><span class="w"> </span><span class="m">1</span><span class="p">)</span>
 <span class="kd">class</span><span class="w"> </span><span class="nc">PostDraftModel</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">HiveObject</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">body</span><span class="p">;</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">;</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">4</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">localMediaPaths</span><span class="p">;</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uploadedUrls</span><span class="p">;</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">6</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="p">;</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">7</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">statusIndex</span><span class="p">;</span><span class="w"> </span><span class="c1">// DraftStatus.index</span>
-<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">8</span><span class="p">)</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">errorMessage</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postTypeIndex</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">2</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">year</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">3</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">courseId</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">4</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">5</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">6</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">postingIdentityIndex</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">7</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">semester</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">8</span><span class="p">)</span><span class="w">  </span><span class="kd">late</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">moduleNumber</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">9</span><span class="p">)</span><span class="w">  </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">externalUrl</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">10</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">11</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">localMediaPaths</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">12</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">uploadedUrls</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">13</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">14</span><span class="p">)</span><span class="w"> </span><span class="kd">late</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">statusIndex</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">15</span><span class="p">)</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">errorMessage</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">16</span><span class="p">)</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">codeSnippetLanguage</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">17</span><span class="p">)</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">codeSnippetFilename</span><span class="p">;</span>
+<span class="w">  </span><span class="nd">@HiveField</span><span class="p">(</span><span class="m">18</span><span class="p">)</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">codeSnippetContent</span><span class="p">;</span>
 
 <span class="w">  </span><span class="n">PostDraft</span><span class="w"> </span><span class="n">toEntity</span><span class="p">();</span>
 <span class="w">  </span><span class="kd">static</span><span class="w"> </span><span class="n">PostDraftModel</span><span class="w"> </span><span class="n">fromEntity</span><span class="p">(</span><span class="n">PostDraft</span><span class="w"> </span><span class="n">draft</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>typeId: 1</code> is reserved for <code>PostDraftModel</code>. The engineer must verify that no existing Hive model in the codebase already uses <code>typeId: 1</code> before assigning it.</p>
-<p>Registration call in <code>lib/core/storage/post_draft_box.dart</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">initPostDraftBox</span><span class="p">()</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">Hive</span><span class="p">.</span><span class="n">registerAdapter</span><span class="p">(</span><span class="n">PostDraftModelAdapter</span><span class="p">());</span>
-<span class="w">  </span><span class="kd">await</span><span class="w"> </span><span class="n">Hive</span><span class="p">.</span><span class="n">openBox</span><span class="o">&lt;</span><span class="n">PostDraftModel</span><span class="o">&gt;</span><span class="p">(</span><span class="s1">&#39;draft_queue&#39;</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Called in <code>main.dart</code> immediately after <code>Hive.initFlutter()</code>.</p>
+<hr />
+<h2 id="upload-sequencing-and-partial-recovery-algorithm">Upload sequencing and partial-recovery algorithm<a class="headerlink" href="#upload-sequencing-and-partial-recovery-algorithm" title="Permanent link">&para;</a></h2>
+<p><code>PostRepositoryImpl.publishDraft</code> must follow this sequence:</p>
+<ol>
+<li>Load <code>draft.uploadedUrls</code> (may be partially populated from a prior attempt).</li>
+<li>For each path in <code>draft.localMediaPaths</code>, in order:
+   a. If <code>draft.uploadedUrls.containsKey(path)</code>, skip — already uploaded.
+   b. Call <code>PostStorageDatasource.upload(localPath, uid)</code> → download URL.
+   c. On success, update <code>draft.uploadedUrls[path] = url</code> and persist to Hive.
+   d. On failure, persist partial <code>uploadedUrls</code>, set <code>DraftStatus.error</code>, rethrow.</li>
+<li>If <code>draft.codeSnippet != null</code>, upload snippet content as <code>text/plain</code> to <code>posts/{uid}/{uuid}-{filename}.{ext}</code>. Store the download URL in the Firestore document as <code>codeSnippetUrl</code>.</li>
+<li>Derive <code>mediaUrls</code> from <code>draft.uploadedUrls.values</code>.</li>
+<li>Call <code>PostFirestoreDatasource.createPost(...)</code> with the complete payload.</li>
+<li>On success, call <code>removeDraft(draft.id)</code>.</li>
+<li>On Firestore failure, leave draft in Hive with <code>DraftStatus.queued</code>.</li>
+</ol>
 <hr />
 <h2 id="gorouter-route">GoRouter route<a class="headerlink" href="#gorouter-route" title="Permanent link">&para;</a></h2>
-<p>Add to the <code>routes</code> list in <code>lib/core/router/router.dart</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">GoRoute</span><span class="p">(</span>
 <span class="w">  </span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/posts/create&#39;</span><span class="p">,</span>
 <span class="w">  </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">CreatePostScreen</span><span class="p">(),</span>
 <span class="p">),</span>
 </code></pre></div>
-<p>The existing <code>_RouterNotifier.redirect</code> already redirects unauthenticated users to <code>/welcome</code> for all non-auth routes, so no additional guard is needed in the route definition itself. The engineer must confirm this redirect logic covers <code>/posts/create</code> before closing the PR.</p>
-<hr />
-<h2 id="upload-sequencing-and-partial-recovery-algorithm">Upload sequencing and partial-recovery algorithm<a class="headerlink" href="#upload-sequencing-and-partial-recovery-algorithm" title="Permanent link">&para;</a></h2>
-<p>The <code>PostRepositoryImpl.publishDraft</code> implementation must follow this sequence exactly:</p>
-<ol>
-<li>Load <code>draft.uploadedUrls</code> (may be partially populated from a prior attempt).</li>
-<li>For each path in <code>draft.localMediaPaths</code>, in order:
-   a. If <code>draft.uploadedUrls.containsKey(path)</code>, skip — already uploaded.
-   b. Otherwise, call <code>PostStorageDatasource.upload(localPath, uid)</code> to obtain a download URL.
-   c. On success, update <code>draft.uploadedUrls[path] = downloadUrl</code> and persist the updated draft to Hive (so the URL survives a crash).
-   d. On failure, update Hive with partial <code>uploadedUrls</code>, update <code>draft.status = DraftStatus.error</code>, and rethrow.</li>
-<li>Once all uploads are complete, derive <code>mediaUrls</code> from <code>draft.uploadedUrls.values</code>.</li>
-<li>Call <code>PostFirestoreDatasource.createPost(...)</code> with the complete document payload.</li>
-<li>On Firestore write success, call <code>PostRepository.removeDraft(draft.id)</code>.</li>
-<li>On Firestore write failure, leave the draft in the Hive queue with <code>status = DraftStatus.queued</code> so <code>SyncDraftQueue</code> will retry with the already-uploaded URLs.</li>
-</ol>
+<p>The existing <code>_RouterNotifier.redirect</code> already redirects unauthenticated users to <code>/welcome</code> for all non-auth routes — no additional guard needed.</p>
 <hr />
 <h2 id="test-plan">Test plan<a class="headerlink" href="#test-plan" title="Permanent link">&para;</a></h2>
 <table>
@@ -2241,31 +2395,39 @@
 <tbody>
 <tr>
 <td><code>test/unit/features/post/domain/usecases/create_post_test.dart</code></td>
-<td><code>CreatePost.call</code> — title validation throws when empty; valid draft with connectivity publishes; valid draft without connectivity is queued; media MIME/size validation rejects invalid files</td>
+<td>title/description/module validation throws; valid draft with connectivity publishes; offline draft is queued; file &gt; 50 MB is rejected</td>
 </tr>
 <tr>
 <td><code>test/unit/features/post/domain/usecases/sync_draft_queue_test.dart</code></td>
-<td><code>SyncDraftQueue.call</code> — empty queue emits nothing; single queued draft is published and removed; second draft is skipped when first fails unrecoverably; emits DraftStatus transitions in order</td>
+<td>empty queue emits nothing; single draft publishes and is removed; second draft skipped when first fails; status transitions emitted in order</td>
 </tr>
 <tr>
 <td><code>test/unit/features/post/data/repositories/post_repository_impl_upload_test.dart</code></td>
-<td>Upload-ordering logic — already-uploaded paths are skipped (idempotency); Hive draft is updated with partial <code>uploadedUrls</code> after each successful file; Firestore write is not called until all uploads complete</td>
+<td>already-uploaded paths are skipped; Hive updated after each file; Firestore not called until all uploads complete; snippet uploaded before Firestore write</td>
 </tr>
 <tr>
 <td><code>test/unit/features/post/data/repositories/post_repository_impl_recovery_test.dart</code></td>
-<td>Partial-upload recovery — draft with one pre-populated <code>uploadedUrls</code> entry only uploads the remaining files; on Storage failure mid-sequence, existing URLs are preserved in Hive</td>
+<td>partial uploadedUrls only re-uploads missing files; on Storage failure existing URLs preserved</td>
 </tr>
 <tr>
 <td><code>test/widget/features/post/screens/create_post_screen_test.dart</code></td>
-<td>Submit button is disabled when title field is empty; submit button is enabled when title is non-empty; tapping submit with no connectivity transitions to Queued chip; error banner appears when provider state is <code>CreatePostError</code></td>
+<td>Next disabled on step 1 until type selected; Next disabled on step 2 until year+course selected; Next disabled on step 3 until required fields filled; Submit always enabled on step 4; Back navigates to previous step</td>
 </tr>
 <tr>
-<td><code>test/widget/features/post/widgets/media_attachment_picker_test.dart</code></td>
-<td>Displays zero items by default; shows a chip for each added file; displays file size warning when a file exceeds 10 MB; remove button clears the file from the list</td>
+<td><code>test/widget/features/post/widgets/type_step_test.dart</code></td>
+<td>tapping Lecture Note highlights card; tapping Assignment highlights card; Past Exam card is disabled</td>
+</tr>
+<tr>
+<td><code>test/widget/features/post/widgets/details_step_test.dart</code></td>
+<td>anonymous toggle hides author name in preview; tag input accepts up to 5 tags; 6th tag is rejected</td>
+</tr>
+<tr>
+<td><code>test/widget/features/post/widgets/files_step_test.dart</code></td>
+<td>file &gt; 50 MB shows size warning; code snippet panel shows language dropdown and filename input; empty snippet is not uploaded</td>
 </tr>
 <tr>
 <td><code>test/widget/features/post/widgets/draft_queue_indicator_test.dart</code></td>
-<td>Renders nothing when queue is empty; shows correct count badge when queue has items; badge updates reactively when queue changes</td>
+<td>renders nothing when queue empty; shows correct count; updates reactively</td>
 </tr>
 </tbody>
 </table>
@@ -2273,23 +2435,24 @@
 <h2 id="out-of-scope">Out of scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Post editing or deletion.</li>
-<li>Comment threads, reactions, or likes beyond the existing <code>likesCount</code> field (which is written as <code>0</code> at creation and never modified by this feature).</li>
-<li>Full-text search, content moderation, or spam filtering at publish time.</li>
-<li>Cloud Functions involvement in the write path.</li>
-<li>NestJS or REST API involvement in the write path.</li>
-<li>Background reconciliation of stale author display name or avatar on existing posts.</li>
-<li>Admin or moderation tooling.</li>
-<li>Video or audio media types (only JPEG, PNG, WebP, and PDF are in scope).</li>
-<li>Push notifications triggered by a new post.</li>
+<li>Past Exam type (marked "Unavailable" in design — reserved for a future spec).</li>
+<li>Comment threads, reactions, or likes beyond the initial <code>likesCount: 0</code> write.</li>
+<li>Full-text search, content moderation, or spam filtering.</li>
+<li>Cloud Functions in the write path.</li>
+<li>Video or audio media types.</li>
+<li>Push notifications on new post.</li>
 <li>Draft sharing across devices (Hive is local-only).</li>
+<li>Background sync of stale author display name or avatar.</li>
 </ul>
 <hr />
 <h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] <strong>Hive typeId assignment</strong> — Confirm that <code>typeId: 1</code> is not already claimed by another Hive model in the project (only the <code>settings</code> box is known at spec time). The flutter-engineer must audit existing registered adapters before assigning the ID.</li>
-<li>[ ] <strong><code>post_repository.dart</code> pre-existence</strong> — PROP-0003 may have scaffolded a <code>PostRepository</code> interface for the read path. The engineer must determine whether to extend an existing file or create a new one, and must not break the feed's <code>watchFeed</code> stream in doing so.</li>
-<li>[x] <strong>Connectivity detection package</strong> — <strong>Resolved:</strong> use <code>connectivity_plus</code>. Provides a real-time <code>Stream&lt;ConnectivityResult&gt;</code> needed to trigger <code>SyncDraftQueue</code> on reconnect. Add to <code>pubspec.yaml</code>; no platform permission entries required.</li>
-<li>[x] <strong>File picker package</strong> — <strong>Resolved:</strong> use <code>file_picker</code>. Covers all four required MIME types (JPEG, PNG, WebP, PDF) in a single package. <code>image_picker</code> is camera/gallery only and cannot pick PDF files. Add to <code>pubspec.yaml</code>; add <code>NSPhotoLibraryUsageDescription</code> to <code>Info.plist</code> and <code>READ_EXTERNAL_STORAGE</code> to <code>AndroidManifest.xml</code>.</li>
+<li>[ ] <strong>Hive typeId</strong> — confirm <code>typeId: 1</code> is not already claimed.</li>
+<li>[ ] <strong><code>post_repository.dart</code> pre-existence</strong> — determine whether to extend existing file from PROP-0003 or create new; must not break <code>watchFeed</code>.</li>
+<li>[ ] <strong>Course reference data shape</strong> — confirm Firestore path and field names for year/course dropdowns (seeded by <code>tools/seed_firestore.js</code>).</li>
+<li>[ ] <strong>Semester values</strong> — confirm whether semester is always 1 or 2, or can vary by university.</li>
+<li>[x] <strong>Connectivity package</strong> — <code>connectivity_plus</code>.</li>
+<li>[x] <strong>File picker package</strong> — <code>file_picker</code>.</li>
 </ul>
 
 
