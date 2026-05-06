@@ -382,3 +382,4 @@ Review: PENDING
   [13:29] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
   [13:32] Edit: apps/mobile/pubspec.yaml
   [13:33] Edit: apps/mobile/pubspec.yaml
+  [13:45] Edit: apps/mobile/.gitignore

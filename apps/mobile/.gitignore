@@ -68,3 +68,4 @@ ios/Flutter/ephemeral/
 macos/Flutter/ephemeral/
 **/GeneratedPluginRegistrant.h
 **/GeneratedPluginRegistrant.m
+**/GeneratedPluginRegistrant.swift
