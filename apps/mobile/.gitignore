@@ -65,5 +65,6 @@ android/local.properties
 # iOS generated
 ios/Flutter/Generated.xcconfig
 ios/Flutter/ephemeral/
+macos/Flutter/ephemeral/
 **/GeneratedPluginRegistrant.h
 **/GeneratedPluginRegistrant.m
