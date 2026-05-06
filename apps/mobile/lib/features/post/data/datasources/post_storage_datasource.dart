@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class PostStorageDatasource {
   final _storage = FirebaseStorage.instance;
 
+  /// Uploads a local file (mobile) to `posts/{uid}/{uuid}-{filename}`.
   Future<String> upload(
     String localPath,
     String uid, {
@@ -15,30 +17,47 @@ class PostStorageDatasource {
     final file = File(localPath);
     final filename = localPath.split('/').last;
     final ref = _storage.ref('posts/$uid/${_newId()}-$filename');
-
     final task = ref.putFile(file);
+    return _trackAndReturn(task, ref, onProgress);
+  }
 
+  /// Uploads in-memory [bytes] (web) to `posts/{uid}/{uuid}-{filename}`.
+  Future<String> uploadBytes(
+    Uint8List bytes,
+    String filename,
+    String uid, {
+    void Function(double progress)? onProgress,
+  }) async {
+    final ref = _storage.ref('posts/$uid/${_newId()}-$filename');
+    final task = ref.putData(bytes);
+    return _trackAndReturn(task, ref, onProgress);
+  }
+
+  /// Uploads [content] as `text/plain`. Used for code snippets.
+  Future<String> uploadText(String content, String uid, String filename) async {
+    final ref = _storage.ref('posts/$uid/${_newId()}-$filename');
+    await ref.putString(content, metadata: SettableMetadata(contentType: 'text/plain'));
+    return ref.getDownloadURL();
+  }
+
+  Future<String> _trackAndReturn(
+    UploadTask task,
+    Reference ref,
+    void Function(double)? onProgress,
+  ) async {
     StreamSubscription? sub;
     if (onProgress != null) {
       sub = task.snapshotEvents.listen((snap) {
-        if (snap.totalBytes > 0) {
-          onProgress(snap.bytesTransferred / snap.totalBytes);
-        }
+        if (snap.totalBytes > 0) onProgress(snap.bytesTransferred / snap.totalBytes);
       });
     }
-
     try {
       await task;
     } finally {
       await sub?.cancel();
     }
-
     return ref.getDownloadURL();
   }
 
-  // Generates a Firebase-style 20-char random ID without a network call.
-  String _newId() {
-    // Same approach as Firestore auto-ID: use the Firestore client's doc() generator.
-    return FirebaseFirestore.instance.collection('_').doc().id;
-  }
+  String _newId() => FirebaseFirestore.instance.collection('_').doc().id;
 }

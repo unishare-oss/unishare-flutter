@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -45,11 +47,13 @@ class PostRepositoryImpl implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double progress)? onProgress,
+    Map<String, Uint8List>? fileDataOverride,
   }) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw StateError('not_authenticated');
 
-    // Step 1: start with the draft's current uploadedUrls (may be partially populated).
+    // Step 1: start with the draft's current uploadedUrls (may be partially
+    // populated from a prior attempt).
     var current = draft;
     final paths = draft.localMediaPaths;
 
@@ -62,13 +66,23 @@ class PostRepositoryImpl implements PostRepository {
 
       try {
         // 2b. Upload and get download URL.
-        final url = await storageDatasource.upload(
-          path,
-          user.uid,
-          onProgress: onProgress != null
-              ? (fp) => onProgress((i + fp) / paths.length)
-              : null,
-        );
+        // Use bytes override on web (path is a name, not a filesystem path).
+        final progressFn = onProgress != null
+            ? (fp) => onProgress((i + fp) / paths.length)
+            : null;
+        final overrideBytes = fileDataOverride?[path];
+        final url = overrideBytes != null
+            ? await storageDatasource.uploadBytes(
+                overrideBytes,
+                path,
+                user.uid,
+                onProgress: progressFn,
+              )
+            : await storageDatasource.upload(
+                path,
+                user.uid,
+                onProgress: progressFn,
+              );
 
         // 2c. Update uploadedUrls and persist so the URL survives a crash.
         final newUrls = Map<String, String>.from(current.uploadedUrls)
@@ -87,24 +101,44 @@ class PostRepositoryImpl implements PostRepository {
       }
     }
 
-    // Step 3: derive mediaUrls in localMediaPaths order.
+    // Step 3: if a code snippet is present, upload it as text/plain and
+    // collect the download URL.
+    String? codeSnippetUrl;
+    if (draft.codeSnippet != null) {
+      final snippet = draft.codeSnippet!;
+      final ext = snippet.language.toLowerCase();
+      final filename = '${snippet.filename}.$ext';
+      codeSnippetUrl = await storageDatasource.uploadText(
+        snippet.content,
+        user.uid,
+        filename,
+      );
+    }
+
+    // Step 4: derive mediaUrls in localMediaPaths order.
     final mediaUrls = paths
         .where((p) => current.uploadedUrls.containsKey(p))
         .map((p) => current.uploadedUrls[p]!)
         .toList();
 
-    // Step 4 & 5: write to Firestore, remove draft on success.
+    // Step 5: write to Firestore; remove draft on success.
     try {
       await firestoreDatasource.createPost(
         draft: current,
         mediaUrls: mediaUrls,
-        authorName: user.displayName ?? '',
-        authorAvatar: user.photoURL ?? '',
+        authorName: draft.postingIdentity == PostingIdentity.anonymous
+            ? ''
+            : (user.displayName ?? ''),
+        authorAvatar: draft.postingIdentity == PostingIdentity.anonymous
+            ? ''
+            : (user.photoURL ?? ''),
+        codeSnippetUrl: codeSnippetUrl,
       );
-      // Step 5: remove from queue on success.
+      // Step 6: remove from queue on success.
       await removeDraft(draft.id);
     } catch (e) {
-      // Step 6: leave draft in queue as queued so SyncDraftQueue can retry.
+      // Step 7: leave draft in queue with queued status so SyncDraftQueue
+      // can retry.
       await saveDraft(
         current.copyWith(
           uploadedUrls: current.uploadedUrls,
