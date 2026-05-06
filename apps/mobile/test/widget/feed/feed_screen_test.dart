@@ -121,7 +121,6 @@ void main() {
       expect(find.byType(PostCardWidget), findsAtLeastNWidgets(4));
     });
 
-
     testWidgets('shows create-post button for logged-in user', (tester) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
@@ -244,7 +243,6 @@ void main() {
   });
 
   group('FeedScreen — guest mode', () {
-
     testWidgets('hides create-post button for guest user', (tester) async {
       await tester.pumpWidget(_buildSubject(guestMode: true));
       await tester.pump();
