@@ -16,7 +16,8 @@ interface JwtPayload {
 
 function b64url(s: string): Uint8Array {
   const b64 = s.replace(/-/g, '+').replace(/_/g, '/');
-  return Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+  const padded = b64.padEnd(b64.length + ((4 - (b64.length % 4)) % 4), '=');
+  return Uint8Array.from(atob(padded), (c) => c.charCodeAt(0));
 }
 
 /** Verifies a Firebase ID token. Returns the uid on success, throws on failure. */
@@ -30,10 +31,13 @@ export async function verifyFirebaseJwt(
   const header = JSON.parse(
     new TextDecoder().decode(b64url(parts[0])),
   ) as JwtHeader;
+  if (header.alg !== 'RS256') throw new Error('Unsupported algorithm');
+
   const payload = JSON.parse(
     new TextDecoder().decode(b64url(parts[1])),
   ) as JwtPayload;
 
+  if (typeof payload.exp !== 'number') throw new Error('Missing exp');
   const now = Math.floor(Date.now() / 1000);
   if (payload.exp <= now) throw new Error('Token expired');
   if (payload.aud !== projectId) throw new Error('Invalid audience');
