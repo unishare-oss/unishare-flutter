@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 
 /// Minimal post card for the feed.
 ///

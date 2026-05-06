@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,6 +46,7 @@ class _FakePostRepository implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
+    Map<String, Uint8List>? fileDataOverride,
   }) => throw UnimplementedError();
 }
 
@@ -78,8 +80,14 @@ Post _fakePost() => Post(
   authorId: 'author-1',
   authorName: 'Test Author',
   authorAvatar: '',
+  postType: PostType.lectureNote,
+  year: 1,
+  courseId: 'csc101',
   title: 'Test Title',
-  body: 'Test body content',
+  description: 'Test body content',
+  postingIdentity: PostingIdentity.named,
+  semester: 1,
+  moduleNumber: '',
   mediaUrls: const [],
   tags: const ['flutter'],
   likesCount: 5,

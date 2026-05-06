@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Unishare (dev)",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=WORKER_URL=https://unishare-upload.psstee.workers.dev"
+      ]
+    }
+  ]
+}

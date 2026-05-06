@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/comment.dart';
+import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
 
 part 'comment_dto.freezed.dart';
 part 'comment_dto.g.dart';

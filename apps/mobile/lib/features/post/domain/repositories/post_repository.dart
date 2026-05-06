@@ -1,7 +1,9 @@
 // Pure Dart — zero Flutter or Firebase imports.
 
-import '../entities/post.dart';
-import '../entities/post_draft.dart';
+import 'dart:typed_data';
+
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 abstract interface class PostRepository {
   // Existing — must not be removed or renamed.
@@ -12,6 +14,8 @@ abstract interface class PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double progress)? onProgress,
+    // Web uploads: maps localMediaPaths key → file bytes (path is null on web)
+    Map<String, Uint8List>? fileDataOverride,
   });
 
   // Added for SPEC-0006.

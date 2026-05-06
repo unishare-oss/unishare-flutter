@@ -1,6 +1,6 @@
-import '../../domain/entities/comment.dart';
-import '../../domain/repositories/comment_repository.dart';
-import '../datasources/comment_firestore_datasource.dart';
+import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/comment_repository.dart';
+import 'package:unishare_mobile/features/post/data/datasources/comment_firestore_datasource.dart';
 
 class CommentRepositoryImpl implements CommentRepository {
   CommentRepositoryImpl({required this.datasource});

@@ -1,5 +1,5 @@
-import '../entities/post_draft.dart';
-import '../repositories/post_repository.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
 
 class SyncDraftQueue {
   const SyncDraftQueue(this._repository);

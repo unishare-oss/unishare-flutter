@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
-import '../../core/router/router.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/core/router/router.dart';
 
 class MainNavBar extends StatelessWidget {
   const MainNavBar({

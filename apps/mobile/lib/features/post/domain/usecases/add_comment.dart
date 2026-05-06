@@ -1,6 +1,6 @@
 // Pure Dart — zero Flutter or Firebase imports.
 
-import '../repositories/comment_repository.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/comment_repository.dart';
 
 class AddComment {
   const AddComment(this._repository);

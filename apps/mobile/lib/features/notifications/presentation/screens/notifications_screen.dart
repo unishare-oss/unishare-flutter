@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../shared/widgets/scroll_to_top_target.dart';
+import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({required GlobalKey<State> scrollKey})

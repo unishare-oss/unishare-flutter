@@ -1,10 +1,12 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/entities/post_draft.dart';
-import 'post_repository_provider.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 
 part 'create_post_provider.g.dart';
 
@@ -18,7 +20,7 @@ final class CreatePostIdle extends CreatePostState {
 
 final class CreatePostUploading extends CreatePostState {
   const CreatePostUploading({required this.progress});
-  final double progress;
+  final double progress; // [0.0, 1.0]
 }
 
 final class CreatePostPublishing extends CreatePostState {
@@ -51,36 +53,22 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   CreatePostState build() => const CreatePostIdle();
 
   Future<void> submit({
-    required String title,
-    required String body,
-    required List<String> tags,
-    required List<String> localMediaPaths,
+    required PostDraft draft,
+    Map<String, Uint8List>? fileDataOverride,
   }) async {
     final useCase = ref.read(createPostUseCaseProvider);
-    final id = List.generate(
-      20,
-      (_) => _chars[_rand.nextInt(_chars.length)],
-    ).join();
-
-    final draft = PostDraft(
-      id: id,
-      title: title,
-      body: body,
-      tags: tags,
-      localMediaPaths: localMediaPaths,
-      uploadedUrls: {},
-      createdAt: DateTime.now(),
-    );
 
     state = const CreatePostUploading(progress: 0.0);
 
     try {
       final results = await Connectivity().checkConnectivity();
-      final isConnected = !results.contains(ConnectivityResult.none);
+      // connectivity_plus returns none on web — treat web as always connected.
+      final isConnected = kIsWeb || !results.contains(ConnectivityResult.none);
 
       final result = await useCase(
         draft: draft,
         isConnected: isConnected,
+        fileDataOverride: fileDataOverride,
         onProgress: (p) {
           state = p < 1.0
               ? CreatePostUploading(progress: p)
@@ -104,4 +92,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }
 
   void reset() => state = const CreatePostIdle();
+
+  static String generateId() =>
+      List.generate(20, (_) => _chars[_rand.nextInt(_chars.length)]).join();
 }

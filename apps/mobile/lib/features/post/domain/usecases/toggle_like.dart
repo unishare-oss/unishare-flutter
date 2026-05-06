@@ -1,6 +1,6 @@
 // Pure Dart — zero Flutter or Firebase imports.
 
-import '../repositories/like_repository.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/like_repository.dart';
 
 /// Checks posts/{postId}/likes/{userId}:
 ///   absent  → creates the document (like)

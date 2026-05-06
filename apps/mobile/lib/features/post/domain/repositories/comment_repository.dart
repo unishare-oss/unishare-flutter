@@ -1,6 +1,6 @@
 // Pure Dart — zero Flutter or Firebase imports.
 
-import '../entities/comment.dart';
+import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
 
 abstract interface class CommentRepository {
   /// Emits the full ordered comment list and re-emits on any change.

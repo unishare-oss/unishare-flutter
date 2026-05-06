@@ -11,8 +11,9 @@
 .idea/
 *.iml
 
-# VS Code
-.vscode/
+# VS Code — launch.json is committed so teammates get the run config
+# Add .vscode/ back here if you want to stop sharing it
+.vscode/*.log
 
 # Git worktrees
 .worktrees/

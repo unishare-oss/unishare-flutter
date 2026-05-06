@@ -3,22 +3,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../data/datasources/comment_firestore_datasource.dart';
-import '../../data/datasources/post_firestore_datasource.dart';
-import '../../data/datasources/post_storage_datasource.dart';
-import '../../data/models/post_draft_model.dart';
-import '../../data/repositories/comment_repository_impl.dart';
-import '../../data/repositories/like_repository_impl.dart';
-import '../../data/repositories/post_repository_impl.dart';
-import '../../domain/repositories/comment_repository.dart';
-import '../../domain/repositories/like_repository.dart';
-import '../../domain/repositories/post_repository.dart';
-import '../../domain/usecases/add_comment.dart';
-import '../../domain/usecases/create_post.dart';
-import '../../domain/usecases/sync_draft_queue.dart';
-import '../../domain/usecases/toggle_like.dart';
-import '../../domain/usecases/watch_comments.dart';
-import '../../domain/usecases/watch_post.dart';
+import 'package:unishare_mobile/features/post/data/datasources/comment_firestore_datasource.dart';
+import 'package:unishare_mobile/features/post/data/datasources/post_firestore_datasource.dart';
+import 'package:unishare_mobile/features/post/data/datasources/post_storage_datasource.dart';
+import 'package:unishare_mobile/features/post/data/models/post_draft_model.dart';
+import 'package:unishare_mobile/features/post/data/repositories/comment_repository_impl.dart';
+import 'package:unishare_mobile/features/post/data/repositories/like_repository_impl.dart';
+import 'package:unishare_mobile/features/post/data/repositories/post_repository_impl.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/comment_repository.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/like_repository.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/add_comment.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/create_post.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/watch_post.dart';
 
 part 'post_repository_provider.g.dart';
 

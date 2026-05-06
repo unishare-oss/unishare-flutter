@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../app_theme.dart';
-import '../themes.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 part 'theme_provider.g.dart';
 

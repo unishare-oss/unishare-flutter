@@ -1,4 +1,4 @@
-import '../repositories/auth_repository.dart';
+import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
 
 class UpdateAcademicProfile {
   const UpdateAcademicProfile(this._repository);
