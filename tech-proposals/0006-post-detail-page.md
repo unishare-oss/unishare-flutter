@@ -5,11 +5,11 @@ description: "Proposal for a dedicated post-detail screen that renders full post
 
 # PROP-0006: Post Detail Page
 
-**Status:** PROPOSED  
+**Status:** ACCEPTED
 **Author:** architect  
 **Date:** 2026-05-06  
 **Spec:** (pending approval)  
-**Approved by:** (fill in when accepted)
+**Approved by:**
 
 ---
 
@@ -44,25 +44,25 @@ The `PostCard` tap handler calls `context.push('/posts/${post.id}', extra: post)
 
 ### Clean Architecture layers
 
-| Layer | Addition |
-|---|---|
-| `domain/entities/Comment` | Pure Dart entity: `id`, `authorId`, `authorName`, `authorAvatar`, `body`, `createdAt` |
-| `domain/repositories/PostRepository` | New method: `Stream<Post> watchPost(String postId)` |
-| `domain/repositories/CommentRepository` | New interface: `Stream<List<Comment>> watchComments(String postId)`, `Future<void> addComment(String postId, String body)` |
-| `domain/usecases/WatchPost` | Wraps `PostRepository.watchPost` |
-| `domain/usecases/WatchComments` | Wraps `CommentRepository.watchComments` |
-| `domain/usecases/AddComment` | Validates body non-empty, delegates to `CommentRepository` |
-| `domain/usecases/ToggleLike` | Writes/removes `posts/{postId}/likes/{userId}`, server-side `likesCount` is managed by Cloud Function |
-| `data/datasources/PostFirestoreDataSource` | Add `watchPost(String postId)` — `snapshots()` stream on `posts/{postId}` |
-| `data/datasources/CommentFirestoreDataSource` | Stream on `posts/{postId}/comments` ordered by `createdAt` ascending |
-| `data/models/CommentDto` | Freezed + `fromJson`/`toJson` |
-| `data/repositories/CommentRepositoryImpl` | Maps `CommentDto` → `Comment` entity |
-| `presentation/providers/postDetailProvider` | `@riverpod`, accepts `postId`; exposes `AsyncValue<Post>` |
-| `presentation/providers/commentsProvider` | `@riverpod`, accepts `postId`; exposes `AsyncValue<List<Comment>>` |
-| `presentation/screens/PostDetailScreen` | Full-screen layout per Figma |
-| `presentation/widgets/CommentTile` | Single comment row |
-| `presentation/widgets/AttachmentCarousel` | Horizontal media strip using `CachedNetworkImage` |
-| `presentation/widgets/LikeButton` | Stateless button; receives `isLiked` + `count` + `onTap` |
+| Layer                                         | Addition                                                                                                                   |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `domain/entities/Comment`                     | Pure Dart entity: `id`, `authorId`, `authorName`, `authorAvatar`, `body`, `createdAt`                                      |
+| `domain/repositories/PostRepository`          | New method: `Stream<Post> watchPost(String postId)`                                                                        |
+| `domain/repositories/CommentRepository`       | New interface: `Stream<List<Comment>> watchComments(String postId)`, `Future<void> addComment(String postId, String body)` |
+| `domain/usecases/WatchPost`                   | Wraps `PostRepository.watchPost`                                                                                           |
+| `domain/usecases/WatchComments`               | Wraps `CommentRepository.watchComments`                                                                                    |
+| `domain/usecases/AddComment`                  | Validates body non-empty, delegates to `CommentRepository`                                                                 |
+| `domain/usecases/ToggleLike`                  | Writes/removes `posts/{postId}/likes/{userId}`, server-side `likesCount` is managed by Cloud Function                      |
+| `data/datasources/PostFirestoreDataSource`    | Add `watchPost(String postId)` — `snapshots()` stream on `posts/{postId}`                                                  |
+| `data/datasources/CommentFirestoreDataSource` | Stream on `posts/{postId}/comments` ordered by `createdAt` ascending                                                       |
+| `data/models/CommentDto`                      | Freezed + `fromJson`/`toJson`                                                                                              |
+| `data/repositories/CommentRepositoryImpl`     | Maps `CommentDto` → `Comment` entity                                                                                       |
+| `presentation/providers/postDetailProvider`   | `@riverpod`, accepts `postId`; exposes `AsyncValue<Post>`                                                                  |
+| `presentation/providers/commentsProvider`     | `@riverpod`, accepts `postId`; exposes `AsyncValue<List<Comment>>`                                                         |
+| `presentation/screens/PostDetailScreen`       | Full-screen layout per Figma                                                                                               |
+| `presentation/widgets/CommentTile`            | Single comment row                                                                                                         |
+| `presentation/widgets/AttachmentCarousel`     | Horizontal media strip using `CachedNetworkImage`                                                                          |
+| `presentation/widgets/LikeButton`             | Stateless button; receives `isLiked` + `count` + `onTap`                                                                   |
 
 ### Data loading strategy (hybrid)
 
@@ -96,11 +96,13 @@ The implementation must reproduce the Figma layout exactly. Before the flutter-e
 The `PostCard` tap passes the full `Post` entity in GoRouter `extra`. The detail screen reads this object and renders it directly — no network call on open. The existing `postFeedProvider` is the sole data source.
 
 **Pros:**
+
 - Instant render with zero additional Firestore reads.
 - No new domain use case or repository method needed for data loading.
 - Simplest possible implementation.
 
 **Cons:**
+
 - Breaks on cold start. Deep links and push notifications provide only a `postId` in the URL path — `extra` is `null`. The screen has no fallback, so cold-start users see an error or blank screen.
 - Data goes stale immediately. `likesCount`, `commentsCount` (if added), and `body` edits are frozen at the moment the feed loaded. A post with 200 likes shows the cached 150 from the feed snapshot.
 - Comments are entirely unavailable — there is no `comments` field on the `Post` entity; comments live in a subcollection that the feed never fetches.
@@ -117,11 +119,13 @@ The `PostCard` tap passes the full `Post` entity in GoRouter `extra`. The detail
 Ignore `extra` entirely. Every time the detail screen opens, `postDetailProvider` issues a one-shot `get()` call on `posts/{postId}`. Comments are fetched separately.
 
 **Pros:**
+
 - Uniform code path for warm-start and cold-start — no conditional branching on `extra`.
 - Data is fresh at open time regardless of how the screen was reached.
 - Simpler provider implementation than the hybrid stream approach.
 
 **Cons:**
+
 - Visible loading spinner on every tap from the feed, even when the post data is already in memory. On a slow connection this creates a noticeable and unnecessary delay — the user just tapped a card they could already read in the feed.
 - A one-shot `get()` does not update after open. `likesCount` incremented by a Cloud Function while the user is reading the post is not reflected. The user must leave and re-enter to see updated counts.
 - No real-time comments — new comments posted by others while the user reads do not appear without a manual refresh.
@@ -138,6 +142,7 @@ Ignore `extra` entirely. Every time the detail screen opens, `postDetailProvider
 Described fully in Proposed Solution above.
 
 **Pros:**
+
 - Instant render on feed tap (seed from `extra`) with no spinner for the common path.
 - Correct cold-start behavior (falls back to Firestore fetch when `extra` is absent).
 - Live updates via `snapshots()` stream keep `likesCount` and post content current throughout the session.
@@ -145,6 +150,7 @@ Described fully in Proposed Solution above.
 - Single provider interface for both cases — presentation layer is unaware of whether data came from `extra` or Firestore.
 
 **Cons:**
+
 - Slightly more complex provider implementation: the provider must accept an optional seed value and merge it with an incoming stream.
 - Opens a persistent Firestore listener per active detail screen, which consumes one Firestore connection slot. This is negligible at current scale but worth monitoring.
 - `extra` carries a Dart object, which is not serializable by GoRouter's URL-based state restoration. If the OS kills the app and restores it to the detail screen, `extra` will be null and the screen will fall back to the Firestore fetch path — this is correct behavior but must be documented and tested.

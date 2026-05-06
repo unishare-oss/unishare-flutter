@@ -7,6 +7,9 @@ import '../entities/post_draft.dart';
 abstract interface class PostRepository {
   Stream<List<Post>> watchFeed({int limit = 20});
 
+  // Added for SPEC-0006: live post stream for the detail screen.
+  Stream<Post> watchPost(String postId);
+
   Future<void> saveDraft(PostDraft draft);
   Future<void> removeDraft(String draftId);
   Future<List<PostDraft>> loadDraftQueue();

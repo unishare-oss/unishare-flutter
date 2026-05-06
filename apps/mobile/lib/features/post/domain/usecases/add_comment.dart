@@ -1,0 +1,17 @@
+// TODO(flutter-engineer): implement per SPEC-0006
+
+import '../repositories/comment_repository.dart';
+
+class AddComment {
+  const AddComment(this._repository);
+  final CommentRepository _repository;
+
+  /// Throws [ArgumentError] if body is blank after trimming.
+  Future<void> call(String postId, String body) {
+    final trimmed = body.trim();
+    if (trimmed.isEmpty) {
+      throw ArgumentError.value(body, 'body', 'Comment body must not be blank');
+    }
+    return _repository.addComment(postId, trimmed);
+  }
+}

@@ -26,6 +26,12 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @override
+  Stream<Post> watchPost(String postId) {
+    // TODO(flutter-engineer): implement per SPEC-0006 — delegate to PostFirestoreDatasource.watchPost
+    throw UnimplementedError('TODO(flutter-engineer): implement per SPEC-0006');
+  }
+
+  @override
   Future<void> saveDraft(PostDraft draft) async {
     await draftBox.put(draft.id, PostDraftModel.fromEntity(draft));
   }
