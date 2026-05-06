@@ -22,10 +22,8 @@ class PostRepositoryImpl implements PostRepository {
   final Box<PostDraftModel> draftBox;
 
   @override
-  Stream<List<Post>> watchFeed({int limit = 20}) {
-    // Implemented by the feed feature — not in scope for SPEC-0004.
-    throw UnimplementedError('watchFeed not implemented in post write path');
-  }
+  Stream<List<Post>> watchFeed({int limit = 20}) =>
+      firestoreDatasource.watchFeed(limit: limit);
 
   @override
   Stream<Post> watchPost(String postId) =>

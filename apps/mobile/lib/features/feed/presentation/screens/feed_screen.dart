@@ -8,9 +8,12 @@ import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/academic_profile_dialog.dart';
 import 'package:unishare_mobile/features/feed/presentation/providers/active_tag_filters_provider.dart';
+import 'package:unishare_mobile/features/feed/presentation/providers/feed_provider.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/feed_empty_state_widget.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/filter_picker_widget.dart';
-import 'package:unishare_mobile/features/feed/presentation/widgets/post_card_widget.dart';
+import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
 // ---------------------------------------------------------------------------
@@ -23,102 +26,12 @@ const _kMuted = Color(0xFFF7F3EE);
 const _kTextMuted = Color(0xFF8A837E);
 const _kForeground = Color(0xFF1C1917);
 
-// ---------------------------------------------------------------------------
-// Mock data
-// ---------------------------------------------------------------------------
-
-const _mockPosts = [
-  MockPost(
-    type: MockPostType.note,
-    courseCode: 'CSC233',
-    title: 'LR Parsing',
-    topicTags: [],
-    authorInitials: 'LYP',
-    authorName: 'La Yaung Phyo',
-    authorYear: 1,
-    commentCount: 0,
-    timeAgo: '21 days ago',
-  ),
-  MockPost(
-    type: MockPostType.note,
-    courseCode: 'CSC220',
-    title: '3.7 TCP Congestion Control (jim kurose)',
-    topicTags: ['networking'],
-    authorInitials: 'MTK',
-    authorName: 'May Thu Khaing',
-    authorYear: 2,
-    commentCount: 2,
-    timeAgo: '15 days ago',
-  ),
-  MockPost(
-    type: MockPostType.note,
-    courseCode: 'CSC220',
-    title: 'Gemini Notes for Network',
-    topicTags: ['networking'],
-    authorInitials: 'HOJ',
-    authorName: 'HackerOrJoker',
-    authorYear: 1,
-    commentCount: 1,
-    timeAgo: '16 days ago',
-  ),
-  MockPost(
-    type: MockPostType.note,
-    courseCode: 'CSC217',
-    title: 'Chapter 7',
-    topicTags: [
-      'concurrency',
-      'data structures',
-      'system design',
-      'software engineering',
-      'os',
-    ],
-    authorInitials: 'S',
-    authorName: 'Slade',
-    authorYear: 2,
-    commentCount: 0,
-    timeAgo: '19 days ago',
-  ),
-  MockPost(
-    type: MockPostType.assignment,
-    courseCode: 'CSC233',
-    title: 'Assignment 9 - Regular expressions (more) of texts and',
-    topicTags: [],
-    authorInitials: 'LYP',
-    authorName: 'La Yaung Phyo',
-    authorYear: 1,
-    commentCount: 2,
-    timeAgo: 'about 1 month ago',
-  ),
-  MockPost(
-    type: MockPostType.assignment,
-    courseCode: 'GEN231',
-    title: 'M2_Final_Assignment',
-    topicTags: [],
-    authorInitials: 'TPT',
-    authorName: 'Thiha Phone Thaw',
-    authorYear: 1,
-    commentCount: 0,
-    timeAgo: 'about 1 month ago',
-  ),
-];
-
-// All curated tags available in the picker (superset of tags on mock posts)
-const _kAvailableTags = [
-  'concurrency',
-  'data structures',
-  'linux',
-  'memory management',
-  'networking',
-  'os',
-  'software engineering',
-  'system design',
-];
 
 // ---------------------------------------------------------------------------
 // Tab labels
 // ---------------------------------------------------------------------------
 
-const _kTabLabels = ['ALL', 'NOTES', 'ASSIGNMENTS'];
+const _kTabLabels = ['ALL', 'NOTES', 'EXERCISES'];
 
 // ---------------------------------------------------------------------------
 // FeedScreen
@@ -175,23 +88,27 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     return ref.watch(guestModeProvider);
   }
 
-  List<MockPost> _visiblePosts(List<String> activeTagFilters) {
-    final posts = switch (_tabController.index) {
-      1 => _mockPosts.where((p) => p.type == MockPostType.note).toList(),
-      2 => _mockPosts.where((p) => p.type == MockPostType.assignment).toList(),
-      _ => _mockPosts,
+  List<Post> _filterPosts(List<Post> all, List<String> activeTagFilters) {
+    final byTab = switch (_tabController.index) {
+      1 => all.where((p) => p.postType == PostType.lectureNote).toList(),
+      2 => all.where((p) => p.postType == PostType.exercise).toList(),
+      _ => all,
     };
-
-    if (activeTagFilters.isEmpty) return posts;
-    return posts
-        .where((p) => p.topicTags.any((t) => activeTagFilters.contains(t)))
+    if (activeTagFilters.isEmpty) return byTab;
+    return byTab
+        .where((p) => p.tags.any((t) => activeTagFilters.contains(t)))
         .toList();
   }
 
-  void _openFilterPicker(List<String> activeTagFilters) {
+  void _openFilterPicker(List<Post> allPosts, List<String> activeTagFilters) {
+    final availableTags = allPosts
+        .expand((p) => p.tags)
+        .toSet()
+        .toList()
+      ..sort();
     FilterPickerWidget.show(
       context,
-      availableTags: _kAvailableTags,
+      availableTags: availableTags,
       selectedTags: activeTagFilters,
       onConfirm: (selected) =>
           ref.read(activeTagFiltersProvider.notifier).set(selected),
@@ -201,6 +118,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   @override
   Widget build(BuildContext context) {
     final activeTagFilters = ref.watch(activeTagFiltersProvider);
+    final feedAsync = ref.watch(feedProvider);
     return Scaffold(
       backgroundColor: const Color(0xFFF7F3EE),
       body: NestedScrollView(
@@ -213,27 +131,39 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               tabController: _tabController,
               activeFilterCount: activeTagFilters.length,
               onTabChanged: () => setState(() {}),
-              onFiltersPressed: () => _openFilterPicker(activeTagFilters),
+              onFiltersPressed: () => _openFilterPicker(
+                feedAsync.value ?? [],
+                activeTagFilters,
+              ),
             ),
           ),
         ],
-        body: AnimatedBuilder(
-          animation: _tabController,
-          builder: (context, _) {
-            final posts = _visiblePosts(activeTagFilters);
+        body: feedAsync.when(
+          loading: () =>
+              const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(
+            child: Text(
+              'Failed to load feed',
+              style: TextStyle(color: _kTextMuted),
+            ),
+          ),
+          data: (allPosts) {
+            final posts = _filterPosts(allPosts, activeTagFilters);
             if (posts.isEmpty) {
               return FeedEmptyStateWidget(
                 onClear: () =>
                     ref.read(activeTagFiltersProvider.notifier).clear(),
               );
             }
-            return ListView.separated(
-              padding: EdgeInsets.zero,
-              itemCount: posts.length,
-              separatorBuilder: (context, index) =>
-                  const Divider(height: 1, thickness: 1, color: _kBorder),
-              itemBuilder: (context, index) =>
-                  PostCardWidget(post: posts[index]),
+            return AnimatedBuilder(
+              animation: _tabController,
+              builder: (context, _) => ListView.separated(
+                padding: EdgeInsets.zero,
+                itemCount: posts.length,
+                separatorBuilder: (_, __) =>
+                    const Divider(height: 1, thickness: 1, color: _kBorder),
+                itemBuilder: (_, i) => PostCard(post: posts[i]),
+              ),
             );
           },
         ),
@@ -341,9 +271,7 @@ class _TabRowDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _height;
 
   @override
-  bool shouldRebuild(covariant _TabRowDelegate oldDelegate) =>
-      oldDelegate.tabController != tabController ||
-      oldDelegate.activeFilterCount != activeFilterCount;
+  bool shouldRebuild(covariant _TabRowDelegate oldDelegate) => true;
 
   @override
   Widget build(
