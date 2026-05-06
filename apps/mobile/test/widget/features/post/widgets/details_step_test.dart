@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/details_step.dart';
@@ -39,9 +40,13 @@ void main() {
     testWidgets('renders heading and required field labels', (tester) async {
       await tester.pumpWidget(_wrap());
       expect(find.text('Add details'), findsOneWidget);
-      expect(find.text('TITLE *'), findsOneWidget);
-      expect(find.text('DESCRIPTION *'), findsOneWidget);
-      expect(find.text('MODULE NUMBER *'), findsOneWidget);
+      // Field labels use RichText directly — check via plainText.
+      bool hasLabel(String label) => tester
+          .widgetList<RichText>(find.byType(RichText))
+          .any((w) => w.text.toPlainText().contains(label));
+      expect(hasLabel('TITLE'), isTrue);
+      expect(hasLabel('DESCRIPTION'), isTrue);
+      expect(hasLabel('MODULE NUMBER'), isTrue);
     });
 
     testWidgets('tapping anonymous radio updates identity', (tester) async {
