@@ -389,3 +389,29 @@ Review: PENDING
   [14:44] Write: apps/mobile/.vscode/launch.json
   [14:45] Edit: apps/mobile/.gitignore
   [14:47] Edit: apps/mobile/.vscode/launch.json
+  [14:52] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [14:52] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [14:56] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [14:59] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Files:
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Summary:  1 file changed, 3 insertions(+), 1 deletion(-)
+
+Files:
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Summary:  1 file changed, 3 insertions(+), 1 deletion(-)
+
+  [15:02] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [15:02] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [15:04] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Files:
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+Summary:  1 file changed, 3 insertions(+), 1 deletion(-)
+
+  [15:05] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+Files:
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+Summary:  2 files changed, 10 insertions(+), 8 deletions(-)
+
+  [15:08] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart

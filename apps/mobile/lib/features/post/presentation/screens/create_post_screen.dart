@@ -118,16 +118,16 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   }
 
   Future<void> _submit() async {
-    // On mobile f.path is a filesystem path; on web it's null so use f.name
-    // as the key so uploadedUrls can still track per-file state.
-    final localMediaPaths = _pickedFiles.map((f) => f.path ?? f.name).toList();
+    // On mobile use f.path (full filesystem path needed to read the file).
+    // On web use f.name — f.path is a blob URL which breaks content-type
+    // detection and doesn't help with file reading (bytes are in f.bytes).
+    final localMediaPaths =
+        _pickedFiles.map((f) => f.bytes != null ? f.name : f.path!).toList();
 
-    // Bytes are only populated on web (withData: kIsWeb in FileUploadWidget).
-    // Key must match localMediaPaths (f.path ?? f.name) so the lookup in
-    // publishDraft finds the bytes instead of falling through to upload().
+    // Bytes populated on web (withData: kIsWeb). Key matches localMediaPaths.
     final fileDataOverride = {
       for (final f in _pickedFiles)
-        if (f.bytes != null) f.path ?? f.name: f.bytes!,
+        if (f.bytes != null) f.name: f.bytes!,
     };
 
     final draft = PostDraft(
