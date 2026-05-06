@@ -386,3 +386,6 @@ Review: PENDING
   [14:28] Write: apps/mobile/lib/features/post/data/datasources/upload_file_io.dart
   [14:28] Write: apps/mobile/lib/features/post/data/datasources/upload_file_stub.dart
   [14:29] Write: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [14:44] Write: apps/mobile/.vscode/launch.json
+  [14:45] Edit: apps/mobile/.gitignore
+  [14:47] Edit: apps/mobile/.vscode/launch.json

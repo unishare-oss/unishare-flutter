@@ -6,7 +6,7 @@
       "request": "launch",
       "type": "dart",
       "args": [
-        "--dart-define=WORKER_URL=https://unishare-upload.PLACEHOLDER.workers.dev"
+        "--dart-define=WORKER_URL=https://unishare-upload.psstee.workers.dev"
       ]
     }
   ]
