@@ -5,11 +5,11 @@ description: "Full implementation spec for server-side tag filtering on the post
 
 # SPEC-0005: Feed Filtering by Tags
 
-**Status:** DRAFT  
+**Status:** APPROVED  
 **Author:** Sudakarn  
 **Date:** 2026-05-05  
 **Proposal:** [PROP-0005](../tech-proposals/0005-feed-filtering-tags.md)  
-**Approved by:** (fill in when approved)
+**Approved by:** Sudakarn
 
 ---
 
