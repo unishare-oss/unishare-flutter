@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../shared/theme/app_colors.dart';
 import '../../domain/entities/comment.dart';
 
 class CommentTile extends StatelessWidget {
@@ -10,6 +11,9 @@ class CommentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final scheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
@@ -25,18 +29,18 @@ class CommentTile extends StatelessWidget {
                   children: [
                     Text(
                       comment.authorName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
-                        color: Color(0xFF1c1917),
+                        color: scheme.onSurface,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       _formatTimestamp(comment.createdAt),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
-                        color: Color(0xFF8a837e),
+                        color: appColors.textMuted,
                       ),
                     ),
                   ],
@@ -44,9 +48,9 @@ class CommentTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   comment.body,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Color(0xFF1c1917),
+                    color: scheme.onSurface,
                     height: 1.4,
                   ),
                 ),
@@ -80,24 +84,27 @@ class _Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final scheme = Theme.of(context).colorScheme;
+
     if (url.isNotEmpty) {
       return CircleAvatar(
         radius: 18,
         backgroundImage: CachedNetworkImageProvider(url),
-        backgroundColor: const Color(0xFFe2dad0),
+        backgroundColor: appColors.muted,
       );
     }
     // Fallback: initials
     final initials = name.isNotEmpty ? name[0].toUpperCase() : '?';
     return CircleAvatar(
       radius: 18,
-      backgroundColor: const Color(0xFFe2dad0),
+      backgroundColor: appColors.muted,
       child: Text(
         initials,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: Color(0xFF1c1917),
+          color: scheme.onSurface,
         ),
       ),
     );

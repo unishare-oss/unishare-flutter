@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../shared/theme/app_colors.dart';
+
 /// A stateless like button widget.
 ///
 /// - [isLiked] true → filled heart icon (red)
@@ -21,11 +23,13 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+
     final color = !enabled
-        ? Colors.grey
+        ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)
         : isLiked
         ? Colors.red
-        : const Color(0xFF8a837e);
+        : appColors.textMuted;
 
     return GestureDetector(
       onTap: enabled ? onTap : null,
