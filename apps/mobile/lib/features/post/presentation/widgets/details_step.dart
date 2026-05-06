@@ -68,105 +68,107 @@ class _DetailsStepState extends State<DetailsStep> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Add details',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            color: _kFg,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Add details',
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: _kFg,
+            ),
           ),
-        ),
-        const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-        // Title
-        _FieldLabel('TITLE', required: true),
-        const SizedBox(height: 6),
-        _TextField(
-          controller: widget.titleController,
-          hint: 'e.g. Complete Lecture Notes Week 1-6',
-          textInputAction: TextInputAction.next,
-        ),
-        const SizedBox(height: 16),
+          // Title
+          _FieldLabel('TITLE', required: true),
+          const SizedBox(height: 6),
+          _TextField(
+            controller: widget.titleController,
+            hint: 'e.g. Complete Lecture Notes Week 1-6',
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 16),
 
-        // Description
-        _FieldLabel('DESCRIPTION', required: true),
-        const SizedBox(height: 6),
-        _TextField(
-          controller: widget.descriptionController,
-          hint: "Describe what you're sharing...",
-          maxLines: 5,
-        ),
-        const SizedBox(height: 16),
+          // Description
+          _FieldLabel('DESCRIPTION', required: true),
+          const SizedBox(height: 6),
+          _TextField(
+            controller: widget.descriptionController,
+            hint: "Describe what you're sharing...",
+            maxLines: 5,
+          ),
+          const SizedBox(height: 16),
 
-        // Posting identity
-        _FieldLabel('POSTING IDENTITY'),
-        const SizedBox(height: 8),
-        _IdentitySelector(
-          value: widget.postingIdentity,
-          onChanged: widget.onIdentityChanged,
-        ),
-        const SizedBox(height: 16),
-
-        // Semester — dropdown
-        _FieldLabel('SEMESTER', required: true),
-        const SizedBox(height: 6),
-        _SemesterDropdown(
-          value: widget.semester,
-          onChanged: widget.onSemesterChanged,
-        ),
-        const SizedBox(height: 16),
-
-        // Module number
-        _FieldLabel('MODULE NUMBER', required: true),
-        const SizedBox(height: 6),
-        _TextField(
-          controller: widget.moduleNumberController,
-          hint: 'e.g. 4',
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.number,
-        ),
-        const SizedBox(height: 16),
-
-        // External URL
-        _FieldLabel('EXTERNAL URL', optional: true),
-        const SizedBox(height: 6),
-        _TextField(
-          controller: widget.externalUrlController,
-          hint: 'https://...',
-          textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.url,
-        ),
-        const SizedBox(height: 16),
-
-        // Tags
-        _FieldLabel('TAGS', optional: true),
-        const SizedBox(height: 6),
-        _TextField(
-          controller: _tagCtrl,
-          hint: 'Type a tag and press Enter...',
-          textInputAction: TextInputAction.done,
-          onSubmitted: _addTag,
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Add up to 5 tags to help others discover your post.',
-          style: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kMuted),
-        ),
-        if (widget.tags.isNotEmpty) ...[
+          // Posting identity
+          _FieldLabel('POSTING IDENTITY'),
           const SizedBox(height: 8),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: widget.tags
-                .map((t) => _TagChip(label: t, onDelete: () => _removeTag(t)))
-                .toList(),
+          _IdentitySelector(
+            value: widget.postingIdentity,
+            onChanged: widget.onIdentityChanged,
           ),
+          const SizedBox(height: 16),
+
+          // Semester — dropdown
+          _FieldLabel('SEMESTER', required: true),
+          const SizedBox(height: 6),
+          _SemesterDropdown(
+            value: widget.semester,
+            onChanged: widget.onSemesterChanged,
+          ),
+          const SizedBox(height: 16),
+
+          // Module number
+          _FieldLabel('MODULE NUMBER', required: true),
+          const SizedBox(height: 6),
+          _TextField(
+            controller: widget.moduleNumberController,
+            hint: 'e.g. 4',
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.number,
+          ),
+          const SizedBox(height: 16),
+
+          // External URL
+          _FieldLabel('EXTERNAL URL', optional: true),
+          const SizedBox(height: 6),
+          _TextField(
+            controller: widget.externalUrlController,
+            hint: 'https://...',
+            textInputAction: TextInputAction.next,
+            keyboardType: TextInputType.url,
+          ),
+          const SizedBox(height: 16),
+
+          // Tags
+          _FieldLabel('TAGS', optional: true),
+          const SizedBox(height: 6),
+          _TextField(
+            controller: _tagCtrl,
+            hint: 'Type a tag and press Enter...',
+            textInputAction: TextInputAction.done,
+            onSubmitted: _addTag,
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Add up to 5 tags to help others discover your post.',
+            style: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kMuted),
+          ),
+          if (widget.tags.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: widget.tags
+                  .map((t) => _TagChip(label: t, onDelete: () => _removeTag(t)))
+                  .toList(),
+            ),
+          ],
+          const SizedBox(height: 8),
         ],
-        const SizedBox(height: 8),
-      ],
+      ),
     );
   }
 }
@@ -304,7 +306,9 @@ class _SemesterDropdown extends StatelessWidget {
                 ),
               )
               .toList(),
-          onChanged: (v) { if (v != null) onChanged(v); },
+          onChanged: (v) {
+            if (v != null) onChanged(v);
+          },
         ),
       ),
     );
@@ -346,7 +350,10 @@ class _TextField extends StatelessWidget {
         hintStyle: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kMuted),
         filled: true,
         fillColor: _kWhite,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 10,
+        ),
         isDense: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
@@ -366,11 +373,7 @@ class _TextField extends StatelessWidget {
 }
 
 class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(
-    this.text, {
-    this.required = false,
-    this.optional = false,
-  });
+  const _FieldLabel(this.text, {this.required = false, this.optional = false});
 
   final String text;
   final bool required;
@@ -393,8 +396,7 @@ class _FieldLabel extends StatelessWidget {
               text: ' *',
               style: TextStyle(color: _kPrimary, fontSize: 13),
             ),
-          if (optional)
-            const TextSpan(text: ' (optional)'),
+          if (optional) const TextSpan(text: ' (optional)'),
         ],
       ),
     );
@@ -408,29 +410,29 @@ class _TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: _kWhite,
-          border: Border.all(color: _kBorder),
-          borderRadius: BorderRadius.circular(4),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    decoration: BoxDecoration(
+      color: _kWhite,
+      border: Border.all(color: _kBorder),
+      borderRadius: BorderRadius.circular(4),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '#$label',
+          style: GoogleFonts.firaCode(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: _kMuted,
+          ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '#$label',
-              style: GoogleFonts.firaCode(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: _kMuted,
-              ),
-            ),
-            const SizedBox(width: 4),
-            GestureDetector(
-              onTap: onDelete,
-              child: const Icon(Icons.close, size: 14, color: _kMuted),
-            ),
-          ],
+        const SizedBox(width: 4),
+        GestureDetector(
+          onTap: onDelete,
+          child: const Icon(Icons.close, size: 14, color: _kMuted),
         ),
-      );
+      ],
+    ),
+  );
 }
