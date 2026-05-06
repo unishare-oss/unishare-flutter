@@ -26,6 +26,8 @@ class _StubRepo implements PostRepository {
   @override
   Future<List<PostDraft>> loadDraftQueue() async => [];
   @override
+  Stream<Post> watchPost(String postId) => throw UnimplementedError();
+  @override
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
