@@ -26,6 +26,8 @@ class _StubRepo implements PostRepository {
   @override
   Future<List<PostDraft>> loadDraftQueue() async => [];
   @override
+  Stream<Post> watchPost(String postId) => throw UnimplementedError();
+  @override
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
@@ -65,7 +67,7 @@ void main() {
       await tester.pump();
       expect(find.text('What are you sharing?'), findsOneWidget);
       expect(find.text('Lecture Note'), findsOneWidget);
-      expect(find.text('Assignment'), findsOneWidget);
+      expect(find.text('Exercise'), findsOneWidget);
       expect(find.text('Past Exam'), findsOneWidget);
     });
 

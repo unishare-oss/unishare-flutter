@@ -21,6 +21,9 @@ class _FakeRepo implements PostRepository {
   Stream<List<Post>> watchFeed({int limit = 20}) => throw UnimplementedError();
 
   @override
+  Stream<Post> watchPost(String postId) => throw UnimplementedError();
+
+  @override
   Future<void> saveDraft(PostDraft draft) async {}
 
   @override

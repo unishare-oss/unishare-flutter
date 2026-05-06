@@ -1,5 +1,4 @@
-// TODO(flutter-engineer): implement per SPEC-0004 API contracts
-// Check for a pre-existing file from PROP-0003 before finalising — do not break watchFeed.
+// Pure Dart — zero Flutter or Firebase imports.
 
 import 'dart:typed_data';
 
@@ -7,8 +6,8 @@ import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 abstract interface class PostRepository {
+  // Existing — must not be removed or renamed.
   Stream<List<Post>> watchFeed({int limit = 20});
-
   Future<void> saveDraft(PostDraft draft);
   Future<void> removeDraft(String draftId);
   Future<List<PostDraft>> loadDraftQueue();
@@ -18,4 +17,7 @@ abstract interface class PostRepository {
     // Web uploads: maps localMediaPaths key → file bytes (path is null on web)
     Map<String, Uint8List>? fileDataOverride,
   });
+
+  // Added for SPEC-0006.
+  Stream<Post> watchPost(String postId);
 }

@@ -19,6 +19,7 @@ class Post {
     required this.likesCount,
     required this.createdAt,
     required this.updatedAt,
+    this.mediaTypes = const [],
     this.externalUrl,
     this.codeSnippetUrl,
   });
@@ -36,6 +37,11 @@ class Post {
   final int semester;
   final String moduleNumber;
   final List<String> mediaUrls;
+
+  /// Parallel to [mediaUrls]. Values: "image" | "pdf" | "video".
+  /// Defaults to empty list for backwards-compat with posts written before SPEC-0006.
+  final List<String> mediaTypes;
+
   final List<String> tags;
   final int likesCount;
   final DateTime createdAt;
@@ -43,4 +49,7 @@ class Post {
   final String? externalUrl;
   final String?
   codeSnippetUrl; // Storage download URL for uploaded snippet file
+
+  // SPEC-0006 alias — PostDetailScreen was authored against this name.
+  String get body => description;
 }

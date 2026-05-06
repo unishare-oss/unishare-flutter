@@ -5,10 +5,11 @@ description: "Proposal for reverse-chronological post feed backed by Firestore w
 
 # PROP-0003: Post Feed
 
-**Status:** PROPOSED  
+**Status:** APPROVED  
 **Author:** architect  
 **Date:** 2026-04-30  
-**Spec:** (pending approval)
+**Approved by:** Pyae Sone Shin Thant  
+**Spec:** absorbed into [SPEC-0005](../tech-specs/0005-feed-filtering-tags.md) — basic feed mechanism implemented as foundation for tag-filtering spec
 
 ---
 

@@ -9,8 +9,10 @@ import 'package:unishare_mobile/features/departments/presentation/screens/depart
 import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
 import 'package:unishare_mobile/features/more/presentation/screens/more_screen.dart';
 import 'package:unishare_mobile/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/my_posts_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
 import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen.dart';
@@ -21,6 +23,9 @@ part 'router.g.dart';
 // ---------------------------------------------------------------------------
 // NavTab — branch index order must match StatefulShellRoute.branches order
 // ---------------------------------------------------------------------------
+
+// Simple in-memory flag — not a Riverpod provider to keep it out of codegen.
+bool academicProfileSessionDismissed = false;
 
 enum NavTab {
   feed,
@@ -127,6 +132,14 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/posts/create',
         builder: (context, state) => const CreatePostScreen(),
+      ),
+      GoRoute(
+        path: '/posts/:postId',
+        builder: (context, state) {
+          final postId = state.pathParameters['postId']!;
+          final seed = state.extra as Post?;
+          return PostDetailScreen(postId: postId, seed: seed);
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>

@@ -419,3 +419,163 @@ Summary:  2 files changed, 10 insertions(+), 8 deletions(-)
   [15:12] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
   [15:12] Edit: apps/mobile/lib/features/post/presentation/widgets/type_step.dart
   [15:13] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+<<<<<<< feature/feed
+  [21:37] Edit: apps/mobile/lib/core/router/router.dart
+=======
+  [15:37] Edit: apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+  [15:37] Edit: apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+  [15:37] Edit: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+Files:
+  ~ apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  ~ apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+Summary:  2 files changed, 3 insertions(+), 3 deletions(-)
+
+>>>>>>> main
+Files:
+  ~ apps/mobile/lib/core/firebase/firebase_init.dart
+  ? apps/mobile/lib/core/router/router.dart (untracked)
+  ~ apps/mobile/lib/core/router/shell_scaffold.dart
+  ~ apps/mobile/lib/core/storage/post_draft_box.dart
+  ~ apps/mobile/lib/features/auth/data/datasources/firebase_auth_datasource.dart
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/auth/data/models/app_user_model.dart
+  ~ apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+  ~ apps/mobile/lib/features/auth/domain/repositories/auth_repository.dart
+  ~ apps/mobile/lib/features/auth/domain/usecases/get_current_user.dart
+  ~ apps/mobile/lib/features/auth/domain/usecases/sign_in_with_email.dart
+  ~ apps/mobile/lib/features/auth/domain/usecases/sign_in_with_google.dart
+  ~ apps/mobile/lib/features/auth/domain/usecases/sign_out.dart
+  ~ apps/mobile/lib/features/auth/domain/usecases/sign_up_with_email.dart
+  ~ apps/mobile/lib/features/auth/domain/usecases/update_academic_profile.dart
+  ~ apps/mobile/lib/features/auth/presentation/providers/auth_repository_provider.dart
+  ~ apps/mobile/lib/features/auth/presentation/providers/auth_state_provider.dart
+  ~ apps/mobile/lib/features/auth/presentation/providers/current_user_provider.dart
+  ~ apps/mobile/lib/features/auth/presentation/providers/departments_provider.dart
+  ~ apps/mobile/lib/features/auth/presentation/providers/universities_provider.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+  > apps/mobile/lib/features/post_feed/data/datasources/.gitkeep -> apps/mobile/lib/features/feed/data/datasources/.gitkeep
+  + apps/mobile/lib/features/feed/data/datasources/preferences_firestore_datasource.dart
+  + apps/mobile/lib/features/feed/data/datasources/tag_firestore_datasource.dart
+  > apps/mobile/lib/features/post_feed/data/models/.gitkeep -> apps/mobile/lib/features/feed/data/models/.gitkeep
+  + apps/mobile/lib/features/feed/data/models/post_filter_preferences_model.dart
+  + apps/mobile/lib/features/feed/data/models/tag_model.dart
+  > apps/mobile/lib/features/post_feed/data/repositories/.gitkeep -> apps/mobile/lib/features/feed/data/repositories/.gitkeep
+  + apps/mobile/lib/features/feed/data/repositories/preferences_repository_impl.dart
+  + apps/mobile/lib/features/feed/data/repositories/tag_repository_impl.dart
+  > apps/mobile/lib/features/post_feed/domain/entities/.gitkeep -> apps/mobile/lib/features/feed/domain/entities/.gitkeep
+  + apps/mobile/lib/features/feed/domain/entities/post_filter_preferences.dart
+  + apps/mobile/lib/features/feed/domain/entities/tag_entity.dart
+  > apps/mobile/lib/features/post_feed/domain/repositories/.gitkeep -> apps/mobile/lib/features/feed/domain/repositories/.gitkeep
+  + apps/mobile/lib/features/feed/domain/repositories/preferences_repository.dart
+  + apps/mobile/lib/features/feed/domain/repositories/tag_repository.dart
+  > apps/mobile/lib/features/post_feed/domain/usecases/.gitkeep -> apps/mobile/lib/features/feed/domain/usecases/.gitkeep
+  + apps/mobile/lib/features/feed/domain/usecases/get_filter_preferences.dart
+  + apps/mobile/lib/features/feed/domain/usecases/get_tag_list.dart
+  + apps/mobile/lib/features/feed/domain/usecases/save_filter_preferences.dart
+  > apps/mobile/lib/features/post_feed/presentation/providers/.gitkeep -> apps/mobile/lib/features/feed/presentation/providers/.gitkeep
+  + apps/mobile/lib/features/feed/presentation/providers/active_tag_filters_provider.dart
+  + apps/mobile/lib/features/feed/presentation/providers/feed_provider.dart
+  + apps/mobile/lib/features/feed/presentation/providers/filter_preferences_provider.dart
+  + apps/mobile/lib/features/feed/presentation/providers/tag_list_provider.dart
+  > apps/mobile/lib/features/post_feed/presentation/screens/.gitkeep -> apps/mobile/lib/features/feed/presentation/screens/.gitkeep
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  > apps/mobile/lib/features/post_feed/presentation/widgets/.gitkeep -> apps/mobile/lib/features/feed/presentation/widgets/.gitkeep
+  + apps/mobile/lib/features/feed/presentation/widgets/feed_empty_state_widget.dart
+  + apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart
+  + apps/mobile/lib/features/feed/presentation/widgets/post_card_widget.dart
+  ~ apps/mobile/lib/features/more/presentation/screens/more_screen.dart
+  ~ apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  ? apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart (untracked)
+  ~ apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  + apps/mobile/lib/features/post/data/datasources/upload_file_io.dart
+  + apps/mobile/lib/features/post/data/datasources/upload_file_stub.dart
+  ~ apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  ? apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart (untracked)
+  + apps/mobile/lib/features/post/domain/entities/code_snippet.dart
+  ? apps/mobile/lib/features/post/domain/entities/post.dart (untracked)
+  ~ apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  ~ apps/mobile/lib/features/post/domain/repositories/post_repository.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/sync_draft_queue.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/draft_queue_provider.dart
+  ? apps/mobile/lib/features/post/presentation/providers/post_repository_provider.dart (untracked)
+  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  + apps/mobile/lib/features/post/presentation/widgets/code_snippet_widget.dart
+  + apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  + apps/mobile/lib/features/post/presentation/widgets/details_step.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/draft_queue_indicator.dart
+  + apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
+  + apps/mobile/lib/features/post/presentation/widgets/files_step.dart
+  + apps/mobile/lib/features/post/presentation/widgets/type_step.dart
+  ~ apps/mobile/lib/main.dart
+  ~ apps/mobile/lib/shared/theme/app_theme.dart
+  ~ apps/mobile/lib/shared/theme/providers/theme_provider.dart
+  ~ apps/mobile/lib/shared/theme/themes.dart
+  ~ apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  ? apps/mobile/pubspec.yaml (untracked)
+  + apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  + apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  + apps/mobile/test/widget/features/departments/screens/departments_screen_test.dart
+  + apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  + apps/mobile/test/widget/features/post/widgets/details_step_test.dart
+  + apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  + apps/mobile/test/widget/features/post/widgets/files_step_test.dart
+  + apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+  + apps/mobile/test/widget/features/profile/screens/profile_screen_test.dart
+  + apps/mobile/test/widget/features/requests/screens/requests_screen_test.dart
+  + apps/mobile/test/widget/features/saved/screens/saved_screen_test.dart
+  + apps/mobile/test/widget/feed/feed_screen_test.dart
+Summary:  96 files changed, 4880 insertions(+), 439 deletions(-)
+
+  [22:27] Edit: apps/mobile/lib/core/router/router.dart
+  [22:28] Edit: apps/mobile/lib/features/post/domain/entities/post.dart
+  [22:28] Edit: apps/mobile/lib/features/post/domain/entities/post.dart
+  [22:28] Edit: apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  [22:28] Edit: apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  [22:28] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [22:28] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [22:28] Edit: apps/mobile/lib/features/post/presentation/providers/post_repository_provider.dart
+  [22:29] Edit: apps/mobile/pubspec.yaml
+Files:
+  ~ apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  ~ apps/mobile/lib/features/post/data/datasources/comment_firestore_datasource.dart
+  ~ apps/mobile/lib/features/post/data/models/comment_dto.dart
+  ~ apps/mobile/lib/features/post/data/repositories/comment_repository_impl.dart
+  ~ apps/mobile/lib/features/post/data/repositories/like_repository_impl.dart
+  ~ apps/mobile/lib/features/post/domain/repositories/comment_repository.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/add_comment.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/toggle_like.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/watch_comments.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/watch_post.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/comments_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/post_detail_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/user_like_status_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/like_button.dart
+Summary:  17 files changed, 35 insertions(+), 35 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  ~ apps/mobile/lib/features/post/data/datasources/comment_firestore_datasource.dart
+  ~ apps/mobile/lib/features/post/data/models/comment_dto.dart
+  ~ apps/mobile/lib/features/post/data/repositories/comment_repository_impl.dart
+  ~ apps/mobile/lib/features/post/data/repositories/like_repository_impl.dart
+  ~ apps/mobile/lib/features/post/domain/repositories/comment_repository.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/add_comment.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/toggle_like.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/watch_comments.dart
+  ~ apps/mobile/lib/features/post/domain/usecases/watch_post.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/comments_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/post_detail_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/user_like_status_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/like_button.dart
+Summary:  17 files changed, 35 insertions(+), 35 deletions(-)
+
