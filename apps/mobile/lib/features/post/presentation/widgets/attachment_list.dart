@@ -143,7 +143,11 @@ class _LeadingIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (type == 'pdf') {
-      return const Icon(Icons.picture_as_pdf_rounded, color: Colors.red, size: 26);
+      return const Icon(
+        Icons.picture_as_pdf_rounded,
+        color: Colors.red,
+        size: 26,
+      );
     }
     if (type == 'video') {
       return Icon(Icons.play_circle_rounded, color: appColors.amber, size: 26);
@@ -160,13 +164,21 @@ class _LeadingIcon extends StatelessWidget {
           width: 36,
           height: 36,
           color: appColors.muted,
-          child: Icon(Icons.image_outlined, size: 16, color: appColors.textMuted),
+          child: Icon(
+            Icons.image_outlined,
+            size: 16,
+            color: appColors.textMuted,
+          ),
         ),
         errorWidget: (ctx, u, e) => Container(
           width: 36,
           height: 36,
           color: appColors.muted,
-          child: Icon(Icons.broken_image_rounded, size: 16, color: appColors.textMuted),
+          child: Icon(
+            Icons.broken_image_rounded,
+            size: 16,
+            color: appColors.textMuted,
+          ),
         ),
       ),
     );

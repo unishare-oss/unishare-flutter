@@ -79,13 +79,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         scrolledUnderElevation: 0,
-        leading: BackButton(
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
+        leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
         titleSpacing: 0,
-        title: _BreadcrumbBar(
-          post: postAsync.whenOrNull(data: (p) => p),
-        ),
+        title: _BreadcrumbBar(post: postAsync.whenOrNull(data: (p) => p)),
       ),
       body: postAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -111,10 +107,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                   Text(
                     error.toString(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: appColors.textMuted,
-                      fontSize: 13,
-                    ),
+                    style: TextStyle(color: appColors.textMuted, fontSize: 13),
                   ),
                 ],
               ),
@@ -154,11 +147,15 @@ class _BreadcrumbBar extends StatelessWidget {
       child: Text('›', style: TextStyle(fontSize: 11, color: Colors.grey)),
     );
 
-    final courseTag = (post?.tags.isNotEmpty ?? false) ? post!.tags.first : null;
+    final courseTag = (post?.tags.isNotEmpty ?? false)
+        ? post!.tags.first
+        : null;
     final rawTitle = post?.title ?? '';
     final truncTitle = rawTitle.length > 14
         ? '${rawTitle.substring(0, 14)}…'
-        : rawTitle.isEmpty ? 'Post' : rawTitle;
+        : rawTitle.isEmpty
+        ? 'Post'
+        : rawTitle;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -339,7 +336,11 @@ class _PostHeader extends StatelessWidget {
                 enabled: !isGuest,
               ),
               const SizedBox(width: 16),
-              Icon(Icons.chat_bubble_outline, size: 16, color: appColors.textMuted),
+              Icon(
+                Icons.chat_bubble_outline,
+                size: 16,
+                color: appColors.textMuted,
+              ),
               const SizedBox(width: 4),
               Text(
                 '$commentCount',
@@ -599,7 +600,11 @@ class _AiSummaryCardState extends State<_AiSummaryCard> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: [
-                  Icon(Icons.auto_awesome_rounded, size: 13, color: appColors.amber),
+                  Icon(
+                    Icons.auto_awesome_rounded,
+                    size: 13,
+                    color: appColors.amber,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     'AI SUMMARY',
@@ -640,7 +645,11 @@ class _AiSummaryCardState extends State<_AiSummaryCard> {
               padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
               child: TextButton.icon(
                 onPressed: () {},
-                icon: Icon(Icons.auto_awesome_rounded, size: 13, color: appColors.amber),
+                icon: Icon(
+                  Icons.auto_awesome_rounded,
+                  size: 13,
+                  color: appColors.amber,
+                ),
                 label: Text(
                   'ASK AI',
                   style: AppTypography.mono(
@@ -653,7 +662,10 @@ class _AiSummaryCardState extends State<_AiSummaryCard> {
                   ),
                 ),
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
@@ -681,9 +693,9 @@ class _EmptyComments extends StatelessWidget {
       child: Text(
         'No comments yet. Be the first to comment.',
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: appColors.textMuted,
-        ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: appColors.textMuted),
       ),
     );
   }
@@ -722,9 +734,9 @@ class _CommentInputBar extends StatelessWidget {
         child: Text(
           'Sign in to comment',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: appColors.textMuted,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: appColors.textMuted),
         ),
       );
     }

@@ -80,7 +80,10 @@ void main() {
       );
       addTearDown(container.dispose);
 
-      container.listen(postDetailProvider('post-1', seed: seed), (prev, next) {});
+      container.listen(
+        postDetailProvider('post-1', seed: seed),
+        (prev, next) {},
+      );
 
       // First: emit a data event to complete the internal Completer.
       final dataPost = fakePost(id: 'post-1');

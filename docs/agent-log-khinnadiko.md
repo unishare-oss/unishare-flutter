@@ -39,3 +39,9 @@ Files:
   ? apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart (untracked)
   ? apps/mobile/lib/features/post/presentation/widgets/like_button.dart (untracked)
 
+Files:
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart
+  ~ apps/mobile/test/unit/features/post/presentation/providers/post_detail_provider_test.dart
+Summary:  3 files changed, 53 insertions(+), 26 deletions(-)
+
