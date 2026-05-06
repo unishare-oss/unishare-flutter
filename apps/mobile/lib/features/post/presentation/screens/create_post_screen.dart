@@ -163,7 +163,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Post published!')));
-        context.pop();
+        if (context.canPop()) context.pop(); else context.go('/feed');
         ref.read(createPostProvider.notifier).reset();
       } else if (next is CreatePostQueued) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -171,7 +171,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             content: Text('Saved offline — will publish when you reconnect.'),
           ),
         );
-        context.pop();
+        if (context.canPop()) context.pop(); else context.go('/feed');
         ref.read(createPostProvider.notifier).reset();
       }
     });
