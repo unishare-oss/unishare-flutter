@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
@@ -61,7 +62,8 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     try {
       final results = await Connectivity().checkConnectivity();
-      final isConnected = !results.contains(ConnectivityResult.none);
+      // connectivity_plus returns none on web — treat web as always connected.
+      final isConnected = kIsWeb || !results.contains(ConnectivityResult.none);
 
       final result = await useCase(
         draft: draft,
