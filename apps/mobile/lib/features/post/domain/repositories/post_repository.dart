@@ -1,12 +1,11 @@
-// TODO(flutter-engineer): implement per SPEC-0004 API contracts
-// Check for a pre-existing file from PROP-0003 before finalising — do not break watchFeed.
+// Pure Dart — zero Flutter or Firebase imports.
 
 import '../entities/post.dart';
 import '../entities/post_draft.dart';
 
 abstract interface class PostRepository {
+  // Existing — must not be removed or renamed.
   Stream<List<Post>> watchFeed({int limit = 20});
-
   Future<void> saveDraft(PostDraft draft);
   Future<void> removeDraft(String draftId);
   Future<List<PostDraft>> loadDraftQueue();
@@ -14,4 +13,7 @@ abstract interface class PostRepository {
     PostDraft draft, {
     void Function(double progress)? onProgress,
   });
+
+  // Added for SPEC-0006.
+  Stream<Post> watchPost(String postId);
 }
