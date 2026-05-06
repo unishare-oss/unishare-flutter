@@ -39,7 +39,7 @@ void main() {
       );
       await tester.tap(find.text('Assignment'));
       await tester.pump();
-      expect(selected, PostType.assignment);
+      expect(selected, PostType.exercise);
     });
 
     testWidgets('Past Exam card has Unavailable label and is not tappable', (

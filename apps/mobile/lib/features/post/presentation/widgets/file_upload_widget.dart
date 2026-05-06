@@ -11,7 +11,18 @@ const _kMuted = Color(0xFF8A837E);
 const _kRed = Color(0xFFDC2626);
 
 const _maxBytes = 50 * 1024 * 1024; // 50 MB per spec
-const _allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'pdf'];
+const _allowedExtensions = [
+  // Images
+  'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'tiff', 'bmp', 'avif', 'heic', 'heif',
+  // Documents
+  'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'odt', 'odp', 'ods', 'epub',
+  // Text / code
+  'txt', 'md', 'html', 'css', 'csv', 'json',
+  // Archives
+  'zip', 'tar', 'gz',
+  // Video
+  'mp4', 'webm', 'ogv', 'mov', 'avi', 'mkv',
+];
 
 /// Drop zone + file list. Works on all platforms (mobile and web).
 /// Uses [PlatformFile] so size is always available without dart:io.

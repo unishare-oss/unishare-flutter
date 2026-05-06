@@ -2,7 +2,7 @@ import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart'
 
 enum DraftStatus { idle, uploading, publishing, published, queued, error }
 
-enum PostType { lectureNote, assignment }
+enum PostType { lectureNote, exercise }
 
 enum PostingIdentity { named, anonymous }
 

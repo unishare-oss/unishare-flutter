@@ -43,12 +43,12 @@ class TypeStep extends StatelessWidget {
         _PastExamCard(),
         const SizedBox(height: 12),
         _TypeCard(
-          label: 'Assignment',
+          label: 'Exercise',
           description: 'Practice worksheets and problem sets',
           icon: Icons.assignment_outlined,
-          type: PostType.assignment,
-          selected: selected == PostType.assignment,
-          onTap: () => onSelect(PostType.assignment),
+          type: PostType.exercise,
+          selected: selected == PostType.exercise,
+          onTap: () => onSelect(PostType.exercise),
         ),
       ],
     );
