@@ -15,7 +15,7 @@ void main() {
       );
       expect(find.text('Lecture Note'), findsOneWidget);
       expect(find.text('Past Exam'), findsOneWidget);
-      expect(find.text('Assignment'), findsOneWidget);
+      expect(find.text('Exercise'), findsOneWidget);
     });
 
     testWidgets('tapping Lecture Note calls onSelect with lectureNote', (
@@ -37,7 +37,7 @@ void main() {
       await tester.pumpWidget(
         _wrap(TypeStep(selected: null, onSelect: (t) => selected = t)),
       );
-      await tester.tap(find.text('Assignment'));
+      await tester.tap(find.text('Exercise'));
       await tester.pump();
       expect(selected, PostType.exercise);
     });
