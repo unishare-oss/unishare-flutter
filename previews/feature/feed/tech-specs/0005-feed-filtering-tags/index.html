@@ -1513,6 +1513,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#deferred-to-data-layer-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred to data-layer phase
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#out-of-scope" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1858,6 +1869,17 @@
     <span class="md-ellipsis">
       
         Test plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deferred-to-data-layer-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred to data-layer phase
       
     </span>
   </a>
@@ -2499,6 +2521,15 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="deferred-to-data-layer-phase">Deferred to data-layer phase<a class="headerlink" href="#deferred-to-data-layer-phase" title="Permanent link">&para;</a></h2>
+<p>The following components are scaffolded (stub classes with <code>UnimplementedError</code>) in this phase but intentionally not wired to Firestore yet. They will be completed in the follow-on data-layer phase once <code>currentUserProvider</code> exists and the open questions below are resolved:</p>
+<ul>
+<li><code>PreferencesRepositoryImpl</code> — delegates to <code>PreferencesFirestoreDatasource</code>; must return <code>PostFilterPreferences.empty()</code> when the Firestore document is absent and use merge-write on save</li>
+<li><code>FilterPreferencesNotifier</code> — reads uid from <code>currentUserProvider</code>, calls <code>GetFilterPreferences</code> use case on build, calls <code>SaveFilterPreferences</code> on <code>save()</code></li>
+<li><code>FeedNotifier</code> — watches <code>filterPreferencesNotifierProvider</code> for active tags, calls <code>PostRepository.watchFeed()</code> with the tag filter</li>
+</ul>
+<p>In the interim, the feed screen uses mock data and <code>activeTagFiltersProvider</code> (a session-local <code>Notifier&lt;List&lt;String&gt;&gt;</code>) to drive filter chip state. No UI currently reads the stubbed providers, so there is no live <code>UnimplementedError</code> crash risk.</p>
 <hr />
 <h2 id="out-of-scope">Out of scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
 <ul>
