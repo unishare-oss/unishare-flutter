@@ -1,8 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/entities/post_filter_preferences.dart';
-import '../../domain/usecases/get_filter_preferences.dart';
-import '../../domain/usecases/save_filter_preferences.dart';
 
 part 'filter_preferences_provider.g.dart';
 
