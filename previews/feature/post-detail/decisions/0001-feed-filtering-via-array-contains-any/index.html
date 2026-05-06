@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Server-side tag filtering on the post feed uses a Firestore array-contains-any query on the existing tags field, with a composite index, rather than fan-out writes or client-side filtering.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/decisions/0003-post-integration-packages/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/decisions/0001-feed-filtering-via-array-contains-any/">
       
       
-        <link rel="prev" href="../0002-border-in-colorscheme-not-appcolors/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../0004-shell-scroll-to-top-pattern/">
+        <link rel="next" href="../0001-single-slot-theming/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0003: Use connectivity_plus and file_picker for post integration - Unishare Engineering Docs</title>
+        <title>0001: Use Firestore array-contains-any for feed tag filtering - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0003-use-connectivity_plus-and-file_picker-for-post-integration" class="md-skip">
+        <a href="#0001-use-firestore-array-contains-any-for-feed-tag-filtering" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0003: Use connectivity_plus and file_picker for post integration
+              0001: Use Firestore array-contains-any for feed tag filtering
             
           </span>
         </div>
@@ -481,10 +481,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Use Firestore array-contains-any for feed tag filtering
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -500,6 +527,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -579,44 +681,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0003: Use connectivity_plus and file_picker for post integration
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -639,81 +707,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options Considered
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reversal-cost" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reversal Cost
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1540,7 +1533,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0003-post-integration-packages.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0001-feed-filtering-via-array-contains-any.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1548,12 +1541,12 @@
   
 
 
-<h1 id="0003-use-connectivity_plus-and-file_picker-for-post-integration">0003 — Use connectivity_plus and file_picker for post integration<a class="headerlink" href="#0003-use-connectivity_plus-and-file_picker-for-post-integration" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-05-03
-<strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect / Slade (CTO)</p>
+<h1 id="0001-use-firestore-array-contains-any-for-feed-tag-filtering">0001 — Use Firestore array-contains-any for feed tag filtering<a class="headerlink" href="#0001-use-firestore-array-contains-any-for-feed-tag-filtering" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> PROPOSED<br />
+<strong>Author:</strong> Sudakarn<br />
+<strong>Date:</strong> 2026-05-04</p>
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>SPEC-0004 (Post Integration) requires two new platform capabilities not yet in <code>pubspec.yaml</code>: (1) a real-time stream of network connectivity changes to trigger offline draft queue sync on reconnect, and (2) a file picker that supports all four media types the feature allows — JPEG, PNG, WebP, and PDF. Two candidate packages exist for each concern and a decision was needed before implementation could begin.</p>
+<p>The Unishare post feed shows every post to every student regardless of relevance. Students need to filter the feed to posts matching one or more subject/department tags. The solution must work offline, stay within the Firebase free tier, require no schema migration, and use no external paid services.</p>
 <h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1567,40 +1560,36 @@
 <tbody>
 <tr>
 <td>1</td>
-<td><code>connectivity_plus</code> (connectivity)</td>
-<td>Flutter Community standard; exposes <code>Stream&lt;ConnectivityResult&gt;</code> needed for reactive draft queue sync; supports iOS, Android, and Web</td>
-<td>Adds a dependency</td>
+<td><code>array-contains-any</code> query on existing <code>tags</code> field with a composite index</td>
+<td>Zero migration; native Firestore operator; same read budget as today; single composite index</td>
+<td>30-value operator limit; cannot combine two <code>array-contains-any</code> clauses in one query</td>
 </tr>
 <tr>
 <td>2</td>
-<td><code>dart:io</code> / <code>InternetAddress.lookup</code> (connectivity)</td>
-<td>No new dependency</td>
-<td>One-shot check only — cannot stream connectivity changes; requires polling workaround for draft queue trigger</td>
+<td>Fan-out writes to per-tag sub-collections at post creation time</td>
+<td>Per-tag queries are simple ordered reads; no operator limit</td>
+<td>Multiplies write cost by tag count; complex multi-cursor pagination for OR queries; partial-failure risk on deletion fan-out</td>
 </tr>
 <tr>
 <td>3</td>
-<td><code>file_picker</code> (media selection)</td>
-<td>Picks files of any type from device storage — covers JPEG, PNG, WebP, and PDF in one package; single dependency</td>
-<td>Requires <code>NSPhotoLibraryUsageDescription</code> (iOS) and <code>READ_EXTERNAL_STORAGE</code> (Android) permission entries</td>
-</tr>
-<tr>
-<td>4</td>
-<td><code>image_picker</code> (media selection)</td>
-<td>Well-known; camera and gallery access</td>
-<td>Images only — cannot pick PDF files; would require a second package alongside for document support</td>
+<td>Flat <code>primaryTag</code> field with equality composite index</td>
+<td>Simple <code>==</code> + <code>orderBy</code> index; unambiguous per-tag query</td>
+<td>Requires schema backfill on all existing posts (explicitly ruled out); loses multi-tag richness</td>
 </tr>
 </tbody>
 </table>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen:</strong> Option 1 (<code>connectivity_plus</code>) and Option 3 (<code>file_picker</code>).</p>
-<p><code>connectivity_plus</code> is the only option that delivers a live stream of connectivity state, which <code>DraftQueueNotifier</code> requires to automatically trigger <code>SyncDraftQueue</code> without polling. <code>file_picker</code> is the only single-package solution covering all four MIME types in scope (JPEG, PNG, WebP, PDF); using <code>image_picker</code> alone would leave PDF support unimplemented, and pairing it with a second package adds more dependency surface than <code>file_picker</code> alone. Both choices rely on the assumption that the app will continue to target iOS, Android, and Web — if Web support were dropped, native alternatives could be reconsidered.</p>
+<p><strong>Chosen:</strong> Option 1 — <code>array-contains-any</code> query on the existing <code>tags</code> field.</p>
+<p>The <code>tags: string[]</code> field already exists on every post written since PROP-0004, so a Firestore composite index on <code>(tags array-contains, createdAt desc)</code> is all that is needed — no new collections, no write-path changes, no backfill. This fits the free tier because the index is free to create and the per-page read count is unchanged from the unfiltered feed. Options 2 and 3 both require either multiplicative write costs or a schema migration, making Option 1 the only approach that satisfies all three hard constraints (no migration, free tier, offline support) simultaneously.</p>
 <h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
-<p>Medium — both packages touch platform permission configuration (<code>Info.plist</code>, <code>AndroidManifest.xml</code>). Swapping either package would require updating permission entries, adjusting the datasource abstraction, and re-testing on both platforms.</p>
+<p><strong>Low.</strong> The composite index can be dropped from <code>firestore.indexes.json</code> and the <code>tagFilter</code> parameter removed from <code>PostRepository.getPostFeed</code>. No documents need to be rewritten. The only residual cost is updating the Riverpod provider and filter UI if the team adopts a different approach.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Easier:</strong> <code>DraftQueueNotifier</code> can subscribe to <code>connectivity_plus</code> stream directly with no polling timer; <code>MediaAttachmentPicker</code> handles all four MIME types with a single <code>FilePicker.platform.pickFiles</code> call.</li>
-<li><strong>Harder:</strong> Two platform permission strings must be added and localised if the app ever ships in languages other than English.</li>
-<li><strong>Follow-up required:</strong> Add <code>connectivity_plus</code> and <code>file_picker</code> to <code>pubspec.yaml</code>; add <code>NSPhotoLibraryUsageDescription</code> to <code>ios/Runner/Info.plist</code>; add <code>READ_EXTERNAL_STORAGE</code> permission to <code>android/app/src/main/AndroidManifest.xml</code>.</li>
+<li>A composite Firestore index <code>(tags array-contains, createdAt desc)</code> must be declared in <code>firestore.indexes.json</code> and deployed before the filtered feed is released.</li>
+<li>The domain repository interface gains a <code>List&lt;String&gt; tagFilter</code> parameter; the data layer applies it conditionally — empty list → unfiltered query, non-empty list → <code>array-contains-any</code> query.</li>
+<li>Selecting more than 30 tags requires query batching in the data layer; the team must decide whether to cap the UI at a lower limit or handle batching transparently (tracked as an open question in PROP-0005).</li>
+<li>Posts predating PROP-0004 (with no <code>tags</code> field) are correctly excluded from filtered results. This is acceptable but must be communicated to users.</li>
+<li>A second independent tag-dimension filter (e.g., department AND subject type simultaneously via two <code>array-contains-any</code> clauses) is not possible in a single Firestore query; if that requirement emerges, this decision will need to be revisited.</li>
 </ul>
 
 
