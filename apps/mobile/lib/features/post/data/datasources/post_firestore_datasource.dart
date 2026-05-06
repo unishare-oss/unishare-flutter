@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 class PostFirestoreDatasource {
   final _firestore = FirebaseFirestore.instance;

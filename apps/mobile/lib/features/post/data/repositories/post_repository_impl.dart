@@ -3,12 +3,12 @@ import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../domain/entities/post.dart';
-import '../../domain/entities/post_draft.dart';
-import '../../domain/repositories/post_repository.dart';
-import '../datasources/post_firestore_datasource.dart';
-import '../datasources/post_storage_datasource.dart';
-import '../models/post_draft_model.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
+import 'package:unishare_mobile/features/post/data/datasources/post_firestore_datasource.dart';
+import 'package:unishare_mobile/features/post/data/datasources/post_storage_datasource.dart';
+import 'package:unishare_mobile/features/post/data/models/post_draft_model.dart';
 
 class PostRepositoryImpl implements PostRepository {
   PostRepositoryImpl({

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../domain/entities/auth_exception.dart';
-import '../providers/auth_repository_provider.dart';
-import '../providers/guest_mode_provider.dart';
-import '../providers/universities_provider.dart';
-import '../widgets/auth_text_field.dart';
-import '../widgets/google_sign_in_button.dart';
-import '../widgets/unishare_logo.dart';
+import 'package:unishare_mobile/features/auth/domain/entities/auth_exception.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/universities_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:unishare_mobile/features/auth/presentation/widgets/google_sign_in_button.dart';
+import 'package:unishare_mobile/features/auth/presentation/widgets/unishare_logo.dart';
 
 // Web-matched auth palette — hardcoded so these screens always look correct
 // regardless of the active app theme.

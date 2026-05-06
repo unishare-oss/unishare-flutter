@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../domain/entities/code_snippet.dart';
-import '../../domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 // typeId: 1 — verified no other model claims this ID in this codebase.
 class PostDraftModel extends HiveObject {

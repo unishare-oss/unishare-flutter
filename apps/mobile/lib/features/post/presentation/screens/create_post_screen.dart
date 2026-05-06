@@ -4,14 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../domain/entities/code_snippet.dart';
-import '../../domain/entities/post_draft.dart';
-import '../providers/create_post_provider.dart';
-import '../widgets/course_step.dart';
-import '../widgets/details_step.dart';
-import '../widgets/draft_queue_indicator.dart';
-import '../widgets/files_step.dart';
-import '../widgets/type_step.dart';
+import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/course_step.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/details_step.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/draft_queue_indicator.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/files_step.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/type_step.dart';
 
 const _kBg = Color(0xFFF7F3EE);
 const _kWhite = Colors.white;
@@ -146,10 +146,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       createdAt: DateTime.now(),
     );
 
-    await ref.read(createPostProvider.notifier).submit(
-      draft: draft,
-      fileDataOverride: fileDataOverride.isEmpty ? null : fileDataOverride,
-    );
+    await ref
+        .read(createPostProvider.notifier)
+        .submit(
+          draft: draft,
+          fileDataOverride: fileDataOverride.isEmpty ? null : fileDataOverride,
+        );
   }
 
   @override
@@ -405,8 +407,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     };
   }
 
-  double get _stepHeight =>
-      MediaQuery.sizeOf(context).height * 1.1;
+  double get _stepHeight => MediaQuery.sizeOf(context).height * 1.1;
 }
 
 // ---------------------------------------------------------------------------

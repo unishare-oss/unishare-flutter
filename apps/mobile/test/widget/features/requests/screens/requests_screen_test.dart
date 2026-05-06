@@ -6,9 +6,7 @@ import 'package:unishare_mobile/features/requests/presentation/screens/requests_
 void main() {
   testWidgets('RequestsScreen renders title and coming soon', (tester) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(home: RequestsScreen()),
-      ),
+      const ProviderScope(child: MaterialApp(home: RequestsScreen())),
     );
     expect(find.text('Requests'), findsOneWidget);
     expect(find.text('Coming soon'), findsOneWidget);

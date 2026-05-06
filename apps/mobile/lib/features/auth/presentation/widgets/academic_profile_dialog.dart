@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../providers/auth_repository_provider.dart';
-import '../providers/auth_state_provider.dart';
-import '../providers/departments_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 
 class AcademicProfileBottomSheet extends ConsumerStatefulWidget {
   const AcademicProfileBottomSheet({super.key});

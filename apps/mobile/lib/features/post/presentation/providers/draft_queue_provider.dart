@@ -4,9 +4,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../data/models/post_draft_model.dart';
-import '../../domain/entities/post_draft.dart';
-import 'post_repository_provider.dart';
+import 'package:unishare_mobile/features/post/data/models/post_draft_model.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 
 part 'draft_queue_provider.g.dart';
 

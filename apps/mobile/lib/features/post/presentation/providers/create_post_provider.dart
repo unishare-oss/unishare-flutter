@@ -4,8 +4,8 @@ import 'dart:typed_data';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/entities/post_draft.dart';
-import 'post_repository_provider.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 
 part 'create_post_provider.g.dart';
 

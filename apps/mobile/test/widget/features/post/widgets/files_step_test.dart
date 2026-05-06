@@ -80,10 +80,16 @@ void main() {
     testWidgets('file list renders row for each path', (tester) async {
       // Use paths that don't exist on disk — size will show as 0.0 MB.
       await tester.pumpWidget(
-        _wrap(files: [
-        PlatformFile(name: 'notes.pdf', size: 0, path: '/tmp/notes.pdf'),
-        PlatformFile(name: 'lecture.png', size: 0, path: '/tmp/lecture.png'),
-      ]),
+        _wrap(
+          files: [
+            PlatformFile(name: 'notes.pdf', size: 0, path: '/tmp/notes.pdf'),
+            PlatformFile(
+              name: 'lecture.png',
+              size: 0,
+              path: '/tmp/lecture.png',
+            ),
+          ],
+        ),
       );
       expect(find.text('notes.pdf'), findsOneWidget);
       expect(find.text('lecture.png'), findsOneWidget);

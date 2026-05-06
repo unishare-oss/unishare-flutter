@@ -1,13 +1,13 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../data/datasources/post_firestore_datasource.dart';
-import '../../data/datasources/post_storage_datasource.dart';
-import '../../data/models/post_draft_model.dart';
-import '../../data/repositories/post_repository_impl.dart';
-import '../../domain/repositories/post_repository.dart';
-import '../../domain/usecases/create_post.dart';
-import '../../domain/usecases/sync_draft_queue.dart';
+import 'package:unishare_mobile/features/post/data/datasources/post_firestore_datasource.dart';
+import 'package:unishare_mobile/features/post/data/datasources/post_storage_datasource.dart';
+import 'package:unishare_mobile/features/post/data/models/post_draft_model.dart';
+import 'package:unishare_mobile/features/post/data/repositories/post_repository_impl.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/create_post.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.dart';
 
 part 'post_repository_provider.g.dart';
 

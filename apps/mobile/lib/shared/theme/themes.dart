@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_theme_data.dart';
+import 'package:unishare_mobile/shared/theme/app_theme_data.dart';
 
 class AppThemes {
   static const unishare = AppThemeData(

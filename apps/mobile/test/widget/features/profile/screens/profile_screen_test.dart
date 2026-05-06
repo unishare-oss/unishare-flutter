@@ -6,9 +6,7 @@ import 'package:unishare_mobile/features/profile/presentation/screens/profile_sc
 void main() {
   testWidgets('ProfileScreen renders title and coming soon', (tester) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(home: ProfileScreen()),
-      ),
+      const ProviderScope(child: MaterialApp(home: ProfileScreen())),
     );
     expect(find.text('Profile'), findsOneWidget);
     expect(find.text('Coming soon'), findsOneWidget);

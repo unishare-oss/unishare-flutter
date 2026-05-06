@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import 'upload_file_stub.dart'
+import 'package:unishare_mobile/features/post/data/datasources/upload_file_stub.dart'
     if (dart.library.io) 'upload_file_io.dart';
 
 class PostStorageDatasource {
@@ -37,7 +37,10 @@ class PostStorageDatasource {
   /// Uploads [content] as `text/plain`. Used for code snippets.
   Future<String> uploadText(String content, String uid, String filename) async {
     final ref = _storage.ref('posts/$uid/${_newId()}-$filename');
-    await ref.putString(content, metadata: SettableMetadata(contentType: 'text/plain'));
+    await ref.putString(
+      content,
+      metadata: SettableMetadata(contentType: 'text/plain'),
+    );
     return ref.getDownloadURL();
   }
 
@@ -49,7 +52,8 @@ class PostStorageDatasource {
     StreamSubscription? sub;
     if (onProgress != null) {
       sub = task.snapshotEvents.listen((snap) {
-        if (snap.totalBytes > 0) onProgress(snap.bytesTransferred / snap.totalBytes);
+        if (snap.totalBytes > 0)
+          onProgress(snap.bytesTransferred / snap.totalBytes);
       });
     }
     try {

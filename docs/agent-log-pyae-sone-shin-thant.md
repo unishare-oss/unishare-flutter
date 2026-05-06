@@ -377,3 +377,4 @@ Review: PENDING
   [13:12] Write: apps/mobile/test/widget/features/departments/screens/departments_screen_test.dart
   [13:12] Write: apps/mobile/test/widget/features/requests/screens/requests_screen_test.dart
   [13:13] Edit: apps/mobile/.gitignore
+  [13:25] Edit: apps/mobile/analysis_options.yaml

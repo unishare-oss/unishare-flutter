@@ -3,8 +3,8 @@
 
 import 'dart:typed_data';
 
-import '../entities/post.dart';
-import '../entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 abstract interface class PostRepository {
   Stream<List<Post>> watchFeed({int limit = 20});

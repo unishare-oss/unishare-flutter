@@ -26,9 +26,11 @@ class _StubRepo implements PostRepository {
   @override
   Future<List<PostDraft>> loadDraftQueue() async => [];
   @override
-  Future<void> publishDraft(PostDraft draft,
-      {void Function(double)? onProgress,
-      Map<String, Uint8List>? fileDataOverride}) async {}
+  Future<void> publishDraft(
+    PostDraft draft, {
+    void Function(double)? onProgress,
+    Map<String, Uint8List>? fileDataOverride,
+  }) async {}
 }
 
 // Fake DraftQueueNotifier that never touches Hive.
@@ -46,14 +48,13 @@ Widget _makeScreen() {
     overrides: [
       postRepositoryProvider.overrideWithValue(_StubRepo()),
       createPostUseCaseProvider.overrideWithValue(CreatePost(_StubRepo())),
-      syncDraftQueueUseCaseProvider
-          .overrideWithValue(SyncDraftQueue(_StubRepo())),
+      syncDraftQueueUseCaseProvider.overrideWithValue(
+        SyncDraftQueue(_StubRepo()),
+      ),
       // Override draftQueueProvider so DraftQueueIndicator never opens Hive.
       draftQueueProvider.overrideWith(() => _FakeDraftQueueNotifier()),
     ],
-    child: const MaterialApp(
-      home: CreatePostScreen(),
-    ),
+    child: const MaterialApp(home: CreatePostScreen()),
   );
 }
 
@@ -68,8 +69,9 @@ void main() {
       expect(find.text('Past Exam'), findsOneWidget);
     });
 
-    testWidgets('Next button is disabled on step 1 until a type is selected',
-        (tester) async {
+    testWidgets('Next button is disabled on step 1 until a type is selected', (
+      tester,
+    ) async {
       await tester.pumpWidget(_makeScreen());
       await tester.pump();
 
@@ -80,8 +82,9 @@ void main() {
       expect(button.onPressed, isNull);
     });
 
-    testWidgets('tapping Lecture Note enables Next and advances to step 2',
-        (tester) async {
+    testWidgets('tapping Lecture Note enables Next and advances to step 2', (
+      tester,
+    ) async {
       await tester.pumpWidget(_makeScreen());
       await tester.pump();
 
@@ -99,8 +102,9 @@ void main() {
       expect(find.text('Which course is this for?'), findsOneWidget);
     });
 
-    testWidgets('Back on step 1 does not crash when no prior route',
-        (tester) async {
+    testWidgets('Back on step 1 does not crash when no prior route', (
+      tester,
+    ) async {
       await tester.pumpWidget(_makeScreen());
       await tester.pump();
 
@@ -111,63 +115,65 @@ void main() {
     });
 
     testWidgets(
-        'step 2: Next is disabled until both year and course are selected',
-        (tester) async {
-      await tester.pumpWidget(_makeScreen());
-      await tester.pump();
+      'step 2: Next is disabled until both year and course are selected',
+      (tester) async {
+        await tester.pumpWidget(_makeScreen());
+        await tester.pump();
 
-      await tester.tap(find.text('Lecture Note'));
-      await tester.pump();
-      await tester.tap(find.widgetWithText(FilledButton, 'Next'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Lecture Note'));
+        await tester.pump();
+        await tester.tap(find.widgetWithText(FilledButton, 'Next'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Which course is this for?'), findsOneWidget);
+        expect(find.text('Which course is this for?'), findsOneWidget);
 
-      final nextButton = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Next'),
-      );
-      expect(nextButton.onPressed, isNull);
-    });
+        final nextButton = tester.widget<FilledButton>(
+          find.widgetWithText(FilledButton, 'Next'),
+        );
+        expect(nextButton.onPressed, isNull);
+      },
+    );
 
     testWidgets(
-        'step 3: Next is disabled until title, description, and module are filled',
-        (tester) async {
-      await tester.pumpWidget(_makeScreen());
-      await tester.pump();
+      'step 3: Next is disabled until title, description, and module are filled',
+      (tester) async {
+        await tester.pumpWidget(_makeScreen());
+        await tester.pump();
 
-      // Step 1
-      await tester.tap(find.text('Lecture Note'));
-      await tester.pump();
-      await tester.tap(find.widgetWithText(FilledButton, 'Next'));
-      await tester.pumpAndSettle();
+        // Step 1
+        await tester.tap(find.text('Lecture Note'));
+        await tester.pump();
+        await tester.tap(find.widgetWithText(FilledButton, 'Next'));
+        await tester.pumpAndSettle();
 
-      // Step 2 — select year
-      await tester.tap(find.text('Select year'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Year 1').last);
-      await tester.pumpAndSettle();
+        // Step 2 — select year
+        await tester.tap(find.text('Select year'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Year 1').last);
+        await tester.pumpAndSettle();
 
-      // Step 2 — select course
-      await tester.tap(find.text('Select course'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('CSC101 Introduction to Computing').last);
-      await tester.pumpAndSettle();
+        // Step 2 — select course
+        await tester.tap(find.text('Select course'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('CSC101 Introduction to Computing').last);
+        await tester.pumpAndSettle();
 
-      var nextButton = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Next'),
-      );
-      expect(nextButton.onPressed, isNotNull);
+        var nextButton = tester.widget<FilledButton>(
+          find.widgetWithText(FilledButton, 'Next'),
+        );
+        expect(nextButton.onPressed, isNotNull);
 
-      await tester.tap(find.widgetWithText(FilledButton, 'Next'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(FilledButton, 'Next'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Add details'), findsOneWidget);
+        expect(find.text('Add details'), findsOneWidget);
 
-      nextButton = tester.widget<FilledButton>(
-        find.widgetWithText(FilledButton, 'Next'),
-      );
-      expect(nextButton.onPressed, isNull);
-    });
+        nextButton = tester.widget<FilledButton>(
+          find.widgetWithText(FilledButton, 'Next'),
+        );
+        expect(nextButton.onPressed, isNull);
+      },
+    );
 
     testWidgets('step 4: Submit button is always enabled', (tester) async {
       await tester.pumpWidget(_makeScreen());

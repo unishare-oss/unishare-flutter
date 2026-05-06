@@ -1,4 +1,4 @@
-import 'post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 class Post {
   const Post({

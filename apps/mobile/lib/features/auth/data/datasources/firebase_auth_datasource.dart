@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../domain/entities/auth_exception.dart';
+import 'package:unishare_mobile/features/auth/domain/entities/auth_exception.dart';
 
 class FirebaseAuthDatasource {
   FirebaseAuthDatasource({FirebaseAuth? firebaseAuth})

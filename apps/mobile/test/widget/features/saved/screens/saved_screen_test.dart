@@ -6,9 +6,7 @@ import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen
 void main() {
   testWidgets('SavedScreen renders title and coming soon', (tester) async {
     await tester.pumpWidget(
-      const ProviderScope(
-        child: MaterialApp(home: SavedScreen()),
-      ),
+      const ProviderScope(child: MaterialApp(home: SavedScreen())),
     );
     expect(find.text('Saved'), findsOneWidget);
     expect(find.text('Coming soon'), findsOneWidget);

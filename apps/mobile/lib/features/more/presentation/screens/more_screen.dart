@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../shared/widgets/scroll_to_top_target.dart';
+import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({required GlobalKey<State> scrollKey})

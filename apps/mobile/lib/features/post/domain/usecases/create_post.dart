@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import '../entities/post_draft.dart';
-import '../repositories/post_repository.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
 
 class CreatePost {
   const CreatePost(this._repository);
@@ -25,8 +25,10 @@ class CreatePost {
     Map<String, Uint8List>? fileDataOverride,
   }) async {
     if (draft.title.trim().isEmpty) throw ArgumentError('title_required');
-    if (draft.description.trim().isEmpty) throw ArgumentError('description_required');
-    if (draft.moduleNumber.trim().isEmpty) throw ArgumentError('module_required');
+    if (draft.description.trim().isEmpty)
+      throw ArgumentError('description_required');
+    if (draft.moduleNumber.trim().isEmpty)
+      throw ArgumentError('module_required');
 
     await _repository.saveDraft(draft);
 

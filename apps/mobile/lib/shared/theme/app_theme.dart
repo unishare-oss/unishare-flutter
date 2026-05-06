@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
-import 'app_theme_data.dart';
-import 'app_typography.dart';
-import 'themes.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_theme_data.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 class AppTheme {
   static ThemeData fromId(String id) =>

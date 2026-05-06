@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../features/auth/presentation/providers/auth_state_provider.dart';
-import '../../features/auth/presentation/providers/guest_mode_provider.dart';
-import '../../features/auth/presentation/screens/welcome_screen.dart';
-import '../../features/departments/presentation/screens/departments_screen.dart';
-import '../../features/feed/presentation/screens/feed_screen.dart';
-import '../../features/more/presentation/screens/more_screen.dart';
-import '../../features/notifications/presentation/screens/notifications_screen.dart';
-import '../../features/post/presentation/screens/create_post_screen.dart';
-import '../../features/post/presentation/screens/my_posts_screen.dart';
-import '../../features/profile/presentation/screens/profile_screen.dart';
-import '../../features/requests/presentation/screens/requests_screen.dart';
-import '../../features/saved/presentation/screens/saved_screen.dart';
-import 'shell_scaffold.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:unishare_mobile/features/departments/presentation/screens/departments_screen.dart';
+import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
+import 'package:unishare_mobile/features/more/presentation/screens/more_screen.dart';
+import 'package:unishare_mobile/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/my_posts_screen.dart';
+import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
+import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
+import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen.dart';
+import 'package:unishare_mobile/core/router/shell_scaffold.dart';
 
 part 'router.g.dart';
 

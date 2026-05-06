@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../domain/entities/code_snippet.dart';
+import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
 
 const _kBg = Color(0xFFF7F3EE);
 const _kWhite = Colors.white;

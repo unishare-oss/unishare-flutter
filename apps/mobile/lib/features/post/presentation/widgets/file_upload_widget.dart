@@ -83,7 +83,10 @@ class FileUploadWidget extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     'Drop files here or click to browse',
-                    style: GoogleFonts.spaceGrotesk(fontSize: 13, color: _kMuted),
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 13,
+                      color: _kMuted,
+                    ),
                   ),
                   Text(
                     'max 50 MB per file',

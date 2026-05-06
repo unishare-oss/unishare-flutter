@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 const _kWhite = Colors.white;
 const _kPrimary = Color(0xFFD97706);
