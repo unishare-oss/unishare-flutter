@@ -1,5 +1,5 @@
-import 'package:unishare_mobile/features/post_feed/domain/entities/post_filter_preferences.dart';
-import 'package:unishare_mobile/features/post_feed/domain/repositories/preferences_repository.dart';
+import 'package:unishare_mobile/features/feed/domain/entities/post_filter_preferences.dart';
+import 'package:unishare_mobile/features/feed/domain/repositories/preferences_repository.dart';
 
 class SaveFilterPreferences {
   const SaveFilterPreferences(this._repository);

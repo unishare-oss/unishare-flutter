@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:unishare_mobile/features/post_feed/domain/entities/post_filter_preferences.dart';
+import 'package:unishare_mobile/features/feed/domain/entities/post_filter_preferences.dart';
 
 part 'post_filter_preferences_model.freezed.dart';
 part 'post_filter_preferences_model.g.dart';

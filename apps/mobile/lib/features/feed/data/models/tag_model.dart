@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:unishare_mobile/features/post_feed/domain/entities/tag_entity.dart';
+import 'package:unishare_mobile/features/feed/domain/entities/tag_entity.dart';
 
 part 'tag_model.freezed.dart';
 part 'tag_model.g.dart';
