@@ -418,3 +418,4 @@ Summary:  2 files changed, 10 insertions(+), 8 deletions(-)
   [15:11] Edit: apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
   [15:12] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
   [15:12] Edit: apps/mobile/lib/features/post/presentation/widgets/type_step.dart
+  [15:13] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
