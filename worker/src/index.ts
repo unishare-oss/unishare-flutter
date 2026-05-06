@@ -30,7 +30,7 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     // CORS preflight
     if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
 
     if (request.method !== 'POST') {
@@ -66,7 +66,8 @@ export default {
     }
 
     // Generate pre-signed R2 URL
-    const key = `posts/${uid}/${nanoid()}-${filename}`;
+    const safeFilename = filename.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 200);
+    const key = `posts/${uid}/${nanoid()}-${safeFilename}`;
     const client = new S3Client({
       region: 'auto',
       endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
@@ -82,7 +83,12 @@ export default {
       ContentType: contentType,
     });
 
-    const uploadUrl = await getSignedUrl(client, command, { expiresIn: 300 });
+    let uploadUrl: string;
+    try {
+      uploadUrl = await getSignedUrl(client, command, { expiresIn: 300 });
+    } catch (e) {
+      return json({ error: 'Failed to generate upload URL' }, 500);
+    }
     const publicUrl = `${env.R2_PUBLIC_URL}/${key}`;
 
     return json({ uploadUrl, publicUrl }, 200);
