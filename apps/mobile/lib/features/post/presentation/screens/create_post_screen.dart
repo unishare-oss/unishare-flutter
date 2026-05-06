@@ -121,8 +121,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     // On mobile use f.path (full filesystem path needed to read the file).
     // On web use f.name — f.path is a blob URL which breaks content-type
     // detection and doesn't help with file reading (bytes are in f.bytes).
-    final localMediaPaths =
-        _pickedFiles.map((f) => f.bytes != null ? f.name : f.path!).toList();
+    final localMediaPaths = _pickedFiles
+        .map((f) => f.bytes != null ? f.name : f.path!)
+        .toList();
 
     // Bytes populated on web (withData: kIsWeb). Key matches localMediaPaths.
     final fileDataOverride = {
@@ -165,7 +166,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Post published!')));
-        if (context.canPop()) { context.pop(); } else { context.go('/feed'); }
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/feed');
+        }
         ref.read(createPostProvider.notifier).reset();
       } else if (next is CreatePostQueued) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -173,7 +178,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             content: Text('Saved offline — will publish when you reconnect.'),
           ),
         );
-        if (context.canPop()) { context.pop(); } else { context.go('/feed'); }
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/feed');
+        }
         ref.read(createPostProvider.notifier).reset();
       }
     });
