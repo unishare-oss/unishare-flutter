@@ -593,3 +593,7 @@ Summary:  17 files changed, 35 insertions(+), 35 deletions(-)
   [23:25] Edit: apps/mobile/test/widget/feed/feed_screen_test.dart
   [23:29] Write: apps/mobile/test/widget/feed/feed_screen_test.dart
   [23:38] Edit: apps/mobile/lib/features/post/data/repositories/like_repository_impl.dart
+Files:
+  ~ apps/mobile/test/unit/auth/fakes/fake_firebase_auth_datasource.dart
+Summary:  1 file changed, 3 insertions(+)
+
