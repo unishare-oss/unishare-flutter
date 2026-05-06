@@ -5,21 +5,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'feed_provider.g.dart';
 
-// TODO: wire postRepositoryProvider and filterPreferencesNotifierProvider
+// Deferred to the data-layer phase. Requires:
+//   1. PostRepositoryImpl.watchFeed() wired via postRepositoryProvider
+//   2. FilterPreferencesNotifier backed by Firestore + currentUserProvider
+//   3. currentUserProvider (not yet implemented)
+// The feed screen uses mock data in the meantime and does not read this provider,
+// so the UnimplementedError below is not a live crash risk.
 @riverpod
 class FeedNotifier extends _$FeedNotifier {
   @override
   Future<List<Object>> build() async {
-    // TODO: read active filter from filterPreferencesNotifierProvider
     // final prefsAsync = ref.watch(filterPreferencesNotifierProvider);
     // final tagFilter = prefsAsync.valueOrNull?.selectedTags ?? const [];
     // final repository = ref.read(postRepositoryProvider);
-    // return repository.getPostFeed(tagFilter: tagFilter);
+    // return repository.watchFeed(tagFilter: tagFilter).first;
     throw UnimplementedError();
   }
 
   Future<void> fetchNextPage(Object? cursor) async {
-    // TODO: implement cursor-based next page fetch
+    // TODO: cursor-based pagination
     throw UnimplementedError();
   }
 }
