@@ -28,8 +28,7 @@ class PostStorageDatasource {
     String filename,
     String uid, {
     void Function(double)? onProgress,
-  }) =>
-      _put(bytes, filename, onProgress);
+  }) => _put(bytes, filename, onProgress);
 
   Future<String> uploadText(String content, String uid, String filename) =>
       _put(
@@ -66,10 +65,7 @@ class PostStorageDatasource {
       uploadUrl,
       data: Stream.fromIterable(bytes.map((b) => [b])),
       options: Options(
-        headers: {
-          'Content-Type': ct,
-          'Content-Length': bytes.length,
-        },
+        headers: {'Content-Type': ct, 'Content-Length': bytes.length},
         sendTimeout: const Duration(minutes: 5),
         receiveTimeout: const Duration(minutes: 1),
       ),

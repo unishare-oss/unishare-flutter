@@ -13,9 +13,29 @@ const _kRed = Color(0xFFDC2626);
 const _maxBytes = 50 * 1024 * 1024; // 50 MB per spec
 const _allowedExtensions = [
   // Images
-  'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'tiff', 'bmp', 'avif', 'heic', 'heif',
+  'jpg',
+  'jpeg',
+  'png',
+  'gif',
+  'webp',
+  'svg',
+  'tiff',
+  'bmp',
+  'avif',
+  'heic',
+  'heif',
   // Documents
-  'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'odt', 'odp', 'ods', 'epub',
+  'pdf',
+  'doc',
+  'docx',
+  'ppt',
+  'pptx',
+  'xls',
+  'xlsx',
+  'odt',
+  'odp',
+  'ods',
+  'epub',
   // Text / code
   'txt', 'md', 'html', 'css', 'csv', 'json',
   // Archives
