@@ -123,9 +123,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     final localMediaPaths = _pickedFiles.map((f) => f.path ?? f.name).toList();
 
     // Bytes are only populated on web (withData: kIsWeb in FileUploadWidget).
+    // Key must match localMediaPaths (f.path ?? f.name) so the lookup in
+    // publishDraft finds the bytes instead of falling through to upload().
     final fileDataOverride = {
       for (final f in _pickedFiles)
-        if (f.bytes != null) f.name: f.bytes!,
+        if (f.bytes != null) f.path ?? f.name: f.bytes!,
     };
 
     final draft = PostDraft(
