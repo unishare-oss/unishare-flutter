@@ -8,6 +8,7 @@ import '../../features/auth/presentation/providers/guest_mode_provider.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/auth/presentation/widgets/academic_profile_dialog.dart';
 import '../../features/post/presentation/screens/create_post_screen.dart';
+import '../../features/post_feed/presentation/screens/feed_screen.dart';
 
 part 'router.g.dart';
 
@@ -16,7 +17,7 @@ part 'router.g.dart';
 // ---------------------------------------------------------------------------
 
 // Simple in-memory flag — not a Riverpod provider to keep it out of codegen.
-bool _academicProfileSessionDismissed = false;
+bool academicProfileSessionDismissed = false;
 
 // ---------------------------------------------------------------------------
 // Notifier — watches auth + guest state, calls notifyListeners on change
@@ -80,52 +81,11 @@ GoRouter router(Ref ref) {
         path: '/welcome',
         builder: (context, state) => const WelcomeScreen(),
       ),
-      GoRoute(path: '/', builder: (context, state) => const _HomeScreen()),
+      GoRoute(path: '/', builder: (context, state) => const FeedScreen()),
       GoRoute(
         path: '/posts/create',
         builder: (context, state) => const CreatePostScreen(),
       ),
     ],
   );
-}
-
-// ---------------------------------------------------------------------------
-// Home screen — shows feed placeholder + triggers academic profile overlay
-// ---------------------------------------------------------------------------
-
-class _HomeScreen extends ConsumerStatefulWidget {
-  const _HomeScreen();
-
-  @override
-  ConsumerState<_HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends ConsumerState<_HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowProfile());
-  }
-
-  void _maybeShowProfile() {
-    if (!mounted) return;
-
-    final authAsync = ref.read(authStateProvider);
-    final user = authAsync.hasValue ? authAsync.value : null;
-
-    if (user != null &&
-        user.departmentId == null &&
-        !_academicProfileSessionDismissed) {
-      _academicProfileSessionDismissed = true;
-      showAcademicProfileBottomSheet(context);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Unishare')),
-      body: const Center(child: Text('Unishare')),
-    );
-  }
 }
