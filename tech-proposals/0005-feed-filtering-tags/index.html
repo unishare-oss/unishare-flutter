@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Proposal for reverse-chronological post feed backed by Firestore with cursor-based pagination.">
+        <meta name="description" content="Proposal for server-side tag filtering on the post feed using Firestore array-contains-any queries, with Hive offline cache support.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0003-post-feed/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0005-feed-filtering-tags/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../0004-post-integration/">
       
       
-        <link rel="next" href="../0004-post-integration/">
+        <link rel="next" href="../0005-main-navbar/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0003: Post Feed - Unishare Engineering Docs</title>
+        <title>0005: Feed Filtering by Tags - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0003-post-feed" class="md-skip">
+        <a href="#prop-0005-feed-filtering-by-tags" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0003: Post Feed
+              0005: Feed Filtering by Tags
             
           </span>
         </div>
@@ -907,37 +907,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0003: Post Feed
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0003-post-feed/" class="md-nav__link">
         
   
   
@@ -953,159 +926,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Proposed Solution
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Proposed Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#firestore-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore Schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pagination" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pagination
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture Layers
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-flat-array-field-on-a-users-document" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Flat array field on a users document
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-algolia-typesense-for-feed-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Algolia / Typesense for feed + search
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-likescount-incremented-by-the-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — likesCount incremented by the client
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria-for-tech-spec" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria (for Tech Spec)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1143,10 +963,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Feed Filtering by Tags
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1162,6 +1009,164 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-firestore-array-contains-any-query-on-tags-field-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — Firestore array-contains-any Query on tags Field (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-fan-out-writes-to-per-tag-sub-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — Fan-out Writes to Per-Tag Sub-Collections
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-composite-index-on-a-flat-primarytag-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C — Composite Index on a Flat primaryTag Field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Approaches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1467,22 +1472,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
+  <a href="#goals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Proposed Solution
+        Goals
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Proposed Solution">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#firestore-schema" class="md-nav__link">
+  <a href="#option-a-firestore-array-contains-any-query-on-tags-field-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Firestore Schema
+        Option A — Firestore array-contains-any Query on tags Field (Recommended)
       
     </span>
   </a>
@@ -1490,10 +1517,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#pagination" class="md-nav__link">
+  <a href="#option-b-fan-out-writes-to-per-tag-sub-collections" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pagination
+        Option B — Fan-out Writes to Per-Tag Sub-Collections
       
     </span>
   </a>
@@ -1501,10 +1528,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
+  <a href="#option-c-composite-index-on-a-flat-primarytag-field" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clean Architecture Layers
+        Option C — Composite Index on a Flat primaryTag Field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Approaches
       
     </span>
   </a>
@@ -1517,52 +1555,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
+  <a href="#recommendation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alternatives Considered
+        Recommendation
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-flat-array-field-on-a-users-document" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Flat array field on a users document
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-algolia-typesense-for-feed-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Algolia / Typesense for feed + search
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-likescount-incremented-by-the-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — likesCount incremented by the client
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1578,10 +1577,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#acceptance-criteria-for-tech-spec" class="md-nav__link">
+  <a href="#acceptance-criteria" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Acceptance Criteria (for Tech Spec)
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
       
     </span>
   </a>
@@ -1605,7 +1615,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0003-post-feed.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0005-feed-filtering-tags.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1613,177 +1623,138 @@
   
 
 
-<h1 id="prop-0003-post-feed">PROP-0003: Post Feed<a class="headerlink" href="#prop-0003-post-feed" title="Permanent link">&para;</a></h1>
+<h1 id="prop-0005-feed-filtering-by-tags">PROP-0005: Feed Filtering by Tags<a class="headerlink" href="#prop-0005-feed-filtering-by-tags" title="Permanent link">&para;</a></h1>
 <p><strong>Status:</strong> APPROVED<br />
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-04-30<br />
-<strong>Approved by:</strong> Pyae Sone Shin Thant<br />
-<strong>Spec:</strong> absorbed into <a href="../../tech-specs/0005-feed-filtering-tags/">SPEC-0005</a> — basic feed mechanism implemented as foundation for tag-filtering spec</p>
+<strong>Author:</strong> Sudakarn<br />
+<strong>Date:</strong> 2026-05-05<br />
+<strong>Spec:</strong> <a href="../../tech-specs/0005-feed-filtering-tags/">SPEC-0005</a><br />
+<strong>Approved by:</strong> Sudakarn</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>Unishare needs a way for university students to discover and share academic content — notes, summaries,
-past papers, and study guides. Without a feed, users have no surface for browsing new content from peers
-or from courses they follow. This is the primary content-discovery mechanism for the app.</p>
+<p>Every authenticated student currently sees the entire global <code>posts</code> feed, ordered by recency, regardless of their university, department, or enrolled subjects. A student enrolled in three subjects — say, Computer Networks, Database Systems, and Software Engineering — still scrolls through posts tagged for Accounting, Biology, and every other discipline on the platform. As the content volume grows, the signal-to-noise ratio collapses.</p>
+<p>Concrete impact today:</p>
+<ul>
+<li>A student following 3 subjects sees 100% of posts from all departments. If 30 departments each contribute equal volume, only ~10% of the feed is relevant.</li>
+<li>There is no way to surface "posts for my courses only," forcing students to abandon the feed entirely or rely on word-of-mouth sharing.</li>
+<li>Without relevance filtering, the feed's value proposition — peer content discovery — erodes at exactly the moment it becomes most needed (mid-semester, when content volume peaks).</li>
+</ul>
+<p>The <code>posts/{postId}</code> schema already carries a <code>tags: string[]</code> field (established in PROP-0003). New posts written via the PROP-0004 write path populate <code>tags</code> at creation time. This means server-side filtering can be implemented without touching any existing document — no backfill is required for posts written after PROP-0004 shipped. Posts predating PROP-0004 with empty <code>tags</code> arrays will simply not appear in filtered results, which is the correct behavior (unclassified content should not pollute a subject-filtered view).</p>
 <hr />
-<h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>A reverse-chronological feed backed by a top-level Firestore <code>posts</code> collection. The feed is paginated
-using cursor-based pagination (<code>startAfterDocument</code>) so infinite scroll works efficiently without
-offset reads. Each post document is self-contained (denormalized author display name + avatar) to avoid
-fan-out reads on render.</p>
-<h3 id="firestore-schema">Firestore Schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>posts/{postId}
-  id:            string   (== document ID)
-  authorId:      string   (UID)
-  authorName:    string   (denormalized — snapshot at write time)
-  authorAvatar:  string   (denormalized URL)
-  title:         string
-  body:          string
-  mediaUrls:     string[]
-  tags:          string[]
-  likesCount:    int      (maintained by Cloud Function, never written by client)
-  createdAt:     Timestamp
-  updatedAt:     Timestamp
-
-posts/{postId}/likes/{userId}
-  likedAt:       Timestamp
-</code></pre></div>
-<p><code>likesCount</code> on the post document is a counter updated by a Cloud Function triggered on
-<code>likes</code> subcollection writes — this avoids race conditions from simultaneous client increments.</p>
-<h3 id="pagination">Pagination<a class="headerlink" href="#pagination" title="Permanent link">&para;</a></h3>
-<p>The feed uses page-number–based pagination. The repository interface takes an explicit <code>page</code> index
-(0-based) and a fixed <code>pageSize</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// domain/repositories/post_repository.dart</span>
-<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">PostRepository</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="n">PostFeedPage</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getPostFeed</span><span class="p">({</span><span class="kt">int</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pageSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">});</span>
-<span class="p">}</span>
-
-<span class="c1">// domain/entities/post_feed_page.dart</span>
-<span class="kd">class</span><span class="w"> </span><span class="nc">PostFeedPage</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;</span><span class="w"> </span><span class="n">posts</span><span class="p">;</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">page</span><span class="p">;</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasMore</span><span class="p">;</span><span class="w"> </span><span class="c1">// false when posts.length &lt; pageSize</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Firestore implementation note:</strong> Firestore has no native offset. The data source implements
-page-number pagination by caching a <code>DocumentSnapshot</code> per page boundary (fetched on the first
-load of each page) and using <code>startAfterDocument</code> internally. This is transparent to the domain
-and presentation layers — they only see page numbers.</p>
-<div class="highlight"><pre><span></span><code>// page 0: plain limit
-posts.orderBy(&#39;createdAt&#39;, descending: true).limit(pageSize)
-
-// page N: startAfterDocument(cachedCursor[N-1])
-posts.orderBy(&#39;createdAt&#39;, descending: true).startAfterDocument(cursor).limit(pageSize)
-</code></pre></div>
-<p>Page cursors are cached in memory for the session; navigating back to a previous page reuses the
-cached snapshot. Jumping to an arbitrary page (e.g., deep-linking to page 10) is not supported —
-the user must scroll through preceding pages to build the cursor cache.</p>
-<h3 id="clean-architecture-layers">Clean Architecture Layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Responsibility</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>domain/entities/Post</code></td>
-<td>Pure Dart; no Firebase types</td>
-</tr>
-<tr>
-<td><code>domain/entities/Author</code></td>
-<td>Pure Dart snapshot of author fields</td>
-</tr>
-<tr>
-<td><code>domain/repositories/PostRepository</code></td>
-<td>Abstract interface</td>
-</tr>
-<tr>
-<td><code>domain/usecases/GetPostFeed</code></td>
-<td>Returns <code>Stream&lt;List&lt;Post&gt;&gt;</code> or <code>Future&lt;PostFeedPage&gt;</code></td>
-</tr>
-<tr>
-<td><code>domain/usecases/CreatePost</code></td>
-<td>Validates and delegates to repository</td>
-</tr>
-<tr>
-<td><code>domain/usecases/DeletePost</code></td>
-<td>Checks ownership, delegates to repository</td>
-</tr>
-<tr>
-<td><code>data/datasources/PostFirestoreDataSource</code></td>
-<td>Firestore queries, cursor management</td>
-</tr>
-<tr>
-<td><code>data/models/PostDto</code></td>
-<td>Freezed + <code>fromJson</code>/<code>toJson</code></td>
-</tr>
-<tr>
-<td><code>data/repositories/PostRepositoryImpl</code></td>
-<td>Maps DTOs → entities</td>
-</tr>
-<tr>
-<td><code>presentation/providers/postFeedProvider</code></td>
-<td><code>@riverpod</code>, exposes paginated state</td>
-</tr>
-<tr>
-<td><code>presentation/screens/PostFeedScreen</code></td>
-<td>Infinite scroll list</td>
-</tr>
-<tr>
-<td><code>presentation/screens/PostDetailScreen</code></td>
-<td>Single post view</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/PostCard</code></td>
-<td>Feed list item</td>
-</tr>
-</tbody>
-</table>
+<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
+<ol>
+<li>A student can select one or more tags (e.g., subject codes or department slugs) and receive only posts matching at least one of those tags — filtered server-side, not in memory.</li>
+<li>Filtered results support the same cursor-based pagination as the unfiltered feed (PROP-0003) — no regression in scroll behavior.</li>
+<li>The last-applied filter set persists across app restarts (stored locally) so the student does not re-select tags on every session.</li>
+<li>The filtered feed's first page is available offline via the existing Hive cache layer without requiring a live Firestore connection.</li>
+<li>The solution stays within the Firestore free tier: no reads beyond what pagination already performs, no Cloud Functions, no third-party search services.</li>
+</ol>
 <hr />
-<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-flat-array-field-on-a-users-document">A — Flat array field on a <code>users</code> document<a class="headerlink" href="#a-flat-array-field-on-a-users-document" title="Permanent link">&para;</a></h3>
-<p>Store each user's posts as an array on their profile document. <strong>Rejected</strong>: arrays are bounded at
-~1 MB per document; no way to paginate across authors; cross-user feed requires client-side merging.</p>
-<h3 id="b-algolia-typesense-for-feed-search">B — Algolia / Typesense for feed + search<a class="headerlink" href="#b-algolia-typesense-for-feed-search" title="Permanent link">&para;</a></h3>
-<p>Use a third-party search index as the feed source. <strong>Rejected for v1</strong>: adds a paid dependency and
-operational overhead before we have content volume. Can be layered on top of Firestore later
-for full-text search without changing the feed architecture.</p>
-<h3 id="c-likescount-incremented-by-the-client">C — <code>likesCount</code> incremented by the client<a class="headerlink" href="#c-likescount-incremented-by-the-client" title="Permanent link">&para;</a></h3>
-<p>Each client writes <code>FieldValue.increment(1)</code> directly on the post document. <strong>Rejected</strong>: concurrent
-likes from different users produce correct final counts, but a malicious or buggy client can set
-arbitrary values. Cloud Function enforcement is the right boundary.</p>
+<h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Free-text search within post bodies or titles — this requires a dedicated search index and is a separate proposal.</li>
+<li>Paid or external search services (Algolia, Typesense, Elastic, or equivalents).</li>
+<li>Back-filling <code>tags</code> on posts that predate PROP-0004 — existing untagged posts are intentionally excluded from filtered results.</li>
+<li>AI-based or collaborative-filtering recommendation systems.</li>
+<li>Tag management or curation (creating, renaming, or deleting canonical tags) — that is an admin feature outside this scope.</li>
+<li>Filtering by criteria other than tags (e.g., date range, author, media type).</li>
+</ul>
+<hr />
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
+<h3 id="option-a-firestore-array-contains-any-query-on-tags-field-recommended">Option A — Firestore <code>array-contains-any</code> Query on <code>tags</code> Field (Recommended)<a class="headerlink" href="#option-a-firestore-array-contains-any-query-on-tags-field-recommended" title="Permanent link">&para;</a></h3>
+<p>Firestore supports the <code>array-contains-any</code> operator, which returns documents where the <code>tags</code> array contains at least one value from a provided list (up to 30 values per query). When the user selects a filter set, the repository swaps the unfiltered feed query for a filtered one:</p>
+<div class="highlight"><pre><span></span><code>posts
+  .where(&#39;tags&#39;, arrayContainsAny: selectedTags)
+  .orderBy(&#39;createdAt&#39;, descending: true)
+  .limit(pageSize)
+</code></pre></div>
+<p>A composite Firestore index on <code>(tags array-contains, createdAt desc)</code> is required and can be declared in <code>firestore.indexes.json</code> — it is free to create and free to query within the existing free tier read quota. No new collections, no writes beyond what already occurs.</p>
+<p>The domain layer <code>PostRepository</code> interface gains a single optional parameter:</p>
+<div class="highlight"><pre><span></span><code>getPostFeed({int page, int pageSize, List&lt;String&gt; tagFilter})
+</code></pre></div>
+<p>When <code>tagFilter</code> is empty, the existing unfiltered query runs. When non-empty, the filtered query runs. The presentation layer passes the current filter selection from a Riverpod provider holding the user's preferences. Filter preferences are persisted in Hive under a well-known key so they survive app restarts.</p>
+<p>For offline support, the first page of the filtered feed is cached to Hive the same way the unfiltered feed is cached today. On reconnect, the cache is refreshed.</p>
+<p><strong>Pros:</strong>
+- Zero schema migration — exploits the <code>tags</code> field that already exists on new posts.
+- Native Firestore operator — no extra infrastructure, no new collections, no Cloud Functions.
+- Pagination and cursor logic from PROP-0003 are reused unchanged; only the query predicate changes.
+- Composite index is declared in source control (<code>firestore.indexes.json</code>) and deployed with <code>firebase deploy --only firestore:indexes</code>.
+- Stays entirely within the free tier: one composite index, same read count per page as today.
+- The 30-value limit on <code>array-contains-any</code> is generous for a subject/department tag list.</p>
+<p><strong>Cons:</strong>
+- Firestore does not allow <code>array-contains-any</code> combined with a second <code>array-contains</code> or <code>array-contains-any</code> clause in the same query — so filtering on two independent tag dimensions simultaneously (e.g., department AND subject type) would require a client-side merge of two queries. For v1, single-dimension filtering is sufficient.
+- If a user selects more than 30 tags, the query must be split into batches and the results client-merged. This is unlikely in practice (students follow a small number of subjects) but must be handled gracefully.
+- Unindexed <code>tags</code> values on old posts (pre-PROP-0004) mean those posts are invisible in filtered results. This is acceptable per the Non-goals but must be communicated to users.</p>
+<p><strong>Effort:</strong> S</p>
+<hr />
+<h3 id="option-b-fan-out-writes-to-per-tag-sub-collections">Option B — Fan-out Writes to Per-Tag Sub-Collections<a class="headerlink" href="#option-b-fan-out-writes-to-per-tag-sub-collections" title="Permanent link">&para;</a></h3>
+<p>At post creation time, the write path (PROP-0004) additionally writes a reference document into one or more <code>tags/{tagId}/posts/{postId}</code> sub-collections. The feed for a given tag is then a simple ordered query on that sub-collection:</p>
+<div class="highlight"><pre><span></span><code>tags/{tagId}/posts
+  .orderBy(&#39;createdAt&#39;, descending: true)
+  .limit(pageSize)
+</code></pre></div>
+<p>Multi-tag queries merge the results of multiple sub-collection queries client-side, de-duplicate by <code>postId</code>, and re-sort by <code>createdAt</code>.</p>
+<p><strong>Pros:</strong>
+- Per-tag queries are simple ordered reads with no composite index.
+- Sub-collection isolation means reads for one tag do not touch documents from unrelated tags.
+- Scales to arbitrarily large tag populations without the 30-value operator limit.</p>
+<p><strong>Cons:</strong>
+- Every post write fans out to N sub-collection writes (one per tag). A post with 5 tags costs 6 Firestore writes instead of 1, which is significant at free-tier write limits.
+- Multi-tag "OR" queries require parallel sub-collection reads followed by client-side merge-sort — added latency and complexity that Option A avoids entirely.
+- Pagination across merged results is non-trivial: cursor positions differ per sub-collection, requiring per-collection cursors to be tracked and reconciled.
+- Post deletion or update must fan-out to all sub-collection references — a partial failure leaves stale references that show deleted posts.
+- Requires schema changes to the write path (PROP-0004) that has already shipped; the fan-out logic must be added retroactively.</p>
+<p><strong>Effort:</strong> L</p>
+<hr />
+<h3 id="option-c-composite-index-on-a-flat-primarytag-field">Option C — Composite Index on a Flat <code>primaryTag</code> Field<a class="headerlink" href="#option-c-composite-index-on-a-flat-primarytag-field" title="Permanent link">&para;</a></h3>
+<p>Rather than <code>array-contains-any</code> on the full <code>tags</code> array, require each post to declare exactly one <code>primaryTag</code> (e.g., the first element of <code>tags</code>). A simple <code>==</code> equality filter on <code>primaryTag</code> combined with <code>orderBy('createdAt', desc)</code> uses a standard composite index. Multi-tag "OR" is handled by issuing one query per selected tag in parallel and merging results client-side.</p>
+<p><strong>Pros:</strong>
+- <code>==</code> + <code>orderBy</code> composite indexes are simpler than array-contains indexes.
+- Each per-tag query is independent and unambiguous; no operator limitations.</p>
+<p><strong>Cons:</strong>
+- Requires adding a <code>primaryTag</code> field to the schema — a migration is needed for all existing posts, which is explicitly ruled out by the project constraints.
+- Forces a single canonical tag per post, discarding the multi-tag richness already in the <code>tags</code> array.
+- Parallel queries per selected tag multiply read costs and merge complexity in exactly the same way as Option B.</p>
+<p><strong>Effort:</strong> M (but immediately disqualified by the schema migration constraint)</p>
+<hr />
+<h3 id="rejected-approaches">Rejected Approaches<a class="headerlink" href="#rejected-approaches" title="Permanent link">&para;</a></h3>
+<p><strong>External search services (Algolia, Typesense, Meilisearch):</strong> Ruled out explicitly by the product owner. These services require paid plans beyond trivial data volumes, add a sync pipeline from Firestore, and introduce operational dependencies outside the Firebase-native stack.</p>
+<p><strong>Client-side filtering (download all, filter in memory):</strong> Ruled out explicitly. Downloading the entire <code>posts</code> collection to filter in the client does not scale beyond a few hundred posts, wastes bandwidth, and violates the free-tier read constraint. It also makes offline support impossible without caching the entire corpus.</p>
+<p><strong>Schema migration / backfill:</strong> Ruled out explicitly. Any approach requiring <code>tags</code> to be retroactively written to pre-PROP-0004 posts is out of scope.</p>
+<hr />
+<h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen option:</strong> Option A — Firestore <code>array-contains-any</code> Query on <code>tags</code> Field.</p>
+<p>Option A is the only approach that satisfies all three hard constraints simultaneously: it requires no schema migration (the <code>tags</code> field already exists), it is free-tier compatible (one composite index, same read budget as today), and it supports offline via the Hive cache layer without additional infrastructure. Option B achieves similar query simplicity at the cost of multiplied write operations and a substantially more complex pagination model; that complexity is not justified when <code>array-contains-any</code> already handles the multi-tag OR case natively. Option C is immediately disqualified by the migration constraint. The 30-tag operator limit is not a practical concern for the student use case (typical subject selection is 3–8 tags), and the single-dimension filtering limitation is an acceptable v1 constraint.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>Author denormalization staleness</strong> — if a user changes their display name or avatar, existing
-   posts show the old value. Acceptable for v1? Or do we need a background migration job?</p>
+<p><strong>Tag taxonomy ownership</strong> — Who defines the canonical set of tags students can select? If tags are free-form strings entered by post authors, the filter UI cannot enumerate them reliably; if they are drawn from a curated reference collection (e.g., <code>universities/{uniId}/courses/{courseId}</code>), the UI can present a structured picker. Which model is authoritative? This must be decided before the spec defines the filter UI component and the tag validation in the write path.</p>
 </li>
 <li>
-<p><strong>Feed ordering</strong> — pure reverse-chronological is simple but surfaces old high-quality posts poorly.
-   Should we reserve a <code>score</code> field now (even if unused) to allow ranking later without a schema
-   migration?</p>
+<p><strong>Filter persistence scope</strong> — Should the selected filter set be per-device (Hive, local only) or per-account (synced to a <code>users/{uid}/preferences</code> Firestore document so the same filter applies when the student switches devices)? Per-account sync adds a Firestore read/write on login but provides a consistent experience across devices; per-device is simpler but forces re-selection on each new install.</p>
 </li>
 <li>
-<p><strong>Offline support</strong> — Firestore offline persistence covers recently viewed documents. Should the
-   feed explicitly seed Hive with the first page for fully-offline use, or rely on Firestore's cache?</p>
+<p><strong>Empty-result UX contract</strong> — When a student's selected tags return zero posts (e.g., a newly created course tag with no content yet), what does the feed show? An empty state with a prompt to broaden the filter, or a fallback to the unfiltered feed? This decision affects the repository interface (should it return an empty list or fall back transparently?) and must be resolved before the spec defines the use case behavior.</p>
 </li>
 <li>
-<p><strong>Media upload flow</strong> — <code>mediaUrls</code> are stored as Firebase Storage URLs. Is upload handled inside
-   <code>CreatePost</code> use case, or is it a prerequisite step the presentation layer completes first before
-   calling <code>CreatePost</code>?</p>
+<p><strong>Tag count ceiling</strong> — The <code>array-contains-any</code> operator accepts up to 30 values. If a student can theoretically select more than 30 tags, the repository must split the query into batches and merge results. Should the UI enforce a maximum (e.g., 10 selected tags) to avoid this complexity, or should the data layer handle batching transparently? The spec must define which layer owns this constraint.</p>
 </li>
 </ol>
 <hr />
-<h2 id="acceptance-criteria-for-tech-spec">Acceptance Criteria (for Tech Spec)<a class="headerlink" href="#acceptance-criteria-for-tech-spec" title="Permanent link">&para;</a></h2>
+<h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Feed loads first 20 posts ordered by <code>createdAt</code> descending</li>
-<li>Scrolling to the end of the list fetches the next page without layout jump</li>
-<li>Liking a post increments the displayed count (optimistic update, reconciled from Firestore)</li>
-<li>Deleting a post is only available to the post author</li>
-<li>All screens have passing widget tests</li>
-<li><code>flutter analyze</code> reports no issues</li>
+<li>Selecting one or more tags in the filter UI causes the feed to show only posts whose <code>tags</code> array contains at least one of the selected values, with filtering applied server-side (verified by confirming the Firestore query predicate, not just the rendered list).</li>
+<li>Filtered feed pagination works correctly: scrolling to the end of the list fetches the next page of filtered results without duplicates or gaps, using the same cursor mechanism as the unfiltered feed.</li>
+<li>The selected filter set survives app restart — reopening the app presents the feed already filtered to the previously selected tags without requiring re-selection.</li>
+<li>When no filter is selected (empty tag set), the feed behaves identically to the existing unfiltered feed from PROP-0003 — no regression in behavior or performance.</li>
+<li>The first page of the filtered feed is available in offline mode (Hive cache) when the device has no connectivity, with a visible indicator distinguishing cached from live results.</li>
+</ul>
+<hr />
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li>PROP-0003: Post Feed — <code>tech-proposals/0003-post-feed.md</code> (defines the <code>posts/{postId}</code> schema and pagination model this proposal extends)</li>
+<li>PROP-0004: Post Integration — <code>tech-proposals/0004-post-integration.md</code> (defines the write path that populates <code>tags</code> on new posts)</li>
+<li>Firestore query limitations: <a href="https://firebase.google.com/docs/firestore/query-data/queries#query_limitations">https://firebase.google.com/docs/firestore/query-data/queries#query_limitations</a></li>
 </ul>
 
 
