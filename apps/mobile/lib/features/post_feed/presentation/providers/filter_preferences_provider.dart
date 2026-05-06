@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/entities/post_filter_preferences.dart';
+import 'package:unishare_mobile/features/post_feed/domain/entities/post_filter_preferences.dart';
 
 part 'filter_preferences_provider.g.dart';
 

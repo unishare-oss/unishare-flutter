@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/router/router.dart'
+import 'package:unishare_mobile/core/router/router.dart'
     show academicProfileSessionDismissed;
-import '../../../auth/presentation/providers/auth_state_provider.dart';
-import '../../../auth/presentation/providers/guest_mode_provider.dart';
-import '../../../auth/presentation/widgets/academic_profile_dialog.dart';
-import '../widgets/feed_empty_state_widget.dart';
-import '../widgets/filter_picker_widget.dart';
-import '../widgets/post_card_widget.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/widgets/academic_profile_dialog.dart';
+import 'package:unishare_mobile/features/post_feed/presentation/widgets/feed_empty_state_widget.dart';
+import 'package:unishare_mobile/features/post_feed/presentation/widgets/filter_picker_widget.dart';
+import 'package:unishare_mobile/features/post_feed/presentation/widgets/post_card_widget.dart';
 
 // ---------------------------------------------------------------------------
 // Color constants

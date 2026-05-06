@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/entities/tag_entity.dart';
+import 'package:unishare_mobile/features/post_feed/domain/entities/tag_entity.dart';
 
 part 'tag_list_provider.g.dart';
 

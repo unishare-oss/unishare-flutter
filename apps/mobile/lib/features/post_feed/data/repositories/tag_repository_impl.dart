@@ -1,5 +1,5 @@
-import '../../domain/entities/tag_entity.dart';
-import '../../domain/repositories/tag_repository.dart';
+import 'package:unishare_mobile/features/post_feed/domain/entities/tag_entity.dart';
+import 'package:unishare_mobile/features/post_feed/domain/repositories/tag_repository.dart';
 
 // TODO: inject TagFirestoreDatasource
 class TagRepositoryImpl implements TagRepository {
