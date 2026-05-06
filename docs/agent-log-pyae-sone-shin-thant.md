@@ -419,4 +419,15 @@ Summary:  2 files changed, 10 insertions(+), 8 deletions(-)
   [15:12] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
   [15:12] Edit: apps/mobile/lib/features/post/presentation/widgets/type_step.dart
   [15:13] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+<<<<<<< feature/feed
   [21:37] Edit: apps/mobile/lib/core/router/router.dart
+=======
+  [15:37] Edit: apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+  [15:37] Edit: apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+  [15:37] Edit: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+Files:
+  ~ apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  ~ apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+Summary:  2 files changed, 3 insertions(+), 3 deletions(-)
+
+>>>>>>> main

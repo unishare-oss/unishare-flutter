@@ -65,7 +65,7 @@ void main() {
       await tester.pump();
       expect(find.text('What are you sharing?'), findsOneWidget);
       expect(find.text('Lecture Note'), findsOneWidget);
-      expect(find.text('Assignment'), findsOneWidget);
+      expect(find.text('Exercise'), findsOneWidget);
       expect(find.text('Past Exam'), findsOneWidget);
     });
 
