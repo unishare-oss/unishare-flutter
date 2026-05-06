@@ -380,3 +380,5 @@ Review: PENDING
   [13:25] Edit: apps/mobile/analysis_options.yaml
   [13:29] Edit: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
   [13:29] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [13:32] Edit: apps/mobile/pubspec.yaml
+  [13:33] Edit: apps/mobile/pubspec.yaml

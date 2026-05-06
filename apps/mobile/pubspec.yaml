@@ -54,6 +54,8 @@ dependencies:
   flutter_svg: ^2.0.10+1
   connectivity_plus: ^7.1.1
   file_picker: ^11.0.2
+  flutter_web_plugins:
+    sdk: flutter
 
 
 dev_dependencies:
