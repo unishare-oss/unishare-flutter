@@ -49,7 +49,8 @@ jobs:
       - name: Build MkDocs site
         run: |
           BRANCH=${{ github.ref_name }}
-          mkdocs build --site-url "https://unishare-oss.github.io/unishare-flutter/previews/${BRANCH}/"
+          sed -i "s|^site_url:.*|site_url: https://unishare-oss.github.io/unishare-flutter/previews/${BRANCH}/|" mkdocs.yml
+          mkdocs build
 
       - name: Deploy preview to gh-pages
         uses: peaceiris/actions-gh-pages@v4
