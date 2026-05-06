@@ -60,24 +60,24 @@ class PostCardWidget extends StatelessWidget {
     return InkWell(
       onTap: () {},
       child: Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTopRow(),
-          const SizedBox(height: 6),
-          _buildTitle(),
-          if (post.topicTags.isNotEmpty) ...[
+        color: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildTopRow(),
             const SizedBox(height: 6),
-            _buildTagsWrap(),
+            _buildTitle(),
+            if (post.topicTags.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              _buildTagsWrap(),
+            ],
+            const SizedBox(height: 8),
+            _buildAuthorRow(),
+            const SizedBox(height: 6),
+            _buildMetaRow(),
           ],
-          const SizedBox(height: 8),
-          _buildAuthorRow(),
-          const SizedBox(height: 6),
-          _buildMetaRow(),
-        ],
-      ),
+        ),
       ),
     );
   }
@@ -152,8 +152,9 @@ class PostCardWidget extends StatelessWidget {
 
   // Row 5: comment count + time ago
   Widget _buildMetaRow() {
-    final commentLabel =
-        post.commentCount == 1 ? '1 comment' : '${post.commentCount} comments';
+    final commentLabel = post.commentCount == 1
+        ? '1 comment'
+        : '${post.commentCount} comments';
     return Row(
       children: [
         Icon(Icons.chat_bubble_outline, size: 12, color: _kTextMuted),

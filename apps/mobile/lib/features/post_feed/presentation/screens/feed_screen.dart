@@ -175,10 +175,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
       case 1:
         posts = _mockPosts.where((p) => p.type == MockPostType.note).toList();
       case 2:
-        posts =
-            _mockPosts
-                .where((p) => p.type == MockPostType.assignment)
-                .toList();
+        posts = _mockPosts
+            .where((p) => p.type == MockPostType.assignment)
+            .toList();
       default:
         posts = _mockPosts;
     }
@@ -261,10 +260,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
             ),
             const SizedBox(width: 10),
             Expanded(child: _buildSearchField()),
-            if (!_isGuest) ...[
-              const SizedBox(width: 8),
-              _buildCreateButton(),
-            ],
+            if (!_isGuest) ...[const SizedBox(width: 8), _buildCreateButton()],
           ],
         ),
       ),
