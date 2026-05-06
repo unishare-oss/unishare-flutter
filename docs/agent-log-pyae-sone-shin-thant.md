@@ -579,3 +579,16 @@ Files:
   ~ apps/mobile/lib/features/post/presentation/widgets/like_button.dart
 Summary:  17 files changed, 35 insertions(+), 35 deletions(-)
 
+  [23:02] Edit: apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  [23:02] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [23:02] Write: apps/mobile/lib/features/feed/presentation/providers/feed_provider.dart
+  [23:03] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [23:03] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [23:03] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [23:10] Edit: apps/mobile/test/widget/feed/feed_screen_test.dart
+  [23:15] Edit: apps/mobile/test/widget/feed/feed_screen_test.dart
+  [23:15] Edit: apps/mobile/test/widget/feed/feed_screen_test.dart
+  [23:24] Write: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [23:24] Edit: apps/mobile/test/widget/feed/feed_screen_test.dart
+  [23:25] Edit: apps/mobile/test/widget/feed/feed_screen_test.dart
+  [23:29] Write: apps/mobile/test/widget/feed/feed_screen_test.dart
