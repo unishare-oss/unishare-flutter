@@ -1,18 +1,24 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../providers/create_post_provider.dart';
-import '../widgets/draft_queue_indicator.dart';
-import '../widgets/media_attachment_picker.dart';
+import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/course_step.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/details_step.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/draft_queue_indicator.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/files_step.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/type_step.dart';
 
-const _kBg = Colors.white;
-const _kBorder = Color(0xFFE2DAD0);
+const _kBg = Color(0xFFF7F3EE);
+const _kWhite = Colors.white;
 const _kPrimary = Color(0xFFD97706);
+const _kBorder = Color(0xFFE2DAD0);
 const _kFg = Color(0xFF1C1917);
 const _kMuted = Color(0xFF8A837E);
-const _kFill = Color(0xFFFEF3C7);
 const _kDestructive = Color(0xFFDC2626);
 
 class CreatePostScreen extends ConsumerStatefulWidget {
@@ -23,19 +29,129 @@ class CreatePostScreen extends ConsumerStatefulWidget {
 }
 
 class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
+  final _pageCtrl = PageController();
+  int _step = 0; // 0-indexed
+
+  // Step 1
+  PostType? _postType;
+
+  // Step 2
+  int? _year;
+  String? _courseId;
+
+  // Step 3
   final _titleCtrl = TextEditingController();
-  final _bodyCtrl = TextEditingController();
-  final _tagCtrl = TextEditingController();
+  final _descCtrl = TextEditingController();
+  final _moduleCtrl = TextEditingController();
+  final _urlCtrl = TextEditingController();
+  PostingIdentity _postingIdentity = PostingIdentity.named;
+  int _semester = 1;
   final _tags = <String>[];
-  final _mediaPaths = <String>[];
-  bool _titleEmpty = true;
+
+  // Step 4
+  final _pickedFiles = <PlatformFile>[];
+  CodeSnippet? _codeSnippet;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleCtrl.addListener(_rebuild);
+    _descCtrl.addListener(_rebuild);
+    _moduleCtrl.addListener(_rebuild);
+  }
 
   @override
   void dispose() {
+    _pageCtrl.dispose();
+    _titleCtrl.removeListener(_rebuild);
+    _descCtrl.removeListener(_rebuild);
+    _moduleCtrl.removeListener(_rebuild);
     _titleCtrl.dispose();
-    _bodyCtrl.dispose();
-    _tagCtrl.dispose();
+    _descCtrl.dispose();
+    _moduleCtrl.dispose();
+    _urlCtrl.dispose();
     super.dispose();
+  }
+
+  void _rebuild() => setState(() {});
+
+  bool get _nextEnabled {
+    return switch (_step) {
+      0 => _postType != null,
+      1 => _year != null && _courseId != null,
+      2 =>
+        _titleCtrl.text.trim().isNotEmpty &&
+            _descCtrl.text.trim().isNotEmpty &&
+            _moduleCtrl.text.trim().isNotEmpty,
+      3 => true, // Submit always enabled on step 4
+      _ => false,
+    };
+  }
+
+  void _goNext() {
+    if (_step < 3) {
+      setState(() => _step++);
+      _pageCtrl.animateToPage(
+        _step,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      _submit();
+    }
+  }
+
+  void _goBack() {
+    if (_step > 0) {
+      setState(() => _step--);
+      _pageCtrl.animateToPage(
+        _step,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // Use Navigator.maybePop so the wizard does not crash in contexts
+      // without a GoRouter (e.g. widget tests, deep-link entry points).
+      // If nothing pops we simply stay — the user can close via OS gesture.
+      Navigator.maybePop(context);
+    }
+  }
+
+  Future<void> _submit() async {
+    // On mobile f.path is a filesystem path; on web it's null so use f.name
+    // as the key so uploadedUrls can still track per-file state.
+    final localMediaPaths = _pickedFiles.map((f) => f.path ?? f.name).toList();
+
+    // Bytes are only populated on web (withData: kIsWeb in FileUploadWidget).
+    final fileDataOverride = {
+      for (final f in _pickedFiles)
+        if (f.bytes != null) f.name: f.bytes!,
+    };
+
+    final draft = PostDraft(
+      id: CreatePostNotifier.generateId(),
+      postType: _postType ?? PostType.lectureNote,
+      year: _year ?? 1,
+      courseId: _courseId ?? '',
+      title: _titleCtrl.text.trim(),
+      description: _descCtrl.text.trim(),
+      postingIdentity: _postingIdentity,
+      semester: _semester,
+      moduleNumber: _moduleCtrl.text.trim(),
+      externalUrl: _urlCtrl.text.trim().isEmpty ? null : _urlCtrl.text.trim(),
+      tags: List.from(_tags),
+      localMediaPaths: localMediaPaths,
+      uploadedUrls: {},
+      codeSnippet: _codeSnippet,
+      createdAt: DateTime.now(),
+    );
+
+    await ref
+        .read(createPostProvider.notifier)
+        .submit(
+          draft: draft,
+          fileDataOverride: fileDataOverride.isEmpty ? null : fileDataOverride,
+        );
   }
 
   @override
@@ -49,6 +165,14 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         ).showSnackBar(const SnackBar(content: Text('Post published!')));
         context.pop();
         ref.read(createPostProvider.notifier).reset();
+      } else if (next is CreatePostQueued) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Saved offline — will publish when you reconnect.'),
+          ),
+        );
+        context.pop();
+        ref.read(createPostProvider.notifier).reset();
       }
     });
 
@@ -56,24 +180,21 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         postState is CreatePostUploading || postState is CreatePostPublishing;
 
     return Scaffold(
-      backgroundColor: _kBg,
+      backgroundColor: _kWhite,
       appBar: AppBar(
-        backgroundColor: _kBg,
+        backgroundColor: _kWhite,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: _kFg),
-          onPressed: () => context.pop(),
-        ),
+        automaticallyImplyLeading: false,
+        titleSpacing: 20,
         title: Text(
-          'Create post',
+          'New Post',
           style: GoogleFonts.spaceGrotesk(
             fontSize: 18,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             color: _kFg,
           ),
         ),
-        centerTitle: false,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(height: 1, color: _kBorder),
@@ -81,139 +202,137 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       ),
       body: Column(
         children: [
+          // Step indicator + scrollable step content
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (postState is CreatePostUploading) ...[
-                    LinearProgressIndicator(
-                      value: postState.progress,
-                      backgroundColor: _kBorder,
-                      valueColor: const AlwaysStoppedAnimation(_kPrimary),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Uploading ${(postState.progress * 100).toInt()}%…',
-                      style: GoogleFonts.firaCode(fontSize: 12, color: _kMuted),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                  if (postState is CreatePostPublishing) ...[
-                    const LinearProgressIndicator(
-                      backgroundColor: _kBorder,
-                      valueColor: AlwaysStoppedAnimation(_kPrimary),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Publishing…',
-                      style: GoogleFonts.firaCode(fontSize: 12, color: _kMuted),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                  if (postState is CreatePostQueued) ...[
-                    _Banner(
-                      message:
-                          'Saved offline — will publish when you reconnect.',
-                      bg: const Color(0xFFF7F3EE),
-                      fg: _kMuted,
-                      border: _kBorder,
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                  if (postState is CreatePostError) ...[
-                    _Banner(
-                      message: postState.message == 'title_required'
-                          ? 'Title is required.'
-                          : postState.message,
-                      bg: const Color(0xFFFEF2F2),
-                      fg: _kDestructive,
-                      border: _kDestructive,
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                  _Label('Title'),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _titleCtrl,
-                    enabled: !isSubmitting,
-                    onChanged: (v) =>
-                        setState(() => _titleEmpty = v.trim().isEmpty),
-                    textInputAction: TextInputAction.next,
-                    style: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kFg),
-                    decoration: _dec('Enter a title…'),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                    child: _StepIndicator(currentStep: _step),
                   ),
-                  const SizedBox(height: 16),
-                  _Label('Body'),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _bodyCtrl,
-                    enabled: !isSubmitting,
-                    maxLines: 6,
-                    style: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kFg),
-                    decoration: _dec('Write something…'),
-                  ),
-                  const SizedBox(height: 16),
-                  _Label('Tags'),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _tagCtrl,
-                          enabled: !isSubmitting,
-                          textInputAction: TextInputAction.done,
-                          style: GoogleFonts.firaCode(
-                            fontSize: 13,
-                            color: _kFg,
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 28, 20, 20),
+                    child: SizedBox(
+                      // Fixed height PageView so steps can be any length.
+                      // The CustomScrollView handles overflow with scroll.
+                      height: _stepHeight,
+                      child: PageView(
+                        controller: _pageCtrl,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          TypeStep(
+                            selected: _postType,
+                            onSelect: (t) => setState(() => _postType = t),
                           ),
-                          decoration: _dec('Add a tag…'),
-                          onFieldSubmitted: _addTag,
-                        ),
+                          CourseStep(
+                            selectedYear: _year,
+                            selectedCourseId: _courseId,
+                            onYearChanged: (y) => setState(() => _year = y),
+                            onCourseChanged: (c) =>
+                                setState(() => _courseId = c),
+                          ),
+                          DetailsStep(
+                            titleController: _titleCtrl,
+                            descriptionController: _descCtrl,
+                            moduleNumberController: _moduleCtrl,
+                            externalUrlController: _urlCtrl,
+                            postingIdentity: _postingIdentity,
+                            semester: _semester,
+                            tags: _tags,
+                            onIdentityChanged: (v) =>
+                                setState(() => _postingIdentity = v),
+                            onSemesterChanged: (v) =>
+                                setState(() => _semester = v),
+                            onTagsChanged: (v) => setState(() {
+                              _tags
+                                ..clear()
+                                ..addAll(v);
+                            }),
+                          ),
+                          FilesStep(
+                            files: _pickedFiles,
+                            codeSnippet: _codeSnippet,
+                            onFilesChanged: (files) => setState(() {
+                              _pickedFiles
+                                ..clear()
+                                ..addAll(files);
+                            }),
+                            onSnippetChanged: (s) =>
+                                setState(() => _codeSnippet = s),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      IconButton(
-                        onPressed: isSubmitting
-                            ? null
-                            : () => _addTag(_tagCtrl.text),
-                        icon: const Icon(Icons.add, color: _kPrimary),
-                      ),
-                    ],
-                  ),
-                  if (_tags.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: _tags
-                          .map(
-                            (t) => _TagChip(
-                              label: t,
-                              onDelete: isSubmitting
-                                  ? null
-                                  : () => setState(() => _tags.remove(t)),
-                            ),
-                          )
-                          .toList(),
                     ),
-                  ],
-                  const SizedBox(height: 16),
-                  _Label('Attachments'),
-                  const SizedBox(height: 6),
-                  MediaAttachmentPicker(
-                    paths: _mediaPaths,
-                    enabled: !isSubmitting,
-                    onChanged: (paths) => setState(() {
-                      _mediaPaths
-                        ..clear()
-                        ..addAll(paths);
-                    }),
                   ),
-                ],
-              ),
+                ),
+                // Error / status banners
+                if (postState is CreatePostError)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: _Banner(
+                        message: _errorMessage(postState.message),
+                        bg: const Color(0xFFFEF2F2),
+                        fg: _kDestructive,
+                        border: _kDestructive,
+                      ),
+                    ),
+                  ),
+                if (postState is CreatePostUploading)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          LinearProgressIndicator(
+                            value: postState.progress,
+                            backgroundColor: _kBorder,
+                            valueColor: const AlwaysStoppedAnimation(_kPrimary),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Uploading ${(postState.progress * 100).toInt()}%…',
+                            style: GoogleFonts.firaCode(
+                              fontSize: 12,
+                              color: _kMuted,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (postState is CreatePostPublishing)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const LinearProgressIndicator(
+                            backgroundColor: _kBorder,
+                            valueColor: AlwaysStoppedAnimation(_kPrimary),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Publishing…',
+                            style: GoogleFonts.firaCode(
+                              fontSize: 12,
+                              color: _kMuted,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
+
+          // StepNav bar
           Container(
             decoration: const BoxDecoration(
               border: Border(top: BorderSide(color: _kBorder)),
@@ -223,21 +342,46 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               children: [
                 const DraftQueueIndicator(),
                 const Spacer(),
+                // Back button
+                TextButton(
+                  onPressed: isSubmitting ? null : _goBack,
+                  style: TextButton.styleFrom(
+                    foregroundColor: _kMuted,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  child: Text(
+                    'Back',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                // Next / Submit button
                 SizedBox(
-                  height: 40,
+                  height: 38,
                   child: FilledButton(
-                    onPressed: (!_titleEmpty && !isSubmitting) ? _submit : null,
+                    onPressed: (_nextEnabled && !isSubmitting) ? _goNext : null,
                     style: FilledButton.styleFrom(
                       backgroundColor: _kPrimary,
                       foregroundColor: Colors.white,
                       disabledBackgroundColor: _kPrimary.withValues(alpha: 0.4),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
+                        borderRadius: BorderRadius.circular(4),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                     ),
                     child: Text(
-                      isSubmitting ? 'Publishing…' : 'Publish',
+                      isSubmitting
+                          ? 'Publishing…'
+                          : (_step == 3 ? 'Submit' : 'Next'),
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -253,60 +397,113 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  void _addTag(String value) {
-    final tag = value.trim().replaceAll('#', '');
-    if (tag.isEmpty || _tags.contains(tag)) return;
-    setState(() => _tags.add(tag));
-    _tagCtrl.clear();
+  String _errorMessage(String code) {
+    return switch (code) {
+      'title_required' => 'Title is required.',
+      'description_required' => 'Description is required.',
+      'module_required' => 'Module number is required.',
+      'file_too_large' => 'One or more files exceed 50 MB.',
+      _ => code,
+    };
   }
 
-  Future<void> _submit() async {
-    await ref
-        .read(createPostProvider.notifier)
-        .submit(
-          title: _titleCtrl.text.trim(),
-          body: _bodyCtrl.text.trim(),
-          tags: List.from(_tags),
-          localMediaPaths: List.from(_mediaPaths),
-        );
-  }
-
-  InputDecoration _dec(String hint) => InputDecoration(
-    hintText: hint,
-    hintStyle: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kMuted),
-    filled: true,
-    fillColor: _kFill,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-    isDense: true,
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(6),
-      borderSide: const BorderSide(color: _kBorder),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(6),
-      borderSide: const BorderSide(color: _kBorder),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(6),
-      borderSide: const BorderSide(color: _kPrimary, width: 1.5),
-    ),
-  );
+  double get _stepHeight => MediaQuery.sizeOf(context).height * 1.1;
 }
 
-class _Label extends StatelessWidget {
-  const _Label(this.text);
-  final String text;
+// ---------------------------------------------------------------------------
+// StepIndicator
+// ---------------------------------------------------------------------------
+
+class _StepIndicator extends StatelessWidget {
+  const _StepIndicator({required this.currentStep});
+
+  final int currentStep; // 0-indexed
 
   @override
-  Widget build(BuildContext context) => Text(
-    text,
-    style: GoogleFonts.spaceGrotesk(
-      fontSize: 13,
-      fontWeight: FontWeight.w500,
-      color: const Color(0xFF1C1917),
-    ),
-  );
+  Widget build(BuildContext context) {
+    return Row(
+      children: List.generate(4, (i) {
+        final isCompleted = i < currentStep;
+        final isActive = i == currentStep;
+        final connectLine = i < 3;
+
+        return Expanded(
+          child: Row(
+            children: [
+              _StepDot(
+                number: i + 1,
+                isCompleted: isCompleted,
+                isActive: isActive,
+              ),
+              if (connectLine)
+                Expanded(
+                  child: Container(
+                    height: 1,
+                    color: isCompleted ? _kPrimary : _kBorder,
+                  ),
+                ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
 }
+
+class _StepDot extends StatelessWidget {
+  const _StepDot({
+    required this.number,
+    required this.isCompleted,
+    required this.isActive,
+  });
+
+  final int number;
+  final bool isCompleted;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color bg;
+    final Widget child;
+
+    if (isCompleted) {
+      bg = _kPrimary;
+      child = const Icon(Icons.check, size: 13, color: Colors.white);
+    } else if (isActive) {
+      bg = _kPrimary;
+      child = Text(
+        '$number',
+        style: GoogleFonts.firaCode(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+      );
+    } else {
+      bg = _kBg;
+      child = Text(
+        '$number',
+        style: GoogleFonts.firaCode(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          color: _kMuted,
+        ),
+      );
+    }
+
+    return Container(
+      width: 25,
+      height: 25,
+      decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+      alignment: Alignment.center,
+      child: child,
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Banner
+// ---------------------------------------------------------------------------
 
 class _Banner extends StatelessWidget {
   const _Banner({
@@ -315,12 +512,14 @@ class _Banner extends StatelessWidget {
     required this.fg,
     required this.border,
   });
+
   final String message;
   final Color bg, fg, border;
 
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.all(12),
+    margin: const EdgeInsets.only(bottom: 12),
     decoration: BoxDecoration(
       color: bg,
       borderRadius: BorderRadius.circular(6),
@@ -329,42 +528,6 @@ class _Banner extends StatelessWidget {
     child: Text(
       message,
       style: GoogleFonts.spaceGrotesk(fontSize: 13, color: fg),
-    ),
-  );
-}
-
-class _TagChip extends StatelessWidget {
-  const _TagChip({required this.label, this.onDelete});
-  final String label;
-  final VoidCallback? onDelete;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-    decoration: BoxDecoration(
-      color: const Color(0xFFF7F3EE),
-      border: Border.all(color: const Color(0xFFE2DAD0)),
-      borderRadius: BorderRadius.circular(4),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          '#$label',
-          style: GoogleFonts.firaCode(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: const Color(0xFF8A837E),
-          ),
-        ),
-        if (onDelete != null) ...[
-          const SizedBox(width: 4),
-          GestureDetector(
-            onTap: onDelete,
-            child: const Icon(Icons.close, size: 14, color: Color(0xFF8A837E)),
-          ),
-        ],
-      ],
     ),
   );
 }

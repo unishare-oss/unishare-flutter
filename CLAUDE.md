@@ -183,6 +183,7 @@ To regenerate: `dart run build_runner build`
 
 ## Conventions
 
+- Always use package imports (`package:unishare_mobile/...`) — never relative imports (`../..`). Enforced by `always_use_package_imports` lint; run `dart fix --apply` to fix violations.
 - Domain layer: zero Flutter or Firebase imports — pure Dart only
 - No unbounded `ListView` — always `ListView.builder` or `SliverList`
 - All remote images through `CachedNetworkImage`

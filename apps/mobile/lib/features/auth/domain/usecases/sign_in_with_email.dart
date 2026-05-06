@@ -1,5 +1,5 @@
-import '../entities/app_user.dart';
-import '../repositories/auth_repository.dart';
+import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
+import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
 
 class SignInWithEmail {
   const SignInWithEmail(this._repository);

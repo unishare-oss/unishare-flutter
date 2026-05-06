@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../domain/entities/app_user.dart';
+import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 
 part 'app_user_model.freezed.dart';
 part 'app_user_model.g.dart';
