@@ -7,6 +7,7 @@ import 'package:unishare_mobile/core/router/router.dart'
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/academic_profile_dialog.dart';
+import 'package:unishare_mobile/features/feed/presentation/providers/active_tag_filters_provider.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/feed_empty_state_widget.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/filter_picker_widget.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/post_card_widget.dart';
@@ -135,7 +136,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     with SingleTickerProviderStateMixin, ScrollToTopTarget {
   late final TabController _tabController;
   final ScrollController _scrollController = ScrollController();
-  List<String> _activeTagFilters = const [];
 
   @override
   ScrollController get scrollController => _scrollController;
@@ -175,30 +175,32 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     return ref.watch(guestModeProvider);
   }
 
-  List<MockPost> get _visiblePosts {
+  List<MockPost> _visiblePosts(List<String> activeTagFilters) {
     final posts = switch (_tabController.index) {
       1 => _mockPosts.where((p) => p.type == MockPostType.note).toList(),
       2 => _mockPosts.where((p) => p.type == MockPostType.assignment).toList(),
       _ => _mockPosts,
     };
 
-    if (_activeTagFilters.isEmpty) return posts;
+    if (activeTagFilters.isEmpty) return posts;
     return posts
-        .where((p) => p.topicTags.any((t) => _activeTagFilters.contains(t)))
+        .where((p) => p.topicTags.any((t) => activeTagFilters.contains(t)))
         .toList();
   }
 
-  void _openFilterPicker() {
+  void _openFilterPicker(List<String> activeTagFilters) {
     FilterPickerWidget.show(
       context,
       availableTags: _kAvailableTags,
-      selectedTags: _activeTagFilters,
-      onConfirm: (selected) => setState(() => _activeTagFilters = selected),
+      selectedTags: activeTagFilters,
+      onConfirm: (selected) =>
+          ref.read(activeTagFiltersProvider.notifier).set(selected),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final activeTagFilters = ref.watch(activeTagFiltersProvider);
     return Scaffold(
       backgroundColor: const Color(0xFFF7F3EE),
       body: NestedScrollView(
@@ -209,19 +211,20 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
             pinned: true,
             delegate: _TabRowDelegate(
               tabController: _tabController,
-              activeFilterCount: _activeTagFilters.length,
+              activeFilterCount: activeTagFilters.length,
               onTabChanged: () => setState(() {}),
-              onFiltersPressed: _openFilterPicker,
+              onFiltersPressed: () => _openFilterPicker(activeTagFilters),
             ),
           ),
         ],
         body: AnimatedBuilder(
           animation: _tabController,
           builder: (context, _) {
-            final posts = _visiblePosts;
+            final posts = _visiblePosts(activeTagFilters);
             if (posts.isEmpty) {
               return FeedEmptyStateWidget(
-                onClear: () => setState(() => _activeTagFilters = const []),
+                onClear: () =>
+                    ref.read(activeTagFiltersProvider.notifier).clear(),
               );
             }
             return ListView.separated(
