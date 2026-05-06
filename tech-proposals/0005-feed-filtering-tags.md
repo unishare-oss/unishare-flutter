@@ -5,11 +5,11 @@ description: "Proposal for server-side tag filtering on the post feed using Fire
 
 # PROP-0005: Feed Filtering by Tags
 
-**Status:** DRAFT  
+**Status:** APPROVED  
 **Author:** Sudakarn  
 **Date:** 2026-05-05  
-**Spec:** (pending approval)  
-**Approved by:** (fill in when accepted)
+**Spec:** [SPEC-0005](../tech-specs/0005-feed-filtering-tags.md)  
+**Approved by:** Sudakarn
 
 ---
 
