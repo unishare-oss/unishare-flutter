@@ -5,4 +5,4 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 FIREBASE_PROJECT_ID = "unishare-flutter"
-R2_PUBLIC_URL = "https://pub-PLACEHOLDER.r2.dev"
+R2_PUBLIC_URL = "https://cdn.psstee.dev"
