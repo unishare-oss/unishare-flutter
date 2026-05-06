@@ -194,7 +194,9 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
           Expanded(
             child: ElevatedButton(
               onPressed: () {
-                widget.onConfirm(_selected.toList());
+                widget.onConfirm(
+                  widget.availableTags.where(_selected.contains).toList(),
+                );
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
