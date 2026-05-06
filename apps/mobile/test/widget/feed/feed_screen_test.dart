@@ -91,12 +91,51 @@ Post _post({
 );
 
 final _mockFeed = [
-  _post(id: '1', type: PostType.lectureNote, courseId: 'CSC233', title: 'LR Parsing', authorName: 'Test User'),
-  _post(id: '2', type: PostType.lectureNote, courseId: 'CSC220', title: 'TCP Congestion', authorName: 'Test User', tags: ['networking']),
-  _post(id: '3', type: PostType.lectureNote, courseId: 'CSC220', title: 'Gemini Notes', authorName: 'Test User', tags: ['networking']),
-  _post(id: '4', type: PostType.lectureNote, courseId: 'CSC217', title: 'Chapter 7', authorName: 'Test User', tags: ['concurrency', 'os']),
-  _post(id: '5', type: PostType.exercise, courseId: 'CSC233', title: 'Assignment 9', authorName: 'Test User'),
-  _post(id: '6', type: PostType.exercise, courseId: 'GEN231', title: 'M2 Final', authorName: 'Test User'),
+  _post(
+    id: '1',
+    type: PostType.lectureNote,
+    courseId: 'CSC233',
+    title: 'LR Parsing',
+    authorName: 'Test User',
+  ),
+  _post(
+    id: '2',
+    type: PostType.lectureNote,
+    courseId: 'CSC220',
+    title: 'TCP Congestion',
+    authorName: 'Test User',
+    tags: ['networking'],
+  ),
+  _post(
+    id: '3',
+    type: PostType.lectureNote,
+    courseId: 'CSC220',
+    title: 'Gemini Notes',
+    authorName: 'Test User',
+    tags: ['networking'],
+  ),
+  _post(
+    id: '4',
+    type: PostType.lectureNote,
+    courseId: 'CSC217',
+    title: 'Chapter 7',
+    authorName: 'Test User',
+    tags: ['concurrency', 'os'],
+  ),
+  _post(
+    id: '5',
+    type: PostType.exercise,
+    courseId: 'CSC233',
+    title: 'Assignment 9',
+    authorName: 'Test User',
+  ),
+  _post(
+    id: '6',
+    type: PostType.exercise,
+    courseId: 'GEN231',
+    title: 'M2 Final',
+    authorName: 'Test User',
+  ),
 ];
 
 // ---------------------------------------------------------------------------
@@ -288,15 +327,25 @@ void main() {
   });
 
   group('PostCard', () {
-    Widget _card(Post post) => MaterialApp(
+    Widget card(Post post) => MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
-      home: Scaffold(body: SingleChildScrollView(child: PostCard(post: post))),
+      home: Scaffold(
+        body: SingleChildScrollView(child: PostCard(post: post)),
+      ),
     );
 
     testWidgets('note type shows NOTE badge', (tester) async {
-      await tester.pumpWidget(_card(
-        _post(id: 'a', type: PostType.lectureNote, courseId: 'CSC101', title: 'Test Note', authorName: 'Alice'),
-      ));
+      await tester.pumpWidget(
+        card(
+          _post(
+            id: 'a',
+            type: PostType.lectureNote,
+            courseId: 'CSC101',
+            title: 'Test Note',
+            authorName: 'Alice',
+          ),
+        ),
+      );
       await tester.pump();
 
       expect(find.text('NOTE'), findsOneWidget);
@@ -305,9 +354,17 @@ void main() {
     });
 
     testWidgets('exercise type shows EXERCISE badge', (tester) async {
-      await tester.pumpWidget(_card(
-        _post(id: 'b', type: PostType.exercise, courseId: 'MTH200', title: 'HW1', authorName: 'Bob'),
-      ));
+      await tester.pumpWidget(
+        card(
+          _post(
+            id: 'b',
+            type: PostType.exercise,
+            courseId: 'MTH200',
+            title: 'HW1',
+            authorName: 'Bob',
+          ),
+        ),
+      );
       await tester.pump();
 
       expect(find.text('EXERCISE'), findsOneWidget);
@@ -315,9 +372,18 @@ void main() {
     });
 
     testWidgets('renders tag chips when tags are present', (tester) async {
-      await tester.pumpWidget(_card(
-        _post(id: 'c', type: PostType.lectureNote, courseId: 'CSC217', title: 'Ch7', authorName: 'Carol', tags: ['concurrency', 'os']),
-      ));
+      await tester.pumpWidget(
+        card(
+          _post(
+            id: 'c',
+            type: PostType.lectureNote,
+            courseId: 'CSC217',
+            title: 'Ch7',
+            authorName: 'Carol',
+            tags: ['concurrency', 'os'],
+          ),
+        ),
+      );
       await tester.pump();
 
       expect(find.text('concurrency'), findsOneWidget);
@@ -325,18 +391,34 @@ void main() {
     });
 
     testWidgets('renders no Wrap when post has no tags', (tester) async {
-      await tester.pumpWidget(_card(
-        _post(id: 'd', type: PostType.lectureNote, courseId: 'CSC101', title: 'No Tags', authorName: 'Dave'),
-      ));
+      await tester.pumpWidget(
+        card(
+          _post(
+            id: 'd',
+            type: PostType.lectureNote,
+            courseId: 'CSC101',
+            title: 'No Tags',
+            authorName: 'Dave',
+          ),
+        ),
+      );
       await tester.pump();
 
       expect(find.byType(Wrap), findsNothing);
     });
 
     testWidgets('renders author name and like count', (tester) async {
-      await tester.pumpWidget(_card(
-        _post(id: 'e', type: PostType.lectureNote, courseId: 'CSC101', title: 'T', authorName: 'Eve'),
-      ));
+      await tester.pumpWidget(
+        card(
+          _post(
+            id: 'e',
+            type: PostType.lectureNote,
+            courseId: 'CSC101',
+            title: 'T',
+            authorName: 'Eve',
+          ),
+        ),
+      );
       await tester.pump();
 
       expect(find.text('Eve'), findsOneWidget);

@@ -26,7 +26,6 @@ const _kMuted = Color(0xFFF7F3EE);
 const _kTextMuted = Color(0xFF8A837E);
 const _kForeground = Color(0xFF1C1917);
 
-
 // ---------------------------------------------------------------------------
 // Tab labels
 // ---------------------------------------------------------------------------
@@ -101,10 +100,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   }
 
   void _openFilterPicker(List<Post> allPosts, List<String> activeTagFilters) {
-    final availableTags = allPosts
-        .expand((p) => p.tags)
-        .toSet()
-        .toList()
+    final availableTags = allPosts.expand((p) => p.tags).toSet().toList()
       ..sort();
     FilterPickerWidget.show(
       context,
@@ -131,16 +127,13 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               tabController: _tabController,
               activeFilterCount: activeTagFilters.length,
               onTabChanged: () => setState(() {}),
-              onFiltersPressed: () => _openFilterPicker(
-                feedAsync.value ?? [],
-                activeTagFilters,
-              ),
+              onFiltersPressed: () =>
+                  _openFilterPicker(feedAsync.value ?? [], activeTagFilters),
             ),
           ),
         ],
         body: feedAsync.when(
-          loading: () =>
-              const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(
             child: Text(
               'Failed to load feed',
@@ -160,7 +153,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               builder: (context, _) => ListView.separated(
                 padding: EdgeInsets.zero,
                 itemCount: posts.length,
-                separatorBuilder: (_, __) =>
+                separatorBuilder: (_, _) =>
                     const Divider(height: 1, thickness: 1, color: _kBorder),
                 itemBuilder: (_, i) => PostCard(post: posts[i]),
               ),

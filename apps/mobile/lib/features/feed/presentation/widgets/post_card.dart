@@ -109,8 +109,8 @@ class PostCard extends StatelessWidget {
     final initials = isAnonymous
         ? '?'
         : post.authorName.isNotEmpty
-            ? post.authorName[0].toUpperCase()
-            : '?';
+        ? post.authorName[0].toUpperCase()
+        : '?';
     final displayName = isAnonymous ? 'Anonymous' : post.authorName;
 
     return Row(
@@ -149,10 +149,7 @@ class PostCard extends StatelessWidget {
           '${post.likesCount} likes',
           style: TextStyle(fontSize: 11, color: appColors.textMuted),
         ),
-        Text(
-          ' · ',
-          style: TextStyle(fontSize: 11, color: appColors.textMuted),
-        ),
+        Text(' · ', style: TextStyle(fontSize: 11, color: appColors.textMuted)),
         Text(
           _timeAgo(post.createdAt),
           style: TextStyle(fontSize: 11, color: appColors.textMuted),
