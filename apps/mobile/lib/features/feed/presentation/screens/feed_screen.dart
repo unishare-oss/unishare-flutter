@@ -176,17 +176,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   }
 
   List<MockPost> get _visiblePosts {
-    List<MockPost> posts;
-    switch (_tabController.index) {
-      case 1:
-        posts = _mockPosts.where((p) => p.type == MockPostType.note).toList();
-      case 2:
-        posts = _mockPosts
-            .where((p) => p.type == MockPostType.assignment)
-            .toList();
-      default:
-        posts = _mockPosts;
-    }
+    final posts = switch (_tabController.index) {
+      1 => _mockPosts.where((p) => p.type == MockPostType.note).toList(),
+      2 => _mockPosts.where((p) => p.type == MockPostType.assignment).toList(),
+      _ => _mockPosts,
+    };
 
     if (_activeTagFilters.isEmpty) return posts;
     return posts
