@@ -6,7 +6,7 @@ import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:unishare_mobile/features/departments/presentation/screens/departments_screen.dart';
-import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
+import 'package:unishare_mobile/features/post_feed/presentation/screens/feed_screen.dart';
 import 'package:unishare_mobile/features/more/presentation/screens/more_screen.dart';
 import 'package:unishare_mobile/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';

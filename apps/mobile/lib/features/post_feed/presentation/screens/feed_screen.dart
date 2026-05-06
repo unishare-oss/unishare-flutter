@@ -10,6 +10,7 @@ import 'package:unishare_mobile/features/auth/presentation/widgets/academic_prof
 import 'package:unishare_mobile/features/post_feed/presentation/widgets/feed_empty_state_widget.dart';
 import 'package:unishare_mobile/features/post_feed/presentation/widgets/filter_picker_widget.dart';
 import 'package:unishare_mobile/features/post_feed/presentation/widgets/post_card_widget.dart';
+import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
 // ---------------------------------------------------------------------------
 // Color constants
@@ -123,16 +124,21 @@ const _kTabLabels = ['ALL', 'NOTES', 'ASSIGNMENTS'];
 // ---------------------------------------------------------------------------
 
 class FeedScreen extends ConsumerStatefulWidget {
-  const FeedScreen({super.key});
+  const FeedScreen({required GlobalKey<State> scrollKey})
+      : super(key: scrollKey);
 
   @override
   ConsumerState<FeedScreen> createState() => _FeedScreenState();
 }
 
 class _FeedScreenState extends ConsumerState<FeedScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, ScrollToTopTarget {
   late final TabController _tabController;
+  final ScrollController _scrollController = ScrollController();
   List<String> _activeTagFilters = const [];
+
+  @override
+  ScrollController get scrollController => _scrollController;
 
   @override
   void initState() {
@@ -158,6 +164,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -201,6 +208,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     return Scaffold(
       backgroundColor: const Color(0xFFF7F3EE),
       body: NestedScrollView(
+        controller: _scrollController,
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverToBoxAdapter(child: _buildAppBar()),
           SliverPersistentHeader(
