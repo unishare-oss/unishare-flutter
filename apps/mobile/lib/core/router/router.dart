@@ -22,6 +22,9 @@ part 'router.g.dart';
 // NavTab — branch index order must match StatefulShellRoute.branches order
 // ---------------------------------------------------------------------------
 
+// Simple in-memory flag — not a Riverpod provider to keep it out of codegen.
+bool academicProfileSessionDismissed = false;
+
 enum NavTab {
   feed,
   posts,

@@ -5,7 +5,7 @@ description: "Proposal for post creation write path with Firebase Storage upload
 
 # PROP-0004: Post Integration
 
-**Status:** ACCEPTED  
+**Status:** APPROVED  
 **Author:** architect  
 **Date:** 2026-05-03  
 **Spec:** [0004-post-integration](../tech-specs/0004-post-integration.md)  
