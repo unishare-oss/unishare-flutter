@@ -126,7 +126,7 @@ const _kTabLabels = ['ALL', 'NOTES', 'ASSIGNMENTS'];
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({required GlobalKey<State> scrollKey})
-      : super(key: scrollKey);
+    : super(key: scrollKey);
 
   @override
   ConsumerState<FeedScreen> createState() => _FeedScreenState();
@@ -313,7 +313,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
       ),
     );
   }
-
 }
 
 // ---------------------------------------------------------------------------

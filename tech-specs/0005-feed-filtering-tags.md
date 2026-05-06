@@ -554,6 +554,18 @@ The Hive `FeedCacheModel` class already exists from PROP-0003. The flutter-engin
 
 ---
 
+## Deferred to data-layer phase
+
+The following components are scaffolded (stub classes with `UnimplementedError`) in this phase but intentionally not wired to Firestore yet. They will be completed in the follow-on data-layer phase once `currentUserProvider` exists and the open questions below are resolved:
+
+- `PreferencesRepositoryImpl` — delegates to `PreferencesFirestoreDatasource`; must return `PostFilterPreferences.empty()` when the Firestore document is absent and use merge-write on save
+- `FilterPreferencesNotifier` — reads uid from `currentUserProvider`, calls `GetFilterPreferences` use case on build, calls `SaveFilterPreferences` on `save()`
+- `FeedNotifier` — watches `filterPreferencesNotifierProvider` for active tags, calls `PostRepository.watchFeed()` with the tag filter
+
+In the interim, the feed screen uses mock data and `activeTagFiltersProvider` (a session-local `Notifier<List<String>>`) to drive filter chip state. No UI currently reads the stubbed providers, so there is no live `UnimplementedError` crash risk.
+
+---
+
 ## Out of scope
 
 - Free-text search within post titles or bodies — requires a dedicated search index and is a separate proposal.
