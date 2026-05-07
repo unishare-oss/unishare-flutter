@@ -70,6 +70,9 @@ class PostRepositoryImpl implements PostRepository {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw StateError('not_authenticated');
 
+    final dioCancelToken = CancelToken();
+    cancellationToken?.addCancelListener(dioCancelToken.cancel);
+
     var current = draft;
     final paths = draft.localMediaPaths;
 
@@ -77,9 +80,6 @@ class PostRepositoryImpl implements PostRepository {
       final path = paths[i];
       if (current.uploadedUrls.containsKey(path)) continue;
       if (cancellationToken?.isCancelled ?? false) return;
-
-      final dioCancelToken = CancelToken();
-      cancellationToken?.addCancelListener(dioCancelToken.cancel);
 
       try {
         void progressFn(double fp) {
@@ -138,6 +138,7 @@ class PostRepositoryImpl implements PostRepository {
         snippet.content,
         user.uid,
         filename,
+        cancelToken: dioCancelToken,
       );
     }
 

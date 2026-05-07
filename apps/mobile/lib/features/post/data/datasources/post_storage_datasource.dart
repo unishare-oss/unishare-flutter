@@ -20,7 +20,7 @@ class PostStorageDatasource {
   }) async {
     final filename = localPath.split('/').last;
     final bytes = await readFileBytes(localPath);
-    return _put(bytes, filename, onProgress, cancelToken: cancelToken);
+    return _put(bytes, filename, onProgress: onProgress, cancelToken: cancelToken);
   }
 
   Future<String> uploadBytes(
@@ -29,20 +29,25 @@ class PostStorageDatasource {
     String uid, {
     void Function(double)? onProgress,
     CancelToken? cancelToken,
-  }) => _put(bytes, filename, onProgress, cancelToken: cancelToken);
+  }) => _put(bytes, filename, onProgress: onProgress, cancelToken: cancelToken);
 
-  Future<String> uploadText(String content, String uid, String filename) =>
+  Future<String> uploadText(
+    String content,
+    String uid,
+    String filename, {
+    CancelToken? cancelToken,
+  }) =>
       _put(
         Uint8List.fromList(utf8.encode(content)),
         filename,
-        null,
         contentType: 'text/plain',
+        cancelToken: cancelToken,
       );
 
   Future<String> _put(
     Uint8List bytes,
-    String filename,
-    void Function(double)? onProgress, {
+    String filename, {
+    void Function(double)? onProgress,
     String? contentType,
     CancelToken? cancelToken,
   }) async {
