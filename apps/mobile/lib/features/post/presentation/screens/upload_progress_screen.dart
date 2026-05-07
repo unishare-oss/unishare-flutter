@@ -29,20 +29,23 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
   Widget build(BuildContext context) {
     ref.listen<CreatePostState>(createPostProvider, (_, next) {
       if (next is CreatePostPublished) {
+        final router = GoRouter.of(context);
         Future.delayed(const Duration(milliseconds: 1500), () {
           if (!mounted) return;
           ref.read(createPostProvider.notifier).reset();
-          // ignore: use_build_context_synchronously
-          context.go('/feed');
+          router.go('/feed');
         });
       } else if (next is CreatePostQueued) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Saved offline — will publish when you reconnect.'),
-          ),
-        );
-        ref.read(createPostProvider.notifier).reset();
-        context.go('/feed');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Saved offline — will publish when you reconnect.'),
+            ),
+          );
+          context.go('/feed');
+          ref.read(createPostProvider.notifier).reset();
+        });
       }
     });
 
@@ -343,10 +346,6 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
   }
 }
 
-// ---------------------------------------------------------------------------
-// FileRow widget
-// ---------------------------------------------------------------------------
-
 class _FileRow extends StatelessWidget {
   const _FileRow({required this.file, required this.isLast});
 
@@ -373,8 +372,8 @@ class _FileRow extends StatelessWidget {
                         style: GoogleFonts.spaceGrotesk(
                           fontSize: 12,
                           color: file.phase == FileUploadPhase.queued
-                              ? const Color(0xFF8A837E)
-                              : const Color(0xFF1C1917),
+                              ? _kMuted
+                              : _kFg,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -390,10 +389,8 @@ class _FileRow extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: file.progress,
                       minHeight: 3,
-                      backgroundColor: const Color(0xFFE2DAD0),
-                      valueColor: const AlwaysStoppedAnimation(
-                        Color(0xFFD97706),
-                      ),
+                      backgroundColor: _kBorder,
+                      valueColor: const AlwaysStoppedAnimation(_kPrimary),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -402,7 +399,7 @@ class _FileRow extends StatelessWidget {
             ),
           ),
         ),
-        if (!isLast) const Divider(height: 1, color: Color(0xFFE2DAD0)),
+        if (!isLast) const Divider(height: 1, color: _kBorder),
       ],
     );
   }
@@ -419,13 +416,13 @@ class _PhaseIcon extends StatelessWidget {
         width: 16,
         height: 16,
         decoration: const BoxDecoration(
-          color: Color(0xFFD1FAE5),
+          color: _kGreenBg,
           shape: BoxShape.circle,
         ),
         child: const Icon(
           Icons.check_rounded,
           size: 10,
-          color: Color(0xFF059669),
+          color: _kGreen,
         ),
       ),
       FileUploadPhase.uploading => SizedBox(
@@ -433,7 +430,7 @@ class _PhaseIcon extends StatelessWidget {
         height: 16,
         child: CircularProgressIndicator(
           strokeWidth: 2,
-          valueColor: const AlwaysStoppedAnimation(Color(0xFFD97706)),
+          valueColor: const AlwaysStoppedAnimation(_kPrimary),
         ),
       ),
       FileUploadPhase.queued => Container(
@@ -441,7 +438,7 @@ class _PhaseIcon extends StatelessWidget {
         height: 16,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF8A837E), width: 1.5),
+          border: Border.all(color: _kMuted, width: 1.5),
         ),
       ),
     };
@@ -460,7 +457,7 @@ class _PhaseLabel extends StatelessWidget {
         style: GoogleFonts.firaCode(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          color: const Color(0xFF059669),
+          color: _kGreen,
         ),
       ),
       FileUploadPhase.uploading => Text(
@@ -468,14 +465,14 @@ class _PhaseLabel extends StatelessWidget {
         style: GoogleFonts.firaCode(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          color: const Color(0xFFD97706),
+          color: _kPrimary,
         ),
       ),
       FileUploadPhase.queued => Text(
         'Queued',
         style: GoogleFonts.firaCode(
           fontSize: 11,
-          color: const Color(0xFF8A837E),
+          color: _kMuted,
         ),
       ),
     };

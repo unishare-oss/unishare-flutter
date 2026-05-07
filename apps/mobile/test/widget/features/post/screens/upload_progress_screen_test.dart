@@ -137,7 +137,10 @@ void main() {
       await tester.pumpWidget(_makeScreen(_UploadingNotifier()));
       await tester.pump();
 
-      expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
+      final cancelBtn = tester.widget<TextButton>(
+        find.widgetWithText(TextButton, 'Cancel'),
+      );
+      expect(cancelBtn.onPressed, isNotNull);
     });
   });
 }
