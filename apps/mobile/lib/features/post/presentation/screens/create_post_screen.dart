@@ -73,7 +73,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   bool get _nextEnabled {
     return switch (_step) {
       0 => _postType != null,
-      1 => _year != null && _courseId != null,
+      1 => _year != null && _courseId != null && _departmentId != null,
       2 =>
         _titleCtrl.text.trim().isNotEmpty &&
             _descCtrl.text.trim().isNotEmpty &&
@@ -221,9 +221,15 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                             selectedDepartmentId: _departmentId,
                             selectedYear: _year,
                             selectedCourseId: _courseId,
-                            onDepartmentChanged: (d) =>
-                                setState(() => _departmentId = d),
-                            onYearChanged: (y) => setState(() => _year = y),
+                            onDepartmentChanged: (d) => setState(() {
+                              _departmentId = d;
+                              _year = null;
+                              _courseId = null;
+                            }),
+                            onYearChanged: (y) => setState(() {
+                              _year = y;
+                              _courseId = null;
+                            }),
                             onCourseChanged: (c) =>
                                 setState(() => _courseId = c),
                           ),
