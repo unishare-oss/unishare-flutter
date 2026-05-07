@@ -690,3 +690,6 @@ Summary:  1 file changed, 26 insertions(+), 27 deletions(-)
 
   [13:36] Edit: apps/mobile/android/app/build.gradle.kts
   [13:36] Edit: apps/mobile/android/app/build.gradle.kts
+  [14:34] Edit: apps/mobile/lib/features/auth/presentation/providers/auth_repository_provider.dart
+  [14:34] Edit: apps/mobile/lib/features/auth/presentation/providers/auth_repository_provider.dart
+  [14:34] Write: apps/mobile/lib/features/more/presentation/screens/more_screen.dart
