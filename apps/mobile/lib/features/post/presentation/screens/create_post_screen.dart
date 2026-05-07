@@ -31,6 +31,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   // Step 2
   int? _year;
   String? _courseId;
+  String? _departmentId;
 
   // Step 3
   final _titleCtrl = TextEditingController();
@@ -131,6 +132,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       postType: _postType ?? PostType.lectureNote,
       year: _year ?? 1,
       courseId: _courseId ?? '',
+      departmentId: _departmentId ?? '',
       title: _titleCtrl.text.trim(),
       description: _descCtrl.text.trim(),
       postingIdentity: _postingIdentity,

@@ -12,6 +12,7 @@ class PostDraft {
     required this.postType,
     required this.year,
     required this.courseId,
+    required this.departmentId,
     required this.title,
     required this.description,
     required this.postingIdentity,
@@ -33,6 +34,7 @@ class PostDraft {
   // Step 2
   final int year; // e.g. 2
   final String courseId; // Firestore reference data ID
+  final String departmentId;
 
   // Step 3
   final String title;
@@ -56,6 +58,7 @@ class PostDraft {
     PostType? postType,
     int? year,
     String? courseId,
+    String? departmentId,
     String? title,
     String? description,
     PostingIdentity? postingIdentity,
@@ -77,6 +80,7 @@ class PostDraft {
       postType: postType ?? this.postType,
       year: year ?? this.year,
       courseId: courseId ?? this.courseId,
+      departmentId: departmentId ?? this.departmentId,
       title: title ?? this.title,
       description: description ?? this.description,
       postingIdentity: postingIdentity ?? this.postingIdentity,

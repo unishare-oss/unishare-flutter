@@ -65,6 +65,7 @@ PostDraft _validDraft({
     postType: PostType.lectureNote,
     year: 2,
     courseId: 'csc201',
+    departmentId: 'dept-cs',
     title: title,
     description: description,
     postingIdentity: PostingIdentity.named,

@@ -68,6 +68,7 @@ class _ErrorNotifier extends CreatePostNotifier {
       postType: PostType.lectureNote,
       year: 1,
       courseId: 'csc101',
+      departmentId: 'dept-cs',
       title: 'T',
       description: 'D',
       postingIdentity: PostingIdentity.named,

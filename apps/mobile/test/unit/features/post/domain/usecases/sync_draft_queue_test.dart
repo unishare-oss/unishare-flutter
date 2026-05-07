@@ -58,6 +58,7 @@ PostDraft _draft(String id, {DraftStatus status = DraftStatus.queued}) {
     postType: PostType.lectureNote,
     year: 1,
     courseId: 'csc101',
+    departmentId: 'dept-cs',
     title: 'Title $id',
     description: 'Desc',
     postingIdentity: PostingIdentity.named,
