@@ -27,6 +27,7 @@ class PostFirestoreDatasource {
       'postType': draft.postType.name,
       'year': draft.year,
       'courseId': draft.courseId,
+      'departmentId': draft.departmentId,
       'title': draft.title,
       'description': draft.description,
       'semester': draft.semester,
