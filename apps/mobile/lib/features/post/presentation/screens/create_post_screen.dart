@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
@@ -211,8 +212,17 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                             onSelect: (t) => setState(() => _postType = t),
                           ),
                           CourseStep(
+                            universityId:
+                                ref
+                                    .watch(currentUserProvider)
+                                    .value
+                                    ?.universityId ??
+                                '',
+                            selectedDepartmentId: _departmentId,
                             selectedYear: _year,
                             selectedCourseId: _courseId,
+                            onDepartmentChanged: (d) =>
+                                setState(() => _departmentId = d),
                             onYearChanged: (y) => setState(() => _year = y),
                             onCourseChanged: (c) =>
                                 setState(() => _courseId = c),

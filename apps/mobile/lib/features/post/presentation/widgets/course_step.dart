@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
-class CourseStep extends ConsumerStatefulWidget {
+class CourseStep extends ConsumerWidget {
   const CourseStep({
     super.key,
     required this.universityId,
@@ -25,64 +25,19 @@ class CourseStep extends ConsumerStatefulWidget {
   final ValueChanged<int?> onYearChanged;
   final ValueChanged<String?> onCourseChanged;
 
-  @override
-  ConsumerState<CourseStep> createState() => _CourseStepState();
-}
-
-class _CourseStepState extends ConsumerState<CourseStep> {
   static const _years = [1, 2, 3, 4];
 
-  late Future<List<({String id, String name})>> _deptsFuture;
-  Future<List<({String id, String name})>>? _coursesFuture;
-  String? _lastDeptId;
-  int? _lastYear;
-
   @override
-  void initState() {
-    super.initState();
-    _loadDepts();
-    _maybeLoadCourses();
-  }
-
-  @override
-  void didUpdateWidget(CourseStep old) {
-    super.didUpdateWidget(old);
-    // Reload courses when dept or year changes.
-    if (widget.selectedDepartmentId != _lastDeptId ||
-        widget.selectedYear != _lastYear) {
-      _maybeLoadCourses();
-    }
-  }
-
-  void _loadDepts() {
-    final ds = ref.read(courseFirestoreDatasourceProvider);
-    _deptsFuture = ds.getDepartments(widget.universityId);
-    _lastDeptId = null;
-    _lastYear = null;
-  }
-
-  void _maybeLoadCourses() {
-    final deptId = widget.selectedDepartmentId;
-    final year = widget.selectedYear;
-    if (deptId != null && year != null) {
-      final ds = ref.read(courseFirestoreDatasourceProvider);
-      setState(() {
-        _coursesFuture = ds.getCourses(deptId, year);
-        _lastDeptId = deptId;
-        _lastYear = year;
-      });
-    } else {
-      setState(() {
-        _coursesFuture = null;
-        _lastDeptId = deptId;
-        _lastYear = year;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final cs = Theme.of(context).colorScheme;
+
+    final deptsAsync = ref.watch(
+      departmentsForUniversityProvider(universityId),
+    );
+
+    final coursesAsync = (selectedDepartmentId != null && selectedYear != null)
+        ? ref.watch(coursesProvider(selectedDepartmentId!, selectedYear!))
+        : const AsyncData(<({String id, String name})>[]);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,52 +55,44 @@ class _CourseStepState extends ConsumerState<CourseStep> {
         // DEPARTMENT
         _FieldLabel('DEPARTMENT'),
         const SizedBox(height: 6),
-        FutureBuilder<List<({String id, String name})>>(
-          future: _deptsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return _DropdownField<String>(
-                value: null,
-                hint: 'Loading…',
-                items: const [],
-                onChanged: null,
-              );
-            }
-            if (snapshot.hasError) {
-              return _DropdownField<String>(
-                value: null,
-                hint: 'Failed to load',
-                items: const [],
-                onChanged: null,
-              );
-            }
-            final depts = snapshot.data ?? [];
-            return _DropdownField<String>(
-              value: widget.selectedDepartmentId,
-              hint: 'Select department',
-              items: depts
-                  .map(
-                    (d) => DropdownMenuItem(
-                      value: d.id,
-                      child: Text(
-                        d.name,
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: cs.onSurface,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+        deptsAsync.when(
+          loading: () => _DropdownField<String>(
+            value: null,
+            hint: 'Loading…',
+            items: const [],
+            onChanged: null,
+          ),
+          error: (_, _) => _DropdownField<String>(
+            value: null,
+            hint: 'Failed to load',
+            items: const [],
+            onChanged: null,
+          ),
+          data: (depts) => _DropdownField<String>(
+            value: selectedDepartmentId,
+            hint: 'Select department',
+            items: depts
+                .map(
+                  (d) => DropdownMenuItem(
+                    value: d.id,
+                    child: Text(
+                      d.name,
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: cs.onSurface,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  )
-                  .toList(),
-              onChanged: (v) {
-                widget.onDepartmentChanged(v);
-                widget.onYearChanged(null);
-                widget.onCourseChanged(null);
-              },
-            );
-          },
+                  ),
+                )
+                .toList(),
+            onChanged: (v) {
+              onDepartmentChanged(v);
+              onYearChanged(null);
+              onCourseChanged(null);
+            },
+          ),
         ),
         const SizedBox(height: 16),
 
@@ -153,7 +100,7 @@ class _CourseStepState extends ConsumerState<CourseStep> {
         _FieldLabel('YEAR'),
         const SizedBox(height: 6),
         _DropdownField<int>(
-          value: widget.selectedYear,
+          value: selectedYear,
           hint: 'Select year',
           items: _years
               .map(
@@ -171,8 +118,8 @@ class _CourseStepState extends ConsumerState<CourseStep> {
               )
               .toList(),
           onChanged: (v) {
-            widget.onYearChanged(v);
-            widget.onCourseChanged(null);
+            onYearChanged(v);
+            onCourseChanged(null);
           },
         ),
         const SizedBox(height: 16),
@@ -180,15 +127,17 @@ class _CourseStepState extends ConsumerState<CourseStep> {
         // COURSE
         _FieldLabel('COURSE'),
         const SizedBox(height: 6),
-        _buildCourseDropdown(context),
+        _buildCourseDropdown(context, coursesAsync),
       ],
     );
   }
 
-  Widget _buildCourseDropdown(BuildContext context) {
+  Widget _buildCourseDropdown(
+    BuildContext context,
+    AsyncValue<List<({String id, String name})>> coursesAsync,
+  ) {
     final cs = Theme.of(context).colorScheme;
-
-    if (widget.selectedDepartmentId == null) {
+    if (selectedDepartmentId == null) {
       return _DropdownField<String>(
         value: null,
         hint: 'Select a department first',
@@ -196,7 +145,7 @@ class _CourseStepState extends ConsumerState<CourseStep> {
         onChanged: null,
       );
     }
-    if (widget.selectedYear == null) {
+    if (selectedYear == null) {
       return _DropdownField<String>(
         value: null,
         hint: 'Select a year first',
@@ -204,57 +153,40 @@ class _CourseStepState extends ConsumerState<CourseStep> {
         onChanged: null,
       );
     }
-    final future = _coursesFuture;
-    if (future == null) {
-      return _DropdownField<String>(
+    return coursesAsync.when(
+      loading: () => _DropdownField<String>(
         value: null,
         hint: 'Loading…',
         items: const [],
         onChanged: null,
-      );
-    }
-    return FutureBuilder<List<({String id, String name})>>(
-      future: future,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return _DropdownField<String>(
-            value: null,
-            hint: 'Loading…',
-            items: const [],
-            onChanged: null,
-          );
-        }
-        if (snapshot.hasError) {
-          return _DropdownField<String>(
-            value: null,
-            hint: 'Failed to load',
-            items: const [],
-            onChanged: null,
-          );
-        }
-        final courses = snapshot.data ?? [];
-        return _DropdownField<String>(
-          value: widget.selectedCourseId,
-          hint: courses.isEmpty ? 'No courses found' : 'Select course',
-          items: courses
-              .map(
-                (c) => DropdownMenuItem(
-                  value: c.id,
-                  child: Text(
-                    c.name,
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: cs.onSurface,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+      ),
+      error: (_, _) => _DropdownField<String>(
+        value: null,
+        hint: 'Failed to load',
+        items: const [],
+        onChanged: null,
+      ),
+      data: (courses) => _DropdownField<String>(
+        value: selectedCourseId,
+        hint: courses.isEmpty ? 'No courses found' : 'Select course',
+        items: courses
+            .map(
+              (c) => DropdownMenuItem(
+                value: c.id,
+                child: Text(
+                  c.name,
+                  style: GoogleFonts.spaceGrotesk(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: cs.onSurface,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-              )
-              .toList(),
-          onChanged: courses.isEmpty ? null : widget.onCourseChanged,
-        );
-      },
+              ),
+            )
+            .toList(),
+        onChanged: courses.isEmpty ? null : onCourseChanged,
+      ),
     );
   }
 }

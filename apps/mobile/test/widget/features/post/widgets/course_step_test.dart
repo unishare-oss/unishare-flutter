@@ -11,7 +11,7 @@ import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
 // ---------------------------------------------------------------------------
-// Fake datasources
+// Fake datasource (success path)
 // ---------------------------------------------------------------------------
 
 class _FakeCourseDatasource implements CourseFirestoreDatasource {
@@ -35,30 +35,12 @@ class _FakeCourseDatasource implements CourseFirestoreDatasource {
   }
 }
 
-class _ErrorCourseDatasource implements CourseFirestoreDatasource {
-  @override
-  Future<List<({String id, String name})>> getDepartments(String _) =>
-      Future.error(Exception('network error'));
-
-  @override
-  Future<List<({String id, String name})>> getCourses(String _, int __) =>
-      Future.error(Exception('network error'));
-}
-
-class _NeverCourseDatasource implements CourseFirestoreDatasource {
-  @override
-  Future<List<({String id, String name})>> getDepartments(String _) =>
-      Completer<List<({String id, String name})>>().future;
-
-  @override
-  Future<List<({String id, String name})>> getCourses(String _, int __) =>
-      Completer<List<({String id, String name})>>().future;
-}
-
 // ---------------------------------------------------------------------------
-// Helper: pump CourseStep with controlled provider override
+// Helpers
 // ---------------------------------------------------------------------------
 
+/// Wraps CourseStep in a ProviderScope that overrides the datasource.
+/// Use for success-path tests (providers resolve normally).
 Widget _makeStep({
   required CourseFirestoreDatasource datasource,
   String? selectedDepartmentId,
@@ -100,8 +82,34 @@ void main() {
     testWidgets('shows loading hint while departments are pending', (
       tester,
     ) async {
-      await tester.pumpWidget(_makeStep(datasource: _NeverCourseDatasource()));
-      // One pump — future hasn't resolved yet.
+      // Override the family provider directly with a never-completing future.
+      // This avoids Riverpod retry timers that would prevent pumpAndSettle.
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            departmentsForUniversityProvider('uni-1').overrideWith((ref) {
+              final c = Completer<List<({String id, String name})>>();
+              return c.future;
+            }),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(AppThemes.unishare),
+            home: Scaffold(
+              body: SingleChildScrollView(
+                child: CourseStep(
+                  universityId: 'uni-1',
+                  selectedDepartmentId: null,
+                  selectedYear: null,
+                  selectedCourseId: null,
+                  onDepartmentChanged: (_) {},
+                  onYearChanged: (_) {},
+                  onCourseChanged: (_) {},
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
       await tester.pump();
       expect(find.text('Loading…'), findsWidgets);
     });
@@ -109,8 +117,34 @@ void main() {
     testWidgets('shows failed-to-load hint when departments error', (
       tester,
     ) async {
-      await tester.pumpWidget(_makeStep(datasource: _ErrorCourseDatasource()));
-      await tester.pumpAndSettle();
+      // Override the family provider with a pre-built AsyncError to avoid
+      // Riverpod retry timers that keep the state stuck in AsyncLoading.
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            departmentsForUniversityProvider('uni-1').overrideWithValue(
+              AsyncError(Exception('network error'), StackTrace.empty),
+            ),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(AppThemes.unishare),
+            home: Scaffold(
+              body: SingleChildScrollView(
+                child: CourseStep(
+                  universityId: 'uni-1',
+                  selectedDepartmentId: null,
+                  selectedYear: null,
+                  selectedCourseId: null,
+                  onDepartmentChanged: (_) {},
+                  onYearChanged: (_) {},
+                  onCourseChanged: (_) {},
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
       expect(find.text('Failed to load'), findsOneWidget);
     });
 
@@ -118,7 +152,6 @@ void main() {
       await tester.pumpWidget(_makeStep(datasource: _FakeCourseDatasource()));
       await tester.pumpAndSettle();
 
-      // Open department dropdown.
       await tester.tap(find.text('Select department'));
       await tester.pumpAndSettle();
 
