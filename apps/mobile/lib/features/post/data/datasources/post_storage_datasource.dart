@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unishare_mobile/features/post/data/datasources/upload_file_stub.dart'
     if (dart.library.io) 'upload_file_io.dart';
 
-// Set at build time: flutter run --dart-define=WORKER_URL=https://...
 const _workerUrl = String.fromEnvironment('WORKER_URL');
 
 class PostStorageDatasource {
@@ -17,10 +16,11 @@ class PostStorageDatasource {
     String localPath,
     String uid, {
     void Function(double)? onProgress,
+    CancelToken? cancelToken,
   }) async {
     final filename = localPath.split('/').last;
     final bytes = await readFileBytes(localPath);
-    return _put(bytes, filename, onProgress);
+    return _put(bytes, filename, onProgress, cancelToken: cancelToken);
   }
 
   Future<String> uploadBytes(
@@ -28,7 +28,8 @@ class PostStorageDatasource {
     String filename,
     String uid, {
     void Function(double)? onProgress,
-  }) => _put(bytes, filename, onProgress);
+    CancelToken? cancelToken,
+  }) => _put(bytes, filename, onProgress, cancelToken: cancelToken);
 
   Future<String> uploadText(String content, String uid, String filename) =>
       _put(
@@ -43,6 +44,7 @@ class PostStorageDatasource {
     String filename,
     void Function(double)? onProgress, {
     String? contentType,
+    CancelToken? cancelToken,
   }) async {
     final ct = contentType ?? _contentTypeFor(filename);
     final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
@@ -56,6 +58,7 @@ class PostStorageDatasource {
           'Content-Type': 'application/json',
         },
       ),
+      cancelToken: cancelToken,
     );
 
     final uploadUrl = workerRes.data!['uploadUrl'] as String;
@@ -74,6 +77,7 @@ class PostStorageDatasource {
               if (total > 0) onProgress(sent / total);
             }
           : null,
+      cancelToken: cancelToken,
     );
 
     return publicUrl;

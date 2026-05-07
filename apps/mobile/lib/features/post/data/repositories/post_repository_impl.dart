@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
@@ -61,7 +63,9 @@ class PostRepositoryImpl implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double progress)? onProgress,
+    void Function(int fileIndex, double fileProgress)? onFileProgress,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
   }) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw StateError('not_authenticated');
@@ -72,11 +76,17 @@ class PostRepositoryImpl implements PostRepository {
     for (var i = 0; i < paths.length; i++) {
       final path = paths[i];
       if (current.uploadedUrls.containsKey(path)) continue;
+      if (cancellationToken?.isCancelled ?? false) return;
+
+      final dioCancelToken = CancelToken();
+      cancellationToken?.addCancelListener(dioCancelToken.cancel);
 
       try {
-        final progressFn = onProgress != null
-            ? (fp) => onProgress((i + fp) / paths.length)
-            : null;
+        void progressFn(double fp) {
+          onFileProgress?.call(i, fp);
+          onProgress?.call((i + fp) / paths.length);
+        }
+
         final overrideBytes = fileDataOverride?[path];
         final url = overrideBytes != null
             ? await storageDatasource.uploadBytes(
@@ -84,17 +94,28 @@ class PostRepositoryImpl implements PostRepository {
                 path,
                 user.uid,
                 onProgress: progressFn,
+                cancelToken: dioCancelToken,
               )
             : await storageDatasource.upload(
                 path,
                 user.uid,
                 onProgress: progressFn,
+                cancelToken: dioCancelToken,
               );
 
         final newUrls = Map<String, String>.from(current.uploadedUrls)
           ..[path] = url;
         current = current.copyWith(uploadedUrls: newUrls);
         await saveDraft(current);
+      } on DioException catch (e) {
+        if (e.type == DioExceptionType.cancel) return;
+        await saveDraft(
+          current.copyWith(
+            status: DraftStatus.error,
+            errorMessage: e.toString(),
+          ),
+        );
+        rethrow;
       } catch (e) {
         await saveDraft(
           current.copyWith(
@@ -105,6 +126,8 @@ class PostRepositoryImpl implements PostRepository {
         rethrow;
       }
     }
+
+    if (cancellationToken?.isCancelled ?? false) return;
 
     String? codeSnippetUrl;
     if (draft.codeSnippet != null) {
