@@ -698,3 +698,6 @@ Files:
   ~ apps/mobile/lib/features/post/presentation/widgets/details_step.dart
 Summary:  1 file changed, 10 insertions(+)
 
+  [15:26] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [15:26] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [15:26] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
