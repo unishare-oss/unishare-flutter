@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="A single GoRouter route replaces three scattered MaterialPageRoute builders and a SnackBar stub for file attachment previewing.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/stencils/tech-proposal/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0007-file-preview-unified-route/">
       
       
-        <link rel="prev" href="../adr/">
+        <link rel="prev" href="../0006-post-detail-data-loading-strategy/">
       
       
-        <link rel="next" href="../tech-spec/">
+        <link rel="next" href="../../stencils/adr/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Tech Proposal Template - Unishare Engineering Docs</title>
+        <title>0007: Unified /preview GoRoute with FilePreviewArgs extra - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tech-proposal-template" class="md-skip">
+        <a href="#0007-unified-preview-goroute-with-filepreviewargs-extra" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tech Proposal Template
+              0007: Unified /preview GoRoute with FilePreviewArgs extra
             
           </span>
         </div>
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../decisions/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -262,13 +264,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../adr/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -396,26 +396,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -433,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -451,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -479,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -507,7 +512,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -542,7 +547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -577,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -612,7 +617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -647,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -675,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+      <a href="../0006-post-detail-data-loading-strategy/" class="md-nav__link">
         
   
   
@@ -683,126 +688,6 @@
     
   
     0006: Post Detail screen uses hybrid seed-then-stream data loading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0007: Unified /preview GoRoute with FilePreviewArgs extra
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Stencils
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Stencils
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../adr/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR Template
   
 
     
@@ -839,7 +724,7 @@
   <span class="md-ellipsis">
     
   
-    Tech Proposal Template
+    0007: Unified /preview GoRoute with FilePreviewArgs extra
   
 
     
@@ -857,7 +742,7 @@
   <span class="md-ellipsis">
     
   
-    Tech Proposal Template
+    0007: Unified /preview GoRoute with FilePreviewArgs extra
   
 
     
@@ -883,10 +768,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Problem
       
     </span>
   </a>
@@ -894,10 +779,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -913,6 +831,65 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stencils
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stencils
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
               
                 
   
@@ -920,7 +897,63 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-spec/" class="md-nav__link">
+      <a href="../../stencils/adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposal Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
         
   
   
@@ -1513,10 +1546,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Problem
       
     </span>
   </a>
@@ -1524,10 +1557,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -1551,7 +1617,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/stencils/tech-proposal.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0007-file-preview-unified-route.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1559,91 +1625,65 @@
   
 
 
-<h1 id="tech-proposal-template">Tech Proposal Template<a class="headerlink" href="#tech-proposal-template" title="Permanent link">&para;</a></h1>
-<p>Copy the markdown below into <code>tech-proposals/NNNN-slug.md</code> on the <code>main</code> branch and fill it in.</p>
-<p><strong>When to write one:</strong> Any change that touches architecture, introduces a new dependency, or where multiple valid approaches exist. Must be approved before design work begins.</p>
-<hr />
-<h2 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>---
-title: &quot;NNNN: Title&quot;
-<span class="gu">description: &quot;One-line summary of the proposal.&quot;</span>
-<span class="gu">---</span>
-
-<span class="gh"># PROP-NNNN: Title</span>
-
-<span class="gs">**Status:**</span> DRAFT  
-<span class="gs">**Author:**</span>  
-<span class="gs">**Date:**</span> YYYY-MM-DD  
-<span class="gs">**Spec:**</span> (pending approval)  
-<span class="gs">**Approved by:**</span> (fill in when accepted)
-
----
-
-<span class="gu">## Problem</span>
-
-What is broken, missing, or suboptimal? Be specific.
-Include user impact and technical context.
-
-<span class="gu">## Proposed Solution</span>
-
-Describe the chosen approach and how it solves the problem.
-
-<span class="gu">## Alternatives Considered</span>
-
-<span class="gu">### A — Title</span>
-
-Description. <span class="gs">**Rejected:**</span> reason.
-
-<span class="gu">### B — Title</span>
-
-Description. <span class="gs">**Rejected:**</span> reason.
-
-<span class="gu">## Open Questions</span>
-
-<span class="k">1.</span> Question that must be resolved before this proposal is accepted.
-
-<span class="gu">## Acceptance Criteria</span>
-
-<span class="k">-</span><span class="w"> </span>What the implementation must achieve (feeds directly into the tech spec).
-</code></pre></div>
-<hr />
-<h2 id="status-values">Status values<a class="headerlink" href="#status-values" title="Permanent link">&para;</a></h2>
+<h1 id="0007-unified-preview-goroute-with-filepreviewargs-extra">0007 — Unified /preview GoRoute with FilePreviewArgs extra<a class="headerlink" href="#0007-unified-preview-goroute-with-filepreviewargs-extra" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> Architect<br />
+<strong>Date:</strong> 2026-05-07</p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>Preview logic for image, PDF, and video attachments is split across three <code>Navigator.push</code> blocks inside <code>_AttachmentRow._onView</code> in <code>attachment_list.dart</code> and a fourth duplicated <code>_openPdfViewer</code> in <code>attachment_carousel.dart</code>. Video shows a <code>SnackBar</code> stub. There is no testable abstraction: anonymous <code>MaterialPageRoute</code> builders cannot be widget-tested without rendering the full <code>PostDetailScreen</code> tree. Any cross-cutting concern (analytics, accessibility labels, deep-link support) must be applied at every call site independently.</p>
+<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Status</th>
-<th>Meaning</th>
+<th>#</th>
+<th>Option</th>
+<th>Upside</th>
+<th>Downside</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>DRAFT</code></td>
-<td>Work in progress, not ready for review</td>
+<td>1</td>
+<td>Patch in place — fix each inline block separately</td>
+<td>Zero new files; no routing change</td>
+<td>Two permanently divergent call sites; anonymous builders remain untestable in isolation; scales poorly as new attachment types are added</td>
 </tr>
 <tr>
-<td><code>PROPOSED</code></td>
-<td>Ready for team review</td>
+<td>2</td>
+<td>Unified <code>FilePreviewScreen</code> on a single <code>/preview</code> GoRoute (chosen)</td>
+<td>One testable widget; one call site shape; one place for analytics, accessibility, and deep-link handling</td>
+<td>Requires GoRouter <code>extra</code> typing discipline; must add <code>/preview</code> to the redirect guard's <code>knownPrefixes</code></td>
 </tr>
 <tr>
-<td><code>ACCEPTED</code></td>
-<td>Approved — tech spec can begin</td>
-</tr>
-<tr>
-<td><code>REJECTED</code></td>
-<td>Declined — reason documented in the proposal</td>
-</tr>
-<tr>
-<td><code>SUPERSEDED</code></td>
-<td>Replaced by a newer proposal</td>
+<td>3</td>
+<td>Three separate routes: <code>/preview/image</code>, <code>/preview/pdf</code>, <code>/preview/video</code></td>
+<td>Each screen is smaller and focused</td>
+<td>Type-branching moves into every caller; boilerplate (AppBar, back nav, error states) is triplicated; no encapsulation gain over Option 1</td>
 </tr>
 </tbody>
 </table>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen:</strong> Option 2 — Unified <code>FilePreviewScreen</code> on <code>/preview</code>.</p>
+<p>A single <code>GoRoute</code> at path <code>/preview</code> accepts a <code>FilePreviewArgs</code> Dart record via <code>state.extra</code>, then switches on <code>type</code> to render one of four private sub-widgets. This gives the team one testable widget boundary, one call site contract, and one extension point for future concerns such as analytics events or accessibility labels. It relies on the team maintaining the discipline of always casting <code>state.extra</code> to <code>FilePreviewArgs</code> — a constraint enforced by the typed record and caught at runtime by a <code>!</code> cast on first access.</p>
+<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
+<p>Medium. Undoing this decision means reintroducing inline <code>MaterialPageRoute</code> builders at each call site and deleting the <code>/preview</code> route. The <code>FilePreviewScreen</code> file can be deleted cleanly; the two call-site widgets must be reverted. No Firestore schema or domain entity changes are involved, so data-layer reversal is zero. Test files for the screen would be discarded.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Easier:</strong> Adding a new attachment type (e.g., audio) requires adding one <code>case</code> in <code>FilePreviewScreen</code> and one new sub-widget — no call-site changes.</li>
+<li><strong>Easier:</strong> Widget-testing all four preview types in isolation without rendering <code>PostDetailScreen</code>.</li>
+<li><strong>Easier:</strong> Adding analytics or accessibility improvements in a single place.</li>
+<li><strong>Harder:</strong> Deep-linking directly to <code>/preview</code> from a push notification or share URL requires the <code>FilePreviewArgs</code> to be reconstructable from a URL — <code>extra</code> is not serialisable across process restarts. If deep-link support is added in future, path parameters or query parameters will need to be used instead of <code>extra</code>, requiring a breaking change to the route contract.</li>
+<li><strong>Follow-up required:</strong> The <code>knownPrefixes</code> guard in <code>_RouterNotifier.redirect</code> must include <code>'/preview'</code> to prevent unauthenticated users from deep-linking into the screen.</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
