@@ -2,9 +2,11 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 
@@ -81,6 +83,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   static const _chars =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
+  CancellationToken? _cancellationToken;
+  PostDraft? _inflight;
+
   @override
   CreatePostState build() => const CreatePostIdle();
 
@@ -88,23 +93,64 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required PostDraft draft,
     Map<String, Uint8List>? fileDataOverride,
   }) async {
-    final useCase = ref.read(createPostUseCaseProvider);
+    _cancellationToken = CancellationToken();
+    _inflight = draft;
 
-    state = const CreatePostUploading(files: [], overallProgress: 0.0);
+    final filenames = draft.localMediaPaths.isEmpty
+        ? <String>[]
+        : draft.localMediaPaths.map((p) => p.split('/').last).toList();
+
+    state = CreatePostUploading(
+      files: filenames
+          .map(
+            (name) => FileUploadProgress(
+              filename: name,
+              phase: FileUploadPhase.queued,
+            ),
+          )
+          .toList(),
+      overallProgress: 0.0,
+    );
+
+    final useCase = ref.read(createPostUseCaseProvider);
 
     try {
       final results = await Connectivity().checkConnectivity();
-      // connectivity_plus returns none on web — treat web as always connected.
       final isConnected = kIsWeb || !results.contains(ConnectivityResult.none);
+
+      double currentOverall = 0.0;
 
       final result = await useCase(
         draft: draft,
         isConnected: isConnected,
         fileDataOverride: fileDataOverride,
+        cancellationToken: _cancellationToken,
+        onFileProgress: (fileIndex, fileProgress) {
+          final current = state;
+          if (current is! CreatePostUploading) return;
+
+          final updatedFiles = List<FileUploadProgress>.from(current.files);
+          for (var j = 0; j < fileIndex; j++) {
+            if (updatedFiles[j].phase != FileUploadPhase.done) {
+              updatedFiles[j] = updatedFiles[j].copyWith(
+                phase: FileUploadPhase.done,
+                progress: 1.0,
+              );
+            }
+          }
+          updatedFiles[fileIndex] = updatedFiles[fileIndex].copyWith(
+            phase: FileUploadPhase.uploading,
+            progress: fileProgress,
+          );
+
+          currentOverall = (fileIndex + fileProgress) / filenames.length;
+          state = CreatePostUploading(
+            files: updatedFiles,
+            overallProgress: currentOverall,
+          );
+        },
         onProgress: (p) {
-          state = p < 1.0
-              ? CreatePostUploading(files: const [], overallProgress: p < 1.0 ? p : 0.99)
-              : const CreatePostPublishing();
+          if (p >= 1.0) state = const CreatePostPublishing();
         },
       );
 
@@ -114,16 +160,50 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         _ => CreatePostError(
           message: result.errorMessage ?? 'Unknown error',
           draft: result,
+          overallProgress: currentOverall,
         ),
       };
     } on ArgumentError catch (e) {
-      state = CreatePostError(message: e.message.toString(), draft: draft);
+      state = CreatePostError(
+        message: e.message.toString(),
+        draft: draft,
+        overallProgress: 0.0,
+      );
+    } on DioException catch (e) {
+      if (e.type != DioExceptionType.cancel) {
+        state = CreatePostError(
+          message: e.toString(),
+          draft: draft,
+          overallProgress: 0.0,
+        );
+      }
     } catch (e) {
-      state = CreatePostError(message: e.toString(), draft: draft);
+      state = CreatePostError(
+        message: e.toString(),
+        draft: draft,
+        overallProgress: 0.0,
+      );
     }
   }
 
-  void reset() => state = const CreatePostIdle();
+  Future<void> cancel() async {
+    _cancellationToken?.cancel();
+    // TODO: orphaned R2 files — add worker DELETE endpoint and call it
+    // for each url in _inflight.uploadedUrls before removing the draft.
+    final draft = _inflight;
+    if (draft != null) {
+      await ref.read(postRepositoryProvider).removeDraft(draft.id);
+    }
+    _inflight = null;
+    _cancellationToken = null;
+    state = const CreatePostIdle();
+  }
+
+  void reset() {
+    _inflight = null;
+    _cancellationToken = null;
+    state = const CreatePostIdle();
+  }
 
   static String generateId() =>
       List.generate(20, (_) => _chars[_rand.nextInt(_chars.length)]).join();
