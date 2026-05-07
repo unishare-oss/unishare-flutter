@@ -74,8 +74,10 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             onPressed: isPublishing
                 ? null
                 : () async {
+                    final router = GoRouter.of(context);
                     await ref.read(createPostProvider.notifier).cancel();
-                    if (mounted) context.go('/feed');
+                    if (!mounted) return;
+                    router.go('/feed');
                   },
             style: TextButton.styleFrom(
               foregroundColor: cs.error,
