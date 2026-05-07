@@ -693,3 +693,4 @@ Summary:  1 file changed, 26 insertions(+), 27 deletions(-)
   [14:34] Edit: apps/mobile/lib/features/auth/presentation/providers/auth_repository_provider.dart
   [14:34] Edit: apps/mobile/lib/features/auth/presentation/providers/auth_repository_provider.dart
   [14:34] Write: apps/mobile/lib/features/more/presentation/screens/more_screen.dart
+  [14:48] Edit: apps/mobile/test/widget/features/more/more_screen_test.dart
