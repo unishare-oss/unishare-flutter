@@ -1645,6 +1645,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0007-save-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1920,11 +1948,11 @@
 
 
 <h1 id="prop-0007-save-post">PROP-0007: Save Post<a class="headerlink" href="#prop-0007-save-post" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> DRAFT<br />
+<p><strong>Status:</strong> APPROVED<br />
 <strong>Author:</strong> architect<br />
 <strong>Date:</strong> 2026-05-07<br />
 <strong>Spec:</strong> (pending approval)<br />
-<strong>Approved by:</strong> (fill in when accepted)</p>
+<strong>Approved by:</strong> Sai Zayar Hein</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
 <p>Students encounter valuable academic posts — lecture notes, past papers, study summaries — while scrolling the feed, but the app provides no mechanism to mark or retrieve those posts later. The only retrieval path is scrolling the feed again from the top, which is impractical once the feed grows beyond one page and becomes impossible for content that has aged off the visible window. There is no personal study collection surface: a student preparing for finals cannot quickly access the five posts they found most useful last week.</p>
@@ -2061,60 +2089,76 @@
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
 <h3 id="a-hive-only-local-saves-no-firestore-sync">A — Hive-only local saves (no Firestore sync)<a class="headerlink" href="#a-hive-only-local-saves-no-firestore-sync" title="Permanent link">&para;</a></h3>
 <p>All saves, for all users, are stored in a local Hive box. No Firestore collection is introduced. The feature is symmetric across guest and authenticated users.</p>
-<p><strong>Pros:</strong>
-- Simplest implementation. No new Firestore subcollection, no merge logic, no auth-switching repository.
-- Works for guests and authenticated users identically.
-- Zero Firestore reads/writes for the save feature — no impact on billing or quota.
-- No sync latency — saves are instant and always available offline.</p>
-<p><strong>Cons:</strong>
-- Authenticated users lose their saved list on device change, app reinstall, or when using the web version. This is a significant regression relative to user expectations for a signed-in experience.
-- The feature's value proposition for authenticated users is substantially weaker than for a cloud-synced list.
-- Cross-device access is impossible.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Simplest implementation. No new Firestore subcollection, no merge logic, no auth-switching repository.</li>
+<li>Works for guests and authenticated users identically.</li>
+<li>Zero Firestore reads/writes for the save feature — no impact on billing or quota.</li>
+<li>No sync latency — saves are instant and always available offline.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Authenticated users lose their saved list on device change, app reinstall, or when using the web version. This is a significant regression relative to user expectations for a signed-in experience.</li>
+<li>The feature's value proposition for authenticated users is substantially weaker than for a cloud-synced list.</li>
+<li>Cross-device access is impossible.</li>
+</ul>
 <p><strong>Effort:</strong> XS.</p>
 <p><strong>Verdict:</strong> Acceptable as a v1 MVP for guest users but inadequate for authenticated users. It is the correct choice only if cross-device sync is explicitly out of scope and communicated to users.</p>
 <hr />
 <h3 id="b-firestore-subcollection-only-usersuidsavedpostspostid">B — Firestore subcollection only (<code>users/{uid}/savedPosts/{postId}</code>)<a class="headerlink" href="#b-firestore-subcollection-only-usersuidsavedpostspostid" title="Permanent link">&para;</a></h3>
 <p>Saves are stored exclusively in Firestore. Guest users cannot save posts — the Save button is hidden or disabled when not authenticated, with a prompt to sign in.</p>
-<p><strong>Pros:</strong>
-- No Hive complexity for this feature. Only one storage backend to maintain.
-- Authenticated saves are fully cross-device from day one.
-- No merge logic on login.
-- Simpler <code>SavedPostRepository</code> — one implementation, not two.</p>
-<p><strong>Cons:</strong>
-- Guest users cannot save posts. This directly contradicts the stated requirement: "Guest users (not logged in): saved posts are stored locally using Hive (offline-first, no Firestore writes)."
-- A guest who finds a useful post must either sign up immediately (friction) or lose the post (poor UX).
-- On logout, all saves are inaccessible until the user signs back in, even on the same device.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>No Hive complexity for this feature. Only one storage backend to maintain.</li>
+<li>Authenticated saves are fully cross-device from day one.</li>
+<li>No merge logic on login.</li>
+<li>Simpler <code>SavedPostRepository</code> — one implementation, not two.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Guest users cannot save posts. This directly contradicts the stated requirement: "Guest users (not logged in): saved posts are stored locally using Hive (offline-first, no Firestore writes)."</li>
+<li>A guest who finds a useful post must either sign up immediately (friction) or lose the post (poor UX).</li>
+<li>On logout, all saves are inaccessible until the user signs back in, even on the same device.</li>
+</ul>
 <p><strong>Effort:</strong> S (single backend, no merge).</p>
 <p><strong>Verdict:</strong> Does not meet the guest requirement. Acceptable only if the product decision is explicitly made to require authentication before saving.</p>
 <hr />
 <h3 id="c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended">C — Hybrid: Hive for guests, Firestore for authenticated users, merge on login (recommended)<a class="headerlink" href="#c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended" title="Permanent link">&para;</a></h3>
 <p>Described fully in Proposed Solution above.</p>
-<p><strong>Pros:</strong>
-- Satisfies all stated requirements: guest saves work offline, authenticated saves sync cross-device.
-- Guest saves are not lost on login — they are merged into Firestore.
-- The domain repository interface is unified — the presentation layer is unaware of which backend is active.
-- No new pub.dev dependencies. <code>hive_flutter</code> and <code>cloud_firestore</code> are already in <code>pubspec.yaml</code>.</p>
-<p><strong>Cons:</strong>
-- Two repository implementations to maintain instead of one.
-- Merge-on-login logic adds complexity. Edge cases must be handled: merge failure, partial merge on network drop, posts that were saved on both a guest session and an existing authenticated account.
-- The <code>saved_post_repository_provider</code> must react to <code>authStateProvider</code> changes, which requires careful provider lifecycle management to avoid read-after-dispose errors when the provider switches implementations mid-session.
-- Hive box for <code>saved_posts</code> adds a second registered adapter alongside <code>PostDraftModelAdapter</code>.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Satisfies all stated requirements: guest saves work offline, authenticated saves sync cross-device.</li>
+<li>Guest saves are not lost on login — they are merged into Firestore.</li>
+<li>The domain repository interface is unified — the presentation layer is unaware of which backend is active.</li>
+<li>No new pub.dev dependencies. <code>hive_flutter</code> and <code>cloud_firestore</code> are already in <code>pubspec.yaml</code>.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Two repository implementations to maintain instead of one.</li>
+<li>Merge-on-login logic adds complexity. Edge cases must be handled: merge failure, partial merge on network drop, posts that were saved on both a guest session and an existing authenticated account.</li>
+<li>The <code>saved_post_repository_provider</code> must react to <code>authStateProvider</code> changes, which requires careful provider lifecycle management to avoid read-after-dispose errors when the provider switches implementations mid-session.</li>
+<li>Hive box for <code>saved_posts</code> adds a second registered adapter alongside <code>PostDraftModelAdapter</code>.</li>
+</ul>
 <p><strong>Effort:</strong> M.</p>
 <p><strong>Verdict:</strong> Recommended. The added complexity is concentrated in the Data layer and merge use case, leaving the Domain interface and Presentation layer clean. The product experience is correct for all user types.</p>
 <hr />
 <h3 id="d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache">D — Firestore subcollection with Firestore offline persistence as local cache<a class="headerlink" href="#d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache" title="Permanent link">&para;</a></h3>
 <p>Use Firestore's built-in offline persistence (already enabled by <code>cloud_firestore</code>) as the offline layer for all users, including guests. Guest users are assigned an anonymous Firebase Auth UID (<code>signInAnonymously</code>), enabling Firestore writes. On explicit sign-in, the anonymous account is linked to the authenticated account, preserving all data.</p>
-<p><strong>Pros:</strong>
-- Single storage backend (Firestore) for all users.
-- No custom Hive model or merge logic.
-- Firebase anonymous auth handles the guest identity problem cleanly.
-- Offline reads are served from Firestore's local cache automatically.</p>
-<p><strong>Cons:</strong>
-- Requires introducing anonymous Firebase Auth (<code>signInAnonymously</code>) — a new auth flow not currently in the codebase. The <code>_RouterNotifier</code> and <code>GuestMode</code> provider would need rearchitecting: currently guest mode is a simple boolean, not a Firebase identity.
-- Anonymous accounts have a 30-day inactivity expiry on Firebase. A guest who returns after a month loses their saves silently.
-- Linking anonymous accounts to authenticated accounts is a one-way operation that can fail (e.g., if the authenticated account already has data). Error handling for link failures is non-trivial.
-- <code>signInAnonymously</code> counts toward Firebase Auth monthly active users, which may affect billing at scale.
-- Firestore offline persistence does not guarantee writes are durable across app reinstalls — the local cache is cleared on reinstall, meaning guest saves on a reinstalled app are lost even with this approach.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Single storage backend (Firestore) for all users.</li>
+<li>No custom Hive model or merge logic.</li>
+<li>Firebase anonymous auth handles the guest identity problem cleanly.</li>
+<li>Offline reads are served from Firestore's local cache automatically.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Requires introducing anonymous Firebase Auth (<code>signInAnonymously</code>) — a new auth flow not currently in the codebase. The <code>_RouterNotifier</code> and <code>GuestMode</code> provider would need rearchitecting: currently guest mode is a simple boolean, not a Firebase identity.</li>
+<li>Anonymous accounts have a 30-day inactivity expiry on Firebase. A guest who returns after a month loses their saves silently.</li>
+<li>Linking anonymous accounts to authenticated accounts is a one-way operation that can fail (e.g., if the authenticated account already has data). Error handling for link failures is non-trivial.</li>
+<li><code>signInAnonymously</code> counts toward Firebase Auth monthly active users, which may affect billing at scale.</li>
+<li>Firestore offline persistence does not guarantee writes are durable across app reinstalls — the local cache is cleared on reinstall, meaning guest saves on a reinstalled app are lost even with this approach.</li>
+</ul>
 <p><strong>Effort:</strong> L (rearchitecting the guest auth model).</p>
 <p><strong>Verdict:</strong> Architecturally elegant but introduces a significant dependency on anonymous auth that rewrites the existing guest model. The merge problem is shifted from the data layer to the auth layer, where failure modes are harder to handle. Not recommended for this scope.</p>
 <hr />
@@ -2143,33 +2187,43 @@
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
-<p><strong>Guest user path:</strong>
-- A guest user can tap the Save button on a <code>PostCard</code> in the feed, and the post is immediately marked as saved (button state toggles, no loading spinner).
-- Saved posts persist across app restarts for a guest user (Hive-backed; survives hot restart and cold start).
-- The Saved tab (<code>/more/saved</code>) displays the guest user's saved posts as a list, rendered from the local Hive store without any Firestore reads.
-- A guest user can unsave a post; the post is immediately removed from the Saved tab.
-- The Save button does not require authentication — it is active for guest users.
-- The Saved tab shows a non-empty empty state UI (illustration + descriptive text + CTA to feed) when no posts are saved.</p>
-<p><strong>Authenticated user path:</strong>
-- An authenticated user's saved posts are stored in <code>users/{uid}/savedPosts/{postId}</code> in Firestore.
-- The Saved tab reflects the Firestore state in real time via a <code>snapshots()</code> stream — saves made on another device appear without a manual refresh.
-- A saved post is retrievable on a second device after signing in with the same account, within one Firestore sync round-trip.
-- Un-saving a post removes the Firestore document and the post disappears from the Saved tab within one round-trip.</p>
-<p><strong>Merge-on-login path:</strong>
-- When a guest user with locally saved posts signs in, all local saves are merged into <code>users/{uid}/savedPosts/</code> in Firestore automatically, without user intervention.
-- Posts that were already saved on the authenticated account (from a previous session or another device) are not duplicated — <code>SetOptions(merge: true)</code> semantics apply.
-- After a successful merge, the Hive box is cleared.
-- If the merge fails (e.g., no network), the Hive box is retained and the merge is retried on the next login event.
-- A guest user who has not saved any posts and then signs in sees no merge prompt and experiences no change in behavior.</p>
-<p><strong>Clean Architecture compliance:</strong>
-- All entities (<code>SavedPost</code>), repository interfaces (<code>SavedPostRepository</code>), and use cases (<code>SavePost</code>, <code>UnsavePost</code>, <code>GetSavedPosts</code>, <code>IsPostSaved</code>, <code>MergeGuestSaves</code>) are pure Dart — zero Flutter or Firebase imports in the domain layer.
-- The presentation layer depends only on the domain interface, never on the Hive or Firestore implementations directly.</p>
-<p><strong>Quality gates:</strong>
-- <code>flutter analyze</code> reports zero issues on all new code.
-- Every new screen (<code>SavedScreen</code>) has a widget test covering: non-empty list state, empty state, and (for authenticated users) a loading state.
-- <code>SaveButton</code> has a widget test for both saved and unsaved visual states.
-- <code>MergeGuestSaves</code> use case has a unit test covering: successful merge, merge with pre-existing Firestore saves (no duplicate), and merge failure (Hive retained).
-- No new pub.dev dependencies are introduced — <code>hive_flutter</code> and <code>cloud_firestore</code> are already declared in <code>pubspec.yaml</code>.</p>
+<p><strong>Guest user path:</strong></p>
+<ul>
+<li>A guest user can tap the Save button on a <code>PostCard</code> in the feed, and the post is immediately marked as saved (button state toggles, no loading spinner).</li>
+<li>Saved posts persist across app restarts for a guest user (Hive-backed; survives hot restart and cold start).</li>
+<li>The Saved tab (<code>/more/saved</code>) displays the guest user's saved posts as a list, rendered from the local Hive store without any Firestore reads.</li>
+<li>A guest user can unsave a post; the post is immediately removed from the Saved tab.</li>
+<li>The Save button does not require authentication — it is active for guest users.</li>
+<li>The Saved tab shows a non-empty empty state UI (illustration + descriptive text + CTA to feed) when no posts are saved.</li>
+</ul>
+<p><strong>Authenticated user path:</strong></p>
+<ul>
+<li>An authenticated user's saved posts are stored in <code>users/{uid}/savedPosts/{postId}</code> in Firestore.</li>
+<li>The Saved tab reflects the Firestore state in real time via a <code>snapshots()</code> stream — saves made on another device appear without a manual refresh.</li>
+<li>A saved post is retrievable on a second device after signing in with the same account, within one Firestore sync round-trip.</li>
+<li>Un-saving a post removes the Firestore document and the post disappears from the Saved tab within one round-trip.</li>
+</ul>
+<p><strong>Merge-on-login path:</strong></p>
+<ul>
+<li>When a guest user with locally saved posts signs in, all local saves are merged into <code>users/{uid}/savedPosts/</code> in Firestore automatically, without user intervention.</li>
+<li>Posts that were already saved on the authenticated account (from a previous session or another device) are not duplicated — <code>SetOptions(merge: true)</code> semantics apply.</li>
+<li>After a successful merge, the Hive box is cleared.</li>
+<li>If the merge fails (e.g., no network), the Hive box is retained and the merge is retried on the next login event.</li>
+<li>A guest user who has not saved any posts and then signs in sees no merge prompt and experiences no change in behavior.</li>
+</ul>
+<p><strong>Clean Architecture compliance:</strong></p>
+<ul>
+<li>All entities (<code>SavedPost</code>), repository interfaces (<code>SavedPostRepository</code>), and use cases (<code>SavePost</code>, <code>UnsavePost</code>, <code>GetSavedPosts</code>, <code>IsPostSaved</code>, <code>MergeGuestSaves</code>) are pure Dart — zero Flutter or Firebase imports in the domain layer.</li>
+<li>The presentation layer depends only on the domain interface, never on the Hive or Firestore implementations directly.</li>
+</ul>
+<p><strong>Quality gates:</strong></p>
+<ul>
+<li><code>flutter analyze</code> reports zero issues on all new code.</li>
+<li>Every new screen (<code>SavedScreen</code>) has a widget test covering: non-empty list state, empty state, and (for authenticated users) a loading state.</li>
+<li><code>SaveButton</code> has a widget test for both saved and unsaved visual states.</li>
+<li><code>MergeGuestSaves</code> use case has a unit test covering: successful merge, merge with pre-existing Firestore saves (no duplicate), and merge failure (Hive retained).</li>
+<li>No new pub.dev dependencies are introduced — <code>hive_flutter</code> and <code>cloud_firestore</code> are already declared in <code>pubspec.yaml</code>.</li>
+</ul>
 
 
 
