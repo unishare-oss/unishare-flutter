@@ -158,6 +158,7 @@ class _PdfViewerState extends State<_PdfViewer> {
   int _currentPage = 0;
   int _pageCount = 0;
   bool _hasError = false;
+  bool _isLoading = true;
   int _reloadKey = 0;
 
   @override
@@ -171,10 +172,13 @@ class _PdfViewerState extends State<_PdfViewer> {
     if (!mounted) return;
     final page = _pdfController.pageNumber ?? 0;
     final count = _pdfController.isReady ? _pdfController.pageCount : 0;
-    if (page != _currentPage || count != _pageCount) {
+    if (page != _currentPage ||
+        count != _pageCount ||
+        (_isLoading && _pdfController.isReady)) {
       setState(() {
         _currentPage = page;
         _pageCount = count;
+        if (_pdfController.isReady) _isLoading = false;
       });
     }
   }
@@ -182,6 +186,7 @@ class _PdfViewerState extends State<_PdfViewer> {
   void _retry() {
     setState(() {
       _hasError = false;
+      _isLoading = true;
       _reloadKey++;
       _pdfController.removeListener(_onControllerChanged);
       _pdfController = PdfViewerController();
@@ -224,20 +229,27 @@ class _PdfViewerState extends State<_PdfViewer> {
                 ],
               ),
             )
-          : PdfViewer.uri(
-              key: ValueKey(_reloadKey),
-              Uri.parse(widget.url),
-              controller: _pdfController,
-              params: PdfViewerParams(
-                errorBannerBuilder: (context, error, stackTrace, documentRef) {
-                  // Trigger retry UI on next frame so setState is not
-                  // called during build.
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (mounted) setState(() => _hasError = true);
-                  });
-                  return const SizedBox.shrink();
-                },
-              ),
+          : Stack(
+              children: [
+                PdfViewer.uri(
+                  key: ValueKey(_reloadKey),
+                  Uri.parse(widget.url),
+                  controller: _pdfController,
+                  params: PdfViewerParams(
+                    errorBannerBuilder:
+                        (context, error, stackTrace, documentRef) {
+                          // Trigger retry UI on next frame so setState is not
+                          // called during build.
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted) setState(() => _hasError = true);
+                          });
+                          return const SizedBox.shrink();
+                        },
+                  ),
+                ),
+                if (_isLoading)
+                  const Center(child: CircularProgressIndicator()),
+              ],
             ),
     );
   }
@@ -294,8 +306,9 @@ class _VideoViewerState extends State<_VideoViewer> {
     final connectivity = await Connectivity().checkConnectivity();
     if (connectivity.contains(ConnectivityResult.none) &&
         connectivity.length == 1) {
-      if (mounted)
+      if (mounted) {
         setState(() => _state = _VideoDownloadState.offlineUnavailable);
+      }
       return;
     }
 
