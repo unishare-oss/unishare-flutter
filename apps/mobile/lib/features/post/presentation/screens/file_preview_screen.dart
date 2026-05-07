@@ -24,6 +24,9 @@ typedef FilePreviewArgs = ({
 // Top-level helper — public so unit tests can import it directly.
 // ---------------------------------------------------------------------------
 
+// Fix 5: extracted constant — used by videoCachePath() and _VideoViewerState.
+const _videoCacheSubdir = 'unishare_video';
+
 /// Returns the local file-system path where a video should be cached.
 ///
 /// Strips query-string parameters from [url] so the filename is stable across
@@ -31,7 +34,7 @@ typedef FilePreviewArgs = ({
 Future<String> videoCachePath(String url) async {
   final dir = await getTemporaryDirectory();
   final filename = url.split('/').last.split('?').first;
-  return '${dir.path}/unishare_video/$filename';
+  return '${dir.path}/$_videoCacheSubdir/$filename';
 }
 
 // ---------------------------------------------------------------------------
@@ -282,6 +285,10 @@ class _VideoViewerState extends State<_VideoViewer> {
   double _downloadProgress = 0;
   VideoPlayerController? _videoController;
   ChewieController? _chewieController;
+  // Fix 3: single Dio instance, closed in dispose().
+  final Dio _dio = Dio();
+  // Fix 4: cancel token to abort in-flight downloads on widget disposal.
+  CancelToken? _cancelToken;
 
   @override
   void initState() {
@@ -290,10 +297,10 @@ class _VideoViewerState extends State<_VideoViewer> {
   }
 
   Future<void> _init() async {
-    setState(() {
-      _state = _VideoDownloadState.loading;
-      _downloadProgress = 0;
-    });
+    // Fix 1: removed setState() here — fields are already initialised at
+    // declaration (_state = loading, _downloadProgress = 0). Calling setState
+    // inside initState fires before the first build and violates the framework
+    // contract. The retry button resets state before calling _init() instead.
 
     final cachePath = await videoCachePath(widget.url);
 
@@ -316,14 +323,18 @@ class _VideoViewerState extends State<_VideoViewer> {
     if (mounted) setState(() => _state = _VideoDownloadState.downloading);
 
     final dir = Directory(
-      '${(await getTemporaryDirectory()).path}/unishare_video',
+      '${(await getTemporaryDirectory()).path}/$_videoCacheSubdir',
     );
     await dir.create(recursive: true);
 
     try {
-      await Dio().download(
+      // Fix 4: fresh token for each download attempt.
+      _cancelToken = CancelToken();
+      // Fix 3: reuse _dio instead of creating a throwaway instance.
+      await _dio.download(
         widget.url,
         cachePath,
+        cancelToken: _cancelToken,
         onReceiveProgress: (received, total) {
           if (total > 0 && mounted) {
             setState(() => _downloadProgress = received / total);
@@ -362,6 +373,10 @@ class _VideoViewerState extends State<_VideoViewer> {
 
   @override
   void dispose() {
+    // Fix 4: cancel any in-flight download before tearing down resources.
+    _cancelToken?.cancel('widget disposed');
+    // Fix 3: close the Dio instance to free its connection pool.
+    _dio.close(force: true);
     _chewieController?.dispose();
     _videoController?.dispose();
     super.dispose();
@@ -413,7 +428,18 @@ class _VideoViewerState extends State<_VideoViewer> {
               style: TextStyle(color: Colors.white70),
             ),
             const SizedBox(height: 8),
-            TextButton(onPressed: _init, child: const Text('Retry')),
+            // Fix 1: reset state here (not inside _init) so _init is safe to
+            // call from initState without an early setState.
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _state = _VideoDownloadState.loading;
+                  _downloadProgress = 0;
+                });
+                _init();
+              },
+              child: const Text('Retry'),
+            ),
           ],
         ),
       ),
