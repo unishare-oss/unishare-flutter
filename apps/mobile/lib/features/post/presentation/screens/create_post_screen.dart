@@ -190,7 +190,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                    child: _StepIndicator(currentStep: _step),
+                    child: Center(child: _StepIndicator(currentStep: _step)),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -333,30 +333,22 @@ class _StepIndicator extends StatelessWidget {
     final ac = Theme.of(context).extension<AppColors>()!;
     final dividerColor = Theme.of(context).dividerColor;
     return Row(
-      children: List.generate(4, (i) {
-        final isCompleted = i < currentStep;
-        final isActive = i == currentStep;
-        final connectLine = i < 3;
-
-        return Expanded(
-          child: Row(
-            children: [
-              _StepDot(
-                number: i + 1,
-                isCompleted: isCompleted,
-                isActive: isActive,
-              ),
-              if (connectLine)
-                Expanded(
-                  child: Container(
-                    height: 1,
-                    color: isCompleted ? ac.amber : dividerColor,
-                  ),
-                ),
-            ],
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (int i = 0; i < 4; i++) ...[
+          _StepDot(
+            number: i + 1,
+            isCompleted: i < currentStep,
+            isActive: i == currentStep,
           ),
-        );
-      }),
+          if (i < 3)
+            Container(
+              width: 56,
+              height: 1,
+              color: i < currentStep ? ac.amber : dividerColor,
+            ),
+        ],
+      ],
     );
   }
 }
