@@ -37,6 +37,9 @@ class CreatePost {
         fileDataOverride: fileDataOverride,
         cancellationToken: cancellationToken,
       );
+      if (cancellationToken?.isCancelled == true) {
+        return draft.copyWith(status: DraftStatus.queued);
+      }
       return draft.copyWith(status: DraftStatus.published);
     } catch (_) {
       return draft.copyWith(status: DraftStatus.queued);

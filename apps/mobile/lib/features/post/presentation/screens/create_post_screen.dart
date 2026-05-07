@@ -147,14 +147,18 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       createdAt: DateTime.now(),
     );
 
+    final wasIdle = ref.read(createPostProvider) is CreatePostIdle;
     ref
         .read(createPostProvider.notifier)
         .submit(
           draft: draft,
           fileDataOverride: fileDataOverride.isEmpty ? null : fileDataOverride,
         );
-    if (ref.read(createPostProvider) is CreatePostUploading) {
-      context.push('/upload-progress');
+    if (wasIdle) {
+      final newState = ref.read(createPostProvider);
+      if (newState is CreatePostUploading || newState is CreatePostPublishing) {
+        context.push('/upload-progress');
+      }
     }
   }
 

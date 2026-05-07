@@ -86,6 +86,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   CancellationToken? _cancellationToken;
   PostDraft? _inflight;
+  Map<String, Uint8List>? _inflightFileData;
 
   @override
   CreatePostState build() {
@@ -102,22 +103,27 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final token = CancellationToken();
     _cancellationToken = token;
     _inflight = draft;
+    _inflightFileData = fileDataOverride;
 
     final filenames = draft.localMediaPaths.isEmpty
         ? <String>[]
         : draft.localMediaPaths.map((p) => p.split('/').last).toList();
 
-    state = CreatePostUploading(
-      files: filenames
-          .map(
-            (name) => FileUploadProgress(
-              filename: name,
-              phase: FileUploadPhase.queued,
-            ),
-          )
-          .toList(),
-      overallProgress: 0.0,
-    );
+    if (filenames.isEmpty) {
+      state = const CreatePostPublishing(files: []);
+    } else {
+      state = CreatePostUploading(
+        files: filenames
+            .map(
+              (name) => FileUploadProgress(
+                filename: name,
+                phase: FileUploadPhase.queued,
+              ),
+            )
+            .toList(),
+        overallProgress: 0.0,
+      );
+    }
 
     final useCase = ref.read(createPostUseCaseProvider);
 
@@ -146,7 +152,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
             }
           }
           updatedFiles[fileIndex] = updatedFiles[fileIndex].copyWith(
-            phase: FileUploadPhase.uploading,
+            phase: fileProgress >= 1.0
+                ? FileUploadPhase.done
+                : FileUploadPhase.uploading,
             progress: fileProgress,
           );
 
@@ -217,6 +225,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       return switch (e.message.toString()) {
         'title_required' => 'Please add a title before submitting.',
         'description_required' => 'Please add a description before submitting.',
+        'module_required' => 'Please add a module number before submitting.',
         _ => 'Check your inputs and try again.',
       };
     }
@@ -240,6 +249,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     // for each url in _inflight.uploadedUrls before removing the draft.
     final draft = _inflight;
     _inflight = null;
+    _inflightFileData = null;
     _cancellationToken = null;
     state = const CreatePostIdle();
     if (draft != null) {
@@ -249,8 +259,15 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
   void reset() {
     _inflight = null;
+    _inflightFileData = null;
     _cancellationToken = null;
     state = const CreatePostIdle();
+  }
+
+  Future<void> retry() async {
+    final draft = _inflight;
+    if (draft == null) return;
+    await submit(draft: draft, fileDataOverride: _inflightFileData);
   }
 
   static String generateId() =>

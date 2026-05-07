@@ -18,18 +18,21 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen<CreatePostState>(createPostProvider, (_, next) {
-      if (next is CreatePostPublished || next is CreatePostQueued) {
+      if (next is CreatePostPublished) {
+        final router = GoRouter.of(context);
+        Future.delayed(const Duration(milliseconds: 1500), () {
+          if (!mounted) return;
+          ref.read(createPostProvider.notifier).reset();
+          router.go('/feed');
+        });
+      } else if (next is CreatePostQueued) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
-          if (next is CreatePostQueued) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Saved offline — will publish when you reconnect.',
-                ),
-              ),
-            );
-          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Saved offline — will publish when you reconnect.'),
+            ),
+          );
           ref.read(createPostProvider.notifier).reset();
           GoRouter.of(context).go('/feed');
         });
@@ -122,6 +125,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           ],
           if (state is CreatePostPublishing)
             _buildFileList(context, state.files),
+          if (state is CreatePostPublished) _buildSuccessBanner(context),
           if (state is CreatePostError) ...[
             _buildErrorBanner(context, state),
             const SizedBox(height: 16),
@@ -249,6 +253,15 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           ),
         ],
       );
+    } else if (state is CreatePostPublished) {
+      return Text(
+        'Post published!',
+        style: GoogleFonts.spaceGrotesk(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: ac.success,
+        ),
+      );
     } else if (state is CreatePostError) {
       final failedFile = state.draft.localMediaPaths
           .where((p) => !state.draft.uploadedUrls.containsKey(p))
@@ -298,6 +311,23 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
     );
   }
 
+  Widget _buildSuccessBanner(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: ac.success.withValues(alpha: 0.08),
+        border: Border.all(color: ac.success.withValues(alpha: 0.3)),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        'Your post is live. Taking you to the feed…',
+        style: GoogleFonts.spaceGrotesk(fontSize: 12, color: ac.success),
+      ),
+    );
+  }
+
   Widget _buildGoToFeedButton(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
     return TextButton(
@@ -336,7 +366,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       height: 42,
       child: FilledButton(
         onPressed: () {
-          ref.read(createPostProvider.notifier).submit(draft: state.draft);
+          ref.read(createPostProvider.notifier).retry();
         },
         style: FilledButton.styleFrom(
           backgroundColor: ac.amber,
