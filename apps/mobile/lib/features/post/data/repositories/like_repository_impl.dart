@@ -18,18 +18,23 @@ class LikeRepositoryImpl implements LikeRepository {
     final uid = _auth.currentUser?.uid;
     if (uid == null) throw StateError('not_authenticated');
 
-    final ref = _firestore
+    final likeRef = _firestore
         .collection('posts')
         .doc(postId)
         .collection('likes')
         .doc(uid);
+    final postRef = _firestore.collection('posts').doc(postId);
 
-    final snap = await ref.get();
-    if (snap.exists) {
-      await ref.delete();
-    } else {
-      await ref.set({'createdAt': Timestamp.now()});
-    }
+    await _firestore.runTransaction((tx) async {
+      final snap = await tx.get(likeRef);
+      if (snap.exists) {
+        tx.delete(likeRef);
+        tx.update(postRef, {'likesCount': FieldValue.increment(-1)});
+      } else {
+        tx.set(likeRef, {'createdAt': Timestamp.now()});
+        tx.update(postRef, {'likesCount': FieldValue.increment(1)});
+      }
+    });
   }
 
   @override

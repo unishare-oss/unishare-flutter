@@ -88,6 +88,10 @@ class AuthRepositoryImpl implements AuthRepository {
     );
     final uid = credential.user!.uid;
 
+    // Set displayName on the Firebase Auth profile so it's available
+    // when creating posts (PostRepositoryImpl reads user.displayName).
+    await credential.user!.updateDisplayName(name);
+
     await _firestore.createUser(
       uid: uid,
       name: name,
