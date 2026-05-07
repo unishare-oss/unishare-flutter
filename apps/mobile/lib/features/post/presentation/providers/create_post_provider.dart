@@ -94,7 +94,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     Map<String, Uint8List>? fileDataOverride,
   }) async {
     if (state is CreatePostUploading || state is CreatePostPublishing) return;
-    _cancellationToken = CancellationToken();
+    // Capture locally so cancel() nulling the field doesn't affect this run.
+    final token = CancellationToken();
+    _cancellationToken = token;
     _inflight = draft;
 
     final filenames = draft.localMediaPaths.isEmpty
@@ -124,8 +126,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         draft: draft,
         isConnected: isConnected,
         fileDataOverride: fileDataOverride,
-        cancellationToken: _cancellationToken,
+        cancellationToken: token,
         onFileProgress: (fileIndex, fileProgress) {
+          if (token.isCancelled) return;
           final current = state;
           if (current is! CreatePostUploading) return;
 
@@ -150,41 +153,66 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           );
         },
         onProgress: (p) {
+          if (token.isCancelled) return;
           if (p >= 1.0) state = const CreatePostPublishing();
         },
       );
 
-      if (_cancellationToken?.isCancelled ?? false) return;
+      if (token.isCancelled) return;
       state = switch (result.status) {
         DraftStatus.published => CreatePostPublished(postId: result.id),
         DraftStatus.queued => CreatePostQueued(draftId: result.id),
         _ => CreatePostError(
-          message: result.errorMessage ?? 'Unknown error',
+          message: result.errorMessage ?? 'Upload failed. Please try again.',
           draft: result,
           overallProgress: currentOverall,
         ),
       };
     } on ArgumentError catch (e) {
+      if (token.isCancelled) return;
       state = CreatePostError(
-        message: e.message.toString(),
+        message: _toUserMessage(e),
         draft: draft,
         overallProgress: 0.0,
       );
     } on DioException catch (e) {
-      if (e.type != DioExceptionType.cancel) {
+      if (e.type != DioExceptionType.cancel && !token.isCancelled) {
         state = CreatePostError(
-          message: e.toString(),
+          message: _toUserMessage(e),
           draft: draft,
           overallProgress: currentOverall,
         );
       }
     } catch (e) {
+      if (token.isCancelled) return;
       state = CreatePostError(
-        message: e.toString(),
+        message: _toUserMessage(e),
         draft: draft,
         overallProgress: currentOverall,
       );
     }
+  }
+
+  static String _toUserMessage(Object e) {
+    if (e is ArgumentError) {
+      return switch (e.message.toString()) {
+        'title_required' => 'Please add a title before submitting.',
+        'description_required' => 'Please add a description before submitting.',
+        _ => 'Check your inputs and try again.',
+      };
+    }
+    if (e is DioException) {
+      return switch (e.type) {
+        DioExceptionType.connectionTimeout ||
+        DioExceptionType.sendTimeout ||
+        DioExceptionType.receiveTimeout =>
+          'Request timed out. Check your connection and try again.',
+        DioExceptionType.connectionError =>
+          'No internet connection. Your draft has been saved.',
+        _ => 'Network error. Please try again.',
+      };
+    }
+    return 'Something went wrong. Please try again.';
   }
 
   Future<void> cancel() async {

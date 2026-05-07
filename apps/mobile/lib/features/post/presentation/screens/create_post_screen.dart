@@ -111,6 +111,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   }
 
   void _submit() {
+    final currentState = ref.read(createPostProvider);
+    if (currentState is CreatePostUploading ||
+        currentState is CreatePostPublishing) {
+      return;
+    }
+
     final localMediaPaths = _pickedFiles
         .map((f) => f.bytes != null ? f.name : f.path!)
         .toList();
