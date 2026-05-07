@@ -1129,10 +1129,7 @@ class _MoreFromThisCourse extends StatelessWidget {
               children: [
                 for (int i = 0; i < _items.length; i++) ...[
                   if (i > 0)
-                    Divider(
-                      height: 1,
-                      color: Theme.of(context).dividerColor,
-                    ),
+                    Divider(height: 1, color: Theme.of(context).dividerColor),
                   _RelatedPostTile(item: _items[i]),
                 ],
               ],

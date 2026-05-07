@@ -45,3 +45,12 @@ Files:
   ~ apps/mobile/test/unit/features/post/presentation/providers/post_detail_provider_test.dart
 Summary:  3 files changed, 53 insertions(+), 26 deletions(-)
 
+Files:
+  ~ apps/mobile/lib/features/post/presentation/providers/post_detail_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+Summary:  2 files changed, 15 insertions(+), 25 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+Summary:  1 file changed, 1 insertion(+), 4 deletions(-)
+
