@@ -688,3 +688,5 @@ Files:
   ~ apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
 Summary:  1 file changed, 26 insertions(+), 27 deletions(-)
 
+  [13:36] Edit: apps/mobile/android/app/build.gradle.kts
+  [13:36] Edit: apps/mobile/android/app/build.gradle.kts
