@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:pdfrx/pdfrx.dart';
 
-import '../../../../shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 /// Vertical file-attachment list used on the Post Detail screen.
 ///

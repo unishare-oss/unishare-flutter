@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../data/datasources/firebase_auth_datasource.dart';
-import '../../data/datasources/firestore_user_datasource.dart';
-import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/repositories/auth_repository.dart';
+import 'package:unishare_mobile/features/auth/data/datasources/firebase_auth_datasource.dart';
+import 'package:unishare_mobile/features/auth/data/datasources/firestore_user_datasource.dart';
+import 'package:unishare_mobile/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
 
 part 'auth_repository_provider.g.dart';
 

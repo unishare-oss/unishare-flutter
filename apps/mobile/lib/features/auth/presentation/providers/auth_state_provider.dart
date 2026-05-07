@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/entities/app_user.dart';
-import 'auth_repository_provider.dart';
+import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 
 part 'auth_state_provider.g.dart';
 

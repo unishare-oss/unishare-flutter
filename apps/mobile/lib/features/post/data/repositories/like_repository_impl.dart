@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../domain/repositories/like_repository.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/like_repository.dart';
 
 class LikeRepositoryImpl implements LikeRepository {
   LikeRepositoryImpl({

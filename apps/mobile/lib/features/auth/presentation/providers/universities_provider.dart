@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'auth_repository_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 
 part 'universities_provider.g.dart';
 

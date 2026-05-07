@@ -11,11 +11,16 @@
 .idea/
 *.iml
 
-# VS Code
-.vscode/
+# VS Code — launch.json is committed so teammates get the run config
+# Add .vscode/ back here if you want to stop sharing it
+.vscode/*.log
 
 # Git worktrees
 .worktrees/
+
+# Claude Code agent session files
+.claude/worktrees/
+.claude/settings.local.json
 
 # Agent log 
 apps/mobile/docs/

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../models/app_user_model.dart';
+import 'package:unishare_mobile/features/auth/data/models/app_user_model.dart';
 
 class FirestoreUserDatasource {
   FirestoreUserDatasource({FirebaseFirestore? firestore})

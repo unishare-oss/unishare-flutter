@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../domain/entities/comment.dart';
-import '../models/comment_dto.dart';
+import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
+import 'package:unishare_mobile/features/post/data/models/comment_dto.dart';
 
 class CommentFirestoreDatasource {
   final _firestore = FirebaseFirestore.instance;

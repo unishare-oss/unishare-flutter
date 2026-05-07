@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../shared/theme/app_colors.dart';
-import '../../../../shared/theme/app_typography.dart';
-import '../../../auth/presentation/providers/guest_mode_provider.dart';
-import '../../domain/entities/post.dart';
-import '../providers/comments_provider.dart';
-import '../providers/post_detail_provider.dart';
-import '../providers/post_repository_provider.dart';
-import '../providers/user_like_status_provider.dart';
-import '../widgets/attachment_list.dart';
-import '../widgets/comment_tile.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/comments_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/post_detail_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/user_like_status_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/attachment_list.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/comment_tile.dart';
+//import 'package:unishare_mobile/features/post/presentation/widgets/like_button.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
   const PostDetailScreen({super.key, required this.postId, this.seed});

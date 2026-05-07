@@ -1,7 +1,7 @@
 // Pure Dart — zero Flutter or Firebase imports.
 
-import '../entities/comment.dart';
-import '../repositories/comment_repository.dart';
+import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/comment_repository.dart';
 
 class WatchComments {
   const WatchComments(this._repository);

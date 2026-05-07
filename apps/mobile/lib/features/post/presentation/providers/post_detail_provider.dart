@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../domain/entities/post.dart';
-import 'post_repository_provider.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 
 part 'post_detail_provider.g.dart';
 

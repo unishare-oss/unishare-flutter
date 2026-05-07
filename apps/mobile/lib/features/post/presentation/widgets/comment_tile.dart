@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../shared/theme/app_colors.dart';
-import '../../domain/entities/comment.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
 
 class CommentTile extends StatelessWidget {
   const CommentTile({super.key, required this.comment});

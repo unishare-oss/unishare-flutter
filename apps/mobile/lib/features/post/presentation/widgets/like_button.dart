@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 /// A stateless like button widget.
 ///

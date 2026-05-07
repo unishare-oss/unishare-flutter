@@ -1,4 +1,4 @@
-import '../entities/app_user.dart';
+import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 
 abstract interface class AuthRepository {
   /// Emits null when signed out, AppUser when signed in.

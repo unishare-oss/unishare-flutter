@@ -5,7 +5,7 @@ description: "Persistent 4-tab bottom navigation bar for authenticated users, in
 
 # PROP-0005: Main Navigation Bar
 
-**Status:** ACCEPTED  
+**Status:** APPROVED  
 **Author:** architect  
 **Date:** 2026-05-05  
 **Spec:** [SPEC-0005](../tech-specs/0005-main-navbar.md)  
