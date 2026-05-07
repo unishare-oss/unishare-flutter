@@ -1,59 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
-/// Step 2: year + course dropdowns.
-///
-/// Courses are loaded from a simple in-memory list keyed by year for v1.
-/// When Firestore reference data is seeded, this can be replaced with a
-/// StreamProvider that queries the `courses` collection filtered by year.
-class CourseStep extends StatelessWidget {
+class CourseStep extends ConsumerStatefulWidget {
   const CourseStep({
     super.key,
+    required this.universityId,
+    required this.selectedDepartmentId,
     required this.selectedYear,
     required this.selectedCourseId,
+    required this.onDepartmentChanged,
     required this.onYearChanged,
     required this.onCourseChanged,
   });
 
+  final String universityId;
+  final String? selectedDepartmentId;
   final int? selectedYear;
   final String? selectedCourseId;
+  final ValueChanged<String?> onDepartmentChanged;
   final ValueChanged<int?> onYearChanged;
   final ValueChanged<String?> onCourseChanged;
 
+  @override
+  ConsumerState<CourseStep> createState() => _CourseStepState();
+}
+
+class _CourseStepState extends ConsumerState<CourseStep> {
   static const _years = [1, 2, 3, 4];
 
-  /// Placeholder course list until Firestore reference data is seeded.
-  static const _courses = <int, List<_Course>>{
-    1: [
-      _Course('csc101', 'CSC101 Introduction to Computing'),
-      _Course('mat101', 'MAT101 Calculus I'),
-      _Course('eng101', 'ENG101 Technical Writing'),
-    ],
-    2: [
-      _Course('csc201', 'CSC201 Data Structures'),
-      _Course('csc202', 'CSC202 Algorithms'),
-      _Course('mat201', 'MAT201 Linear Algebra'),
-    ],
-    3: [
-      _Course('csc301', 'CSC301 Operating Systems'),
-      _Course('csc302', 'CSC302 Database Systems'),
-      _Course('csc303', 'CSC303 Software Engineering'),
-    ],
-    4: [
-      _Course('csc401', 'CSC401 Machine Learning'),
-      _Course('csc402', 'CSC402 Distributed Systems'),
-      _Course('csc403', 'CSC403 Final Year Project'),
-    ],
-  };
+  late Future<List<({String id, String name})>> _deptsFuture;
+  Future<List<({String id, String name})>>? _coursesFuture;
+  String? _lastDeptId;
+  int? _lastYear;
 
-  List<_Course> get _currentCourses =>
-      selectedYear != null ? (_courses[selectedYear] ?? []) : [];
+  @override
+  void initState() {
+    super.initState();
+    _loadDepts();
+    _maybeLoadCourses();
+  }
+
+  @override
+  void didUpdateWidget(CourseStep old) {
+    super.didUpdateWidget(old);
+    // Reload courses when dept or year changes.
+    if (widget.selectedDepartmentId != _lastDeptId ||
+        widget.selectedYear != _lastYear) {
+      _maybeLoadCourses();
+    }
+  }
+
+  void _loadDepts() {
+    final ds = ref.read(courseFirestoreDatasourceProvider);
+    _deptsFuture = ds.getDepartments(widget.universityId);
+    _lastDeptId = null;
+    _lastYear = null;
+  }
+
+  void _maybeLoadCourses() {
+    final deptId = widget.selectedDepartmentId;
+    final year = widget.selectedYear;
+    if (deptId != null && year != null) {
+      final ds = ref.read(courseFirestoreDatasourceProvider);
+      setState(() {
+        _coursesFuture = ds.getCourses(deptId, year);
+        _lastDeptId = deptId;
+        _lastYear = year;
+      });
+    } else {
+      setState(() {
+        _coursesFuture = null;
+        _lastDeptId = deptId;
+        _lastYear = year;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -66,10 +96,64 @@ class CourseStep extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
+
+        // DEPARTMENT
+        _FieldLabel('DEPARTMENT'),
+        const SizedBox(height: 6),
+        FutureBuilder<List<({String id, String name})>>(
+          future: _deptsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _DropdownField<String>(
+                value: null,
+                hint: 'Loading…',
+                items: const [],
+                onChanged: null,
+              );
+            }
+            if (snapshot.hasError) {
+              return _DropdownField<String>(
+                value: null,
+                hint: 'Failed to load',
+                items: const [],
+                onChanged: null,
+              );
+            }
+            final depts = snapshot.data ?? [];
+            return _DropdownField<String>(
+              value: widget.selectedDepartmentId,
+              hint: 'Select department',
+              items: depts
+                  .map(
+                    (d) => DropdownMenuItem(
+                      value: d.id,
+                      child: Text(
+                        d.name,
+                        style: GoogleFonts.spaceGrotesk(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: cs.onSurface,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (v) {
+                widget.onDepartmentChanged(v);
+                widget.onYearChanged(null);
+                widget.onCourseChanged(null);
+              },
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+
+        // YEAR
         _FieldLabel('YEAR'),
         const SizedBox(height: 6),
         _DropdownField<int>(
-          value: selectedYear,
+          value: widget.selectedYear,
           hint: 'Select year',
           items: _years
               .map(
@@ -87,18 +171,72 @@ class CourseStep extends StatelessWidget {
               )
               .toList(),
           onChanged: (v) {
-            onYearChanged(v);
-            // Reset course when year changes.
-            onCourseChanged(null);
+            widget.onYearChanged(v);
+            widget.onCourseChanged(null);
           },
         ),
         const SizedBox(height: 16),
+
+        // COURSE
         _FieldLabel('COURSE'),
         const SizedBox(height: 6),
-        _DropdownField<String>(
-          value: selectedCourseId,
-          hint: selectedYear == null ? 'Select a year first' : 'Select course',
-          items: _currentCourses
+        _buildCourseDropdown(context),
+      ],
+    );
+  }
+
+  Widget _buildCourseDropdown(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    if (widget.selectedDepartmentId == null) {
+      return _DropdownField<String>(
+        value: null,
+        hint: 'Select a department first',
+        items: const [],
+        onChanged: null,
+      );
+    }
+    if (widget.selectedYear == null) {
+      return _DropdownField<String>(
+        value: null,
+        hint: 'Select a year first',
+        items: const [],
+        onChanged: null,
+      );
+    }
+    final future = _coursesFuture;
+    if (future == null) {
+      return _DropdownField<String>(
+        value: null,
+        hint: 'Loading…',
+        items: const [],
+        onChanged: null,
+      );
+    }
+    return FutureBuilder<List<({String id, String name})>>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _DropdownField<String>(
+            value: null,
+            hint: 'Loading…',
+            items: const [],
+            onChanged: null,
+          );
+        }
+        if (snapshot.hasError) {
+          return _DropdownField<String>(
+            value: null,
+            hint: 'Failed to load',
+            items: const [],
+            onChanged: null,
+          );
+        }
+        final courses = snapshot.data ?? [];
+        return _DropdownField<String>(
+          value: widget.selectedCourseId,
+          hint: courses.isEmpty ? 'No courses found' : 'Select course',
+          items: courses
               .map(
                 (c) => DropdownMenuItem(
                   value: c.id,
@@ -114,17 +252,11 @@ class CourseStep extends StatelessWidget {
                 ),
               )
               .toList(),
-          onChanged: selectedYear != null ? onCourseChanged : null,
-        ),
-      ],
+          onChanged: courses.isEmpty ? null : widget.onCourseChanged,
+        );
+      },
     );
   }
-}
-
-class _Course {
-  const _Course(this.id, this.name);
-  final String id;
-  final String name;
 }
 
 class _FieldLabel extends StatelessWidget {

@@ -8,17 +8,15 @@ part 'course_reference_provider.g.dart';
 CourseFirestoreDatasource courseFirestoreDatasource(Ref ref) =>
     CourseFirestoreDatasource();
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<({String id, String name})>> departmentsForUniversity(
   Ref ref,
   String universityId,
-) =>
-    ref.watch(courseFirestoreDatasourceProvider).getDepartments(universityId);
+) => ref.read(courseFirestoreDatasourceProvider).getDepartments(universityId);
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<({String id, String name})>> courses(
   Ref ref,
   String deptId,
   int year,
-) =>
-    ref.watch(courseFirestoreDatasourceProvider).getCourses(deptId, year);
+) => ref.read(courseFirestoreDatasourceProvider).getCourses(deptId, year);
