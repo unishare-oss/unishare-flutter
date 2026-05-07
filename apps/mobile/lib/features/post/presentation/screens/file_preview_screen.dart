@@ -187,11 +187,12 @@ class _PdfViewerState extends State<_PdfViewer> {
   }
 
   void _retry() {
+    final old = _pdfController;
     setState(() {
       _hasError = false;
       _isLoading = true;
       _reloadKey++;
-      _pdfController.removeListener(_onControllerChanged);
+      old.removeListener(_onControllerChanged);
       _pdfController = PdfViewerController();
       _pdfController.addListener(_onControllerChanged);
     });

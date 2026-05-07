@@ -62,7 +62,7 @@ class AttachmentCarousel extends StatelessWidget {
       case 'pdf':
         return _PdfSlot(url: url);
       case 'video':
-        return _VideoSlot(url: url, outerContext: context);
+        return _VideoSlot(url: url);
       default:
         return GestureDetector(
           onTap: () => context.push(
@@ -157,10 +157,9 @@ class _PdfSlot extends StatelessWidget {
 }
 
 class _VideoSlot extends StatelessWidget {
-  const _VideoSlot({required this.url, required this.outerContext});
+  const _VideoSlot({required this.url});
 
   final String url;
-  final BuildContext outerContext;
 
   static String _filename(String rawUrl) {
     final uri = Uri.tryParse(rawUrl);
@@ -172,7 +171,7 @@ class _VideoSlot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => outerContext.push(
+      onTap: () => context.push(
         '/preview',
         extra: (url: url, type: 'video', filename: _filename(url)),
       ),

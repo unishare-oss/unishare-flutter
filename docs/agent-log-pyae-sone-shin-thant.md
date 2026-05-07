@@ -644,3 +644,7 @@ Review: PENDING
   [11:41] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
   [11:42] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart
   [11:42] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
+  [11:45] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:45] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
+  [11:45] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
+  [11:45] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
