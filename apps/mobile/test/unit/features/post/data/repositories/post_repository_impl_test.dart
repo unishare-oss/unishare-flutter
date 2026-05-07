@@ -32,25 +32,25 @@ class _FakeDatasource extends PostFirestoreDatasource {
 // ---------------------------------------------------------------------------
 
 Post _post(String id) => Post(
-      id: id,
-      authorId: 'a',
-      authorName: 'A',
-      authorAvatar: '',
-      postType: PostType.lectureNote,
-      year: 1,
-      courseId: 'c',
-      title: 'T',
-      description: 'D',
-      postingIdentity: PostingIdentity.named,
-      semester: 1,
-      moduleNumber: '1',
-      mediaUrls: const [],
-      mediaTypes: const [],
-      tags: const [],
-      likesCount: 0,
-      createdAt: DateTime(2026),
-      updatedAt: DateTime(2026),
-    );
+  id: id,
+  authorId: 'a',
+  authorName: 'A',
+  authorAvatar: '',
+  postType: PostType.lectureNote,
+  year: 1,
+  courseId: 'c',
+  title: 'T',
+  description: 'D',
+  postingIdentity: PostingIdentity.named,
+  semester: 1,
+  moduleNumber: '1',
+  mediaUrls: const [],
+  mediaTypes: const [],
+  tags: const [],
+  likesCount: 0,
+  createdAt: DateTime(2026),
+  updatedAt: DateTime(2026),
+);
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -78,14 +78,13 @@ void main() {
     required FeedCache feedCache,
     required _FakeDatasource datasource,
     Duration cacheTtl = const Duration(minutes: 5),
-  }) =>
-      PostRepositoryImpl(
-        firestoreDatasource: datasource,
-        storageDatasource: PostStorageDatasource(),
-        draftBox: draftBox,
-        feedCache: feedCache,
-        cacheTtl: cacheTtl,
-      );
+  }) => PostRepositoryImpl(
+    firestoreDatasource: datasource,
+    storageDatasource: PostStorageDatasource(),
+    draftBox: draftBox,
+    feedCache: feedCache,
+    cacheTtl: cacheTtl,
+  );
 
   group('watchFeed — cache miss', () {
     test('emits nothing until datasource emits when cache is empty', () async {
