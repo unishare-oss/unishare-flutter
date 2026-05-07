@@ -78,7 +78,7 @@ final class CreatePostError extends CreatePostState {
   final double overallProgress;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class CreatePostNotifier extends _$CreatePostNotifier {
   static final _rand = Random.secure();
   static const _chars =
@@ -88,7 +88,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   PostDraft? _inflight;
 
   @override
-  CreatePostState build() => const CreatePostIdle();
+  CreatePostState build() {
+    ref.onDispose(() => _cancellationToken?.cancel());
+    return const CreatePostIdle();
+  }
 
   Future<void> submit({
     required PostDraft draft,
@@ -129,7 +132,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         fileDataOverride: fileDataOverride,
         cancellationToken: token,
         onFileProgress: (fileIndex, fileProgress) {
-          if (token.isCancelled) return;
+          if (token.isCancelled || !ref.mounted) return;
           final current = state;
           if (current is! CreatePostUploading) return;
 
@@ -154,7 +157,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           );
         },
         onProgress: (p) {
-          if (token.isCancelled) return;
+          if (token.isCancelled || !ref.mounted) return;
           if (p >= 1.0) {
             final current = state;
             final allDone = current is CreatePostUploading
@@ -172,7 +175,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         },
       );
 
-      if (token.isCancelled) return;
+      if (token.isCancelled || !ref.mounted) return;
       state = switch (result.status) {
         DraftStatus.published => CreatePostPublished(postId: result.id),
         DraftStatus.queued => CreatePostQueued(draftId: result.id),
@@ -183,14 +186,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         ),
       };
     } on ArgumentError catch (e) {
-      if (token.isCancelled) return;
+      if (token.isCancelled || !ref.mounted) return;
       state = CreatePostError(
         message: _toUserMessage(e),
         draft: draft,
         overallProgress: 0.0,
       );
     } on DioException catch (e) {
-      if (e.type != DioExceptionType.cancel && !token.isCancelled) {
+      if (e.type != DioExceptionType.cancel && !token.isCancelled && ref.mounted) {
         state = CreatePostError(
           message: _toUserMessage(e),
           draft: draft,
@@ -198,7 +201,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         );
       }
     } catch (e) {
-      if (token.isCancelled) return;
+      if (token.isCancelled || !ref.mounted) return;
       state = CreatePostError(
         message: _toUserMessage(e),
         draft: draft,
