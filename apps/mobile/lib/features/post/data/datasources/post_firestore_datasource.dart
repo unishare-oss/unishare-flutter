@@ -5,7 +5,7 @@ import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 class PostFirestoreDatasource {
-  final _firestore = FirebaseFirestore.instance;
+  late final _firestore = FirebaseFirestore.instance;
 
   Future<void> createPost({
     required PostDraft draft,
