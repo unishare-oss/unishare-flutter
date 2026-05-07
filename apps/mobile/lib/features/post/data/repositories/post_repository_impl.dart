@@ -64,6 +64,7 @@ class PostRepositoryImpl implements PostRepository {
     PostDraft draft, {
     void Function(double progress)? onProgress,
     void Function(int fileIndex, double fileProgress)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
     CancellationToken? cancellationToken,
   }) async {
@@ -115,6 +116,7 @@ class PostRepositoryImpl implements PostRepository {
           ..[path] = url;
         current = current.copyWith(uploadedUrls: newUrls);
         await saveDraft(current);
+        onDraftUpdated?.call(current);
       } on DioException catch (e) {
         if (e.type == DioExceptionType.cancel) return;
         await saveDraft(

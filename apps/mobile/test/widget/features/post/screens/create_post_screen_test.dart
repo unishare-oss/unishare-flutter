@@ -39,6 +39,7 @@ class _StubRepo implements PostRepository {
     PostDraft draft, {
     void Function(double)? onProgress,
     void Function(int, double)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
     CancellationToken? cancellationToken,
   }) async {}

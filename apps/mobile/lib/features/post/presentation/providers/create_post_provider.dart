@@ -128,6 +128,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     final useCase = ref.read(createPostUseCaseProvider);
 
     double currentOverall = 0.0;
+    var latestDraft = draft;
     try {
       final results = await Connectivity().checkConnectivity();
       final isConnected = kIsWeb || !results.contains(ConnectivityResult.none);
@@ -137,6 +138,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         isConnected: isConnected,
         fileDataOverride: fileDataOverride,
         cancellationToken: token,
+        onDraftUpdated: (updated) {
+          _inflight = updated;
+          latestDraft = updated;
+        },
         onFileProgress: (fileIndex, fileProgress) {
           if (token.isCancelled || !ref.mounted) return;
           final current = state;
@@ -197,7 +202,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       if (token.isCancelled || !ref.mounted) return;
       state = CreatePostError(
         message: _toUserMessage(e),
-        draft: draft,
+        draft: latestDraft,
         overallProgress: 0.0,
       );
     } on DioException catch (e) {
@@ -206,7 +211,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
           ref.mounted) {
         state = CreatePostError(
           message: _toUserMessage(e),
-          draft: draft,
+          draft: latestDraft,
           overallProgress: currentOverall,
         );
       }
@@ -214,7 +219,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
       if (token.isCancelled || !ref.mounted) return;
       state = CreatePostError(
         message: _toUserMessage(e),
-        draft: draft,
+        draft: latestDraft,
         overallProgress: currentOverall,
       );
     }

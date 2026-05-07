@@ -16,6 +16,7 @@ abstract interface class PostRepository {
     PostDraft draft, {
     void Function(double progress)? onProgress,
     void Function(int fileIndex, double fileProgress)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
     CancellationToken? cancellationToken,
   });
