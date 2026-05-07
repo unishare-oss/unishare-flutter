@@ -23,10 +23,7 @@ class SaveButton extends StatelessWidget {
       return SizedBox(
         width: size,
         height: size,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          color: _amber,
-        ),
+        child: CircularProgressIndicator(strokeWidth: 2, color: _amber),
       );
     }
     return GestureDetector(

@@ -15,10 +15,7 @@ class SavedScreen extends ConsumerWidget {
     final isGuest = ref.watch(guestModeProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Saved'),
-        centerTitle: false,
-      ),
+      appBar: AppBar(title: const Text('Saved'), centerTitle: false),
       body: Column(
         children: [
           if (isGuest) const _GuestBanner(),
@@ -60,8 +57,8 @@ class _GuestBanner extends StatelessWidget {
             child: Text(
               "Saved posts are stored locally and won't sync across devices.",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           TextButton(
@@ -83,8 +80,8 @@ class _EmptyState extends StatelessWidget {
       child: Text(
         'No saved posts yet.',
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }

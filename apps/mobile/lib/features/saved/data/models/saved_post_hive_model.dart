@@ -37,31 +37,30 @@ class SavedPostHiveModel extends HiveObject {
   int commentsCount;
 
   SavedPost toEntity() => SavedPost(
-        postId: postId,
-        savedAt: savedAt,
-        snapshot: SavedPostSnapshot(
-          title: title,
-          authorName: authorName,
-          authorAvatar: authorAvatar,
-          courseId: courseId,
-          postType: postType,
-          tags: List.unmodifiable(tags),
-          commentsCount: commentsCount,
-        ),
-      );
+    postId: postId,
+    savedAt: savedAt,
+    snapshot: SavedPostSnapshot(
+      title: title,
+      authorName: authorName,
+      authorAvatar: authorAvatar,
+      courseId: courseId,
+      postType: postType,
+      tags: List.unmodifiable(tags),
+      commentsCount: commentsCount,
+    ),
+  );
 
-  static SavedPostHiveModel fromEntity(SavedPost entity) =>
-      SavedPostHiveModel(
-        postId: entity.postId,
-        savedAt: entity.savedAt,
-        title: entity.snapshot.title,
-        authorName: entity.snapshot.authorName,
-        authorAvatar: entity.snapshot.authorAvatar,
-        courseId: entity.snapshot.courseId,
-        postType: entity.snapshot.postType,
-        tags: List<String>.from(entity.snapshot.tags),
-        commentsCount: entity.snapshot.commentsCount,
-      );
+  static SavedPostHiveModel fromEntity(SavedPost entity) => SavedPostHiveModel(
+    postId: entity.postId,
+    savedAt: entity.savedAt,
+    title: entity.snapshot.title,
+    authorName: entity.snapshot.authorName,
+    authorAvatar: entity.snapshot.authorAvatar,
+    courseId: entity.snapshot.courseId,
+    postType: entity.snapshot.postType,
+    tags: List<String>.from(entity.snapshot.tags),
+    commentsCount: entity.snapshot.commentsCount,
+  );
 }
 
 class SavedPostHiveModelAdapter extends TypeAdapter<SavedPostHiveModel> {

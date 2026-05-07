@@ -28,16 +28,16 @@ abstract class SavedPostDto with _$SavedPostDto {
 
 extension SavedPostDtoMapper on SavedPostDto {
   SavedPost toEntity() => SavedPost(
-        postId: postId,
-        savedAt: savedAt,
-        snapshot: SavedPostSnapshot(
-          title: title,
-          authorName: authorName,
-          authorAvatar: authorAvatar,
-          courseId: courseId,
-          postType: postType,
-          tags: List.unmodifiable(tags),
-          commentsCount: commentsCount,
-        ),
-      );
+    postId: postId,
+    savedAt: savedAt,
+    snapshot: SavedPostSnapshot(
+      title: title,
+      authorName: authorName,
+      authorAvatar: authorAvatar,
+      courseId: courseId,
+      postType: postType,
+      tags: List.unmodifiable(tags),
+      commentsCount: commentsCount,
+    ),
+  );
 }

@@ -18,8 +18,7 @@ class SavedPostHiveRepositoryImpl implements SavedPostRepository {
   Future<void> unsavePost(String postId) => _datasource.remove(postId);
 
   @override
-  Stream<bool> isPostSaved(String postId) =>
-      _datasource.watchContains(postId);
+  Stream<bool> isPostSaved(String postId) => _datasource.watchContains(postId);
 
   @override
   Future<void> mergeFrom(List<SavedPost> guestSaves) async {
