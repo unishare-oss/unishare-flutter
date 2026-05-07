@@ -4,6 +4,39 @@ Automated log of all Claude Code sessions.
 See `CLAUDE.md` for the logging convention.
 
 ---
+Date: 2026-05-07 10:00
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 4 — implement UploadProgressScreen with widget tests
+Prompt: Write failing widget tests first, then implement UploadProgressScreen showing a circular ring hero, per-file status rows, publishing state, and error recovery.
+Outcome: Created upload_progress_screen.dart (ConsumerStatefulWidget) and upload_progress_screen_test.dart. Tests confirmed failing before screen existed. Fixed one unnecessary_cast lint and one use_build_context_synchronously warning. flutter analyze clean. All 5 widget tests pass. Committed as f894652.
+Decisions: Replaced ternary chain with explicit if/else blocks in _buildRing to eliminate unnecessary_cast on the already-narrowed CreatePostError type. Used inline // ignore comment for the async gap BuildContext use inside Future.delayed since the mounted guard immediately precedes it, making it safe.
+Handoff: Task 4 complete (commit f894652). Task 5 (wire UploadProgressScreen into GoRouter at /posts/upload-progress) remains. Screen needs a route entry so CreatePostScreen can push to it after calling notifier.submit().
+Review: PENDING
+
+---
+Date: 2026-05-07 00:01
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 3 — rewrite CreatePostNotifier with per-file progress states and cancel support
+Prompt: Rewrite CreatePostNotifier to emit per-file FileUploadProgress states, track a CancellationToken, and expose a cancel() method that aborts the upload and removes the draft.
+Outcome: Replaced the CreatePostNotifier class in create_post_provider.dart. Added dio and cancellation_token imports. Notifier now initialises FileUploadProgress list from draft.localMediaPaths, delegates onFileProgress to update per-file phase/progress, accumulates currentOverall, handles DioException cancel silently, and exposes cancel() which calls _cancellationToken.cancel() then removeDraft(). flutter analyze clean, all 85 unit tests pass, codegen succeeded.
+Decisions: DioException catch block only suppresses cancel-type exceptions; other Dio errors fall through to CreatePostError. currentOverall is a local variable captured by closure — correct Dart semantics for accumulating progress across callbacks.
+Handoff: Task 3 complete (commit d895293). Tasks 4 (UploadProgressScreen widget) and 5 (widget test) remain.
+Review: PENDING
+
+---
+Date: 2026-05-07 00:00
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Fix three correctness bugs in the upload stack found during code review
+Prompt: Fix listener leak (single CancelToken per publishDraft call), make uploadText cancellable, and make _put's onProgress a named parameter
+Outcome: Applied all three fixes. `dioCancelToken` and `addCancelListener` moved before the for-loop in `post_repository_impl.dart`. `uploadText` gained a `CancelToken? cancelToken` named param passed through to `_put`. `_put`'s `onProgress` changed from positional to named; all three internal call sites updated. `flutter analyze` clean, all 85 unit tests pass.
+Decisions: The three fixes were applied in a single commit as they are tightly coupled — all relate to cancellation plumbing in the same two files.
+Handoff: Upload stack correctness bugs resolved. Tasks 3-5 of the upload-progress feature (UI screen, provider, widget test) are unblocked and can proceed.
+Review: PENDING
+
+---
 Date: 2026-05-04 00:00
 Member: Pyae Sone Shin Thant
 Agent: qa-engineer
@@ -701,3 +734,65 @@ Summary:  1 file changed, 10 insertions(+)
   [15:26] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [15:26] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [15:26] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [16:19] Write: apps/mobile/test/unit/core/cancellation/cancellation_token_test.dart
+  [16:19] Write: apps/mobile/lib/core/cancellation/cancellation_token.dart
+  [16:19] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:19] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:20] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:20] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:25] Write: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [16:25] Write: apps/mobile/lib/features/post/domain/repositories/post_repository.dart
+  [16:25] Write: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [16:25] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [16:25] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [16:26] Edit: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [16:26] Edit: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [16:26] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [16:27] Edit: apps/mobile/test/unit/features/post/fakes/fake_post_repository.dart
+  [16:27] Edit: apps/mobile/test/unit/features/post/fakes/fake_post_repository.dart
+  [16:27] Edit: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [16:27] Edit: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [16:30] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [16:30] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [16:30] Edit: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [16:31] Edit: apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  [16:33] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:34] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:37] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:37] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:37] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:37] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:37] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [16:40] Write: apps/mobile/test/widget/features/post/screens/upload_progress_screen_test.dart
+  [16:41] Write: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:41] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:41] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:45] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:45] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:45] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [16:45] Edit: apps/mobile/test/widget/features/post/screens/upload_progress_screen_test.dart
+  [16:48] Edit: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [16:48] Edit: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [16:48] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:48] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:48] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:48] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:48] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:48] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:48] Edit: apps/mobile/lib/core/router/router.dart
+  [16:48] Edit: apps/mobile/lib/core/router/router.dart
+  [16:48] Edit: apps/mobile/lib/core/router/router.dart
+  [16:50] Edit: apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  [16:50] Edit: apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  [16:50] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [16:50] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart

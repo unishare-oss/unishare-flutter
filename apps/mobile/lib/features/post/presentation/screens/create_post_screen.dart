@@ -19,7 +19,6 @@ const _kPrimary = Color(0xFFD97706);
 const _kBorder = Color(0xFFE2DAD0);
 const _kFg = Color(0xFF1C1917);
 const _kMuted = Color(0xFF8A837E);
-const _kDestructive = Color(0xFFDC2626);
 
 class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});
@@ -149,13 +148,13 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           draft: draft,
           fileDataOverride: fileDataOverride.isEmpty ? null : fileDataOverride,
         );
-    context.push('/upload-progress');
+    if (ref.read(createPostProvider) is CreatePostUploading) {
+      context.push('/upload-progress');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final postState = ref.watch(createPostProvider);
-
     return Scaffold(
       backgroundColor: _kWhite,
       appBar: AppBar(
@@ -245,19 +244,6 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     ),
                   ),
                 ),
-                // Error / status banners
-                if (postState is CreatePostError)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _Banner(
-                        message: _errorMessage(postState.message),
-                        bg: const Color(0xFFFEF2F2),
-                        fg: _kDestructive,
-                        border: _kDestructive,
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),
@@ -323,16 +309,6 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         ],
       ),
     );
-  }
-
-  String _errorMessage(String code) {
-    return switch (code) {
-      'title_required' => 'Title is required.',
-      'description_required' => 'Description is required.',
-      'module_required' => 'Module number is required.',
-      'file_too_large' => 'One or more files exceed 50 MB.',
-      _ => code,
-    };
   }
 
   double get _stepHeight => MediaQuery.sizeOf(context).height * 1.1;
@@ -429,33 +405,3 @@ class _StepDot extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Banner
-// ---------------------------------------------------------------------------
-
-class _Banner extends StatelessWidget {
-  const _Banner({
-    required this.message,
-    required this.bg,
-    required this.fg,
-    required this.border,
-  });
-
-  final String message;
-  final Color bg, fg, border;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(12),
-    margin: const EdgeInsets.only(bottom: 12),
-    decoration: BoxDecoration(
-      color: bg,
-      borderRadius: BorderRadius.circular(6),
-      border: Border.all(color: border.withValues(alpha: 0.4)),
-    ),
-    child: Text(
-      message,
-      style: GoogleFonts.spaceGrotesk(fontSize: 13, color: fg),
-    ),
-  );
-}
