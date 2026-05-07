@@ -612,3 +612,35 @@ Prompt: Implement the full contents of apps/mobile/lib/features/post/presentatio
   [10:51] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
   [10:52] Write: apps/mobile/test/widget/features/post/screens/file_preview_screen_test.dart
   [10:53] Edit: apps/mobile/test/widget/features/post/screens/file_preview_screen_test.dart
+Outcome: FilePreviewScreen fully implemented. All 4 sub-viewers working per spec. 4 new tests added (2 widget, 2 unit), 171 total passing. flutter analyze: no issues.
+Decisions: PdfViewerController has no dispose() method in pdfrx 2.3.0 — removed dispose calls. PdfViewer.uri has no onError param — used PdfViewerParams.errorBannerBuilder instead with addPostFrameCallback to avoid setState-during-build. pageNumber is int? — null-coalesced to 0. pageCount guarded by isReady check. videoCachePath unit tests mock path_provider MethodChannel to avoid MissingPluginException.
+Handoff: FilePreviewScreen is ready. Caller must pass FilePreviewArgs as GoRouter extra and extract fields. Widget test does not cover _ImageViewer/_PdfViewer/_VideoViewer as they require real platform plugins — recommend integration tests for those viewers.
+Review: PENDING
+  [10:57] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [10:57] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [10:57] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [10:57] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [10:58] Edit: apps/mobile/test/widget/features/post/screens/file_preview_screen_test.dart
+  [10:58] Edit: apps/mobile/test/widget/features/post/screens/file_preview_screen_test.dart
+  [10:58] Edit: apps/mobile/test/widget/features/post/screens/file_preview_screen_test.dart
+  [10:58] Edit: apps/mobile/test/widget/features/post/screens/file_preview_screen_test.dart
+  [10:59] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:02] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:02] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:02] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:02] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:03] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:39] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:39] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [11:41] Edit: apps/mobile/lib/core/router/router.dart
+  [11:41] Edit: apps/mobile/lib/core/router/router.dart
+  [11:41] Edit: apps/mobile/lib/core/router/router.dart
+  [11:41] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart
+  [11:41] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart
+  [11:41] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
+  [11:41] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
+  [11:41] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
+  [11:41] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
+  [11:41] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
+  [11:42] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart
+  [11:42] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart
