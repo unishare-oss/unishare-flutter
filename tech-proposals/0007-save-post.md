@@ -1,15 +1,15 @@
 ---
-title: "0007: Save Post"
-description: "Persistent bookmarking of feed posts for later reference, with Hive-backed local storage for guest users and Firestore sync for authenticated users, merged on login."
+title: '0007: Save Post'
+description: 'Persistent bookmarking of feed posts for later reference, with Hive-backed local storage for guest users and Firestore sync for authenticated users, merged on login.'
 ---
 
 # PROP-0007: Save Post
 
-**Status:** DRAFT  
+**Status:** APPROVED  
 **Author:** architect  
 **Date:** 2026-05-07  
 **Spec:** (pending approval)  
-**Approved by:** (fill in when accepted)
+**Approved by:** Sai Zayar Hein
 
 ---
 
@@ -71,25 +71,25 @@ abstract class SavedPostRepository {
 
 #### Data layer
 
-| File | Responsibility |
-|---|---|
-| `data/models/saved_post_hive_model.dart` | `HiveObject` with manual `TypeAdapter` (typeId: 2 — next available after `PostDraftModelAdapter` at typeId 1); stores `postId`, `savedAt`, and denormalized snapshot fields |
-| `data/models/saved_post_dto.dart` | Freezed + `fromJson`/`toJson` for Firestore document mapping |
-| `data/datasources/saved_post_hive_datasource.dart` | Opens `Box<SavedPostHiveModel>('saved_posts')`; CRUD via Hive box |
-| `data/datasources/saved_post_firestore_datasource.dart` | Reads/writes `users/{uid}/savedPosts/{postId}` |
-| `data/repositories/saved_post_hive_repository_impl.dart` | Implements `SavedPostRepository` against Hive; `mergeFrom` is a no-op |
-| `data/repositories/saved_post_firestore_repository_impl.dart` | Implements `SavedPostRepository` against Firestore; `mergeFrom` batch-writes all guest saves |
+| File                                                          | Responsibility                                                                                                                                                              |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `data/models/saved_post_hive_model.dart`                      | `HiveObject` with manual `TypeAdapter` (typeId: 2 — next available after `PostDraftModelAdapter` at typeId 1); stores `postId`, `savedAt`, and denormalized snapshot fields |
+| `data/models/saved_post_dto.dart`                             | Freezed + `fromJson`/`toJson` for Firestore document mapping                                                                                                                |
+| `data/datasources/saved_post_hive_datasource.dart`            | Opens `Box<SavedPostHiveModel>('saved_posts')`; CRUD via Hive box                                                                                                           |
+| `data/datasources/saved_post_firestore_datasource.dart`       | Reads/writes `users/{uid}/savedPosts/{postId}`                                                                                                                              |
+| `data/repositories/saved_post_hive_repository_impl.dart`      | Implements `SavedPostRepository` against Hive; `mergeFrom` is a no-op                                                                                                       |
+| `data/repositories/saved_post_firestore_repository_impl.dart` | Implements `SavedPostRepository` against Firestore; `mergeFrom` batch-writes all guest saves                                                                                |
 
 #### Presentation layer
 
-| File | Responsibility |
-|---|---|
+| File                                                         | Responsibility                                                                                                                    |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
 | `presentation/providers/saved_post_repository_provider.dart` | `@riverpod keepAlive` — returns the Hive impl when guest, the Firestore impl when authenticated; switches when auth state changes |
-| `presentation/providers/saved_posts_provider.dart` | `@riverpod` — `StreamProvider` wrapping `GetSavedPosts`; exposes `AsyncValue<List<SavedPost>>` |
-| `presentation/providers/is_post_saved_provider.dart` | `@riverpod` family keyed on `postId` — `StreamProvider<bool>` for save-button state on `PostCard` |
-| `presentation/screens/saved_screen.dart` | Replaces the "Coming soon" stub; renders saved list or empty state |
-| `presentation/widgets/saved_post_card.dart` | Renders a saved post from the denormalized snapshot — no additional Firestore reads |
-| `presentation/widgets/save_button.dart` | Stateless toggle button; receives `isSaved` + `onTap`; placed on `PostCard` and `PostDetailScreen` |
+| `presentation/providers/saved_posts_provider.dart`           | `@riverpod` — `StreamProvider` wrapping `GetSavedPosts`; exposes `AsyncValue<List<SavedPost>>`                                    |
+| `presentation/providers/is_post_saved_provider.dart`         | `@riverpod` family keyed on `postId` — `StreamProvider<bool>` for save-button state on `PostCard`                                 |
+| `presentation/screens/saved_screen.dart`                     | Replaces the "Coming soon" stub; renders saved list or empty state                                                                |
+| `presentation/widgets/saved_post_card.dart`                  | Renders a saved post from the denormalized snapshot — no additional Firestore reads                                               |
+| `presentation/widgets/save_button.dart`                      | Stateless toggle button; receives `isSaved` + `onTap`; placed on `PostCard` and `PostDetailScreen`                                |
 
 #### Firestore schema
 
@@ -131,12 +131,14 @@ The `PostCard` widget in the feed gains a `SaveButton` that calls `savePost` / `
 All saves, for all users, are stored in a local Hive box. No Firestore collection is introduced. The feature is symmetric across guest and authenticated users.
 
 **Pros:**
+
 - Simplest implementation. No new Firestore subcollection, no merge logic, no auth-switching repository.
 - Works for guests and authenticated users identically.
 - Zero Firestore reads/writes for the save feature — no impact on billing or quota.
 - No sync latency — saves are instant and always available offline.
 
 **Cons:**
+
 - Authenticated users lose their saved list on device change, app reinstall, or when using the web version. This is a significant regression relative to user expectations for a signed-in experience.
 - The feature's value proposition for authenticated users is substantially weaker than for a cloud-synced list.
 - Cross-device access is impossible.
@@ -152,12 +154,14 @@ All saves, for all users, are stored in a local Hive box. No Firestore collectio
 Saves are stored exclusively in Firestore. Guest users cannot save posts — the Save button is hidden or disabled when not authenticated, with a prompt to sign in.
 
 **Pros:**
+
 - No Hive complexity for this feature. Only one storage backend to maintain.
 - Authenticated saves are fully cross-device from day one.
 - No merge logic on login.
 - Simpler `SavedPostRepository` — one implementation, not two.
 
 **Cons:**
+
 - Guest users cannot save posts. This directly contradicts the stated requirement: "Guest users (not logged in): saved posts are stored locally using Hive (offline-first, no Firestore writes)."
 - A guest who finds a useful post must either sign up immediately (friction) or lose the post (poor UX).
 - On logout, all saves are inaccessible until the user signs back in, even on the same device.
@@ -173,12 +177,14 @@ Saves are stored exclusively in Firestore. Guest users cannot save posts — the
 Described fully in Proposed Solution above.
 
 **Pros:**
+
 - Satisfies all stated requirements: guest saves work offline, authenticated saves sync cross-device.
 - Guest saves are not lost on login — they are merged into Firestore.
 - The domain repository interface is unified — the presentation layer is unaware of which backend is active.
 - No new pub.dev dependencies. `hive_flutter` and `cloud_firestore` are already in `pubspec.yaml`.
 
 **Cons:**
+
 - Two repository implementations to maintain instead of one.
 - Merge-on-login logic adds complexity. Edge cases must be handled: merge failure, partial merge on network drop, posts that were saved on both a guest session and an existing authenticated account.
 - The `saved_post_repository_provider` must react to `authStateProvider` changes, which requires careful provider lifecycle management to avoid read-after-dispose errors when the provider switches implementations mid-session.
@@ -195,12 +201,14 @@ Described fully in Proposed Solution above.
 Use Firestore's built-in offline persistence (already enabled by `cloud_firestore`) as the offline layer for all users, including guests. Guest users are assigned an anonymous Firebase Auth UID (`signInAnonymously`), enabling Firestore writes. On explicit sign-in, the anonymous account is linked to the authenticated account, preserving all data.
 
 **Pros:**
+
 - Single storage backend (Firestore) for all users.
 - No custom Hive model or merge logic.
 - Firebase anonymous auth handles the guest identity problem cleanly.
 - Offline reads are served from Firestore's local cache automatically.
 
 **Cons:**
+
 - Requires introducing anonymous Firebase Auth (`signInAnonymously`) — a new auth flow not currently in the codebase. The `_RouterNotifier` and `GuestMode` provider would need rearchitecting: currently guest mode is a simple boolean, not a Firebase identity.
 - Anonymous accounts have a 30-day inactivity expiry on Firebase. A guest who returns after a month loses their saves silently.
 - Linking anonymous accounts to authenticated accounts is a one-way operation that can fail (e.g., if the authenticated account already has data). Error handling for link failures is non-trivial.
@@ -235,6 +243,7 @@ Use Firestore's built-in offline persistence (already enabled by `cloud_firestor
 ## Acceptance Criteria
 
 **Guest user path:**
+
 - A guest user can tap the Save button on a `PostCard` in the feed, and the post is immediately marked as saved (button state toggles, no loading spinner).
 - Saved posts persist across app restarts for a guest user (Hive-backed; survives hot restart and cold start).
 - The Saved tab (`/more/saved`) displays the guest user's saved posts as a list, rendered from the local Hive store without any Firestore reads.
@@ -243,12 +252,14 @@ Use Firestore's built-in offline persistence (already enabled by `cloud_firestor
 - The Saved tab shows a non-empty empty state UI (illustration + descriptive text + CTA to feed) when no posts are saved.
 
 **Authenticated user path:**
+
 - An authenticated user's saved posts are stored in `users/{uid}/savedPosts/{postId}` in Firestore.
 - The Saved tab reflects the Firestore state in real time via a `snapshots()` stream — saves made on another device appear without a manual refresh.
 - A saved post is retrievable on a second device after signing in with the same account, within one Firestore sync round-trip.
 - Un-saving a post removes the Firestore document and the post disappears from the Saved tab within one round-trip.
 
 **Merge-on-login path:**
+
 - When a guest user with locally saved posts signs in, all local saves are merged into `users/{uid}/savedPosts/` in Firestore automatically, without user intervention.
 - Posts that were already saved on the authenticated account (from a previous session or another device) are not duplicated — `SetOptions(merge: true)` semantics apply.
 - After a successful merge, the Hive box is cleared.
@@ -256,10 +267,12 @@ Use Firestore's built-in offline persistence (already enabled by `cloud_firestor
 - A guest user who has not saved any posts and then signs in sees no merge prompt and experiences no change in behavior.
 
 **Clean Architecture compliance:**
+
 - All entities (`SavedPost`), repository interfaces (`SavedPostRepository`), and use cases (`SavePost`, `UnsavePost`, `GetSavedPosts`, `IsPostSaved`, `MergeGuestSaves`) are pure Dart — zero Flutter or Firebase imports in the domain layer.
 - The presentation layer depends only on the domain interface, never on the Hive or Firestore implementations directly.
 
 **Quality gates:**
+
 - `flutter analyze` reports zero issues on all new code.
 - Every new screen (`SavedScreen`) has a widget test covering: non-empty list state, empty state, and (for authenticated users) a loading state.
 - `SaveButton` has a widget test for both saved and unsaved visual states.

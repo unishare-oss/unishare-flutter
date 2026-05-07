@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,6 +17,7 @@ import 'package:unishare_mobile/features/post/presentation/screens/post_detail_s
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
 import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen.dart';
+import 'package:unishare_mobile/core/router/guest_shell_scaffold.dart';
 import 'package:unishare_mobile/core/router/shell_scaffold.dart';
 
 part 'router.g.dart';
@@ -94,10 +96,15 @@ class _RouterNotifier extends ChangeNotifier {
       return '/feed';
     }
 
-    // 4. Unknown path → /feed
+    // 4. Authenticated user on guest-only /saved → redirect to /more/saved
+    if (isAuthenticated && currentPath == '/saved') {
+      return '/more/saved';
+    }
+
+    // 5. Unknown path → /feed
     // authRoutes covers /welcome as exact-match only (no child routes exist).
     // knownPrefixes covers shell branches and their nested children.
-    const knownPrefixes = {'/feed', '/posts', '/notifications', '/more'};
+    const knownPrefixes = {'/feed', '/posts', '/notifications', '/more', '/saved'};
     final isKnown =
         authRoutes.contains(currentPath) ||
         knownPrefixes.any(
@@ -142,8 +149,14 @@ GoRouter router(Ref ref) {
         },
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            ShellScaffold(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) => Consumer(
+          builder: (context, ref, _) {
+            final isGuest = ref.watch(guestModeProvider);
+            return isGuest
+                ? GuestShellScaffold(navigationShell: navigationShell)
+                : ShellScaffold(navigationShell: navigationShell);
+          },
+        ),
         branches: [
           // Branch 0 — FEED
           StatefulShellBranch(
@@ -205,6 +218,15 @@ GoRouter router(Ref ref) {
                     builder: (context, state) => const RequestsScreen(),
                   ),
                 ],
+              ),
+            ],
+          ),
+          // Branch 4 — SAVED (top-level; used by the guest shell nav bar)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/saved',
+                builder: (context, state) => const SavedScreen(),
               ),
             ],
           ),

@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/saved/domain/entities/saved_post_snapshot.dart';
+import 'package:unishare_mobile/features/saved/domain/usecases/save_post.dart';
+import 'package:unishare_mobile/features/saved/domain/usecases/unsave_post.dart';
+import 'package:unishare_mobile/features/saved/presentation/providers/is_post_saved_provider.dart';
+import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
+import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
 
-/// Minimal post card for the feed.
-///
-/// Shows title, author name, and like count. Taps navigate to the
-/// Post Detail screen with the post as seed data for instant render.
-class PostCard extends StatelessWidget {
+class PostCard extends ConsumerWidget {
   const PostCard({super.key, required this.post});
 
   final Post post;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSavedAsync = ref.watch(isPostSavedProvider(post.id));
+    final isSaved = isSavedAsync.asData?.value ?? false;
+
     return GestureDetector(
       onTap: () => context.push('/posts/${post.id}', extra: post),
       child: Container(
@@ -27,14 +33,25 @@ class PostCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Author name
-            Text(
-              post.authorName,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color(0xFF8a837e),
-                fontWeight: FontWeight.w500,
-              ),
+            // Header row: author name + bookmark toggle (top-right)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    post.authorName,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFF8a837e),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                SaveButton(
+                  isSaved: isSaved,
+                  onTap: () => _toggleSave(ref, isSaved),
+                ),
+              ],
             ),
             const SizedBox(height: 6),
             // Title
@@ -72,5 +89,25 @@ class PostCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _toggleSave(WidgetRef ref, bool currentlySaved) {
+    final repository = ref.read(savedPostRepositoryProvider);
+    if (currentlySaved) {
+      UnsavePost(repository).call(post.id);
+    } else {
+      SavePost(repository).call(
+        post.id,
+        SavedPostSnapshot(
+          title: post.title,
+          authorName: post.authorName,
+          authorAvatar: post.authorAvatar,
+          courseId: post.courseId,
+          postType: post.postType.name,
+          tags: post.tags,
+          commentsCount: 0,
+        ),
+      );
+    }
   }
 }
