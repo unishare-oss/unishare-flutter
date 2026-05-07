@@ -41,9 +41,15 @@ class DetailsStep extends StatefulWidget {
 
 class _DetailsStepState extends State<DetailsStep> {
   final _tagCtrl = TextEditingController();
+  late final FocusNode _tagFocus = FocusNode()..addListener(_onTagFocusChange);
+
+  void _onTagFocusChange() {
+    if (!_tagFocus.hasFocus) _addTag(_tagCtrl.text);
+  }
 
   @override
   void dispose() {
+    _tagFocus.dispose();
     _tagCtrl.dispose();
     super.dispose();
   }
@@ -147,6 +153,7 @@ class _DetailsStepState extends State<DetailsStep> {
           const SizedBox(height: 6),
           _TextField(
             controller: _tagCtrl,
+            focusNode: _tagFocus,
             hint: 'Type a tag and press Enter...',
             textInputAction: TextInputAction.done,
             onSubmitted: _addTag,
@@ -327,6 +334,7 @@ class _TextField extends StatelessWidget {
     this.textInputAction,
     this.keyboardType,
     this.onSubmitted,
+    this.focusNode,
   });
 
   final TextEditingController controller;
@@ -335,11 +343,13 @@ class _TextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onSubmitted;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       maxLines: maxLines,
       textInputAction: textInputAction,
       keyboardType: keyboardType,

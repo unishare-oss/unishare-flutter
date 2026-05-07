@@ -21,10 +21,14 @@ service cloud.firestore {
       allow create: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null && request.auth.uid == userId;
       allow delete: if false;
+
+      match /preferences {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
     }
 
     match /posts/{postId} {
-      allow read: if request.auth != null;
+      allow read: if true;
       allow create: if request.auth != null
                     && request.resource.data.authorId == request.auth.uid
                     && request.resource.data.title is string
@@ -36,7 +40,7 @@ service cloud.firestore {
       allow delete: if false;
 
       match /comments/{commentId} {
-        allow read: if request.auth != null;
+        allow read: if true;
         allow create: if request.auth != null
                       && request.resource.data.authorId == request.auth.uid
                       && request.resource.data.body is string
@@ -47,7 +51,7 @@ service cloud.firestore {
       }
 
       match /likes/{userId} {
-        allow read: if request.auth != null;
+        allow read: if true;
         allow create, delete: if request.auth != null
                                && request.auth.uid == userId;
         allow update: if false;
