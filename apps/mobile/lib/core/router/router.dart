@@ -12,6 +12,7 @@ import 'package:unishare_mobile/features/notifications/presentation/screens/noti
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/my_posts_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
@@ -97,7 +98,7 @@ class _RouterNotifier extends ChangeNotifier {
     // 4. Unknown path → /feed
     // authRoutes covers /welcome as exact-match only (no child routes exist).
     // knownPrefixes covers shell branches and their nested children.
-    const knownPrefixes = {'/feed', '/posts', '/notifications', '/more'};
+    const knownPrefixes = {'/feed', '/posts', '/notifications', '/more', '/preview'};
     final isKnown =
         authRoutes.contains(currentPath) ||
         knownPrefixes.any(
@@ -139,6 +140,17 @@ GoRouter router(Ref ref) {
           final postId = state.pathParameters['postId']!;
           final seed = state.extra as Post?;
           return PostDetailScreen(postId: postId, seed: seed);
+        },
+      ),
+      GoRoute(
+        path: '/preview',
+        builder: (context, state) {
+          final args = state.extra! as FilePreviewArgs;
+          return FilePreviewScreen(
+            url: args.url,
+            type: args.type,
+            filename: args.filename,
+          );
         },
       ),
       StatefulShellRoute.indexedStack(

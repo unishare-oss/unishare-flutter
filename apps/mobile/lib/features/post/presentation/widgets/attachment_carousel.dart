@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pdfrx/pdfrx.dart';
 
 /// Horizontal carousel that renders image, PDF, and video attachments.
@@ -49,25 +50,38 @@ class AttachmentCarousel extends StatelessWidget {
     );
   }
 
+  static String _filename(String rawUrl) {
+    final uri = Uri.tryParse(rawUrl);
+    if (uri == null) return rawUrl;
+    final segments = uri.pathSegments;
+    return segments.isEmpty ? rawUrl : Uri.decodeComponent(segments.last);
+  }
+
   Widget _buildSlot(BuildContext context, String url, String type) {
     switch (type) {
       case 'pdf':
         return _PdfSlot(url: url);
       case 'video':
-        return _VideoSlot(outerContext: context);
+        return _VideoSlot(url: url, outerContext: context);
       default:
-        return CachedNetworkImage(
-          imageUrl: url,
-          fit: BoxFit.cover,
-          placeholder: (ctx, _) => Container(
-            color: const Color(0xFFe2dad0),
-            child: const Center(
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
+        return GestureDetector(
+          onTap: () => context.push(
+            '/preview',
+            extra: (url: url, type: 'image', filename: _filename(url)),
           ),
-          errorWidget: (ctx, _, e) => Container(
-            color: const Color(0xFFe2dad0),
-            child: const Icon(Icons.broken_image, color: Color(0xFF8a837e)),
+          child: CachedNetworkImage(
+            imageUrl: url,
+            fit: BoxFit.cover,
+            placeholder: (ctx, _) => Container(
+              color: const Color(0xFFe2dad0),
+              child: const Center(
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+            errorWidget: (ctx, _, e) => Container(
+              color: const Color(0xFFe2dad0),
+              child: const Icon(Icons.broken_image, color: Color(0xFF8a837e)),
+            ),
           ),
         );
     }
@@ -127,32 +141,41 @@ class _PdfSlot extends StatelessWidget {
     );
   }
 
+  static String _filename(String rawUrl) {
+    final uri = Uri.tryParse(rawUrl);
+    if (uri == null) return rawUrl;
+    final segments = uri.pathSegments;
+    return segments.isEmpty ? rawUrl : Uri.decodeComponent(segments.last);
+  }
+
   void _openPdfViewer(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => Scaffold(
-          appBar: AppBar(title: const Text('PDF')),
-          body: PdfViewer.uri(Uri.parse(url)),
-        ),
-      ),
+    context.push(
+      '/preview',
+      extra: (url: url, type: 'pdf', filename: _filename(url)),
     );
   }
 }
 
 class _VideoSlot extends StatelessWidget {
-  const _VideoSlot({required this.outerContext});
+  const _VideoSlot({required this.url, required this.outerContext});
 
+  final String url;
   final BuildContext outerContext;
+
+  static String _filename(String rawUrl) {
+    final uri = Uri.tryParse(rawUrl);
+    if (uri == null) return rawUrl;
+    final segments = uri.pathSegments;
+    return segments.isEmpty ? rawUrl : Uri.decodeComponent(segments.last);
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: upgrade to video_player when video upload is supported
     return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(outerContext).showSnackBar(
-          const SnackBar(content: Text('Video playback coming soon')),
-        );
-      },
+      onTap: () => outerContext.push(
+        '/preview',
+        extra: (url: url, type: 'video', filename: _filename(url)),
+      ),
       child: Container(
         color: const Color(0xFF333333),
         child: const Center(
