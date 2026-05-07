@@ -600,3 +600,15 @@ Summary:  1 file changed, 3 insertions(+)
 
 2026-05-07
   [10:35] Write: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [10:45] Edit: apps/mobile/pubspec.yaml
+
+---
+Date: 2026-05-07 00:00
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Implement FilePreviewScreen with image/pdf/video/unsupported viewers (SPEC-0007, Task 2)
+Prompt: Implement the full contents of apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart — FilePreviewArgs typedef, FilePreviewScreen, _ImageViewer, _PdfViewer, _VideoViewer, _UnsupportedViewer, videoCachePath helper
+  [10:48] Write: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [10:51] Edit: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
+  [10:52] Write: apps/mobile/test/widget/features/post/screens/file_preview_screen_test.dart
+  [10:53] Edit: apps/mobile/test/widget/features/post/screens/file_preview_screen_test.dart
