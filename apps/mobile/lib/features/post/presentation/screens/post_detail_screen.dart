@@ -43,9 +43,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       _commentController.clear();
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to post comment: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to post comment: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -57,9 +57,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       await ref.read(toggleLikeUseCaseProvider).call(widget.postId);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to toggle like: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to toggle like: $e')));
       }
     }
   }
@@ -231,8 +231,7 @@ class _PostContent extends StatelessWidget {
 
     // tags[0] = course code (badge); tags[1+] = topic chips
     final courseTag = post.tags.isNotEmpty ? post.tags.first : null;
-    final topicTags =
-        post.tags.length > 1 ? post.tags.sublist(1) : <String>[];
+    final topicTags = post.tags.length > 1 ? post.tags.sublist(1) : <String>[];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,13 +248,23 @@ class _PostContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── NOTE + course badges ──────────────────────────────────
+              // ── NOTE badge + course code label ────────────────────────
               Row(
                 children: [
                   const _TealBadge(label: 'NOTE'),
                   if (courseTag != null) ...[
-                    const SizedBox(width: 6),
-                    _TealBadge(label: courseTag.toUpperCase()),
+                    const SizedBox(width: 8),
+                    Text(
+                      courseTag.toUpperCase(),
+                      style: AppTypography.mono(
+                        base: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: appColors.amber,
+                          letterSpacing: 0.4,
+                        ),
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -270,6 +279,14 @@ class _PostContent extends StatelessWidget {
                   height: 1.2,
                 ),
               ),
+              const SizedBox(height: 6),
+
+              // ── Subtitle: Year / Semester / Module ────────────────────
+              // TODO(post-detail): source from course metadata provider
+              Text(
+                'Year 2 · Semester 2 · Module 2',
+                style: TextStyle(fontSize: 13, color: appColors.textMuted),
+              ),
               const SizedBox(height: 12),
 
               // ── Topic chips ───────────────────────────────────────────
@@ -277,8 +294,7 @@ class _PostContent extends StatelessWidget {
                 Wrap(
                   spacing: 6,
                   runSpacing: 6,
-                  children:
-                      topicTags.map((t) => _TopicChip(label: t)).toList(),
+                  children: topicTags.map((t) => _TopicChip(label: t)).toList(),
                 ),
                 const SizedBox(height: 14),
               ],
@@ -288,7 +304,7 @@ class _PostContent extends StatelessWidget {
               const SizedBox(height: 12),
 
               // ── Stats row ─────────────────────────────────────────────
-              _StatsRow(post: post),
+              _StatsRow(post: post, commentCount: commentCount),
             ],
           ),
         ),
@@ -355,11 +371,11 @@ class _PostContent extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Divider(color: Theme.of(context).dividerColor, height: 1),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
 
         // ── MORE FROM THIS COURSE ─────────────────────────────────────
-        // TODO(post-detail): wire to a relatedPostsProvider once available
-        const SizedBox(height: 4),
+        const _MoreFromThisCourse(),
+        const SizedBox(height: 20),
         Divider(color: Theme.of(context).dividerColor, height: 1),
         const SizedBox(height: 12),
 
@@ -547,8 +563,9 @@ class _AuthorRow extends StatelessWidget {
                 color: scheme.onSurface,
               ),
             ),
+            // TODO(post-detail): replace placeholder with user-profile department
             Text(
-              _relativeTime(post.createdAt),
+              'Computer Science · ${_relativeTime(post.createdAt)}',
               style: TextStyle(fontSize: 12, color: appColors.textMuted),
             ),
           ],
@@ -563,8 +580,9 @@ class _AuthorRow extends StatelessWidget {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _StatsRow extends StatelessWidget {
-  const _StatsRow({required this.post});
+  const _StatsRow({required this.post, required this.commentCount});
   final Post post;
+  final int commentCount;
 
   @override
   Widget build(BuildContext context) {
@@ -577,6 +595,13 @@ class _StatsRow extends StatelessWidget {
           '${post.likesCount} views',
           style: TextStyle(fontSize: 13, color: appColors.textMuted),
         ),
+        const SizedBox(width: 14),
+        Icon(Icons.chat_bubble_outline, size: 16, color: appColors.textMuted),
+        const SizedBox(width: 4),
+        Text(
+          '$commentCount ${commentCount == 1 ? 'comment' : 'comments'}',
+          style: TextStyle(fontSize: 13, color: appColors.textMuted),
+        ),
         const Spacer(),
         _StatsIconButton(
           icon: Icons.bookmark_border_rounded,
@@ -585,7 +610,7 @@ class _StatsRow extends StatelessWidget {
         ),
         const SizedBox(width: 4),
         _StatsIconButton(
-          icon: Icons.open_in_new_rounded,
+          icon: Icons.link_rounded,
           onTap: () {},
           color: appColors.textMuted,
         ),
@@ -817,7 +842,7 @@ class _AiSummaryCardState extends State<_AiSummaryCard> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Reactions row  👍 N  ❤  👎  ↗  ⭐  😊  /  "N reactions"
+// Reactions row — 6 circular outline buttons + "N reaction(s)" on the right
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _ReactionsRow extends StatelessWidget {
@@ -836,58 +861,59 @@ class _ReactionsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
+    final borderColor = Theme.of(context).dividerColor;
+    final iconColor = appColors.textMuted;
+    final likeCount = post.likesCount;
 
-    final mutedColor = appColors.textMuted;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Thumbs up with count (wired to toggleLike)
-            GestureDetector(
-              onTap: isGuest ? null : onToggleLike,
-              behavior: HitTestBehavior.opaque,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    isLiked
-                        ? Icons.thumb_up_rounded
-                        : Icons.thumb_up_outlined,
-                    size: 20,
-                    color: isLiked ? appColors.amber : mutedColor,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${post.likesCount}',
-                    style: TextStyle(fontSize: 13, color: mutedColor),
-                  ),
-                ],
-              ),
-            ),
-            _ReactionIcon(
-              icon: Icons.favorite_border_rounded,
-              color: mutedColor,
-            ),
-            _ReactionIcon(
-              icon: Icons.thumb_down_outlined,
-              color: mutedColor,
-            ),
-            _ReactionIcon(icon: Icons.reply_rounded, color: mutedColor),
-            _ReactionIcon(icon: Icons.star_border_rounded, color: mutedColor),
-            _ReactionIcon(
-              icon: Icons.emoji_emotions_outlined,
-              color: mutedColor,
-            ),
-          ],
+        _ReactionButton(
+          icon: isLiked ? Icons.thumb_up_rounded : Icons.thumb_up_outlined,
+          iconColor: isLiked ? appColors.amber : iconColor,
+          borderColor: borderColor,
+          onTap: isGuest ? () {} : onToggleLike,
         ),
-        const SizedBox(height: 6),
+        const SizedBox(width: 6),
+        _ReactionButton(
+          icon: Icons.favorite_border_rounded,
+          iconColor: iconColor,
+          borderColor: borderColor,
+          onTap: () {},
+        ),
+        const SizedBox(width: 6),
+        _ReactionButton(
+          icon: Icons.thumb_down_outlined,
+          iconColor: iconColor,
+          borderColor: borderColor,
+          onTap: () {},
+          count: likeCount > 0 ? likeCount : null,
+        ),
+        const SizedBox(width: 6),
+        _ReactionButton(
+          icon: Icons.bolt_rounded,
+          iconColor: iconColor,
+          borderColor: borderColor,
+          onTap: () {},
+        ),
+        const SizedBox(width: 6),
+        _ReactionButton(
+          icon: Icons.star_border_rounded,
+          iconColor: iconColor,
+          borderColor: borderColor,
+          onTap: () {},
+        ),
+        const SizedBox(width: 6),
+        _ReactionButton(
+          icon: Icons.sentiment_satisfied_alt_outlined,
+          iconColor: iconColor,
+          borderColor: borderColor,
+          onTap: () {},
+        ),
+        const Spacer(),
         Text(
-          '${post.likesCount} reactions',
+          '$likeCount ${likeCount == 1 ? 'reaction' : 'reactions'}',
           style: TextStyle(
-            fontSize: 12,
+            fontSize: 13,
             color: appColors.textMuted,
             fontWeight: FontWeight.w500,
           ),
@@ -897,20 +923,52 @@ class _ReactionsRow extends StatelessWidget {
   }
 }
 
-class _ReactionIcon extends StatelessWidget {
-  const _ReactionIcon({required this.icon, required this.color});
+class _ReactionButton extends StatelessWidget {
+  const _ReactionButton({
+    required this.icon,
+    required this.iconColor,
+    required this.borderColor,
+    required this.onTap,
+    this.count,
+  });
 
   final IconData icon;
-  final Color color;
+  final Color iconColor;
+  final Color borderColor;
+  final VoidCallback onTap;
+  final int? count;
 
   @override
   Widget build(BuildContext context) {
+    final hasCount = count != null && count! > 0;
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Icon(icon, size: 20, color: color),
+      child: Container(
+        height: 36,
+        padding: EdgeInsets.symmetric(horizontal: hasCount ? 10 : 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: borderColor),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 18, color: iconColor),
+            if (hasCount) ...[
+              const SizedBox(width: 4),
+              Text(
+                '$count',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: iconColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
@@ -972,10 +1030,7 @@ class _CommentInputSection extends StatelessWidget {
             children: [
               Text(
                 'Shift · Enter to submit',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: appColors.textMuted,
-                ),
+                style: TextStyle(fontSize: 11, color: appColors.textMuted),
               ),
               const Spacer(),
               FilledButton(
@@ -1027,6 +1082,133 @@ class _CommentInputSection extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// More from this course
+// TODO(post-detail): replace static list with relatedPostsProvider data
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _RelatedPost {
+  const _RelatedPost({
+    required this.title,
+    required this.author,
+    required this.type,
+  });
+  final String title;
+  final String author;
+  final String type;
+}
+
+class _MoreFromThisCourse extends StatelessWidget {
+  const _MoreFromThisCourse();
+
+  static const _items = [
+    _RelatedPost(title: 'Chapter 7', author: 'Slade', type: 'NOTE'),
+    _RelatedPost(title: 'Chapter 6', author: 'Slade', type: 'NOTE'),
+    _RelatedPost(title: 'OS vid', author: 'Anonymous', type: 'NOTE'),
+    _RelatedPost(title: 'OS Block 2 Notes', author: 'Anonymous', type: 'NOTE'),
+    _RelatedPost(title: 'Chapter 10', author: 'Slade', type: 'PAST EXAM'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: _SectionLabel(label: 'MORE FROM THIS COURSE'),
+        ),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Theme.of(context).dividerColor),
+            ),
+            child: Column(
+              children: [
+                for (int i = 0; i < _items.length; i++) ...[
+                  if (i > 0)
+                    Divider(
+                      height: 1,
+                      color: Theme.of(context).dividerColor,
+                    ),
+                  _RelatedPostTile(item: _items[i]),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RelatedPostTile extends StatelessWidget {
+  const _RelatedPostTile({required this.item});
+  final _RelatedPost item;
+
+  @override
+  Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final scheme = Theme.of(context).colorScheme;
+    final isPastExam = item.type == 'PAST EXAM';
+    final accentColor = isPastExam ? appColors.amber : appColors.info;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 5, right: 10),
+            child: Container(
+              width: 7,
+              height: 7,
+              decoration: BoxDecoration(
+                color: accentColor,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: scheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${item.author} · about 1 month ago',
+                  style: TextStyle(fontSize: 12, color: appColors.textMuted),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            item.type,
+            style: AppTypography.mono(
+              base: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: accentColor,
+                letterSpacing: 0.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Empty comments placeholder
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1041,9 +1223,9 @@ class _EmptyComments extends StatelessWidget {
       child: Text(
         'No comments yet. Be the first to comment.',
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: appColors.textMuted,
-        ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: appColors.textMuted),
       ),
     );
   }
