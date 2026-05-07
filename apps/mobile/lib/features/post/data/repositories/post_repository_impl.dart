@@ -70,6 +70,10 @@ class PostRepositoryImpl implements PostRepository {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw StateError('not_authenticated');
 
+    // Fetch once — avoids a per-file round trip to Firebase Auth.
+    final idToken = await user.getIdToken() ?? '';
+    if (idToken.isEmpty) throw StateError('id_token_unavailable');
+
     final dioCancelToken = CancelToken();
     cancellationToken?.addCancelListener(dioCancelToken.cancel);
 
@@ -80,6 +84,10 @@ class PostRepositoryImpl implements PostRepository {
       final path = paths[i];
       if (current.uploadedUrls.containsKey(path)) continue;
       if (cancellationToken?.isCancelled ?? false) return;
+
+      // Signal the UI immediately so the row flips to "uploading" while we
+      // read the file from disk and wait for the presign response.
+      onFileProgress?.call(i, 0.0);
 
       try {
         void progressFn(double fp) {
@@ -92,13 +100,13 @@ class PostRepositoryImpl implements PostRepository {
             ? await storageDatasource.uploadBytes(
                 overrideBytes,
                 path,
-                user.uid,
+                idToken,
                 onProgress: progressFn,
                 cancelToken: dioCancelToken,
               )
             : await storageDatasource.upload(
                 path,
-                user.uid,
+                idToken,
                 onProgress: progressFn,
                 cancelToken: dioCancelToken,
               );
@@ -136,7 +144,7 @@ class PostRepositoryImpl implements PostRepository {
       final filename = '${snippet.filename}.$ext';
       codeSnippetUrl = await storageDatasource.uploadText(
         snippet.content,
-        user.uid,
+        idToken,
         filename,
         cancelToken: dioCancelToken,
       );

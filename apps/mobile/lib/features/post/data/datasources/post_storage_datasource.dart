@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:unishare_mobile/features/post/data/datasources/upload_file_stub.dart'
     if (dart.library.io) 'upload_file_io.dart';
@@ -14,7 +13,7 @@ class PostStorageDatasource {
 
   Future<String> upload(
     String localPath,
-    String uid, {
+    String idToken, {
     void Function(double)? onProgress,
     CancelToken? cancelToken,
   }) async {
@@ -23,6 +22,7 @@ class PostStorageDatasource {
     return _put(
       bytes,
       filename,
+      idToken,
       onProgress: onProgress,
       cancelToken: cancelToken,
     );
@@ -31,32 +31,33 @@ class PostStorageDatasource {
   Future<String> uploadBytes(
     Uint8List bytes,
     String filename,
-    String uid, {
+    String idToken, {
     void Function(double)? onProgress,
     CancelToken? cancelToken,
-  }) => _put(bytes, filename, onProgress: onProgress, cancelToken: cancelToken);
+  }) => _put(bytes, filename, idToken, onProgress: onProgress, cancelToken: cancelToken);
 
   Future<String> uploadText(
     String content,
-    String uid,
+    String idToken,
     String filename, {
     CancelToken? cancelToken,
   }) => _put(
     Uint8List.fromList(utf8.encode(content)),
     filename,
+    idToken,
     contentType: 'text/plain',
     cancelToken: cancelToken,
   );
 
   Future<String> _put(
     Uint8List bytes,
-    String filename, {
+    String filename,
+    String idToken, {
     void Function(double)? onProgress,
     String? contentType,
     CancelToken? cancelToken,
   }) async {
     final ct = contentType ?? _contentTypeFor(filename);
-    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
 
     final workerRes = await _dio.post<Map<String, dynamic>>(
       _workerUrl,
@@ -75,7 +76,7 @@ class PostStorageDatasource {
 
     await _dio.put<void>(
       uploadUrl,
-      data: Stream.fromIterable(bytes.map((b) => [b])),
+      data: bytes,
       options: Options(
         headers: {'Content-Type': ct, 'Content-Length': bytes.length},
         sendTimeout: const Duration(minutes: 5),
