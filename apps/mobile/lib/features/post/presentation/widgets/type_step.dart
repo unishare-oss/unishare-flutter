@@ -2,14 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
-
-const _kBg = Color(0xFFF7F3EE);
-const _kWhite = Colors.white;
-const _kPrimary = Color(0xFFD97706);
-const _kPrimaryFill = Color(0xFFFEF3C7);
-const _kBorder = Color(0xFFE2DAD0);
-const _kFg = Color(0xFF1C1917);
-const _kMuted = Color(0xFF8A837E);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class TypeStep extends StatelessWidget {
   const TypeStep({super.key, required this.selected, required this.onSelect});
@@ -19,6 +12,7 @@ class TypeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -27,7 +21,7 @@ class TypeStep extends StatelessWidget {
           style: GoogleFonts.spaceGrotesk(
             fontSize: 22,
             fontWeight: FontWeight.w700,
-            color: _kFg,
+            color: cs.onSurface,
           ),
         ),
         const SizedBox(height: 24),
@@ -74,14 +68,21 @@ class _TypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+    final dividerColor = Theme.of(context).dividerColor;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: selected ? _kPrimaryFill : _kWhite,
-          border: Border.all(color: selected ? _kPrimary : _kBorder, width: 2),
+          color: selected ? ac.amberSubtle : cs.surface,
+          border: Border.all(
+            color: selected ? ac.amber : dividerColor,
+            width: 2,
+          ),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
@@ -90,13 +91,13 @@ class _TypeCard extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: selected ? _kPrimary.withValues(alpha: 0.2) : _kBg,
+                color: selected ? ac.amber.withValues(alpha: 0.2) : scaffoldBg,
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Icon(
                 icon,
                 size: 21,
-                color: selected ? _kPrimary : _kMuted,
+                color: selected ? ac.amber : ac.mutedForeground,
               ),
             ),
             const SizedBox(width: 16),
@@ -109,7 +110,7 @@ class _TypeCard extends StatelessWidget {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: _kFg,
+                      color: cs.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -118,7 +119,7 @@ class _TypeCard extends StatelessWidget {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: _kMuted,
+                      color: ac.mutedForeground,
                     ),
                   ),
                 ],
@@ -128,8 +129,8 @@ class _TypeCard extends StatelessWidget {
               Container(
                 width: 21,
                 height: 21,
-                decoration: const BoxDecoration(
-                  color: _kPrimary,
+                decoration: BoxDecoration(
+                  color: ac.amber,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.check, size: 13, color: Colors.white),
@@ -144,13 +145,17 @@ class _TypeCard extends StatelessWidget {
 class _PastExamCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+    final dividerColor = Theme.of(context).dividerColor;
     return Opacity(
       opacity: 0.5,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: _kWhite,
-          border: Border.all(color: _kBorder, width: 2),
+          color: cs.surface,
+          border: Border.all(color: dividerColor, width: 2),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
@@ -159,13 +164,13 @@ class _PastExamCard extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: _kBg,
+                color: scaffoldBg,
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.school_outlined,
                 size: 21,
-                color: _kMuted,
+                color: ac.mutedForeground,
               ),
             ),
             const SizedBox(width: 16),
@@ -178,7 +183,7 @@ class _PastExamCard extends StatelessWidget {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: _kFg,
+                      color: cs.onSurface,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -187,7 +192,7 @@ class _PastExamCard extends StatelessWidget {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: _kMuted,
+                      color: ac.mutedForeground,
                     ),
                   ),
                 ],
@@ -196,7 +201,7 @@ class _PastExamCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
               decoration: BoxDecoration(
-                color: _kBg,
+                color: scaffoldBg,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
@@ -204,7 +209,7 @@ class _PastExamCard extends StatelessWidget {
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 10,
                   fontWeight: FontWeight.w500,
-                  color: _kMuted,
+                  color: ac.mutedForeground,
                 ),
               ),
             ),

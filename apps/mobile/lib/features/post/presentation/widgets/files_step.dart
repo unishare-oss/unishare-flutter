@@ -6,8 +6,6 @@ import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart'
 import 'package:unishare_mobile/features/post/presentation/widgets/code_snippet_widget.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/file_upload_widget.dart';
 
-const _kFg = Color(0xFF1C1917);
-
 /// Step 4: file drop zone + code snippet panel.
 class FilesStep extends StatelessWidget {
   const FilesStep({
@@ -25,6 +23,7 @@ class FilesStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,7 +32,7 @@ class FilesStep extends StatelessWidget {
           style: GoogleFonts.spaceGrotesk(
             fontSize: 22,
             fontWeight: FontWeight.w700,
-            color: _kFg,
+            color: cs.onSurface,
           ),
         ),
         const SizedBox(height: 24),

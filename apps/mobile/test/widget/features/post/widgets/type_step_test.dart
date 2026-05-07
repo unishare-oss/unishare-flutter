@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/type_step.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 Widget _wrap(Widget child) => MaterialApp(
+  theme: AppTheme.build(AppThemes.unishare),
   home: Scaffold(body: SingleChildScrollView(child: child)),
 );
 

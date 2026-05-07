@@ -2,12 +2,10 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:unishare_mobile/features/post/data/datasources/upload_file_stub.dart'
     if (dart.library.io) 'upload_file_io.dart';
 
-// Set at build time: flutter run --dart-define=WORKER_URL=https://...
 const _workerUrl = String.fromEnvironment('WORKER_URL');
 
 class PostStorageDatasource {
@@ -15,37 +13,57 @@ class PostStorageDatasource {
 
   Future<String> upload(
     String localPath,
-    String uid, {
+    String idToken, {
     void Function(double)? onProgress,
+    CancelToken? cancelToken,
   }) async {
     final filename = localPath.split('/').last;
     final bytes = await readFileBytes(localPath);
-    return _put(bytes, filename, onProgress);
+    return _put(
+      bytes,
+      filename,
+      idToken,
+      onProgress: onProgress,
+      cancelToken: cancelToken,
+    );
   }
 
   Future<String> uploadBytes(
     Uint8List bytes,
     String filename,
-    String uid, {
+    String idToken, {
     void Function(double)? onProgress,
-  }) => _put(bytes, filename, onProgress);
+    CancelToken? cancelToken,
+  }) => _put(
+    bytes,
+    filename,
+    idToken,
+    onProgress: onProgress,
+    cancelToken: cancelToken,
+  );
 
-  Future<String> uploadText(String content, String uid, String filename) =>
-      _put(
-        Uint8List.fromList(utf8.encode(content)),
-        filename,
-        null,
-        contentType: 'text/plain',
-      );
+  Future<String> uploadText(
+    String content,
+    String idToken,
+    String filename, {
+    CancelToken? cancelToken,
+  }) => _put(
+    Uint8List.fromList(utf8.encode(content)),
+    filename,
+    idToken,
+    contentType: 'text/plain',
+    cancelToken: cancelToken,
+  );
 
   Future<String> _put(
     Uint8List bytes,
     String filename,
-    void Function(double)? onProgress, {
+    String idToken, {
+    void Function(double)? onProgress,
     String? contentType,
+    CancelToken? cancelToken,
   }) async {
     final ct = contentType ?? _contentTypeFor(filename);
-    final idToken = await FirebaseAuth.instance.currentUser!.getIdToken();
 
     final workerRes = await _dio.post<Map<String, dynamic>>(
       _workerUrl,
@@ -56,6 +74,7 @@ class PostStorageDatasource {
           'Content-Type': 'application/json',
         },
       ),
+      cancelToken: cancelToken,
     );
 
     final uploadUrl = workerRes.data!['uploadUrl'] as String;
@@ -63,7 +82,7 @@ class PostStorageDatasource {
 
     await _dio.put<void>(
       uploadUrl,
-      data: Stream.fromIterable(bytes.map((b) => [b])),
+      data: bytes,
       options: Options(
         headers: {'Content-Type': ct, 'Content-Length': bytes.length},
         sendTimeout: const Duration(minutes: 5),
@@ -74,6 +93,7 @@ class PostStorageDatasource {
               if (total > 0) onProgress(sent / total);
             }
           : null,
+      cancelToken: cancelToken,
     );
 
     return publicUrl;

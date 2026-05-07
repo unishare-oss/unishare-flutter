@@ -14,17 +14,9 @@ import 'package:unishare_mobile/features/feed/presentation/widgets/filter_picker
 import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
-
-// ---------------------------------------------------------------------------
-// Color constants
-// ---------------------------------------------------------------------------
-
-const _kOrange = Color(0xFFD97706);
-const _kBorder = Color(0xFFE2DAD0);
-const _kMuted = Color(0xFFF7F3EE);
-const _kTextMuted = Color(0xFF8A837E);
-const _kForeground = Color(0xFF1C1917);
 
 // ---------------------------------------------------------------------------
 // Tab labels
@@ -48,6 +40,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     with SingleTickerProviderStateMixin, ScrollToTopTarget {
   late final TabController _tabController;
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
+  String _searchQuery = '';
 
   @override
   ScrollController get scrollController => _scrollController;
@@ -56,6 +51,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: _kTabLabels.length, vsync: this);
+    _searchFocusNode.addListener(() {
+      if (_searchFocusNode.hasFocus) {
+        setState(() {});
+      } else {
+        Future.delayed(const Duration(milliseconds: 150), () {
+          if (mounted) setState(() {});
+        });
+      }
+    });
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => _maybeShowAcademicProfile(),
     );
@@ -77,6 +81,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
+    _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -93,10 +99,64 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
       2 => all.where((p) => p.postType == PostType.exercise).toList(),
       _ => all,
     };
-    if (activeTagFilters.isEmpty) return byTab;
-    return byTab
-        .where((p) => p.tags.any((t) => activeTagFilters.contains(t)))
-        .toList();
+    final byTag = activeTagFilters.isEmpty
+        ? byTab
+        : byTab
+              .where((p) => p.tags.any((t) => activeTagFilters.contains(t)))
+              .toList();
+    if (_searchQuery.isEmpty) return byTag;
+    if (_searchQuery.startsWith('#')) {
+      final q = _searchQuery.substring(1).toLowerCase();
+      return q.isEmpty
+          ? byTag
+          : byTag
+                .where((p) => p.tags.any((t) => t.toLowerCase().contains(q)))
+                .toList();
+    }
+    final q = _searchQuery.toLowerCase();
+    return byTag.where((p) {
+      return p.title.toLowerCase().contains(q) ||
+          p.description.toLowerCase().contains(q);
+    }).toList();
+  }
+
+  List<String> _buildSuggestions(List<Post> allPosts) {
+    if (_searchQuery.isEmpty || !_searchFocusNode.hasFocus) return const [];
+    final isTagSearch = _searchQuery.startsWith('#');
+    final q = isTagSearch
+        ? _searchQuery.substring(1).toLowerCase()
+        : _searchQuery.toLowerCase();
+    if (q.isEmpty) return const [];
+
+    final suggestions = <String>[];
+
+    final tagLimit = isTagSearch ? 5 : 3;
+    final tags = allPosts.expand((p) => p.tags).toSet().toList()..sort();
+    for (final tag in tags) {
+      if (tag.toLowerCase().contains(q)) {
+        suggestions.add('#$tag');
+        if (suggestions.length >= tagLimit) break;
+      }
+    }
+
+    if (!isTagSearch) {
+      final seen = <String>{};
+      for (final post in allPosts) {
+        if (!seen.add(post.title)) continue;
+        if (post.title.toLowerCase().contains(q)) {
+          suggestions.add(post.title);
+          if (suggestions.length >= 5) break;
+        }
+      }
+    }
+
+    return suggestions;
+  }
+
+  void _onSuggestionTap(String suggestion) {
+    _searchController.text = suggestion;
+    setState(() => _searchQuery = suggestion.trim());
+    _searchFocusNode.requestFocus();
   }
 
   void _openFilterPicker(List<Post> allPosts, List<String> activeTagFilters) {
@@ -113,14 +173,32 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<CreatePostState>(createPostProvider, (_, next) {
+      if (!mounted) return;
+      if (next is CreatePostPublished) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Post published!')));
+        ref.read(createPostProvider.notifier).reset();
+      } else if (next is CreatePostQueued) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Saved offline — will publish when you reconnect.'),
+          ),
+        );
+        ref.read(createPostProvider.notifier).reset();
+      }
+    });
+
     final activeTagFilters = ref.watch(activeTagFiltersProvider);
     final feedAsync = ref.watch(feedProvider);
+    final suggestions = _buildSuggestions(feedAsync.value ?? const []);
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F3EE),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: NestedScrollView(
         controller: _scrollController,
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverToBoxAdapter(child: _buildAppBar()),
+          SliverToBoxAdapter(child: _buildAppBar(suggestions)),
           SliverPersistentHeader(
             pinned: true,
             delegate: _TabRowDelegate(
@@ -137,7 +215,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
           error: (e, _) => Center(
             child: Text(
               'Failed to load feed',
-              style: TextStyle(color: _kTextMuted),
+              style: TextStyle(
+                color: Theme.of(context).extension<AppColors>()!.textMuted,
+              ),
             ),
           ),
           data: (allPosts) {
@@ -153,8 +233,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               builder: (context, _) => ListView.separated(
                 padding: EdgeInsets.zero,
                 itemCount: posts.length,
-                separatorBuilder: (_, _) =>
-                    const Divider(height: 1, thickness: 1, color: _kBorder),
+                separatorBuilder: (_, _) => Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Theme.of(context).dividerColor,
+                ),
                 itemBuilder: (_, i) => PostCard(post: posts[i]),
               ),
             );
@@ -168,42 +251,100 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   // App bar
   // -------------------------------------------------------------------------
 
-  Widget _buildAppBar() {
+  Widget _buildAppBar(List<String> suggestions) {
+    final theme = Theme.of(context);
     return SafeArea(
       bottom: false,
       child: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        child: Row(
+        color: theme.cardColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Feed',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: _kForeground,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                children: [
+                  Text(
+                    'Feed',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildSearchField()),
+                  if (!_isGuest) ...[
+                    const SizedBox(width: 8),
+                    _buildCreateButton(),
+                  ],
+                ],
               ),
             ),
-            const SizedBox(width: 10),
-            Expanded(child: _buildSearchField()),
-            if (!_isGuest) ...[const SizedBox(width: 8), _buildCreateButton()],
+            if (suggestions.isNotEmpty) _buildSuggestionChips(suggestions),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildSuggestionChips(List<String> suggestions) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
+    return SizedBox(
+      height: 36,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        itemCount: suggestions.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 6),
+        itemBuilder: (_, i) {
+          final s = suggestions[i];
+          final isTag = s.startsWith('#');
+          return GestureDetector(
+            onTap: () => _onSuggestionTap(s),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: isTag ? ac.amber.withValues(alpha: 0.08) : ac.muted,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isTag
+                      ? ac.amber.withValues(alpha: 0.3)
+                      : Colors.transparent,
+                ),
+              ),
+              child: Text(
+                s,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isTag ? ac.amber : cs.onSurface,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildSearchField() {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
     return SizedBox(
       height: 38,
       child: TextField(
-        style: const TextStyle(fontSize: 13, color: _kForeground),
+        controller: _searchController,
+        focusNode: _searchFocusNode,
+        onChanged: (value) => setState(() => _searchQuery = value.trim()),
+        style: TextStyle(fontSize: 13, color: cs.onSurface),
         decoration: InputDecoration(
           hintText: 'Search posts or #tags...',
-          hintStyle: const TextStyle(fontSize: 13, color: _kTextMuted),
+          hintStyle: TextStyle(fontSize: 13, color: ac.textMuted),
           filled: true,
-          fillColor: _kMuted,
-          prefixIcon: const Icon(Icons.search, size: 18, color: _kTextMuted),
+          fillColor: ac.muted,
+          prefixIcon: Icon(Icons.search, size: 18, color: ac.textMuted),
           contentPadding: const EdgeInsets.symmetric(vertical: 0),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
@@ -215,7 +356,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
-            borderSide: const BorderSide(color: _kOrange, width: 1.5),
+            borderSide: BorderSide(color: ac.amber, width: 1.5),
           ),
         ),
       ),
@@ -223,16 +364,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   }
 
   Widget _buildCreateButton() {
+    final cs = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => context.push('/posts/create'),
       child: Container(
         width: 36,
         height: 36,
-        decoration: const BoxDecoration(
-          color: _kOrange,
-          shape: BoxShape.circle,
-        ),
-        child: const Icon(Icons.add, color: Colors.white, size: 20),
+        decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
+        child: Icon(Icons.add, color: cs.onPrimary, size: 20),
       ),
     );
   }
@@ -296,11 +435,13 @@ class _TabRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final ac = theme.extension<AppColors>()!;
     return Container(
       height: 44,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: _kBorder, width: 1)),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        border: Border(bottom: BorderSide(color: theme.dividerColor, width: 1)),
       ),
       child: Row(
         children: [
@@ -309,11 +450,11 @@ class _TabRow extends StatelessWidget {
               controller: tabController,
               isScrollable: true,
               tabAlignment: TabAlignment.start,
-              indicatorColor: _kOrange,
+              indicatorColor: ac.amber,
               indicatorSize: TabBarIndicatorSize.tab,
               dividerColor: Colors.transparent,
-              labelColor: _kOrange,
-              unselectedLabelColor: _kTextMuted,
+              labelColor: ac.amber,
+              unselectedLabelColor: ac.textMuted,
               labelStyle: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -349,6 +490,8 @@ class _FiltersButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: Stack(
@@ -357,7 +500,7 @@ class _FiltersButton extends StatelessWidget {
           TextButton.icon(
             onPressed: onPressed,
             style: TextButton.styleFrom(
-              foregroundColor: activeCount > 0 ? _kOrange : _kTextMuted,
+              foregroundColor: activeCount > 0 ? ac.amber : ac.textMuted,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -376,15 +519,15 @@ class _FiltersButton extends StatelessWidget {
                 width: 16,
                 height: 16,
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: _kOrange,
+                decoration: BoxDecoration(
+                  color: ac.amber,
                   shape: BoxShape.circle,
                 ),
                 child: Text(
                   '$activeCount',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 9,
-                    color: Colors.white,
+                    color: cs.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

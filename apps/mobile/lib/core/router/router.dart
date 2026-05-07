@@ -11,6 +11,7 @@ import 'package:unishare_mobile/features/more/presentation/screens/more_screen.d
 import 'package:unishare_mobile/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/upload_progress_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/my_posts_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
@@ -104,6 +105,7 @@ class _RouterNotifier extends ChangeNotifier {
       '/notifications',
       '/more',
       '/preview',
+      '/upload-progress',
     };
     final isKnown =
         authRoutes.contains(currentPath) ||
@@ -139,6 +141,10 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/posts/create',
         builder: (context, state) => const CreatePostScreen(),
+      ),
+      GoRoute(
+        path: '/upload-progress',
+        builder: (context, state) => const UploadProgressScreen(),
       ),
       GoRoute(
         path: '/posts/:postId',

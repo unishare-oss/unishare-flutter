@@ -1,19 +1,26 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
+import 'package:unishare_mobile/features/post/data/datasources/course_firestore_datasource.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/create_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/draft_queue_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 // ---------------------------------------------------------------------------
-// Stub repository — no Firebase or Hive calls
+// Stubs
 // ---------------------------------------------------------------------------
 
 class _StubRepo implements PostRepository {
@@ -31,18 +38,33 @@ class _StubRepo implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
+    void Function(int, double)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
   }) async {}
 }
 
-// Fake DraftQueueNotifier that never touches Hive.
 class _FakeDraftQueueNotifier extends DraftQueueNotifier {
   @override
   List<PostDraft> build() => [];
 }
 
+class _FakeCourseDatasource implements CourseFirestoreDatasource {
+  @override
+  Future<List<({String id, String name})>> getDepartments(
+    String universityId,
+  ) async => [(id: 'dept-cs', name: 'Computer Science')];
+
+  @override
+  Future<List<({String id, String name})>> getCourses(
+    String deptId,
+    int year,
+  ) async => [(id: 'csc101', name: 'CSC101 Introduction to Computing')];
+}
+
 // ---------------------------------------------------------------------------
-// Helper: pump the screen with overridden providers
+// Helper
 // ---------------------------------------------------------------------------
 
 Widget _makeScreen() {
@@ -53,11 +75,42 @@ Widget _makeScreen() {
       syncDraftQueueUseCaseProvider.overrideWithValue(
         SyncDraftQueue(_StubRepo()),
       ),
-      // Override draftQueueProvider so DraftQueueIndicator never opens Hive.
       draftQueueProvider.overrideWith(() => _FakeDraftQueueNotifier()),
+      courseFirestoreDatasourceProvider.overrideWithValue(
+        _FakeCourseDatasource(),
+      ),
+      currentUserProvider.overrideWith(
+        (_) async => AppUser(
+          id: 'user-1',
+          name: 'Test User',
+          email: 'test@test.com',
+          universityId: 'uni-1',
+        ),
+      ),
     ],
-    child: const MaterialApp(home: CreatePostScreen()),
+    child: MaterialApp(
+      theme: AppTheme.build(AppThemes.unishare),
+      home: const CreatePostScreen(),
+    ),
   );
+}
+
+/// Navigate to step 2 then select department + year + course.
+Future<void> _completeStep2(WidgetTester tester) async {
+  await tester.tap(find.text('Select department'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Computer Science').last);
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.text('Select year'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Year 1').last);
+  await tester.pumpAndSettle();
+
+  await tester.tap(find.text('Select course'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('CSC101 Introduction to Computing').last);
+  await tester.pumpAndSettle();
 }
 
 void main() {
@@ -117,7 +170,7 @@ void main() {
     });
 
     testWidgets(
-      'step 2: Next is disabled until both year and course are selected',
+      'step 2: Next is disabled until department, year, and course are selected',
       (tester) async {
         await tester.pumpWidget(_makeScreen());
         await tester.pump();
@@ -148,17 +201,8 @@ void main() {
         await tester.tap(find.widgetWithText(FilledButton, 'Next'));
         await tester.pumpAndSettle();
 
-        // Step 2 — select year
-        await tester.tap(find.text('Select year'));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('Year 1').last);
-        await tester.pumpAndSettle();
-
-        // Step 2 — select course
-        await tester.tap(find.text('Select course'));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text('CSC101 Introduction to Computing').last);
-        await tester.pumpAndSettle();
+        // Step 2
+        await _completeStep2(tester);
 
         var nextButton = tester.widget<FilledButton>(
           find.widgetWithText(FilledButton, 'Next'),
@@ -188,14 +232,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Step 2
-      await tester.tap(find.text('Select year'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Year 1').last);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Select course'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('CSC101 Introduction to Computing').last);
-      await tester.pumpAndSettle();
+      await _completeStep2(tester);
       await tester.tap(find.widgetWithText(FilledButton, 'Next'));
       await tester.pumpAndSettle();
 

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
@@ -12,14 +13,7 @@ import 'package:unishare_mobile/features/post/presentation/widgets/details_step.
 import 'package:unishare_mobile/features/post/presentation/widgets/draft_queue_indicator.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/files_step.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/type_step.dart';
-
-const _kBg = Color(0xFFF7F3EE);
-const _kWhite = Colors.white;
-const _kPrimary = Color(0xFFD97706);
-const _kBorder = Color(0xFFE2DAD0);
-const _kFg = Color(0xFF1C1917);
-const _kMuted = Color(0xFF8A837E);
-const _kDestructive = Color(0xFFDC2626);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});
@@ -38,6 +32,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   // Step 2
   int? _year;
   String? _courseId;
+  String? _departmentId;
 
   // Step 3
   final _titleCtrl = TextEditingController();
@@ -78,7 +73,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   bool get _nextEnabled {
     return switch (_step) {
       0 => _postType != null,
-      1 => _year != null && _courseId != null,
+      1 => _year != null && _courseId != null && _departmentId != null,
       2 =>
         _titleCtrl.text.trim().isNotEmpty &&
             _descCtrl.text.trim().isNotEmpty &&
@@ -117,15 +112,17 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     }
   }
 
-  Future<void> _submit() async {
-    // On mobile use f.path (full filesystem path needed to read the file).
-    // On web use f.name — f.path is a blob URL which breaks content-type
-    // detection and doesn't help with file reading (bytes are in f.bytes).
+  void _submit() {
+    final currentState = ref.read(createPostProvider);
+    if (currentState is CreatePostUploading ||
+        currentState is CreatePostPublishing) {
+      return;
+    }
+
     final localMediaPaths = _pickedFiles
         .map((f) => f.bytes != null ? f.name : f.path!)
         .toList();
 
-    // Bytes populated on web (withData: kIsWeb). Key matches localMediaPaths.
     final fileDataOverride = {
       for (final f in _pickedFiles)
         if (f.bytes != null) f.name: f.bytes!,
@@ -136,6 +133,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       postType: _postType ?? PostType.lectureNote,
       year: _year ?? 1,
       courseId: _courseId ?? '',
+      departmentId: _departmentId ?? '',
       title: _titleCtrl.text.trim(),
       description: _descCtrl.text.trim(),
       postingIdentity: _postingIdentity,
@@ -149,51 +147,30 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       createdAt: DateTime.now(),
     );
 
-    await ref
+    final wasIdle = ref.read(createPostProvider) is CreatePostIdle;
+    ref
         .read(createPostProvider.notifier)
         .submit(
           draft: draft,
           fileDataOverride: fileDataOverride.isEmpty ? null : fileDataOverride,
         );
+    if (wasIdle) {
+      final newState = ref.read(createPostProvider);
+      if (newState is CreatePostUploading || newState is CreatePostPublishing) {
+        context.push('/upload-progress');
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final postState = ref.watch(createPostProvider);
-
-    ref.listen<CreatePostState>(createPostProvider, (_, next) {
-      if (next is CreatePostPublished) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Post published!')));
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go('/feed');
-        }
-        ref.read(createPostProvider.notifier).reset();
-      } else if (next is CreatePostQueued) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Saved offline — will publish when you reconnect.'),
-          ),
-        );
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go('/feed');
-        }
-        ref.read(createPostProvider.notifier).reset();
-      }
-    });
-
-    final isSubmitting =
-        postState is CreatePostUploading || postState is CreatePostPublishing;
-
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Scaffold(
-      backgroundColor: _kWhite,
+      backgroundColor: cs.surface,
       appBar: AppBar(
-        backgroundColor: _kWhite,
+        backgroundColor: cs.surface,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         automaticallyImplyLeading: false,
@@ -203,12 +180,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           style: GoogleFonts.spaceGrotesk(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: _kFg,
+            color: cs.onSurface,
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(height: 1, color: _kBorder),
+          child: Container(height: 1, color: dividerColor),
         ),
       ),
       body: Column(
@@ -220,7 +197,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-                    child: _StepIndicator(currentStep: _step),
+                    child: Center(child: _StepIndicator(currentStep: _step)),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -239,9 +216,24 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                             onSelect: (t) => setState(() => _postType = t),
                           ),
                           CourseStep(
+                            universityId:
+                                ref
+                                    .watch(currentUserProvider)
+                                    .value
+                                    ?.universityId ??
+                                '',
+                            selectedDepartmentId: _departmentId,
                             selectedYear: _year,
                             selectedCourseId: _courseId,
-                            onYearChanged: (y) => setState(() => _year = y),
+                            onDepartmentChanged: (d) => setState(() {
+                              _departmentId = d;
+                              _year = null;
+                              _courseId = null;
+                            }),
+                            onYearChanged: (y) => setState(() {
+                              _year = y;
+                              _courseId = null;
+                            }),
                             onCourseChanged: (c) =>
                                 setState(() => _courseId = c),
                           ),
@@ -279,74 +271,14 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     ),
                   ),
                 ),
-                // Error / status banners
-                if (postState is CreatePostError)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _Banner(
-                        message: _errorMessage(postState.message),
-                        bg: const Color(0xFFFEF2F2),
-                        fg: _kDestructive,
-                        border: _kDestructive,
-                      ),
-                    ),
-                  ),
-                if (postState is CreatePostUploading)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          LinearProgressIndicator(
-                            value: postState.progress,
-                            backgroundColor: _kBorder,
-                            valueColor: const AlwaysStoppedAnimation(_kPrimary),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Uploading ${(postState.progress * 100).toInt()}%…',
-                            style: GoogleFonts.firaCode(
-                              fontSize: 12,
-                              color: _kMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (postState is CreatePostPublishing)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const LinearProgressIndicator(
-                            backgroundColor: _kBorder,
-                            valueColor: AlwaysStoppedAnimation(_kPrimary),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Publishing…',
-                            style: GoogleFonts.firaCode(
-                              fontSize: 12,
-                              color: _kMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),
 
           // StepNav bar
           Container(
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: _kBorder)),
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: dividerColor)),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Row(
@@ -355,9 +287,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 const Spacer(),
                 // Back button
                 TextButton(
-                  onPressed: isSubmitting ? null : _goBack,
+                  onPressed: _goBack,
                   style: TextButton.styleFrom(
-                    foregroundColor: _kMuted,
+                    foregroundColor: ac.mutedForeground,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
@@ -379,20 +311,18 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 SizedBox(
                   height: 38,
                   child: FilledButton(
-                    onPressed: (_nextEnabled && !isSubmitting) ? _goNext : null,
+                    onPressed: _nextEnabled ? _goNext : null,
                     style: FilledButton.styleFrom(
-                      backgroundColor: _kPrimary,
+                      backgroundColor: ac.amber,
                       foregroundColor: Colors.white,
-                      disabledBackgroundColor: _kPrimary.withValues(alpha: 0.4),
+                      disabledBackgroundColor: ac.amber.withValues(alpha: 0.4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                     ),
                     child: Text(
-                      isSubmitting
-                          ? 'Publishing…'
-                          : (_step == 3 ? 'Submit' : 'Next'),
+                      _step == 3 ? 'Submit' : 'Next',
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -406,16 +336,6 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         ],
       ),
     );
-  }
-
-  String _errorMessage(String code) {
-    return switch (code) {
-      'title_required' => 'Title is required.',
-      'description_required' => 'Description is required.',
-      'module_required' => 'Module number is required.',
-      'file_too_large' => 'One or more files exceed 50 MB.',
-      _ => code,
-    };
   }
 
   double get _stepHeight => MediaQuery.sizeOf(context).height * 1.1;
@@ -432,31 +352,25 @@ class _StepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Row(
-      children: List.generate(4, (i) {
-        final isCompleted = i < currentStep;
-        final isActive = i == currentStep;
-        final connectLine = i < 3;
-
-        return Expanded(
-          child: Row(
-            children: [
-              _StepDot(
-                number: i + 1,
-                isCompleted: isCompleted,
-                isActive: isActive,
-              ),
-              if (connectLine)
-                Expanded(
-                  child: Container(
-                    height: 1,
-                    color: isCompleted ? _kPrimary : _kBorder,
-                  ),
-                ),
-            ],
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (int i = 0; i < 4; i++) ...[
+          _StepDot(
+            number: i + 1,
+            isCompleted: i < currentStep,
+            isActive: i == currentStep,
           ),
-        );
-      }),
+          if (i < 3)
+            Container(
+              width: 56,
+              height: 1,
+              color: i < currentStep ? ac.amber : dividerColor,
+            ),
+        ],
+      ],
     );
   }
 }
@@ -474,14 +388,16 @@ class _StepDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
     final Color bg;
     final Widget child;
 
     if (isCompleted) {
-      bg = _kPrimary;
+      bg = ac.amber;
       child = const Icon(Icons.check, size: 13, color: Colors.white);
     } else if (isActive) {
-      bg = _kPrimary;
+      bg = ac.amber;
       child = Text(
         '$number',
         style: GoogleFonts.firaCode(
@@ -491,13 +407,13 @@ class _StepDot extends StatelessWidget {
         ),
       );
     } else {
-      bg = _kBg;
+      bg = scaffoldBg;
       child = Text(
         '$number',
         style: GoogleFonts.firaCode(
           fontSize: 11,
           fontWeight: FontWeight.w500,
-          color: _kMuted,
+          color: ac.mutedForeground,
         ),
       );
     }
@@ -510,35 +426,4 @@ class _StepDot extends StatelessWidget {
       child: child,
     );
   }
-}
-
-// ---------------------------------------------------------------------------
-// Banner
-// ---------------------------------------------------------------------------
-
-class _Banner extends StatelessWidget {
-  const _Banner({
-    required this.message,
-    required this.bg,
-    required this.fg,
-    required this.border,
-  });
-
-  final String message;
-  final Color bg, fg, border;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(12),
-    margin: const EdgeInsets.only(bottom: 12),
-    decoration: BoxDecoration(
-      color: bg,
-      borderRadius: BorderRadius.circular(6),
-      border: Border.all(color: border.withValues(alpha: 0.4)),
-    ),
-    child: Text(
-      message,
-      style: GoogleFonts.spaceGrotesk(fontSize: 13, color: fg),
-    ),
-  );
 }
