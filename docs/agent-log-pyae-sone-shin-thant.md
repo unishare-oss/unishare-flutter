@@ -4,6 +4,17 @@ Automated log of all Claude Code sessions.
 See `CLAUDE.md` for the logging convention.
 
 ---
+Date: 2026-05-07 11:00
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 2 — add CourseFirestoreDatasource
+Prompt: Create apps/mobile/lib/features/post/data/datasources/course_firestore_datasource.dart with getDepartments and getCourses methods backed by Firestore.
+Outcome: Created CourseFirestoreDatasource. flutter analyze reports no issues. Committed as fdcc278.
+Decisions: File content was specified exactly by the task; no design decisions were made.
+Handoff: CourseFirestoreDatasource is ready to be injected into whatever repository or notifier needs department/course lookups.
+Review: PENDING
+
+---
 Date: 2026-05-07 10:00
 Member: Pyae Sone Shin Thant
 Agent: flutter-engineer
@@ -813,3 +824,33 @@ Summary:  1 file changed, 10 insertions(+)
   [18:01] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
   [18:01] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
   [18:01] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [21:59] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  [21:59] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  [21:59] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  [22:00] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  [22:00] Edit: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [22:00] Edit: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [22:00] Edit: apps/mobile/test/widget/features/post/screens/upload_progress_screen_test.dart
+  [22:00] Edit: apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  [22:01] Edit: apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  [22:01] Edit: apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  [22:01] Edit: apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  [22:01] Edit: apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  [22:01] Edit: apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  [22:01] Edit: apps/mobile/lib/features/post/data/models/post_draft_model.dart
+  [22:01] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [22:02] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [22:05] Write: apps/mobile/lib/features/post/data/datasources/course_firestore_datasource.dart
+  [22:06] Write: apps/mobile/lib/features/post/presentation/providers/course_reference_provider.dart
+
+---
+Date: 2026-05-07 22:06
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 3 — add course reference Riverpod providers and run codegen
+Prompt: Create course_reference_provider.dart with courseFirestoreDatasource (keepAlive), departmentsForUniversity, and courses providers; run build_runner; verify analyze passes; commit.
+
+Outcome: Created course_reference_provider.dart, ran build_runner (generated course_reference_provider.g.dart), flutter analyze reports no issues.
+Decisions: Used exact content from spec verbatim; no changes needed since CourseFirestoreDatasource signature matched.
+Handoff: Providers are ready for use in the New Post step-2 screen (department/course picker).
+Review: PENDING
