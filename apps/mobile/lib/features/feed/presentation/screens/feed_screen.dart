@@ -352,10 +352,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
       child: Container(
         width: 36,
         height: 36,
-        decoration: BoxDecoration(
-          color: cs.primary,
-          shape: BoxShape.circle,
-        ),
+        decoration: BoxDecoration(color: cs.primary, shape: BoxShape.circle),
         child: Icon(Icons.add, color: cs.onPrimary, size: 20),
       ),
     );
@@ -426,9 +423,7 @@ class _TabRow extends StatelessWidget {
       height: 44,
       decoration: BoxDecoration(
         color: theme.cardColor,
-        border: Border(
-          bottom: BorderSide(color: theme.dividerColor, width: 1),
-        ),
+        border: Border(bottom: BorderSide(color: theme.dividerColor, width: 1)),
       ),
       child: Row(
         children: [

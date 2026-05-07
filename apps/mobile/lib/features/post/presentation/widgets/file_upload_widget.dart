@@ -3,12 +3,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const _kBg = Color(0xFFF7F3EE);
-const _kWhite = Colors.white;
-const _kBorder = Color(0xFFE2DAD0);
-const _kFg = Color(0xFF1C1917);
-const _kMuted = Color(0xFF8A837E);
-const _kRed = Color(0xFFDC2626);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 const _maxBytes = 50 * 1024 * 1024; // 50 MB per spec
 const _allowedExtensions = [
@@ -90,6 +85,9 @@ class FileUploadWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -98,10 +96,10 @@ class FileUploadWidget extends StatelessWidget {
           child: Container(
             height: 100,
             decoration: BoxDecoration(
-              color: _kBg,
+              color: scaffoldBg,
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
-                color: _kBorder,
+                color: dividerColor,
                 width: 1.5,
                 strokeAlign: BorderSide.strokeAlignInside,
               ),
@@ -110,20 +108,20 @@ class FileUploadWidget extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.upload_file, color: _kMuted, size: 24),
+                  Icon(Icons.upload_file, color: ac.mutedForeground, size: 24),
                   const SizedBox(height: 6),
                   Text(
                     'Drop files here or click to browse',
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 13,
-                      color: _kMuted,
+                      color: ac.mutedForeground,
                     ),
                   ),
                   Text(
                     'max 50 MB per file',
                     style: GoogleFonts.firaCode(
                       fontSize: 11,
-                      color: _kMuted,
+                      color: ac.mutedForeground,
                       letterSpacing: 0.4,
                     ),
                   ),
@@ -177,12 +175,15 @@ class _FileRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fg = tooLarge ? _kRed : _kMuted;
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
+    final fg = tooLarge ? cs.error : ac.mutedForeground;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: tooLarge ? const Color(0xFFFEF2F2) : _kWhite,
-        border: Border.all(color: tooLarge ? _kRed : _kBorder),
+        color: tooLarge ? cs.error.withValues(alpha: 0.06) : cs.surface,
+        border: Border.all(color: tooLarge ? cs.error : dividerColor),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
@@ -195,7 +196,10 @@ class _FileRow extends StatelessWidget {
               children: [
                 Text(
                   name.length > 30 ? '${name.substring(0, 30)}…' : name,
-                  style: GoogleFonts.firaCode(fontSize: 12, color: _kFg),
+                  style: GoogleFonts.firaCode(
+                    fontSize: 12,
+                    color: cs.onSurface,
+                  ),
                 ),
                 Text(
                   tooLarge ? '$sizeLabel — exceeds 50 MB' : sizeLabel,
@@ -206,7 +210,7 @@ class _FileRow extends StatelessWidget {
           ),
           GestureDetector(
             onTap: onRemove,
-            child: const Icon(Icons.close, size: 16, color: _kMuted),
+            child: Icon(Icons.close, size: 16, color: ac.mutedForeground),
           ),
         ],
       ),

@@ -12,6 +12,8 @@ import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.d
 import 'package:unishare_mobile/features/post/presentation/providers/draft_queue_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 // ---------------------------------------------------------------------------
 // Stub repository — no Firebase or Hive calls
@@ -59,7 +61,10 @@ Widget _makeScreen() {
       // Override draftQueueProvider so DraftQueueIndicator never opens Hive.
       draftQueueProvider.overrideWith(() => _FakeDraftQueueNotifier()),
     ],
-    child: const MaterialApp(home: CreatePostScreen()),
+    child: MaterialApp(
+      theme: AppTheme.build(AppThemes.unishare),
+      home: const CreatePostScreen(),
+    ),
   );
 }
 

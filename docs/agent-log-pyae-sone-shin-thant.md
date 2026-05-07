@@ -796,3 +796,20 @@ Summary:  1 file changed, 10 insertions(+)
   [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
   [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
   [16:53] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [17:03] Edit: apps/mobile/lib/features/post/presentation/widgets/files_step.dart
+  [17:03] Edit: apps/mobile/lib/features/post/presentation/widgets/files_step.dart
+  [17:03] Write: apps/mobile/lib/features/feed/presentation/widgets/feed_empty_state_widget.dart
+  [17:03] Write: apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart
+  [17:04] Write: apps/mobile/lib/features/auth/presentation/widgets/google_sign_in_button.dart
+  [17:57] Write: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [17:58] Write: apps/mobile/lib/features/post/presentation/widgets/details_step.dart
+  [17:58] Write: apps/mobile/lib/features/post/presentation/widgets/code_snippet_widget.dart
+  [17:59] Write: apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
+  [17:59] Write: apps/mobile/lib/features/post/presentation/widgets/type_step.dart
+  [17:59] Write: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [18:00] Write: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [18:00] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [18:00] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [18:01] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [18:01] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [18:01] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart

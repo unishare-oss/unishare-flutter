@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const _kBorder = Color(0xFFE2DAD0);
-const _kFg = Color(0xFF1C1917);
-const _kMuted = Color(0xFF8A837E);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 /// Step 2: year + course dropdowns.
 ///
@@ -55,6 +53,7 @@ class CourseStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -63,7 +62,7 @@ class CourseStep extends StatelessWidget {
           style: GoogleFonts.spaceGrotesk(
             fontSize: 22,
             fontWeight: FontWeight.w700,
-            color: _kFg,
+            color: cs.onSurface,
           ),
         ),
         const SizedBox(height: 24),
@@ -81,7 +80,7 @@ class CourseStep extends StatelessWidget {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: _kFg,
+                      color: cs.onSurface,
                     ),
                   ),
                 ),
@@ -108,7 +107,7 @@ class CourseStep extends StatelessWidget {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: _kFg,
+                      color: cs.onSurface,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -133,15 +132,18 @@ class _FieldLabel extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) => Text(
-    text,
-    style: GoogleFonts.firaCode(
-      fontSize: 11,
-      fontWeight: FontWeight.w600,
-      color: _kMuted,
-      letterSpacing: 0.55,
-    ),
-  );
+  Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    return Text(
+      text,
+      style: GoogleFonts.firaCode(
+        fontSize: 11,
+        fontWeight: FontWeight.w600,
+        color: ac.mutedForeground,
+        letterSpacing: 0.55,
+      ),
+    );
+  }
 }
 
 class _DropdownField<T> extends StatelessWidget {
@@ -159,11 +161,14 @@ class _DropdownField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Container(
       height: 42,
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: _kBorder),
+        color: cs.surface,
+        border: Border.all(color: dividerColor),
         borderRadius: BorderRadius.circular(6),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -172,15 +177,22 @@ class _DropdownField<T> extends StatelessWidget {
           value: value,
           hint: Text(
             hint,
-            style: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kMuted),
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 14,
+              color: ac.mutedForeground,
+            ),
           ),
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, color: _kMuted, size: 18),
-          style: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kFg),
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: ac.mutedForeground,
+            size: 18,
+          ),
+          style: GoogleFonts.spaceGrotesk(fontSize: 14, color: cs.onSurface),
           items: items,
           onChanged: onChanged,
           focusColor: Colors.transparent,
-          dropdownColor: Colors.white,
+          dropdownColor: cs.surface,
           borderRadius: BorderRadius.circular(6),
         ),
       ),

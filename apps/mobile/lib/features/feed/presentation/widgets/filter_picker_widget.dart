@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const _kOrange = Color(0xFFD97706);
-const _kBorder = Color(0xFFE2DAD0);
-const _kMuted = Color(0xFFF7F3EE);
-const _kTextMuted = Color(0xFF8A837E);
-const _kForeground = Color(0xFF1C1917);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class FilterPickerWidget extends StatefulWidget {
   const FilterPickerWidget({
@@ -28,7 +24,7 @@ class FilterPickerWidget extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -55,6 +51,9 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     final bottomPadding = MediaQuery.viewInsetsOf(context).bottom;
     return DraggableScrollableSheet(
       expand: false,
@@ -67,9 +66,9 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _buildHandle(),
-              _buildHeader(),
-              const Divider(height: 1, color: _kBorder),
+              _buildHandle(dividerColor),
+              _buildHeader(cs, ac),
+              Divider(height: 1, color: dividerColor),
               Expanded(
                 child: ListView.builder(
                   controller: scrollController,
@@ -94,7 +93,7 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
                           children: [
                             Checkbox(
                               value: checked,
-                              activeColor: _kOrange,
+                              activeColor: ac.amber,
                               onChanged: (v) => setState(() {
                                 if (v == true) {
                                   _selected.add(tag);
@@ -107,7 +106,7 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
                               tag,
                               style: GoogleFonts.firaCode(
                                 fontSize: 13,
-                                color: checked ? _kOrange : _kForeground,
+                                color: checked ? ac.amber : cs.onSurface,
                                 fontWeight: checked
                                     ? FontWeight.w600
                                     : FontWeight.normal,
@@ -120,8 +119,8 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
                   },
                 ),
               ),
-              const Divider(height: 1, color: _kBorder),
-              _buildActions(),
+              Divider(height: 1, color: dividerColor),
+              _buildActions(cs, ac, dividerColor),
             ],
           ),
         );
@@ -129,45 +128,45 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
     );
   }
 
-  Widget _buildHandle() {
+  Widget _buildHandle(Color dividerColor) {
     return Center(
       child: Container(
         margin: const EdgeInsets.only(top: 12, bottom: 8),
         width: 40,
         height: 4,
         decoration: BoxDecoration(
-          color: _kBorder,
+          color: dividerColor,
           borderRadius: BorderRadius.circular(2),
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(ColorScheme cs, AppColors ac) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Filter by tags',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: _kForeground,
+              color: cs.onSurface,
             ),
           ),
           if (_selected.isNotEmpty)
             Text(
               '${_selected.length} selected',
-              style: const TextStyle(fontSize: 12, color: _kOrange),
+              style: TextStyle(fontSize: 12, color: ac.amber),
             ),
         ],
       ),
     );
   }
 
-  Widget _buildActions() {
+  Widget _buildActions(ColorScheme cs, AppColors ac, Color dividerColor) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -180,9 +179,9 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
                 Navigator.of(context).pop();
               },
               style: OutlinedButton.styleFrom(
-                foregroundColor: _kTextMuted,
-                side: const BorderSide(color: _kBorder),
-                backgroundColor: _kMuted,
+                foregroundColor: ac.mutedForeground,
+                side: BorderSide(color: dividerColor),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -200,7 +199,7 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: _kOrange,
+                backgroundColor: ac.amber,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),

@@ -12,13 +12,7 @@ import 'package:unishare_mobile/features/post/presentation/widgets/details_step.
 import 'package:unishare_mobile/features/post/presentation/widgets/draft_queue_indicator.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/files_step.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/type_step.dart';
-
-const _kBg = Color(0xFFF7F3EE);
-const _kWhite = Colors.white;
-const _kPrimary = Color(0xFFD97706);
-const _kBorder = Color(0xFFE2DAD0);
-const _kFg = Color(0xFF1C1917);
-const _kMuted = Color(0xFF8A837E);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});
@@ -144,7 +138,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       createdAt: DateTime.now(),
     );
 
-    ref.read(createPostProvider.notifier).submit(
+    ref
+        .read(createPostProvider.notifier)
+        .submit(
           draft: draft,
           fileDataOverride: fileDataOverride.isEmpty ? null : fileDataOverride,
         );
@@ -155,10 +151,13 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Scaffold(
-      backgroundColor: _kWhite,
+      backgroundColor: cs.surface,
       appBar: AppBar(
-        backgroundColor: _kWhite,
+        backgroundColor: cs.surface,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         automaticallyImplyLeading: false,
@@ -168,12 +167,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           style: GoogleFonts.spaceGrotesk(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: _kFg,
+            color: cs.onSurface,
           ),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(height: 1, color: _kBorder),
+          child: Container(height: 1, color: dividerColor),
         ),
       ),
       body: Column(
@@ -250,8 +249,8 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
           // StepNav bar
           Container(
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: _kBorder)),
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: dividerColor)),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Row(
@@ -262,7 +261,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 TextButton(
                   onPressed: _goBack,
                   style: TextButton.styleFrom(
-                    foregroundColor: _kMuted,
+                    foregroundColor: ac.mutedForeground,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
@@ -286,9 +285,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   child: FilledButton(
                     onPressed: _nextEnabled ? _goNext : null,
                     style: FilledButton.styleFrom(
-                      backgroundColor: _kPrimary,
+                      backgroundColor: ac.amber,
                       foregroundColor: Colors.white,
-                      disabledBackgroundColor: _kPrimary.withValues(alpha: 0.4),
+                      disabledBackgroundColor: ac.amber.withValues(alpha: 0.4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -325,6 +324,8 @@ class _StepIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Row(
       children: List.generate(4, (i) {
         final isCompleted = i < currentStep;
@@ -343,7 +344,7 @@ class _StepIndicator extends StatelessWidget {
                 Expanded(
                   child: Container(
                     height: 1,
-                    color: isCompleted ? _kPrimary : _kBorder,
+                    color: isCompleted ? ac.amber : dividerColor,
                   ),
                 ),
             ],
@@ -367,14 +368,16 @@ class _StepDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
     final Color bg;
     final Widget child;
 
     if (isCompleted) {
-      bg = _kPrimary;
+      bg = ac.amber;
       child = const Icon(Icons.check, size: 13, color: Colors.white);
     } else if (isActive) {
-      bg = _kPrimary;
+      bg = ac.amber;
       child = Text(
         '$number',
         style: GoogleFonts.firaCode(
@@ -384,13 +387,13 @@ class _StepDot extends StatelessWidget {
         ),
       );
     } else {
-      bg = _kBg;
+      bg = scaffoldBg;
       child = Text(
         '$number',
         style: GoogleFonts.firaCode(
           fontSize: 11,
           fontWeight: FontWeight.w500,
-          color: _kMuted,
+          color: ac.mutedForeground,
         ),
       );
     }
@@ -404,4 +407,3 @@ class _StepDot extends StatelessWidget {
     );
   }
 }
-

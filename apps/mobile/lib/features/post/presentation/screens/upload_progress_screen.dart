@@ -4,17 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
-
-const _kWhite = Colors.white;
-const _kBg = Color(0xFFF7F3EE);
-const _kPrimary = Color(0xFFD97706);
-const _kBorder = Color(0xFFE2DAD0);
-const _kFg = Color(0xFF1C1917);
-const _kMuted = Color(0xFF8A837E);
-const _kGreen = Color(0xFF059669);
-const _kGreenBg = Color(0xFFD1FAE5);
-const _kDestructive = Color(0xFFDC2626);
-const _kDestructiveBg = Color(0xFFFEE2E2);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class UploadProgressScreen extends ConsumerStatefulWidget {
   const UploadProgressScreen({super.key});
@@ -50,17 +40,21 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
     });
 
     final state = ref.watch(createPostProvider);
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
     return Scaffold(
-      backgroundColor: _kBg,
-      appBar: _buildAppBar(state),
-      body: SafeArea(child: _buildBody(state)),
+      backgroundColor: scaffoldBg,
+      appBar: _buildAppBar(context, state),
+      body: SafeArea(child: _buildBody(context, state)),
     );
   }
 
-  AppBar _buildAppBar(CreatePostState state) {
+  AppBar _buildAppBar(BuildContext context, CreatePostState state) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     final isPublishing = state is CreatePostPublishing;
     return AppBar(
-      backgroundColor: _kWhite,
+      backgroundColor: cs.surface,
       elevation: 0,
       surfaceTintColor: Colors.transparent,
       automaticallyImplyLeading: false,
@@ -70,7 +64,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
         style: GoogleFonts.spaceGrotesk(
           fontSize: 18,
           fontWeight: FontWeight.w700,
-          color: _kFg,
+          color: cs.onSurface,
         ),
       ),
       actions: [
@@ -84,10 +78,12 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
                     if (mounted) context.go('/feed');
                   },
             style: TextButton.styleFrom(
-              foregroundColor: _kDestructive,
-              disabledForegroundColor: _kMuted,
+              foregroundColor: cs.error,
+              disabledForegroundColor: ac.mutedForeground,
               side: BorderSide(
-                color: isPublishing ? _kBorder : const Color(0xFFFCA5A5),
+                color: isPublishing
+                    ? dividerColor
+                    : cs.error.withValues(alpha: 0.4),
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
@@ -106,64 +102,64 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: Container(height: 1, color: _kBorder),
+        child: Container(height: 1, color: dividerColor),
       ),
     );
   }
 
-  Widget _buildBody(CreatePostState state) {
+  Widget _buildBody(BuildContext context, CreatePostState state) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
       child: Column(
         children: [
-          _buildRing(state),
+          _buildRing(context, state),
           const SizedBox(height: 12),
-          _buildSubtitles(state),
+          _buildSubtitles(context, state),
           const SizedBox(height: 28),
-          if (state is CreatePostUploading) _buildFileList(state.files),
-          if (state is CreatePostPublishing) _buildFileListAllDone(),
+          if (state is CreatePostUploading)
+            _buildFileList(context, state.files),
+          if (state is CreatePostPublishing) _buildFileListAllDone(context),
           if (state is CreatePostError) ...[
-            _buildErrorBanner(state),
+            _buildErrorBanner(context, state),
             const SizedBox(height: 16),
-            _buildRetryButton(state),
+            _buildRetryButton(context, state),
           ],
         ],
       ),
     );
   }
 
-  Widget _buildRing(CreatePostState state) {
+  Widget _buildRing(BuildContext context, CreatePostState state) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
+    final dividerColor = Theme.of(context).dividerColor;
     final Color ringColor;
     final Color ringBg;
     final Widget center;
 
     if (state is CreatePostUploading) {
-      ringColor = _kPrimary;
-      ringBg = _kBorder;
+      ringColor = ac.amber;
+      ringBg = dividerColor;
       final pct = (state.overallProgress * 100).toInt();
       center = Text(
         '$pct%',
         style: GoogleFonts.spaceGrotesk(
           fontSize: 22,
           fontWeight: FontWeight.w700,
-          color: _kPrimary,
+          color: ac.amber,
         ),
       );
     } else if (state is CreatePostPublishing) {
-      ringColor = _kGreen;
-      ringBg = _kGreenBg;
-      center = const Icon(Icons.check_rounded, size: 32, color: _kGreen);
+      ringColor = ac.success;
+      ringBg = ac.success.withValues(alpha: 0.15);
+      center = Icon(Icons.check_rounded, size: 32, color: ac.success);
     } else if (state is CreatePostError) {
-      ringColor = _kDestructive;
-      ringBg = _kDestructiveBg;
-      center = const Icon(
-        Icons.priority_high_rounded,
-        size: 32,
-        color: _kDestructive,
-      );
+      ringColor = cs.error;
+      ringBg = cs.error.withValues(alpha: 0.1);
+      center = Icon(Icons.priority_high_rounded, size: 32, color: cs.error);
     } else {
-      ringColor = _kPrimary;
-      ringBg = _kBorder;
+      ringColor = ac.amber;
+      ringBg = dividerColor;
       center = const SizedBox.shrink();
     }
 
@@ -194,7 +190,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
     );
   }
 
-  Widget _buildSubtitles(CreatePostState state) {
+  Widget _buildSubtitles(BuildContext context, CreatePostState state) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
     if (state is CreatePostUploading) {
       final uploading = state.files
           .where((f) => f.phase == FileUploadPhase.uploading)
@@ -211,14 +209,17 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: _kFg,
+              color: cs.onSurface,
             ),
           ),
           if (uploading != null) ...[
             const SizedBox(height: 4),
             Text(
               'Uploading $uploading…',
-              style: GoogleFonts.firaCode(fontSize: 11, color: _kMuted),
+              style: GoogleFonts.firaCode(
+                fontSize: 11,
+                color: ac.mutedForeground,
+              ),
             ),
           ],
         ],
@@ -231,13 +232,16 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: _kFg,
+              color: cs.onSurface,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             'Finishing up…',
-            style: GoogleFonts.firaCode(fontSize: 11, color: _kMuted),
+            style: GoogleFonts.firaCode(
+              fontSize: 11,
+              color: ac.mutedForeground,
+            ),
           ),
         ],
       );
@@ -253,14 +257,17 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: _kDestructive,
+              color: cs.error,
             ),
           ),
           if (failedFile != null) ...[
             const SizedBox(height: 4),
             Text(
               '$failedFile could not be uploaded',
-              style: GoogleFonts.firaCode(fontSize: 11, color: _kMuted),
+              style: GoogleFonts.firaCode(
+                fontSize: 11,
+                color: ac.mutedForeground,
+              ),
             ),
           ],
         ],
@@ -269,11 +276,13 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
     return const SizedBox.shrink();
   }
 
-  Widget _buildFileList(List<FileUploadProgress> files) {
+  Widget _buildFileList(BuildContext context, List<FileUploadProgress> files) {
+    final cs = Theme.of(context).colorScheme;
+    final dividerColor = Theme.of(context).dividerColor;
     return Container(
       decoration: BoxDecoration(
-        color: _kWhite,
-        border: Border.all(color: _kBorder),
+        color: cs.surface,
+        border: Border.all(color: dividerColor),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -285,19 +294,22 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
     );
   }
 
-  Widget _buildFileListAllDone() {
+  Widget _buildFileListAllDone(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Container(
       decoration: BoxDecoration(
-        color: _kWhite,
-        border: Border.all(color: _kBorder),
+        color: cs.surface,
+        border: Border.all(color: dividerColor),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Center(
+      child: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           child: Icon(
             Icons.check_circle_outline_rounded,
-            color: _kGreen,
+            color: ac.success,
             size: 32,
           ),
         ),
@@ -305,23 +317,25 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
     );
   }
 
-  Widget _buildErrorBanner(CreatePostError state) {
+  Widget _buildErrorBanner(BuildContext context, CreatePostError state) {
+    final cs = Theme.of(context).colorScheme;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFEF2F2),
-        border: Border.all(color: const Color(0xFFFECACA)),
+        color: cs.error.withValues(alpha: 0.06),
+        border: Border.all(color: cs.error.withValues(alpha: 0.3)),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         state.message,
-        style: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kDestructive),
+        style: GoogleFonts.spaceGrotesk(fontSize: 12, color: cs.error),
       ),
     );
   }
 
-  Widget _buildRetryButton(CreatePostError state) {
+  Widget _buildRetryButton(BuildContext context, CreatePostError state) {
+    final ac = Theme.of(context).extension<AppColors>()!;
     return SizedBox(
       width: double.infinity,
       height: 42,
@@ -330,8 +344,8 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           ref.read(createPostProvider.notifier).submit(draft: state.draft);
         },
         style: FilledButton.styleFrom(
-          backgroundColor: _kPrimary,
-          foregroundColor: _kWhite,
+          backgroundColor: ac.amber,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         ),
         child: Text(
@@ -354,6 +368,9 @@ class _FileRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Column(
       children: [
         Opacity(
@@ -372,8 +389,8 @@ class _FileRow extends StatelessWidget {
                         style: GoogleFonts.spaceGrotesk(
                           fontSize: 12,
                           color: file.phase == FileUploadPhase.queued
-                              ? _kMuted
-                              : _kFg,
+                              ? ac.mutedForeground
+                              : cs.onSurface,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -389,8 +406,8 @@ class _FileRow extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: file.progress,
                       minHeight: 3,
-                      backgroundColor: _kBorder,
-                      valueColor: const AlwaysStoppedAnimation(_kPrimary),
+                      backgroundColor: dividerColor,
+                      valueColor: AlwaysStoppedAnimation(ac.amber),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -399,7 +416,7 @@ class _FileRow extends StatelessWidget {
             ),
           ),
         ),
-        if (!isLast) const Divider(height: 1, color: _kBorder),
+        if (!isLast) Divider(height: 1, color: dividerColor),
       ],
     );
   }
@@ -411,26 +428,23 @@ class _PhaseIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
     return switch (phase) {
       FileUploadPhase.done => Container(
         width: 16,
         height: 16,
-        decoration: const BoxDecoration(
-          color: _kGreenBg,
+        decoration: BoxDecoration(
+          color: ac.success.withValues(alpha: 0.15),
           shape: BoxShape.circle,
         ),
-        child: const Icon(
-          Icons.check_rounded,
-          size: 10,
-          color: _kGreen,
-        ),
+        child: Icon(Icons.check_rounded, size: 10, color: ac.success),
       ),
       FileUploadPhase.uploading => SizedBox(
         width: 16,
         height: 16,
         child: CircularProgressIndicator(
           strokeWidth: 2,
-          valueColor: const AlwaysStoppedAnimation(_kPrimary),
+          valueColor: AlwaysStoppedAnimation(ac.amber),
         ),
       ),
       FileUploadPhase.queued => Container(
@@ -438,7 +452,7 @@ class _PhaseIcon extends StatelessWidget {
         height: 16,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: _kMuted, width: 1.5),
+          border: Border.all(color: ac.mutedForeground, width: 1.5),
         ),
       ),
     };
@@ -451,13 +465,14 @@ class _PhaseLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
     return switch (file.phase) {
       FileUploadPhase.done => Text(
         'Done',
         style: GoogleFonts.firaCode(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          color: _kGreen,
+          color: ac.success,
         ),
       ),
       FileUploadPhase.uploading => Text(
@@ -465,15 +480,12 @@ class _PhaseLabel extends StatelessWidget {
         style: GoogleFonts.firaCode(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          color: _kPrimary,
+          color: ac.amber,
         ),
       ),
       FileUploadPhase.queued => Text(
         'Queued',
-        style: GoogleFonts.firaCode(
-          fontSize: 11,
-          color: _kMuted,
-        ),
+        style: GoogleFonts.firaCode(fontSize: 11, color: ac.mutedForeground),
       ),
     };
   }

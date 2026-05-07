@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/upload_progress_screen.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 // ---------------------------------------------------------------------------
 // Stub notifiers
@@ -75,7 +77,10 @@ class _ErrorNotifier extends CreatePostNotifier {
 
 Widget _makeScreen(CreatePostNotifier notifier) => ProviderScope(
   overrides: [createPostProvider.overrideWith(() => notifier)],
-  child: const MaterialApp(home: UploadProgressScreen()),
+  child: MaterialApp(
+    theme: AppTheme.build(AppThemes.unishare),
+    home: const UploadProgressScreen(),
+  ),
 );
 
 // ---------------------------------------------------------------------------
