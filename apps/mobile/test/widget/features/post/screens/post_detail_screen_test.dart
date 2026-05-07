@@ -149,8 +149,8 @@ void main() {
       expect(find.text('Test Title'), findsAtLeastNWidgets(1));
       expect(find.text('Test body content'), findsOneWidget);
       expect(find.text('Test Author'), findsOneWidget);
-      // Tag is rendered in upper case by the screen.
-      expect(find.text('FLUTTER'), findsOneWidget);
+      // Tag is rendered in upper case by the screen (appears in breadcrumb and badge).
+      expect(find.text('FLUTTER'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('error state shows error widget with error_outline icon', (
