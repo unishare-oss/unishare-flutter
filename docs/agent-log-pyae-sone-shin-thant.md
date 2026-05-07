@@ -910,3 +910,21 @@ Files:
   ~ apps/mobile/test/widget/features/post/screens/upload_progress_screen_test.dart
 Summary:  6 files changed, 30 insertions(+), 19 deletions(-)
 
+
+2026-05-08
+  [00:43] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [00:43] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [00:44] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [00:44] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [00:45] Edit: apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  [00:49] Edit: apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart

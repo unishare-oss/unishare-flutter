@@ -253,7 +253,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     _cancellationToken = null;
     state = const CreatePostIdle();
     if (draft != null) {
-      await ref.read(postRepositoryProvider).removeDraft(draft.id);
+      try {
+        await ref.read(postRepositoryProvider).removeDraft(draft.id);
+      } catch (_) {}
     }
   }
 
