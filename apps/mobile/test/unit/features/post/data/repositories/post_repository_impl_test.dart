@@ -74,7 +74,7 @@ void main() {
 
   tearDown(() async => draftBox.clear());
 
-  PostRepositoryImpl _makeRepo({
+  PostRepositoryImpl makeRepo({
     required FeedCache feedCache,
     required _FakeDatasource datasource,
     Duration cacheTtl = const Duration(minutes: 5),
@@ -90,7 +90,7 @@ void main() {
   group('watchFeed — cache miss', () {
     test('emits nothing until datasource emits when cache is empty', () async {
       final datasource = _FakeDatasource();
-      final repo = _makeRepo(feedCache: FeedCache(), datasource: datasource);
+      final repo = makeRepo(feedCache: FeedCache(), datasource: datasource);
 
       final emissions = <List<Post>>[];
       final sub = repo.watchFeed().listen(emissions.add);
@@ -112,7 +112,7 @@ void main() {
     test('updates cache after Firestore emission', () async {
       final datasource = _FakeDatasource();
       final cache = FeedCache();
-      final repo = _makeRepo(feedCache: cache, datasource: datasource);
+      final repo = makeRepo(feedCache: cache, datasource: datasource);
 
       final sub = repo.watchFeed().listen((_) {});
       // Wait for the async* generator to reach its await-for and subscribe.
@@ -133,7 +133,7 @@ void main() {
     test('emits cached list immediately before Firestore responds', () async {
       final datasource = _FakeDatasource();
       final cache = FeedCache()..update([_post('cached')]);
-      final repo = _makeRepo(feedCache: cache, datasource: datasource);
+      final repo = makeRepo(feedCache: cache, datasource: datasource);
 
       final emissions = <List<Post>>[];
       final sub = repo.watchFeed().listen(emissions.add);
@@ -154,7 +154,7 @@ void main() {
     test('does not yield cache when TTL is expired', () async {
       final datasource = _FakeDatasource();
       final cache = FeedCache()..update([_post('stale')]);
-      final repo = _makeRepo(
+      final repo = makeRepo(
         feedCache: cache,
         datasource: datasource,
         cacheTtl: Duration.zero,
@@ -177,7 +177,7 @@ void main() {
       cache.invalidate();
 
       final datasource = _FakeDatasource();
-      final repo = _makeRepo(feedCache: cache, datasource: datasource);
+      final repo = makeRepo(feedCache: cache, datasource: datasource);
 
       final emissions = <List<Post>>[];
       final sub = repo.watchFeed().listen(emissions.add);
