@@ -18,23 +18,18 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen<CreatePostState>(createPostProvider, (_, next) {
-      if (next is CreatePostPublished) {
-        final router = GoRouter.of(context);
-        Future.delayed(const Duration(milliseconds: 1500), () {
-          if (!mounted) return;
-          ref.read(createPostProvider.notifier).reset();
-          router.go('/feed');
-        });
-      } else if (next is CreatePostQueued) {
+      if (next is CreatePostPublished || next is CreatePostQueued) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Saved offline — will publish when you reconnect.'),
-            ),
-          );
-          context.go('/feed');
+          if (next is CreatePostQueued) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Saved offline — will publish when you reconnect.'),
+              ),
+            );
+          }
           ref.read(createPostProvider.notifier).reset();
+          GoRouter.of(context).go('/feed');
         });
       }
     });
@@ -118,8 +113,11 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           const SizedBox(height: 12),
           _buildSubtitles(context, state),
           const SizedBox(height: 28),
-          if (state is CreatePostUploading)
+          if (state is CreatePostUploading) ...[
             _buildFileList(context, state.files),
+            const SizedBox(height: 20),
+            _buildGoToFeedButton(context),
+          ],
           if (state is CreatePostPublishing)
             _buildFileList(context, state.files),
           if (state is CreatePostError) ...[
@@ -161,9 +159,10 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       ringBg = cs.error.withValues(alpha: 0.1);
       center = Icon(Icons.priority_high_rounded, size: 32, color: cs.error);
     } else {
-      ringColor = ac.amber;
-      ringBg = dividerColor;
-      center = const SizedBox.shrink();
+      // CreatePostPublished — same green as Publishing while listener navigates away.
+      ringColor = ac.success;
+      ringBg = ac.success.withValues(alpha: 0.15);
+      center = Icon(Icons.check_rounded, size: 32, color: ac.success);
     }
 
     final double value;
@@ -293,6 +292,20 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           for (var i = 0; i < files.length; i++)
             _FileRow(file: files[i], isLast: i == files.length - 1),
         ],
+      ),
+    );
+  }
+
+  Widget _buildGoToFeedButton(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    return TextButton(
+      onPressed: () => context.go('/feed'),
+      child: Text(
+        'Go to feed — upload continues in background',
+        style: GoogleFonts.spaceGrotesk(
+          fontSize: 12,
+          color: ac.mutedForeground,
+        ),
       ),
     );
   }

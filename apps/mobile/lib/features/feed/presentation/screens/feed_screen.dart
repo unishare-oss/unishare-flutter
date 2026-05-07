@@ -14,6 +14,7 @@ import 'package:unishare_mobile/features/feed/presentation/widgets/filter_picker
 import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
@@ -172,6 +173,23 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<CreatePostState>(createPostProvider, (_, next) {
+      if (!mounted) return;
+      if (next is CreatePostPublished) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Post published!')),
+        );
+        ref.read(createPostProvider.notifier).reset();
+      } else if (next is CreatePostQueued) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Saved offline — will publish when you reconnect.'),
+          ),
+        );
+        ref.read(createPostProvider.notifier).reset();
+      }
+    });
+
     final activeTagFilters = ref.watch(activeTagFiltersProvider);
     final feedAsync = ref.watch(feedProvider);
     final suggestions = _buildSuggestions(feedAsync.value ?? const []);
