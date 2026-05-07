@@ -117,15 +117,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     }
   }
 
-  Future<void> _submit() async {
-    // On mobile use f.path (full filesystem path needed to read the file).
-    // On web use f.name — f.path is a blob URL which breaks content-type
-    // detection and doesn't help with file reading (bytes are in f.bytes).
+  void _submit() {
     final localMediaPaths = _pickedFiles
         .map((f) => f.bytes != null ? f.name : f.path!)
         .toList();
 
-    // Bytes populated on web (withData: kIsWeb). Key matches localMediaPaths.
     final fileDataOverride = {
       for (final f in _pickedFiles)
         if (f.bytes != null) f.name: f.bytes!,
@@ -149,46 +145,16 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       createdAt: DateTime.now(),
     );
 
-    await ref
-        .read(createPostProvider.notifier)
-        .submit(
+    ref.read(createPostProvider.notifier).submit(
           draft: draft,
           fileDataOverride: fileDataOverride.isEmpty ? null : fileDataOverride,
         );
+    context.push('/upload-progress');
   }
 
   @override
   Widget build(BuildContext context) {
     final postState = ref.watch(createPostProvider);
-
-    ref.listen<CreatePostState>(createPostProvider, (_, next) {
-      if (next is CreatePostPublished) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Post published!')));
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go('/feed');
-        }
-        ref.read(createPostProvider.notifier).reset();
-      } else if (next is CreatePostQueued) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Saved offline — will publish when you reconnect.'),
-          ),
-        );
-        if (context.canPop()) {
-          context.pop();
-        } else {
-          context.go('/feed');
-        }
-        ref.read(createPostProvider.notifier).reset();
-      }
-    });
-
-    final isSubmitting =
-        postState is CreatePostUploading || postState is CreatePostPublishing;
 
     return Scaffold(
       backgroundColor: _kWhite,
@@ -292,53 +258,6 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                       ),
                     ),
                   ),
-                if (postState is CreatePostUploading)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          LinearProgressIndicator(
-                            value: postState.progress,
-                            backgroundColor: _kBorder,
-                            valueColor: const AlwaysStoppedAnimation(_kPrimary),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Uploading ${(postState.progress * 100).toInt()}%…',
-                            style: GoogleFonts.firaCode(
-                              fontSize: 12,
-                              color: _kMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (postState is CreatePostPublishing)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const LinearProgressIndicator(
-                            backgroundColor: _kBorder,
-                            valueColor: AlwaysStoppedAnimation(_kPrimary),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Publishing…',
-                            style: GoogleFonts.firaCode(
-                              fontSize: 12,
-                              color: _kMuted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ],
             ),
           ),
@@ -355,7 +274,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 const Spacer(),
                 // Back button
                 TextButton(
-                  onPressed: isSubmitting ? null : _goBack,
+                  onPressed: _goBack,
                   style: TextButton.styleFrom(
                     foregroundColor: _kMuted,
                     padding: const EdgeInsets.symmetric(
@@ -379,7 +298,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 SizedBox(
                   height: 38,
                   child: FilledButton(
-                    onPressed: (_nextEnabled && !isSubmitting) ? _goNext : null,
+                    onPressed: _nextEnabled ? _goNext : null,
                     style: FilledButton.styleFrom(
                       backgroundColor: _kPrimary,
                       foregroundColor: Colors.white,
@@ -390,9 +309,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                     ),
                     child: Text(
-                      isSubmitting
-                          ? 'Publishing…'
-                          : (_step == 3 ? 'Submit' : 'Next'),
+                      _step == 3 ? 'Submit' : 'Next',
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,

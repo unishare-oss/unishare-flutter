@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,7 +48,9 @@ class _FakePostRepository implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
+    void Function(int, double)? onFileProgress,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
   }) => throw UnimplementedError();
 }
 
