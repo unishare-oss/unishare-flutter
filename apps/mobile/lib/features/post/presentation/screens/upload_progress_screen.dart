@@ -120,7 +120,8 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           const SizedBox(height: 28),
           if (state is CreatePostUploading)
             _buildFileList(context, state.files),
-          if (state is CreatePostPublishing) _buildFileListAllDone(context),
+          if (state is CreatePostPublishing)
+            _buildFileList(context, state.files),
           if (state is CreatePostError) ...[
             _buildErrorBanner(context, state),
             const SizedBox(height: 16),
@@ -292,29 +293,6 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           for (var i = 0; i < files.length; i++)
             _FileRow(file: files[i], isLast: i == files.length - 1),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFileListAllDone(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final ac = Theme.of(context).extension<AppColors>()!;
-    final dividerColor = Theme.of(context).dividerColor;
-    return Container(
-      decoration: BoxDecoration(
-        color: cs.surface,
-        border: Border.all(color: dividerColor),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Icon(
-            Icons.check_circle_outline_rounded,
-            color: ac.success,
-            size: 32,
-          ),
-        ),
       ),
     );
   }

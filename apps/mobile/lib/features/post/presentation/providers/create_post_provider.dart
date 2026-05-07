@@ -52,7 +52,8 @@ final class CreatePostUploading extends CreatePostState {
 }
 
 final class CreatePostPublishing extends CreatePostState {
-  const CreatePostPublishing();
+  const CreatePostPublishing({required this.files});
+  final List<FileUploadProgress> files;
 }
 
 final class CreatePostPublished extends CreatePostState {
@@ -154,7 +155,20 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         },
         onProgress: (p) {
           if (token.isCancelled) return;
-          if (p >= 1.0) state = const CreatePostPublishing();
+          if (p >= 1.0) {
+            final current = state;
+            final allDone = current is CreatePostUploading
+                ? current.files
+                      .map(
+                        (f) => f.copyWith(
+                          phase: FileUploadPhase.done,
+                          progress: 1.0,
+                        ),
+                      )
+                      .toList()
+                : <FileUploadProgress>[];
+            state = CreatePostPublishing(files: allDone);
+          }
         },
       );
 

@@ -40,7 +40,20 @@ class _UploadingNotifier extends CreatePostNotifier {
 
 class _PublishingNotifier extends CreatePostNotifier {
   @override
-  CreatePostState build() => const CreatePostPublishing();
+  CreatePostState build() => CreatePostPublishing(
+    files: const [
+      FileUploadProgress(
+        filename: 'notes.pdf',
+        phase: FileUploadPhase.done,
+        progress: 1.0,
+      ),
+      FileUploadProgress(
+        filename: 'diagram.png',
+        phase: FileUploadPhase.done,
+        progress: 1.0,
+      ),
+    ],
+  );
 
   @override
   Future<void> cancel() async {}
@@ -104,7 +117,7 @@ void main() {
       expect(find.text('Queued'), findsOneWidget);
     });
 
-    testWidgets('shows Publishing text when in publishing state', (
+    testWidgets('shows Publishing text and Done file rows when in publishing state', (
       tester,
     ) async {
       await tester.pumpWidget(_makeScreen(_PublishingNotifier()));
@@ -112,6 +125,9 @@ void main() {
 
       expect(find.text('Publishing…'), findsOneWidget);
       expect(find.text('Finishing up…'), findsOneWidget);
+      expect(find.text('notes.pdf'), findsOneWidget);
+      expect(find.text('diagram.png'), findsOneWidget);
+      expect(find.text('Done'), findsNWidgets(2));
     });
 
     testWidgets('Cancel button is disabled in publishing state', (
