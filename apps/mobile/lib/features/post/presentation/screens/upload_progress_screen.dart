@@ -24,7 +24,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           if (next is CreatePostQueued) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Saved offline — will publish when you reconnect.'),
+                content: Text(
+                  'Saved offline — will publish when you reconnect.',
+                ),
               ),
             );
           }

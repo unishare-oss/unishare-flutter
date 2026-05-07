@@ -34,7 +34,13 @@ class PostStorageDatasource {
     String idToken, {
     void Function(double)? onProgress,
     CancelToken? cancelToken,
-  }) => _put(bytes, filename, idToken, onProgress: onProgress, cancelToken: cancelToken);
+  }) => _put(
+    bytes,
+    filename,
+    idToken,
+    onProgress: onProgress,
+    cancelToken: cancelToken,
+  );
 
   Future<String> uploadText(
     String content,

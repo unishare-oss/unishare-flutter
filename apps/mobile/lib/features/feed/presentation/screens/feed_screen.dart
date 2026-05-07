@@ -176,9 +176,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     ref.listen<CreatePostState>(createPostProvider, (_, next) {
       if (!mounted) return;
       if (next is CreatePostPublished) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Post published!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Post published!')));
         ref.read(createPostProvider.notifier).reset();
       } else if (next is CreatePostQueued) {
         ScaffoldMessenger.of(context).showSnackBar(

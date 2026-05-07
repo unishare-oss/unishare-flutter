@@ -118,18 +118,19 @@ void main() {
       expect(find.text('Queued'), findsOneWidget);
     });
 
-    testWidgets('shows Publishing text and Done file rows when in publishing state', (
-      tester,
-    ) async {
-      await tester.pumpWidget(_makeScreen(_PublishingNotifier()));
-      await tester.pump();
+    testWidgets(
+      'shows Publishing text and Done file rows when in publishing state',
+      (tester) async {
+        await tester.pumpWidget(_makeScreen(_PublishingNotifier()));
+        await tester.pump();
 
-      expect(find.text('Publishing…'), findsOneWidget);
-      expect(find.text('Finishing up…'), findsOneWidget);
-      expect(find.text('notes.pdf'), findsOneWidget);
-      expect(find.text('diagram.png'), findsOneWidget);
-      expect(find.text('Done'), findsNWidgets(2));
-    });
+        expect(find.text('Publishing…'), findsOneWidget);
+        expect(find.text('Finishing up…'), findsOneWidget);
+        expect(find.text('notes.pdf'), findsOneWidget);
+        expect(find.text('diagram.png'), findsOneWidget);
+        expect(find.text('Done'), findsNWidgets(2));
+      },
+    );
 
     testWidgets('Cancel button is disabled in publishing state', (
       tester,

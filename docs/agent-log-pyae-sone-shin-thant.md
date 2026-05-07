@@ -4,6 +4,13 @@ Automated log of all Claude Code sessions.
 See `CLAUDE.md` for the logging convention.
 
 ---
+Date: 2026-05-07 12:00
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 4 fix — rewrite CourseStep as ConsumerWidget with Riverpod AsyncValue pattern, fix test retry-timer hang
+Prompt: The previous implementer got 9/9 tests passing using FutureBuilder (wrong architecture). Rewrite to use ConsumerWidget + AsyncValue, change family providers to auto-dispose, and fix tests to override family providers directly to avoid Riverpod 3.x retry-timer pumpAndSettle hang.
+
+---
 Date: 2026-05-07 11:00
 Member: Pyae Sone Shin Thant
 Agent: flutter-engineer
@@ -844,6 +851,17 @@ Summary:  1 file changed, 10 insertions(+)
   [22:06] Write: apps/mobile/lib/features/post/presentation/providers/course_reference_provider.dart
 
 ---
+Date: 2026-05-07 22:30
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 4 — rewrite CourseStep as Firestore-backed ConsumerWidget (TDD)
+Prompt: Write failing tests for CourseStep with universityId/selectedDepartmentId/selectedYear/selectedCourseId props and Firestore-backed dropdowns, confirm red phase, implement CourseStep as ConsumerWidget, confirm all 9 tests pass, commit.
+Outcome: All 9 CourseStep widget tests pass. create_post_screen_test failures (5 tests, compile errors) are expected — CreatePostScreen has not been updated yet to pass the new required props. Committed as e0800fe.
+Decisions: Riverpod 3.x uses ProviderContainer.defaultRetry (exponential backoff, 10 retries) which prevents AsyncError from settling in widget tests via pumpAndSettle. Worked around by using ConsumerStatefulWidget + FutureBuilder instead of ref.watch on a FutureProvider, which uses Flutter's own async machinery that correctly settles in tests. Changed ref.watch to ref.read in provider bodies since the datasource is a singleton and need not be re-watched.
+Handoff: Task 4 complete (commit e0800fe). Next task must update CreatePostScreen to pass universityId, selectedDepartmentId, onDepartmentChanged to CourseStep; until then 5 test files that import create_post_screen.dart fail to compile.
+Review: PENDING
+
+---
 Date: 2026-05-07 22:06
 Member: Pyae Sone Shin Thant
 Agent: flutter-engineer
@@ -854,3 +872,41 @@ Outcome: Created course_reference_provider.dart, ran build_runner (generated cou
 Decisions: Used exact content from spec verbatim; no changes needed since CourseFirestoreDatasource signature matched.
 Handoff: Providers are ready for use in the New Post step-2 screen (department/course picker).
 Review: PENDING
+  [22:10] Write: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:10] Write: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [22:15] Edit: apps/mobile/lib/features/post/presentation/providers/course_reference_provider.dart
+  [22:16] Edit: apps/mobile/lib/features/post/presentation/providers/course_reference_provider.dart
+  [22:18] Write: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [22:29] Write: apps/mobile/lib/features/post/presentation/providers/course_reference_provider.dart
+  [22:29] Write: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [22:30] Write: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:31] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:31] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:31] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:54] Write: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:54] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:54] Edit: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [22:54] Edit: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [22:56] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:56] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:56] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:56] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [22:57] Edit: apps/mobile/test/widget/features/post/widgets/course_step_test.dart
+  [23:01] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [23:01] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [23:03] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [23:08] Edit: apps/mobile/lib/features/post/presentation/widgets/course_step.dart
+  [23:10] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [23:11] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [23:11] Write: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [23:11] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [23:14] Edit: apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+Files:
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  ~ apps/mobile/lib/features/post/data/datasources/course_firestore_datasource.dart
+  ~ apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart
+  ~ apps/mobile/lib/features/post/presentation/providers/create_post_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/upload_progress_screen.dart
+  ~ apps/mobile/test/widget/features/post/screens/upload_progress_screen_test.dart
+Summary:  6 files changed, 30 insertions(+), 19 deletions(-)
+

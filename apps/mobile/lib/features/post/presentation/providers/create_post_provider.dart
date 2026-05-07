@@ -193,7 +193,9 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         overallProgress: 0.0,
       );
     } on DioException catch (e) {
-      if (e.type != DioExceptionType.cancel && !token.isCancelled && ref.mounted) {
+      if (e.type != DioExceptionType.cancel &&
+          !token.isCancelled &&
+          ref.mounted) {
         state = CreatePostError(
           message: _toUserMessage(e),
           draft: draft,
