@@ -5,11 +5,11 @@ description: "Unified FilePreviewScreen that replaces scattered inline preview l
 
 # SPEC-0007: File Preview Screen
 
-**Status:** DRAFT  
+**Status:** APPROVED  
 **Author:** Architect  
 **Date:** 2026-05-07  
 **Proposal:** [PROP-0007](../tech-proposals/0007-file-preview-screen.md)  
-**Approved by:** (fill in when approved)
+**Approved by:** Pyae Sone Shin Thant (2026-05-07)
 
 ---
 

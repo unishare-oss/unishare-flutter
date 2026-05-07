@@ -597,3 +597,6 @@ Files:
   ~ apps/mobile/test/unit/auth/fakes/fake_firebase_auth_datasource.dart
 Summary:  1 file changed, 3 insertions(+)
 
+
+2026-05-07
+  [10:35] Write: apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart
