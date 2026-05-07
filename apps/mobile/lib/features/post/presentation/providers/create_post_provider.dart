@@ -18,9 +18,35 @@ final class CreatePostIdle extends CreatePostState {
   const CreatePostIdle();
 }
 
+enum FileUploadPhase { queued, uploading, done }
+
+class FileUploadProgress {
+  const FileUploadProgress({
+    required this.filename,
+    required this.phase,
+    this.progress = 0.0,
+  });
+
+  final String filename;
+  final FileUploadPhase phase;
+  final double progress;
+
+  FileUploadProgress copyWith({FileUploadPhase? phase, double? progress}) =>
+      FileUploadProgress(
+        filename: filename,
+        phase: phase ?? this.phase,
+        progress: progress ?? this.progress,
+      );
+}
+
 final class CreatePostUploading extends CreatePostState {
-  const CreatePostUploading({required this.progress});
-  final double progress; // [0.0, 1.0]
+  const CreatePostUploading({
+    required this.files,
+    required this.overallProgress,
+  });
+
+  final List<FileUploadProgress> files;
+  final double overallProgress;
 }
 
 final class CreatePostPublishing extends CreatePostState {
@@ -38,9 +64,15 @@ final class CreatePostQueued extends CreatePostState {
 }
 
 final class CreatePostError extends CreatePostState {
-  const CreatePostError({required this.message, required this.draft});
+  const CreatePostError({
+    required this.message,
+    required this.draft,
+    this.overallProgress = 0.0,
+  });
+
   final String message;
   final PostDraft draft;
+  final double overallProgress;
 }
 
 @riverpod
@@ -58,7 +90,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
   }) async {
     final useCase = ref.read(createPostUseCaseProvider);
 
-    state = const CreatePostUploading(progress: 0.0);
+    state = const CreatePostUploading(files: [], overallProgress: 0.0);
 
     try {
       final results = await Connectivity().checkConnectivity();
@@ -71,7 +103,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         fileDataOverride: fileDataOverride,
         onProgress: (p) {
           state = p < 1.0
-              ? CreatePostUploading(progress: p)
+              ? CreatePostUploading(files: const [], overallProgress: p < 1.0 ? p : 0.99)
               : const CreatePostPublishing();
         },
       );
