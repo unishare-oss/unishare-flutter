@@ -93,6 +93,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     required PostDraft draft,
     Map<String, Uint8List>? fileDataOverride,
   }) async {
+    if (state is CreatePostUploading || state is CreatePostPublishing) return;
     _cancellationToken = CancellationToken();
     _inflight = draft;
 
@@ -114,11 +115,10 @@ class CreatePostNotifier extends _$CreatePostNotifier {
 
     final useCase = ref.read(createPostUseCaseProvider);
 
+    double currentOverall = 0.0;
     try {
       final results = await Connectivity().checkConnectivity();
       final isConnected = kIsWeb || !results.contains(ConnectivityResult.none);
-
-      double currentOverall = 0.0;
 
       final result = await useCase(
         draft: draft,
@@ -154,6 +154,7 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         },
       );
 
+      if (_cancellationToken?.isCancelled ?? false) return;
       state = switch (result.status) {
         DraftStatus.published => CreatePostPublished(postId: result.id),
         DraftStatus.queued => CreatePostQueued(draftId: result.id),
@@ -174,14 +175,14 @@ class CreatePostNotifier extends _$CreatePostNotifier {
         state = CreatePostError(
           message: e.toString(),
           draft: draft,
-          overallProgress: 0.0,
+          overallProgress: currentOverall,
         );
       }
     } catch (e) {
       state = CreatePostError(
         message: e.toString(),
         draft: draft,
-        overallProgress: 0.0,
+        overallProgress: currentOverall,
       );
     }
   }
@@ -191,12 +192,12 @@ class CreatePostNotifier extends _$CreatePostNotifier {
     // TODO: orphaned R2 files — add worker DELETE endpoint and call it
     // for each url in _inflight.uploadedUrls before removing the draft.
     final draft = _inflight;
-    if (draft != null) {
-      await ref.read(postRepositoryProvider).removeDraft(draft.id);
-    }
     _inflight = null;
     _cancellationToken = null;
     state = const CreatePostIdle();
+    if (draft != null) {
+      await ref.read(postRepositoryProvider).removeDraft(draft.id);
+    }
   }
 
   void reset() {
