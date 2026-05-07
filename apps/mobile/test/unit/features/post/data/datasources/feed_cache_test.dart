@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
-import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 Post _post(String id) => Post(
   id: id,
