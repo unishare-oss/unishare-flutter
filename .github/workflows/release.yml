@@ -151,13 +151,17 @@ jobs:
         working-directory: apps/mobile
         run: flutter build ipa --no-codesign --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
 
-      - name: Zip iOS archive
-        run: zip -r $GITHUB_WORKSPACE/ios-archive.zip apps/mobile/build/ios/archive/
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p Payload
+          cp -r apps/mobile/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app Payload/
+          zip -r ios-unsigned.ipa Payload/
+          rm -rf Payload
 
       - uses: actions/upload-artifact@v7
         with:
-          name: ios-archive
-          path: ios-archive.zip
+          name: ios-ipa
+          path: ios-unsigned.ipa
           if-no-files-found: error
 
   create-release:
@@ -182,7 +186,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: ios-archive
+          name: ios-ipa
 
       - uses: softprops/action-gh-release@v3
         with:
@@ -191,4 +195,4 @@ jobs:
             web-release.zip
             app-arm64-v8a-release.apk
             app-release.aab
-            ios-archive.zip
+            ios-unsigned.ipa
