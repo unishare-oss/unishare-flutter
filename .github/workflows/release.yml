@@ -151,10 +151,14 @@ jobs:
         working-directory: apps/mobile
         run: flutter build ipa --no-codesign --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
 
+      - name: Zip iOS archive
+        run: zip -r $GITHUB_WORKSPACE/ios-archive.zip apps/mobile/build/ios/archive/
+
       - uses: actions/upload-artifact@v7
         with:
-          name: ios-ipa
-          path: apps/mobile/build/ios/ipa/*.ipa
+          name: ios-archive
+          path: ios-archive.zip
+          if-no-files-found: error
 
   create-release:
     name: Create GitHub Release
@@ -178,7 +182,7 @@ jobs:
 
       - uses: actions/download-artifact@v8
         with:
-          name: ios-ipa
+          name: ios-archive
 
       - uses: softprops/action-gh-release@v3
         with:
@@ -187,4 +191,4 @@ jobs:
             web-release.zip
             app-arm64-v8a-release.apk
             app-release.aab
-            *.ipa
+            ios-archive.zip
