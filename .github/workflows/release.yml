@@ -97,15 +97,64 @@ jobs:
         working-directory: apps/mobile
         run: flutter build apk --release --split-per-abi --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
 
+      - name: Build Android AAB (release)
+        working-directory: apps/mobile
+        run: flutter build appbundle --release --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
+
       - uses: actions/upload-artifact@v7
         with:
           name: android-apk
           path: apps/mobile/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 
+      - uses: actions/upload-artifact@v7
+        with:
+          name: android-aab
+          path: apps/mobile/build/app/outputs/bundle/release/app-release.aab
+
+  build-ios:
+    name: Build iOS (unsigned)
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.x"
+          channel: stable
+          cache: true
+
+      - name: Write Firebase options
+        env:
+          FIREBASE_OPTIONS: ${{ secrets.FIREBASE_OPTIONS }}
+        run: echo "$FIREBASE_OPTIONS" > apps/mobile/lib/firebase_options.dart
+
+      - name: Write GoogleService-Info.plist
+        env:
+          GOOGLESERVICE_INFO_PLIST: ${{ secrets.GOOGLESERVICE_INFO_PLIST }}
+        run: echo "$GOOGLESERVICE_INFO_PLIST" > apps/mobile/ios/Runner/GoogleService-Info.plist
+
+      - name: Install dependencies
+        working-directory: apps/mobile
+        run: flutter pub get
+
+      - name: Run code generation
+        working-directory: apps/mobile
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build iOS IPA (unsigned)
+        working-directory: apps/mobile
+        run: flutter build ipa --no-codesign --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ios-ipa
+          path: apps/mobile/build/ios/ipa/*.ipa
+
   create-release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
-    needs: [build-web, build-android]
+    needs: [build-web, build-android, build-ios]
     permissions:
       contents: write
 
@@ -118,9 +167,19 @@ jobs:
         with:
           name: android-apk
 
+      - uses: actions/download-artifact@v8
+        with:
+          name: android-aab
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: ios-ipa
+
       - uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
           files: |
             web-release.zip
             app-arm64-v8a-release.apk
+            app-release.aab
+            *.ipa
