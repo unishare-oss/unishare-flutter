@@ -85,6 +85,9 @@ class FakeFirebaseUser extends Fake implements User {
 
   @override
   String? get photoURL => null;
+
+  @override
+  Future<void> updateDisplayName(String? displayName) async {}
 }
 
 class FakeAdditionalUserInfo extends Fake implements AdditionalUserInfo {

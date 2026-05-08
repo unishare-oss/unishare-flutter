@@ -1,8 +1,11 @@
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 
+import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
@@ -15,16 +18,25 @@ class PostRepositoryImpl implements PostRepository {
     required this.firestoreDatasource,
     required this.storageDatasource,
     required this.draftBox,
+    required this.feedCache,
+    this.cacheTtl = const Duration(minutes: 5),
   });
 
   final PostFirestoreDatasource firestoreDatasource;
   final PostStorageDatasource storageDatasource;
   final Box<PostDraftModel> draftBox;
+  final FeedCache feedCache;
+  final Duration cacheTtl;
 
   @override
-  Stream<List<Post>> watchFeed({int limit = 20}) {
-    // Implemented by the feed feature — not in scope for SPEC-0004.
-    throw UnimplementedError('watchFeed not implemented in post write path');
+  Stream<List<Post>> watchFeed({int limit = 20}) async* {
+    if (feedCache.isValid(cacheTtl)) {
+      yield feedCache.posts;
+    }
+    await for (final posts in firestoreDatasource.watchFeed(limit: limit)) {
+      feedCache.update(posts);
+      yield posts;
+    }
   }
 
   @override
@@ -51,50 +63,70 @@ class PostRepositoryImpl implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double progress)? onProgress,
+    void Function(int fileIndex, double fileProgress)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
   }) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw StateError('not_authenticated');
 
-    // Step 1: start with the draft's current uploadedUrls (may be partially
-    // populated from a prior attempt).
+    // Fetch once — avoids a per-file round trip to Firebase Auth.
+    final idToken = await user.getIdToken() ?? '';
+    if (idToken.isEmpty) throw StateError('id_token_unavailable');
+
+    final dioCancelToken = CancelToken();
+    cancellationToken?.addCancelListener(dioCancelToken.cancel);
+
     var current = draft;
     final paths = draft.localMediaPaths;
 
-    // Step 2: upload each file, skipping already-uploaded ones.
     for (var i = 0; i < paths.length; i++) {
       final path = paths[i];
-
-      // 2a. Already uploaded — skip.
       if (current.uploadedUrls.containsKey(path)) continue;
+      if (cancellationToken?.isCancelled ?? false) return;
+
+      // Signal the UI immediately so the row flips to "uploading" while we
+      // read the file from disk and wait for the presign response.
+      onFileProgress?.call(i, 0.0);
 
       try {
-        // 2b. Upload and get download URL.
-        // Use bytes override on web (path is a name, not a filesystem path).
-        final progressFn = onProgress != null
-            ? (fp) => onProgress((i + fp) / paths.length)
-            : null;
+        void progressFn(double fp) {
+          onFileProgress?.call(i, fp);
+          onProgress?.call((i + fp) / paths.length);
+        }
+
         final overrideBytes = fileDataOverride?[path];
         final url = overrideBytes != null
             ? await storageDatasource.uploadBytes(
                 overrideBytes,
                 path,
-                user.uid,
+                idToken,
                 onProgress: progressFn,
+                cancelToken: dioCancelToken,
               )
             : await storageDatasource.upload(
                 path,
-                user.uid,
+                idToken,
                 onProgress: progressFn,
+                cancelToken: dioCancelToken,
               );
 
-        // 2c. Update uploadedUrls and persist so the URL survives a crash.
         final newUrls = Map<String, String>.from(current.uploadedUrls)
           ..[path] = url;
         current = current.copyWith(uploadedUrls: newUrls);
         await saveDraft(current);
+        onDraftUpdated?.call(current);
+      } on DioException catch (e) {
+        if (e.type == DioExceptionType.cancel) return;
+        await saveDraft(
+          current.copyWith(
+            status: DraftStatus.error,
+            errorMessage: e.toString(),
+          ),
+        );
+        rethrow;
       } catch (e) {
-        // 2d. Persist partial progress and rethrow.
         await saveDraft(
           current.copyWith(
             status: DraftStatus.error,
@@ -105,8 +137,8 @@ class PostRepositoryImpl implements PostRepository {
       }
     }
 
-    // Step 3: if a code snippet is present, upload it as text/plain and
-    // collect the download URL.
+    if (cancellationToken?.isCancelled ?? false) return;
+
     String? codeSnippetUrl;
     if (draft.codeSnippet != null) {
       final snippet = draft.codeSnippet!;
@@ -114,22 +146,22 @@ class PostRepositoryImpl implements PostRepository {
       final filename = '${snippet.filename}.$ext';
       codeSnippetUrl = await storageDatasource.uploadText(
         snippet.content,
-        user.uid,
+        idToken,
         filename,
+        cancelToken: dioCancelToken,
       );
     }
 
-    // Step 4: derive mediaUrls in localMediaPaths order.
     final mediaUrls = paths
         .where((p) => current.uploadedUrls.containsKey(p))
         .map((p) => current.uploadedUrls[p]!)
         .toList();
 
-    // Step 5: derive mediaTypes from file extensions, then write to Firestore.
     final mediaTypes = paths
         .where((p) => current.uploadedUrls.containsKey(p))
         .map(_mediaTypeFromPath)
         .toList();
+
     try {
       await firestoreDatasource.createPost(
         draft: current,
@@ -143,11 +175,9 @@ class PostRepositoryImpl implements PostRepository {
             : (user.photoURL ?? ''),
         codeSnippetUrl: codeSnippetUrl,
       );
-      // Step 6: remove from queue on success.
+      feedCache.invalidate();
       await removeDraft(draft.id);
     } catch (e) {
-      // Step 7: leave draft in queue with queued status so SyncDraftQueue
-      // can retry.
       await saveDraft(
         current.copyWith(
           uploadedUrls: current.uploadedUrls,
@@ -158,7 +188,6 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-  /// Derives a media type string from a local file path extension.
   static String _mediaTypeFromPath(String path) {
     final ext = path.split('.').last.toLowerCase();
     switch (ext) {
@@ -174,7 +203,7 @@ class PostRepositoryImpl implements PostRepository {
       case 'avi':
         return 'video';
       default:
-        return 'image'; // safe fallback
+        return 'image';
     }
   }
 }

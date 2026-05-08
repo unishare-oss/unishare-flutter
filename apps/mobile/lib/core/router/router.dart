@@ -12,7 +12,9 @@ import 'package:unishare_mobile/features/more/presentation/screens/more_screen.d
 import 'package:unishare_mobile/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/upload_progress_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/my_posts_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
@@ -110,6 +112,8 @@ class _RouterNotifier extends ChangeNotifier {
       '/notifications',
       '/more',
       '/saved',
+      '/preview',
+      '/upload-progress',
     };
     final isKnown =
         authRoutes.contains(currentPath) ||
@@ -147,11 +151,26 @@ GoRouter router(Ref ref) {
         builder: (context, state) => const CreatePostScreen(),
       ),
       GoRoute(
+        path: '/upload-progress',
+        builder: (context, state) => const UploadProgressScreen(),
+      ),
+      GoRoute(
         path: '/posts/:postId',
         builder: (context, state) {
           final postId = state.pathParameters['postId']!;
           final seed = state.extra as Post?;
           return PostDetailScreen(postId: postId, seed: seed);
+        },
+      ),
+      GoRoute(
+        path: '/preview',
+        builder: (context, state) {
+          final args = state.extra! as FilePreviewArgs;
+          return FilePreviewScreen(
+            url: args.url,
+            type: args.type,
+            filename: args.filename,
+          );
         },
       ),
       StatefulShellRoute.indexedStack(

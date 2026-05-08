@@ -2,22 +2,22 @@
 
 import 'dart:typed_data';
 
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 abstract interface class PostRepository {
-  // Existing — must not be removed or renamed.
   Stream<List<Post>> watchFeed({int limit = 20});
+  Stream<Post> watchPost(String postId);
   Future<void> saveDraft(PostDraft draft);
   Future<void> removeDraft(String draftId);
   Future<List<PostDraft>> loadDraftQueue();
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double progress)? onProgress,
-    // Web uploads: maps localMediaPaths key → file bytes (path is null on web)
+    void Function(int fileIndex, double fileProgress)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
   });
-
-  // Added for SPEC-0006.
-  Stream<Post> watchPost(String postId);
 }

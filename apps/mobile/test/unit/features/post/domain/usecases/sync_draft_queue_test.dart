@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
@@ -38,7 +39,10 @@ class _FakeRepo implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
+    void Function(int, double)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
   }) async {
     if (draft.id == failOnId) throw Exception('publish failed');
     published.add(draft.id);
@@ -55,6 +59,7 @@ PostDraft _draft(String id, {DraftStatus status = DraftStatus.queued}) {
     postType: PostType.lectureNote,
     year: 1,
     courseId: 'csc101',
+    departmentId: 'dept-cs',
     title: 'Title $id',
     description: 'Desc',
     postingIdentity: PostingIdentity.named,

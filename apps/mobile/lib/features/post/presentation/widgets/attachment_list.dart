@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pdfrx/pdfrx.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
@@ -95,37 +95,10 @@ class _AttachmentRow extends StatelessWidget {
   }
 
   void _onView(BuildContext context) {
-    if (type == 'pdf') {
-      Navigator.push(
-        context,
-        MaterialPageRoute<void>(
-          builder: (_) => Scaffold(
-            appBar: AppBar(title: Text(_filename(url))),
-            body: PdfViewer.uri(Uri.parse(url)),
-          ),
-        ),
-      );
-    } else if (type == 'video') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Video playback coming soon')),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute<void>(
-          builder: (_) => Scaffold(
-            backgroundColor: Colors.black,
-            appBar: AppBar(
-              backgroundColor: Colors.black,
-              iconTheme: const IconThemeData(color: Colors.white),
-            ),
-            body: Center(
-              child: CachedNetworkImage(imageUrl: url, fit: BoxFit.contain),
-            ),
-          ),
-        ),
-      );
-    }
+    context.push(
+      '/preview',
+      extra: (url: url, type: type, filename: _filename(url)),
+    );
   }
 }
 

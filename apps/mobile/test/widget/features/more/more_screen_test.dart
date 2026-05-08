@@ -47,15 +47,16 @@ void main() {
     );
   }
 
-  testWidgets('renders 4 ListTile items with correct labels', (tester) async {
+  testWidgets('renders 5 ListTile items with correct labels', (tester) async {
     await tester.pumpWidget(buildSubject());
     await tester.pumpAndSettle();
 
-    expect(find.byType(ListTile), findsNWidgets(4));
+    expect(find.byType(ListTile), findsNWidgets(5));
     expect(find.text('Profile'), findsOneWidget);
     expect(find.text('Saved'), findsOneWidget);
     expect(find.text('Departments'), findsOneWidget);
     expect(find.text('Requests'), findsOneWidget);
+    expect(find.text('Sign out'), findsOneWidget);
   });
 
   testWidgets('tapping Profile tile navigates to /more/profile', (

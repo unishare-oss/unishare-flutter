@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/files_step.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 Widget _wrap({List<PlatformFile> files = const [], CodeSnippet? codeSnippet}) {
   return MaterialApp(
+    theme: AppTheme.build(AppThemes.unishare),
     home: Scaffold(
       body: SingleChildScrollView(
         child: FilesStep(
@@ -51,6 +54,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          theme: AppTheme.build(AppThemes.unishare),
           home: Scaffold(
             body: SingleChildScrollView(
               child: FilesStep(

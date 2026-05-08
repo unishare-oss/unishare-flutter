@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
-
-const _kWhite = Colors.white;
-const _kPrimary = Color(0xFFD97706);
-const _kBorder = Color(0xFFE2DAD0);
-const _kFg = Color(0xFF1C1917);
-const _kMuted = Color(0xFF8A837E);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class DetailsStep extends StatefulWidget {
   const DetailsStep({
@@ -41,9 +36,15 @@ class DetailsStep extends StatefulWidget {
 
 class _DetailsStepState extends State<DetailsStep> {
   final _tagCtrl = TextEditingController();
+  late final FocusNode _tagFocus = FocusNode()..addListener(_onTagFocusChange);
+
+  void _onTagFocusChange() {
+    if (!_tagFocus.hasFocus) _addTag(_tagCtrl.text);
+  }
 
   @override
   void dispose() {
+    _tagFocus.dispose();
     _tagCtrl.dispose();
     super.dispose();
   }
@@ -68,6 +69,8 @@ class _DetailsStepState extends State<DetailsStep> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +80,7 @@ class _DetailsStepState extends State<DetailsStep> {
             style: GoogleFonts.spaceGrotesk(
               fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: _kFg,
+              color: cs.onSurface,
             ),
           ),
           const SizedBox(height: 24),
@@ -147,6 +150,7 @@ class _DetailsStepState extends State<DetailsStep> {
           const SizedBox(height: 6),
           _TextField(
             controller: _tagCtrl,
+            focusNode: _tagFocus,
             hint: 'Type a tag and press Enter...',
             textInputAction: TextInputAction.done,
             onSubmitted: _addTag,
@@ -154,7 +158,10 @@ class _DetailsStepState extends State<DetailsStep> {
           const SizedBox(height: 6),
           Text(
             'Add up to 5 tags to help others discover your post.',
-            style: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kMuted),
+            style: GoogleFonts.spaceGrotesk(
+              fontSize: 12,
+              color: ac.mutedForeground,
+            ),
           ),
           if (widget.tags.isNotEmpty) ...[
             const SizedBox(height: 8),
@@ -185,6 +192,7 @@ class _IdentitySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -202,7 +210,10 @@ class _IdentitySelector extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           'Moderators can still review the post, but other users will not see your identity.',
-          style: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kMuted),
+          style: GoogleFonts.spaceGrotesk(
+            fontSize: 12,
+            color: ac.mutedForeground,
+          ),
         ),
       ],
     );
@@ -222,13 +233,16 @@ class _IdentityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 48,
         decoration: BoxDecoration(
-          color: _kWhite,
-          border: Border.all(color: _kBorder),
+          color: cs.surface,
+          border: Border.all(color: dividerColor),
           borderRadius: BorderRadius.circular(6),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -241,10 +255,10 @@ class _IdentityCard extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: selected ? _kPrimary : _kBorder,
+                  color: selected ? ac.amber : dividerColor,
                   width: selected ? 5 : 1.5,
                 ),
-                color: _kWhite,
+                color: cs.surface,
               ),
             ),
             const SizedBox(width: 12),
@@ -253,7 +267,7 @@ class _IdentityCard extends StatelessWidget {
               style: GoogleFonts.spaceGrotesk(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: _kFg,
+                color: cs.onSurface,
               ),
             ),
           ],
@@ -275,11 +289,14 @@ class _SemesterDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return Container(
       height: 42,
       decoration: BoxDecoration(
-        color: _kWhite,
-        border: Border.all(color: _kBorder),
+        color: cs.surface,
+        border: Border.all(color: dividerColor),
         borderRadius: BorderRadius.circular(6),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -287,8 +304,12 @@ class _SemesterDropdown extends StatelessWidget {
         child: DropdownButton<int>(
           value: value,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, color: _kMuted, size: 18),
-          dropdownColor: _kWhite,
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: ac.mutedForeground,
+            size: 18,
+          ),
+          dropdownColor: cs.surface,
           borderRadius: BorderRadius.circular(6),
           focusColor: Colors.transparent,
           items: [1, 2]
@@ -300,7 +321,7 @@ class _SemesterDropdown extends StatelessWidget {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: _kFg,
+                      color: cs.onSurface,
                     ),
                   ),
                 ),
@@ -327,6 +348,7 @@ class _TextField extends StatelessWidget {
     this.textInputAction,
     this.keyboardType,
     this.onSubmitted,
+    this.focusNode,
   });
 
   final TextEditingController controller;
@@ -335,21 +357,29 @@ class _TextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onSubmitted;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     return TextField(
       controller: controller,
+      focusNode: focusNode,
       maxLines: maxLines,
       textInputAction: textInputAction,
       keyboardType: keyboardType,
       onSubmitted: onSubmitted,
-      style: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kFg),
+      style: GoogleFonts.spaceGrotesk(fontSize: 14, color: cs.onSurface),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: GoogleFonts.spaceGrotesk(fontSize: 14, color: _kMuted),
+        hintStyle: GoogleFonts.spaceGrotesk(
+          fontSize: 14,
+          color: ac.mutedForeground,
+        ),
         filled: true,
-        fillColor: _kWhite,
+        fillColor: cs.surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 10,
@@ -357,15 +387,15 @@ class _TextField extends StatelessWidget {
         isDense: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kBorder),
+          borderSide: BorderSide(color: dividerColor),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kBorder),
+          borderSide: BorderSide(color: dividerColor),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(6),
-          borderSide: const BorderSide(color: _kPrimary, width: 1.5),
+          borderSide: BorderSide(color: ac.amber, width: 1.5),
         ),
       ),
     );
@@ -381,20 +411,21 @@ class _FieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
     return RichText(
       text: TextSpan(
         style: GoogleFonts.firaCode(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          color: _kMuted,
+          color: ac.mutedForeground,
           letterSpacing: 0.55,
         ),
         children: [
           TextSpan(text: text),
           if (required)
-            const TextSpan(
+            TextSpan(
               text: ' *',
-              style: TextStyle(color: _kPrimary, fontSize: 13),
+              style: TextStyle(color: ac.amber, fontSize: 13),
             ),
           if (optional) const TextSpan(text: ' (optional)'),
         ],
@@ -409,30 +440,35 @@ class _TagChip extends StatelessWidget {
   final VoidCallback onDelete;
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-    decoration: BoxDecoration(
-      color: _kWhite,
-      border: Border.all(color: _kBorder),
-      borderRadius: BorderRadius.circular(4),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          '#$label',
-          style: GoogleFonts.firaCode(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: _kMuted,
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: cs.surface,
+        border: Border.all(color: dividerColor),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '#$label',
+            style: GoogleFonts.firaCode(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: ac.mutedForeground,
+            ),
           ),
-        ),
-        const SizedBox(width: 4),
-        GestureDetector(
-          onTap: onDelete,
-          child: const Icon(Icons.close, size: 14, color: _kMuted),
-        ),
-      ],
-    ),
-  );
+          const SizedBox(width: 4),
+          GestureDetector(
+            onTap: onDelete,
+            child: Icon(Icons.close, size: 14, color: ac.mutedForeground),
+          ),
+        ],
+      ),
+    );
+  }
 }

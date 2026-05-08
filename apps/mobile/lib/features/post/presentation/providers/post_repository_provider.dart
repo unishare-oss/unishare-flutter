@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:unishare_mobile/features/post/data/datasources/comment_firestore_datasource.dart';
+import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_firestore_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_storage_datasource.dart';
 import 'package:unishare_mobile/features/post/data/models/post_draft_model.dart';
@@ -33,11 +34,15 @@ PostStorageDatasource postStorageDatasource(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
+FeedCache feedCache(Ref ref) => FeedCache();
+
+@Riverpod(keepAlive: true)
 PostRepository postRepository(Ref ref) {
   return PostRepositoryImpl(
     firestoreDatasource: ref.watch(postFirestoreDatasourceProvider),
     storageDatasource: ref.watch(postStorageDatasourceProvider),
     draftBox: Hive.box<PostDraftModel>('draft_queue'),
+    feedCache: ref.watch(feedCacheProvider),
   );
 }
 

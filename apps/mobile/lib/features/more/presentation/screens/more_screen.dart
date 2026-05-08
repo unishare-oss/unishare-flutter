@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
-class MoreScreen extends StatefulWidget {
+class MoreScreen extends ConsumerStatefulWidget {
   const MoreScreen({required GlobalKey<State> scrollKey})
     : super(key: scrollKey);
 
   @override
-  State<MoreScreen> createState() => _MoreScreenState();
+  ConsumerState<MoreScreen> createState() => _MoreScreenState();
 }
 
-class _MoreScreenState extends State<MoreScreen> with ScrollToTopTarget {
+class _MoreScreenState extends ConsumerState<MoreScreen>
+    with ScrollToTopTarget {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -34,22 +38,33 @@ class _MoreScreenState extends State<MoreScreen> with ScrollToTopTarget {
     (label: 'Requests', route: '/more/requests', icon: Icons.inbox_outlined),
   ];
 
+  Future<void> _signOut() async {
+    await ref.read(signOutUseCaseProvider).call();
+    ref.read(guestModeProvider.notifier).exit();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('More')),
-      body: ListView.builder(
+      body: ListView(
         controller: _scrollController,
-        itemCount: _destinations.length,
-        itemBuilder: (context, index) {
-          final dest = _destinations[index];
-          return ListTile(
-            leading: Icon(dest.icon),
-            title: Text(dest.label),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.go(dest.route),
-          );
-        },
+        children: [
+          ..._destinations.map(
+            (dest) => ListTile(
+              leading: Icon(dest.icon),
+              title: Text(dest.label),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.go(dest.route),
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout, color: Colors.red),
+            title: const Text('Sign out', style: TextStyle(color: Colors.red)),
+            onTap: _signOut,
+          ),
+        ],
       ),
     );
   }
