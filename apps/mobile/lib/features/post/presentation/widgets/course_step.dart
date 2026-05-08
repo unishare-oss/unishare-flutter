@@ -25,7 +25,7 @@ class CourseStep extends ConsumerWidget {
   final ValueChanged<int?> onYearChanged;
   final ValueChanged<String?> onCourseChanged;
 
-  static const _years = [1, 2, 3, 4];
+  static const _years = [1, 2, 3, 4, 5, 6];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
