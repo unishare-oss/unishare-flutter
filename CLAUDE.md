@@ -192,6 +192,14 @@ To regenerate: `dart run build_runner build`
 - Run `flutter analyze` and `dart format .` before every commit
 - Every screen must have a widget test
 
+### Design / Theming
+
+- No hardcoded colors — always use `Theme.of(context).colorScheme`
+- No hardcoded text styles or font sizes — always use `Theme.of(context).textTheme`
+- No hardcoded `FontFamily` strings — typography is Space Grotesk (body) and Fira Code (mono), defined once in `shared/theme/`
+- No hardcoded spacing magic numbers — use the spacing scale defined in `shared/theme/`
+- All icons from the project's defined icon set; avoid mixing icon packs
+
 ## Docs Folder Conventions
 
 Each folder serves a distinct purpose:
