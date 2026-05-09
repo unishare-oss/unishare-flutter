@@ -2,6 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_carousel.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
+
+Widget _wrap(Widget child) => MaterialApp(
+  theme: AppTheme.build(AppThemes.unishare),
+  home: Scaffold(body: child),
+);
 
 void main() {
   group('AttachmentCarousel', () {
@@ -9,11 +16,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: AttachmentCarousel(mediaUrls: [], mediaTypes: []),
-          ),
-        ),
+        _wrap(const AttachmentCarousel(mediaUrls: [], mediaTypes: [])),
       );
       await tester.pump();
 
@@ -30,14 +33,10 @@ void main() {
 
     testWidgets('image slot renders CachedNetworkImage', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: AttachmentCarousel(
-              mediaUrls: ['https://example.com/image.jpg'],
-              mediaTypes: ['image'],
-            ),
-          ),
-        ),
+        _wrap(const AttachmentCarousel(
+          mediaUrls: ['https://example.com/image.jpg'],
+          mediaTypes: ['image'],
+        )),
       );
       await tester.pump();
 
@@ -46,14 +45,10 @@ void main() {
 
     testWidgets('video slot renders play_circle_fill icon', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: AttachmentCarousel(
-              mediaUrls: ['https://example.com/video.mp4'],
-              mediaTypes: ['video'],
-            ),
-          ),
-        ),
+        _wrap(const AttachmentCarousel(
+          mediaUrls: ['https://example.com/video.mp4'],
+          mediaTypes: ['video'],
+        )),
       );
       await tester.pump();
 
@@ -64,14 +59,10 @@ void main() {
       'PDF slot renders GestureDetector and "PDF" label text overlay',
       (tester) async {
         await tester.pumpWidget(
-          const MaterialApp(
-            home: Scaffold(
-              body: AttachmentCarousel(
-                mediaUrls: ['https://example.com/doc.pdf'],
-                mediaTypes: ['pdf'],
-              ),
-            ),
-          ),
+          _wrap(const AttachmentCarousel(
+            mediaUrls: ['https://example.com/doc.pdf'],
+            mediaTypes: ['pdf'],
+          )),
         );
         await tester.pump();
 
@@ -87,17 +78,13 @@ void main() {
       (tester) async {
         // 2 URLs but only 1 type → second slot falls back to "image".
         await tester.pumpWidget(
-          const MaterialApp(
-            home: Scaffold(
-              body: AttachmentCarousel(
-                mediaUrls: [
-                  'https://example.com/img1.jpg',
-                  'https://example.com/img2.jpg',
-                ],
-                mediaTypes: ['image'], // shorter than mediaUrls
-              ),
-            ),
-          ),
+          _wrap(const AttachmentCarousel(
+            mediaUrls: [
+              'https://example.com/img1.jpg',
+              'https://example.com/img2.jpg',
+            ],
+            mediaTypes: ['image'], // shorter than mediaUrls
+          )),
         );
         await tester.pump();
 
