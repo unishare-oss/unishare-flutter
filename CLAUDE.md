@@ -195,7 +195,8 @@ To regenerate: `dart run build_runner build`
 ### Design / Theming
 
 - Access `AppColors` via `final ac = Theme.of(context).extension<AppColors>()!` — use `ac` as the variable name consistently
-- No hardcoded colors — always use `Theme.of(context).colorScheme` or `ac.*`
+- Access `ColorScheme` via `final cs = Theme.of(context).colorScheme` — use `cs` as the variable name consistently
+- No hardcoded colors — always use `cs.*` or `ac.*`
 - No hardcoded text styles or font sizes — always use `Theme.of(context).textTheme`
 - No hardcoded `FontFamily` strings — typography is Space Grotesk (body) and Fira Code (mono), defined once in `shared/theme/`
 - No hardcoded spacing magic numbers — use the spacing scale defined in `shared/theme/`
