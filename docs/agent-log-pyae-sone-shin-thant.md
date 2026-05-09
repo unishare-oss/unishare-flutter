@@ -955,3 +955,20 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
 Files:
 ~ apps/mobile/lib/features/post/presentation/widgets/course_step.dart
 Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
+
+2026-05-09
+  [11:45] Edit: apps/mobile/lib/core/router/router.dart
+  [11:45] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [11:45] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [11:45] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [11:45] Edit: apps/mobile/lib/features/saved/data/datasources/saved_post_firestore_datasource.dart
+  [11:45] Edit: apps/mobile/lib/features/saved/data/datasources/saved_post_firestore_datasource.dart
+  [11:45] Edit: apps/mobile/lib/features/saved/presentation/providers/saved_post_repository_provider.dart
+  [11:45] Edit: apps/mobile/lib/main.dart
+  [11:46] Edit: apps/mobile/lib/main.dart
+  [11:46] Write: apps/mobile/lib/features/saved/presentation/widgets/save_button.dart
+  [11:46] Write: apps/mobile/lib/features/saved/presentation/widgets/saved_post_card.dart
+  [11:46] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [11:46] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [11:46] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [11:46] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart

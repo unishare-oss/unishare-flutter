@@ -14,6 +14,12 @@ import 'package:unishare_mobile/features/post/presentation/providers/user_like_s
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_list.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/comment_tile.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/like_button.dart';
+import 'package:unishare_mobile/features/saved/domain/entities/saved_post_snapshot.dart';
+import 'package:unishare_mobile/features/saved/domain/usecases/save_post.dart';
+import 'package:unishare_mobile/features/saved/domain/usecases/unsave_post.dart';
+import 'package:unishare_mobile/features/saved/presentation/providers/is_post_saved_provider.dart';
+import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
+import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
   const PostDetailScreen({super.key, required this.postId, this.seed});
@@ -263,7 +269,7 @@ class _PostBody extends ConsumerWidget {
 // Post header — badges, title, tags, author, stats, AI summary, body, attachments
 // ---------------------------------------------------------------------------
 
-class _PostHeader extends StatelessWidget {
+class _PostHeader extends ConsumerWidget {
   const _PostHeader({
     required this.post,
     required this.isLiked,
@@ -278,8 +284,42 @@ class _PostHeader extends StatelessWidget {
   final VoidCallback onToggleLike;
   final int commentCount;
 
+  Future<void> _toggleSave(
+    BuildContext context,
+    WidgetRef ref,
+    bool isSaved,
+  ) async {
+    final repository = ref.read(savedPostRepositoryProvider);
+    try {
+      if (isSaved) {
+        await UnsavePost(repository).call(post.id);
+      } else {
+        await SavePost(repository).call(
+          post.id,
+          SavedPostSnapshot(
+            title: post.title,
+            authorName: post.authorName,
+            authorAvatar: post.authorAvatar,
+            courseId: post.courseId,
+            postType: post.postType.name,
+            tags: post.tags,
+            commentsCount: 0,
+          ),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update saved post')),
+        );
+      }
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSavedAsync = ref.watch(isPostSavedProvider(post.id));
+    final isSaved = isSavedAsync.asData?.value ?? false;
     final appColors = Theme.of(context).extension<AppColors>()!;
     final scheme = Theme.of(context).colorScheme;
 
@@ -329,7 +369,7 @@ class _PostHeader extends StatelessWidget {
           _AuthorChip(post: post),
           const SizedBox(height: 12),
 
-          // ── Stats: likes + comments ───────────────────────────────────────
+          // ── Stats: likes + comments + save ───────────────────────────────
           Row(
             children: [
               LikeButton(
@@ -352,6 +392,12 @@ class _PostHeader extends StatelessWidget {
                   color: appColors.textMuted,
                   fontWeight: FontWeight.w500,
                 ),
+              ),
+              const Spacer(),
+              SaveButton(
+                isSaved: isSaved,
+                onTap: () => _toggleSave(context, ref, isSaved),
+                size: 22,
               ),
             ],
           ),

@@ -12,6 +12,7 @@ import 'package:unishare_mobile/features/feed/presentation/widgets/feed_empty_st
 import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/saved/presentation/providers/is_post_saved_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
@@ -327,10 +328,15 @@ void main() {
   });
 
   group('PostCard', () {
-    Widget card(Post post) => MaterialApp(
-      theme: AppTheme.build(AppThemes.unishare),
-      home: Scaffold(
-        body: SingleChildScrollView(child: PostCard(post: post)),
+    Widget card(Post post) => ProviderScope(
+      overrides: [
+        isPostSavedProvider(post.id).overrideWith((_) => Stream.value(false)),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.build(AppThemes.unishare),
+        home: Scaffold(
+          body: SingleChildScrollView(child: PostCard(post: post)),
+        ),
       ),
     );
 
