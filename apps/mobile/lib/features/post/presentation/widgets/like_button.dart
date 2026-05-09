@@ -28,7 +28,7 @@ class LikeButton extends StatelessWidget {
     final color = !enabled
         ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38)
         : isLiked
-        ? Colors.red
+        ? Theme.of(context).colorScheme.error
         : appColors.textMuted;
 
     return GestureDetector(

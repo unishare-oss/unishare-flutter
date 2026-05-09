@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
@@ -68,7 +70,10 @@ Widget _wrap(List<PostDraft> queue) {
       ),
       draftQueueProvider.overrideWith(() => _FakeNotifier(queue)),
     ],
-    child: const MaterialApp(home: Scaffold(body: DraftQueueIndicator())),
+    child: MaterialApp(
+      theme: AppTheme.build(AppThemes.unishare),
+      home: const Scaffold(body: DraftQueueIndicator()),
+    ),
   );
 }
 

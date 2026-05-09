@@ -370,7 +370,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
         },
         style: FilledButton.styleFrom(
           backgroundColor: ac.amber,
-          foregroundColor: Colors.white,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         ),
         child: Text(

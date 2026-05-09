@@ -201,7 +201,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     style: GoogleFonts.spaceGrotesk(
                       fontSize: 30,
                       fontWeight: FontWeight.w300,
-                      color: const Color(0xFFF7F3EE),
+                      color: Theme.of(context).scaffoldBackgroundColor,
                       letterSpacing: -0.5,
                       height: 1.3,
                     ),
@@ -548,7 +548,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   : (isSignUp ? _handleSignUp : _handleSignIn),
               style: FilledButton.styleFrom(
                 backgroundColor: ac.amber,
-                foregroundColor: Colors.white,
+                foregroundColor: cs.surface,
                 disabledBackgroundColor: ac.amber.withValues(alpha: 0.5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6),
@@ -561,7 +561,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 style: GoogleFonts.spaceGrotesk(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white,
+                  color: cs.surface,
                 ),
               ),
             ),

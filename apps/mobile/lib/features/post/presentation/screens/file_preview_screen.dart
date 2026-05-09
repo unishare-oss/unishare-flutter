@@ -91,17 +91,15 @@ class _ImageViewerState extends State<_ImageViewer> {
 
   @override
   Widget build(BuildContext context) {
-    final appColors = Theme.of(context).extension<AppColors>();
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: ac.surfaceDark,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          widget.filename,
-          style: const TextStyle(color: Colors.white),
-        ),
+        backgroundColor: ac.surfaceDark,
+        iconTheme: IconThemeData(color: cs.surface),
+        title: Text(widget.filename, style: TextStyle(color: cs.surface)),
       ),
       body: Column(
         children: [
@@ -115,10 +113,10 @@ class _ImageViewerState extends State<_ImageViewer> {
                 child: CachedNetworkImage(
                   imageUrl: widget.url,
                   fit: BoxFit.contain,
-                  errorWidget: (context, url, error) => const Center(
+                  errorWidget: (context, url, error) => Center(
                     child: Icon(
                       Icons.broken_image_outlined,
-                      color: Colors.white54,
+                      color: cs.surface.withValues(alpha: 0.54),
                       size: 64,
                     ),
                   ),
@@ -130,10 +128,7 @@ class _ImageViewerState extends State<_ImageViewer> {
             padding: const EdgeInsets.only(bottom: 16),
             child: Text(
               'Pinch to zoom',
-              style: TextStyle(
-                color: appColors?.textMuted ?? Colors.grey,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: ac.textMuted, fontSize: 12),
             ),
           ),
         ],
@@ -362,7 +357,10 @@ class _VideoViewerState extends State<_VideoViewer> {
       autoPlay: false,
       looping: false,
       allowFullScreen: true,
-      materialProgressColors: ChewieProgressColors(playedColor: Colors.amber),
+      materialProgressColors: ChewieProgressColors(
+        // ignore: use_build_context_synchronously
+        playedColor: Theme.of(context).extension<AppColors>()!.amber,
+      ),
     );
 
     setState(() {
@@ -385,21 +383,23 @@ class _VideoViewerState extends State<_VideoViewer> {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: ac.surfaceDark,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          widget.filename,
-          style: const TextStyle(color: Colors.white),
-        ),
+        backgroundColor: ac.surfaceDark,
+        iconTheme: IconThemeData(color: cs.surface),
+        title: Text(widget.filename, style: TextStyle(color: cs.surface)),
       ),
-      body: _buildBody(),
+      body: _buildBody(context),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
     return switch (_state) {
       _VideoDownloadState.loading => const Center(
         child: CircularProgressIndicator(),
@@ -412,7 +412,7 @@ class _VideoViewerState extends State<_VideoViewer> {
             const SizedBox(height: 16),
             Text(
               'Downloading… ${(_downloadProgress * 100).toInt()}%',
-              style: const TextStyle(color: Colors.white70),
+              style: TextStyle(color: cs.surface.withValues(alpha: 0.70)),
             ),
           ],
         ),
@@ -424,9 +424,9 @@ class _VideoViewerState extends State<_VideoViewer> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               'Download failed',
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(color: cs.surface.withValues(alpha: 0.70)),
             ),
             const SizedBox(height: 8),
             // Fix 1: reset state here (not inside _init) so _init is safe to
@@ -444,15 +444,19 @@ class _VideoViewerState extends State<_VideoViewer> {
           ],
         ),
       ),
-      _VideoDownloadState.offlineUnavailable => const Center(
+      _VideoDownloadState.offlineUnavailable => Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.wifi_off, color: Colors.white54, size: 48),
-            SizedBox(height: 12),
+            Icon(
+              Icons.wifi_off,
+              color: cs.surface.withValues(alpha: 0.54),
+              size: 48,
+            ),
+            const SizedBox(height: 12),
             Text(
               'Not available offline',
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(color: cs.surface.withValues(alpha: 0.70)),
             ),
           ],
         ),

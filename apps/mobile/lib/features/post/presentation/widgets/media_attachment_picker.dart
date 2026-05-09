@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class MediaAttachmentPicker extends StatelessWidget {
   const MediaAttachmentPicker({
@@ -51,6 +52,7 @@ class MediaAttachmentPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -87,8 +89,8 @@ class MediaAttachmentPicker extends StatelessWidget {
             style: GoogleFonts.spaceGrotesk(fontSize: 13),
           ),
           style: OutlinedButton.styleFrom(
-            foregroundColor: const Color(0xFF6B6560),
-            side: const BorderSide(color: Color(0xFFE2DAD0)),
+            foregroundColor: ac.mutedForeground,
+            side: BorderSide(color: Theme.of(context).dividerColor),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
@@ -121,14 +123,18 @@ class _FileChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const red = Color(0xFFDC2626);
-    const stone = Color(0xFF8A837E);
-    final fg = tooLarge ? red : stone;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final errorColor = Theme.of(context).colorScheme.error;
+    final fg = tooLarge ? errorColor : ac.textMuted;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: tooLarge ? const Color(0xFFFEF2F2) : const Color(0xFFF7F3EE),
-        border: Border.all(color: tooLarge ? red : const Color(0xFFE2DAD0)),
+        color: tooLarge
+            ? Theme.of(context).colorScheme.errorContainer
+            : ac.muted,
+        border: Border.all(
+          color: tooLarge ? errorColor : Theme.of(context).dividerColor,
+        ),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
@@ -153,7 +159,7 @@ class _FileChip extends StatelessWidget {
           const SizedBox(width: 6),
           GestureDetector(
             onTap: onRemove,
-            child: const Icon(Icons.close, size: 14, color: stone),
+            child: Icon(Icons.close, size: 14, color: ac.textMuted),
           ),
         ],
       ),

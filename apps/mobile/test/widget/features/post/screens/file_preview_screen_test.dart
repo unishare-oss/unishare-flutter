@@ -5,8 +5,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
-Widget _wrap(Widget child) => MaterialApp(home: child);
+// Minimal theme: provides AppColors extension and colorScheme.error without
+// triggering GoogleFonts network/asset lookups (which fail in test hosts).
+ThemeData _testTheme() => ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFD97706))
+      .copyWith(
+        error: const Color(0xFFDC2626),
+        surface: const Color(0xFFF7F3EE),
+        onSurface: const Color(0xFF1C1917),
+      ),
+  scaffoldBackgroundColor: const Color(0xFFF7F3EE),
+  dividerColor: const Color(0xFFE2DAD0),
+  extensions: const [
+    AppColors(
+      muted: Color(0xFFF7F3EE),
+      mutedForeground: Color(0xFF6B6560),
+      textSecondary: Color(0xFF6B6560),
+      textMuted: Color(0xFF8A837E),
+      amber: Color(0xFFD97706),
+      amberHover: Color(0xFFB45309),
+      amberSubtle: Color(0xFFFEF3C7),
+      success: Color(0xFF16A34A),
+      info: Color(0xFF0369A1),
+      surfaceDark: Color(0xFF1C1917),
+      cardDark: Color(0xFFF0EBE4),
+    ),
+  ],
+);
+
+Widget _wrap(Widget child) => MaterialApp(theme: _testTheme(), home: child);
 
 /// Suppress framework errors caused by missing platform channels (pdfrx,
 /// video_player, connectivity_plus) so only genuine test failures surface.
