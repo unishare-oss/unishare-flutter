@@ -200,7 +200,7 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: ac.amber,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

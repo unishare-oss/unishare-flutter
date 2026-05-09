@@ -124,14 +124,14 @@ class _FileChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
-    const red = Color(0xFFDC2626);
-    final fg = tooLarge ? red : ac.textMuted;
+    final errorColor = Theme.of(context).colorScheme.error;
+    final fg = tooLarge ? errorColor : ac.textMuted;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: tooLarge ? const Color(0xFFFEF2F2) : ac.muted,
+        color: tooLarge ? Theme.of(context).colorScheme.errorContainer : ac.muted,
         border: Border.all(
-          color: tooLarge ? red : Theme.of(context).dividerColor,
+          color: tooLarge ? errorColor : Theme.of(context).dividerColor,
         ),
         borderRadius: BorderRadius.circular(4),
       ),
