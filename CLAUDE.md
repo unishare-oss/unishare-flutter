@@ -217,9 +217,9 @@ To regenerate: `dart run build_runner build`
 | `ac.info` | `AppColors` | Info badges, NOTE type label |
 | `ac.surfaceDark` | `AppColors` | Dark overlay surfaces |
 | `ac.cardDark` | `AppColors` | Dark card variant |
-| `colorScheme.surface` | `ColorScheme` | Card/sheet backgrounds |
-| `colorScheme.onSurface` | `ColorScheme` | Primary text, icons on surface |
-| `colorScheme.primary` | `ColorScheme` | Brand primary (same hue as `ac.amber`) |
+| `cs.surface` | `ColorScheme` | Card/sheet backgrounds |
+| `cs.onSurface` | `ColorScheme` | Primary text, icons on surface |
+| `cs.primary` | `ColorScheme` | Brand primary (same hue as `ac.amber`) |
 | `theme.scaffoldBackgroundColor` | `ThemeData` | Page background |
 | `theme.cardColor` | `ThemeData` | Card background |
 | `theme.dividerColor` | `ThemeData` | Borders, dividers |
