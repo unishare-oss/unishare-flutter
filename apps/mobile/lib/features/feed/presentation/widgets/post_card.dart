@@ -32,7 +32,7 @@ class PostCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTopRow(appColors, isSaved, ref),
+            _buildTopRow(context, appColors, isSaved, ref),
             const SizedBox(height: 6),
             _buildTitle(context),
             if (post.tags.isNotEmpty) ...[
@@ -49,27 +49,44 @@ class PostCard extends ConsumerWidget {
     );
   }
 
-  void _toggleSave(WidgetRef ref, bool currentlySaved) {
+  Future<void> _toggleSave(
+    BuildContext context,
+    WidgetRef ref,
+    bool currentlySaved,
+  ) async {
     final repository = ref.read(savedPostRepositoryProvider);
-    if (currentlySaved) {
-      UnsavePost(repository).call(post.id);
-    } else {
-      SavePost(repository).call(
-        post.id,
-        SavedPostSnapshot(
-          title: post.title,
-          authorName: post.authorName,
-          authorAvatar: post.authorAvatar,
-          courseId: post.courseId,
-          postType: post.postType.name,
-          tags: post.tags,
-          commentsCount: 0,
-        ),
-      );
+    try {
+      if (currentlySaved) {
+        await UnsavePost(repository).call(post.id);
+      } else {
+        await SavePost(repository).call(
+          post.id,
+          SavedPostSnapshot(
+            title: post.title,
+            authorName: post.authorName,
+            authorAvatar: post.authorAvatar,
+            courseId: post.courseId,
+            postType: post.postType.name,
+            tags: post.tags,
+            commentsCount: 0,
+          ),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update saved post')),
+        );
+      }
     }
   }
 
-  Widget _buildTopRow(AppColors appColors, bool isSaved, WidgetRef ref) {
+  Widget _buildTopRow(
+    BuildContext context,
+    AppColors appColors,
+    bool isSaved,
+    WidgetRef ref,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -86,7 +103,7 @@ class PostCard extends ConsumerWidget {
         const Spacer(),
         SaveButton(
           isSaved: isSaved,
-          onTap: () => _toggleSave(ref, isSaved),
+          onTap: () => _toggleSave(context, ref, isSaved),
           size: 18,
         ),
       ],

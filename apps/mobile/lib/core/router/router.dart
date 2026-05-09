@@ -28,6 +28,10 @@ part 'router.g.dart';
 // NavTab — branch index order must match StatefulShellRoute.branches order
 // ---------------------------------------------------------------------------
 
+/// Branch index of the guest /saved route in the StatefulShellRoute.
+/// Declared here to avoid a circular import between GuestNavBar and GuestShellScaffold.
+const kSavedBranchIndex = 4;
+
 // Simple in-memory flag — not a Riverpod provider to keep it out of codegen.
 bool academicProfileSessionDismissed = false;
 

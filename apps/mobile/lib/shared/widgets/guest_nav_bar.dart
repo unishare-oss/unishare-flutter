@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:unishare_mobile/core/router/guest_shell_scaffold.dart';
 import 'package:unishare_mobile/core/router/router.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 

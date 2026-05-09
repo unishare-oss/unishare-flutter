@@ -281,23 +281,35 @@ class _PostHeader extends ConsumerWidget {
   final VoidCallback onToggleLike;
   final int commentCount;
 
-  void _toggleSave(WidgetRef ref, bool isSaved) {
+  Future<void> _toggleSave(
+    BuildContext context,
+    WidgetRef ref,
+    bool isSaved,
+  ) async {
     final repository = ref.read(savedPostRepositoryProvider);
-    if (isSaved) {
-      UnsavePost(repository).call(post.id);
-    } else {
-      SavePost(repository).call(
-        post.id,
-        SavedPostSnapshot(
-          title: post.title,
-          authorName: post.authorName,
-          authorAvatar: post.authorAvatar,
-          courseId: post.courseId,
-          postType: post.postType.name,
-          tags: post.tags,
-          commentsCount: 0,
-        ),
-      );
+    try {
+      if (isSaved) {
+        await UnsavePost(repository).call(post.id);
+      } else {
+        await SavePost(repository).call(
+          post.id,
+          SavedPostSnapshot(
+            title: post.title,
+            authorName: post.authorName,
+            authorAvatar: post.authorAvatar,
+            courseId: post.courseId,
+            postType: post.postType.name,
+            tags: post.tags,
+            commentsCount: 0,
+          ),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update saved post')),
+        );
+      }
     }
   }
 
@@ -381,7 +393,7 @@ class _PostHeader extends ConsumerWidget {
               const Spacer(),
               SaveButton(
                 isSaved: isSaved,
-                onTap: () => _toggleSave(ref, isSaved),
+                onTap: () => _toggleSave(context, ref, isSaved),
                 size: 22,
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
@@ -32,18 +33,38 @@ SavedPostRepository savedPostRepository(Ref ref) {
     return SavedPostHiveRepositoryImpl(hiveDs);
   }
 
-  // Authenticated — trigger merge from any guest saves that accumulated.
-  final guestSaves = hiveDs.readAll();
-  if (guestSaves.isNotEmpty) {
-    final firestoreRepo = SavedPostFirestoreRepositoryImpl(
-      firestoreDatasource: firestoreDs,
-      hiveDatasource: hiveDs,
-    );
-    MergeGuestSaves(firestoreRepo).call(guestSaves).ignore();
-  }
-
   return SavedPostFirestoreRepositoryImpl(
     firestoreDatasource: firestoreDs,
     hiveDatasource: hiveDs,
   );
+}
+
+/// Listens for the unauthenticated → authenticated transition and merges any
+/// guest-accumulated saves exactly once per session. Must be initialized at
+/// app startup via [ref.watch] in the root widget.
+@Riverpod(keepAlive: true)
+void mergeGuestSavesOnLogin(Ref ref) {
+  var hasMerged = false;
+
+  ref.listen(authStateProvider, (previous, next) {
+    if (hasMerged) return;
+    final wasUnauthenticated = previous?.asData?.value == null;
+    final isNowAuthenticated = next.asData?.value != null;
+    final isGuest = ref.read(guestModeProvider);
+    if (wasUnauthenticated && isNowAuthenticated && !isGuest) {
+      hasMerged = true;
+      final hiveDs = ref.read(savedPostHiveDatasourceProvider);
+      final guestSaves = hiveDs.readAll();
+      if (guestSaves.isNotEmpty) {
+        final firestoreDs = ref.read(savedPostFirestoreDatasourceProvider);
+        final firestoreRepo = SavedPostFirestoreRepositoryImpl(
+          firestoreDatasource: firestoreDs,
+          hiveDatasource: hiveDs,
+        );
+        MergeGuestSaves(firestoreRepo).call(guestSaves).catchError(
+          (Object e) => debugPrint('mergeGuestSaves failed: $e'),
+        );
+      }
+    }
+  });
 }

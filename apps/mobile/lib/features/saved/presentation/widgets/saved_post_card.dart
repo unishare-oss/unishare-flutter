@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unishare_mobile/features/saved/domain/entities/saved_post.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class SavedPostCard extends ConsumerWidget {
   const SavedPostCard({super.key, required this.savedPost, this.onTap});
@@ -11,14 +12,12 @@ class SavedPostCard extends ConsumerWidget {
   final SavedPost savedPost;
   final VoidCallback? onTap;
 
-  static const _amber = Color(0xFFD97706);
-  static const _muted = Color(0xFF8a837e);
-  static const _border = Color(0xFFe2dad0);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final snapshot = savedPost.snapshot;
     final theme = Theme.of(context);
+    final appColors = theme.extension<AppColors>()!;
+    final scheme = theme.colorScheme;
 
     return GestureDetector(
       onTap: onTap,
@@ -26,14 +25,13 @@ class SavedPostCard extends ConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: scheme.surface,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: _border),
+          border: Border.all(color: theme.dividerColor),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header row: type badge + course code + bookmark toggle
             Row(
               children: [
                 _TypeBadge(postType: snapshot.postType),
@@ -41,7 +39,7 @@ class SavedPostCard extends ConsumerWidget {
                 Text(
                   snapshot.courseId,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: _amber,
+                    color: appColors.amber,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -57,18 +55,16 @@ class SavedPostCard extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 8),
-            // Title
             Text(
               snapshot.title,
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF1c1917),
+                color: scheme.onSurface,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 6),
-            // Author row
             Row(
               children: [
                 _AuthorAvatar(name: snapshot.authorName),
@@ -78,21 +74,26 @@ class SavedPostCard extends ConsumerWidget {
                     snapshot.authorName.isEmpty
                         ? 'Anonymous'
                         : snapshot.authorName,
-                    style: theme.textTheme.bodySmall?.copyWith(color: _muted),
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: appColors.textMuted),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 4),
-            // Comments + relative time
             Row(
               children: [
-                const Icon(Icons.chat_bubble_outline, size: 13, color: _muted),
+                Icon(
+                  Icons.chat_bubble_outline,
+                  size: 13,
+                  color: appColors.textMuted,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   '${snapshot.commentsCount} comments · ${_relativeTime(savedPost.savedAt)}',
-                  style: theme.textTheme.bodySmall?.copyWith(color: _muted),
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: appColors.textMuted),
                 ),
               ],
             ),
@@ -119,18 +120,19 @@ class _TypeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFF1c1917)),
+        border: Border.all(color: scheme.onSurface.withValues(alpha: 0.3)),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
         postType.toUpperCase(),
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w700,
-          color: Color(0xFF1c1917),
+          color: scheme.onSurface,
           letterSpacing: 0.5,
         ),
       ),
@@ -143,24 +145,26 @@ class _AuthorAvatar extends StatelessWidget {
   final String name;
 
   String get _initials {
-    if (name.isEmpty) return '?';
     final parts = name.trim().split(RegExp(r'\s+'));
     return parts.take(2).map((p) => p[0].toUpperCase()).join();
   }
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
     return CircleAvatar(
       radius: 10,
-      backgroundColor: const Color(0xFFe2dad0),
-      child: Text(
-        _initials,
-        style: const TextStyle(
-          fontSize: 8,
-          fontWeight: FontWeight.w700,
-          color: Color(0xFF1c1917),
-        ),
-      ),
+      backgroundColor: appColors.muted,
+      child: name.isEmpty
+          ? Icon(Icons.person_outline, size: 12, color: appColors.textMuted)
+          : Text(
+              _initials,
+              style: TextStyle(
+                fontSize: 8,
+                fontWeight: FontWeight.w700,
+                color: appColors.textSecondary,
+              ),
+            ),
     );
   }
 }

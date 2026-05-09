@@ -6,9 +6,6 @@ import 'package:unishare_mobile/core/router/shell_scaffold.dart';
 import 'package:unishare_mobile/shared/widgets/guest_nav_bar.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
-/// Branch index of the /saved route in the StatefulShellRoute.
-const kSavedBranchIndex = 4;
-
 class GuestShellScaffold extends StatelessWidget {
   const GuestShellScaffold({super.key, required this.navigationShell});
 
