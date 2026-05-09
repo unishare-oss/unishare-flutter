@@ -74,8 +74,9 @@ class SavedPostCard extends ConsumerWidget {
                     snapshot.authorName.isEmpty
                         ? 'Anonymous'
                         : snapshot.authorName,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: appColors.textMuted),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: appColors.textMuted,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -92,8 +93,9 @@ class SavedPostCard extends ConsumerWidget {
                 const SizedBox(width: 4),
                 Text(
                   '${snapshot.commentsCount} comments · ${_relativeTime(savedPost.savedAt)}',
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: appColors.textMuted),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: appColors.textMuted,
+                  ),
                 ),
               ],
             ),

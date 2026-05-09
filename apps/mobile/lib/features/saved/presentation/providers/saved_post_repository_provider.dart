@@ -61,9 +61,9 @@ void mergeGuestSavesOnLogin(Ref ref) {
           firestoreDatasource: firestoreDs,
           hiveDatasource: hiveDs,
         );
-        MergeGuestSaves(firestoreRepo).call(guestSaves).catchError(
-          (Object e) => debugPrint('mergeGuestSaves failed: $e'),
-        );
+        MergeGuestSaves(firestoreRepo)
+            .call(guestSaves)
+            .catchError((Object e) => debugPrint('mergeGuestSaves failed: $e'));
       }
     }
   });

@@ -52,7 +52,9 @@ class SavedPostFirestoreDatasource {
     if (saves.isEmpty) return;
     final existingSnap = await _col(uid).get();
     final existingIds = existingSnap.docs.map((d) => d.id).toSet();
-    final toWrite = saves.where((s) => !existingIds.contains(s.postId)).toList();
+    final toWrite = saves
+        .where((s) => !existingIds.contains(s.postId))
+        .toList();
     if (toWrite.isEmpty) return;
     final batch = _firestore.batch();
     for (final save in toWrite) {

@@ -23,7 +23,10 @@ class SaveButton extends StatelessWidget {
       return SizedBox(
         width: size,
         height: size,
-        child: CircularProgressIndicator(strokeWidth: 2, color: appColors.amber),
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          color: appColors.amber,
+        ),
       );
     }
     return Tooltip(
