@@ -116,9 +116,9 @@ class _LeadingIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (type == 'pdf') {
-      return const Icon(
+      return Icon(
         Icons.picture_as_pdf_rounded,
-        color: Colors.red,
+        color: Theme.of(context).colorScheme.error,
         size: 26,
       );
     }

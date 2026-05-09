@@ -148,9 +148,12 @@ class _BreadcrumbBar extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
 
     final mutedStyle = TextStyle(fontSize: 11, color: appColors.textMuted);
-    const sep = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 3),
-      child: Text('›', style: TextStyle(fontSize: 11, color: Colors.grey)),
+    final sep = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 3),
+      child: Text(
+        '›',
+        style: TextStyle(fontSize: 11, color: appColors.textMuted),
+      ),
     );
 
     final courseTag = (post?.tags.isNotEmpty ?? false)
