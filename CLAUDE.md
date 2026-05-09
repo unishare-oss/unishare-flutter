@@ -201,6 +201,30 @@ To regenerate: `dart run build_runner build`
 - No hardcoded spacing magic numbers — use the spacing scale defined in `shared/theme/`
 - All icons from the project's defined icon set; avoid mixing icon packs
 
+#### Theme token reference
+
+| Token | Source | Use for |
+|---|---|---|
+| `ac.amber` | `AppColors` | Primary accent — buttons, active icons, highlights |
+| `ac.amberHover` | `AppColors` | Pressed/hover state of amber elements |
+| `ac.amberSubtle` | `AppColors` | Amber tinted backgrounds, badge fills |
+| `ac.muted` | `AppColors` | Subtle background fills, tag chips |
+| `ac.mutedForeground` | `AppColors` | Text on muted backgrounds |
+| `ac.textSecondary` | `AppColors` | Secondary body text |
+| `ac.textMuted` | `AppColors` | Placeholder, meta, timestamp text |
+| `ac.success` | `AppColors` | Success states |
+| `ac.info` | `AppColors` | Info badges, NOTE type label |
+| `ac.surfaceDark` | `AppColors` | Dark overlay surfaces |
+| `ac.cardDark` | `AppColors` | Dark card variant |
+| `colorScheme.surface` | `ColorScheme` | Card/sheet backgrounds |
+| `colorScheme.onSurface` | `ColorScheme` | Primary text, icons on surface |
+| `colorScheme.primary` | `ColorScheme` | Brand primary (same hue as `ac.amber`) |
+| `theme.scaffoldBackgroundColor` | `ThemeData` | Page background |
+| `theme.cardColor` | `ThemeData` | Card background |
+| `theme.dividerColor` | `ThemeData` | Borders, dividers |
+| `AppTypography.mono(base: style)` | `AppTypography` | Fira Code monospace spans |
+| `theme.textTheme.*` | `TextTheme` | All body/headline/label styles (Space Grotesk) |
+
 ## Docs Folder Conventions
 
 Each folder serves a distinct purpose:
