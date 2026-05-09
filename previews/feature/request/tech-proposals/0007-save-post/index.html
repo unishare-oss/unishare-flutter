@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Persistent 4-tab bottom navigation bar for authenticated users, integrated with GoRouter and matching the Figma design exactly.">
+        <meta name="description" content="Persistent bookmarking of feed posts for later reference, with Hive-backed local storage for guest users and Firestore sync for authenticated users, merged on login.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/request/tech-proposals/0005-main-navbar/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/request/tech-proposals/0007-save-post/">
       
       
-        <link rel="prev" href="../0005-feed-filtering-tags/">
+        <link rel="prev" href="../0007-file-preview-screen/">
       
       
-        <link rel="next" href="../0006-post-detail-page/">
+        <link rel="next" href="../0008-request-post/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0005: Main Navigation Bar - Unishare Engineering Docs</title>
+        <title>0007: Save Post - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0005-main-navigation-bar" class="md-skip">
+        <a href="#prop-0007-save-post" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0005: Main Navigation Bar
+              0007: Save Post
             
           </span>
         </div>
@@ -1075,37 +1075,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0005: Main Navigation Bar
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1121,214 +1094,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#non-goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Non-goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Proposed Solution
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Proposed Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#router-integration-statefulshellroute" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Router integration — StatefulShellRoute
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bottom-bar-widget" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bottom bar widget
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#auth-awareness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Auth-awareness
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#more-tab" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MORE tab
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#active-tab-highlight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Active-tab highlight
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-material-3-navigationbar-inside-statefulshellroute" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Material 3 NavigationBar inside StatefulShellRoute
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-custom-painted-bottom-bar-proposed-solution-above" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Custom-painted bottom bar (proposed solution above)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-material-2-bottomnavigationbar" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — Material 2 BottomNavigationBar
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        D — IndexedStack with manual tab state (no StatefulShellRoute)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1394,10 +1159,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0007-save-post/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1413,6 +1205,242 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#summary-of-the-choice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary of the choice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domain-layer-pure-dart-zero-flutter-or-firebase-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain layer (pure Dart — zero Flutter or Firebase imports)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#presentation-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presentation layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-on-login-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge-on-login flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-box-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hive box registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#router-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Router integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-hive-only-local-saves-no-firestore-sync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Hive-only local saves (no Firestore sync)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-firestore-subcollection-only-usersuidsavedpostspostid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Firestore subcollection only (users/{uid}/savedPosts/{postId})
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Hybrid: Hive for guests, Firestore for authenticated users, merge on login (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Firestore subcollection with Firestore offline persistence as local cache
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1802,28 +1830,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#non-goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Non-goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1836,10 +1842,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#router-integration-statefulshellroute" class="md-nav__link">
+  <a href="#summary-of-the-choice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Router integration — StatefulShellRoute
+        Summary of the choice
       
     </span>
   </a>
@@ -1847,10 +1853,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bottom-bar-widget" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bottom bar widget
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domain-layer-pure-dart-zero-flutter-or-firebase-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain layer (pure Dart — zero Flutter or Firebase imports)
       
     </span>
   </a>
@@ -1858,10 +1876,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#auth-awareness" class="md-nav__link">
+  <a href="#data-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Auth-awareness
+        Data layer
       
     </span>
   </a>
@@ -1869,10 +1887,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#more-tab" class="md-nav__link">
+  <a href="#presentation-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        MORE tab
+        Presentation layer
       
     </span>
   </a>
@@ -1880,13 +1898,51 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#active-tab-highlight" class="md-nav__link">
+  <a href="#firestore-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Active-tab highlight
+        Firestore schema
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-on-login-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge-on-login flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-box-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hive box registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#router-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Router integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1908,10 +1964,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-material-3-navigationbar-inside-statefulshellroute" class="md-nav__link">
+  <a href="#a-hive-only-local-saves-no-firestore-sync" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Material 3 NavigationBar inside StatefulShellRoute
+        A — Hive-only local saves (no Firestore sync)
       
     </span>
   </a>
@@ -1919,10 +1975,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-custom-painted-bottom-bar-proposed-solution-above" class="md-nav__link">
+  <a href="#b-firestore-subcollection-only-usersuidsavedpostspostid" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Custom-painted bottom bar (proposed solution above)
+        B — Firestore subcollection only (users/{uid}/savedPosts/{postId})
       
     </span>
   </a>
@@ -1930,10 +1986,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-material-2-bottomnavigationbar" class="md-nav__link">
+  <a href="#c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Material 2 BottomNavigationBar
+        C — Hybrid: Hive for guests, Firestore for authenticated users, merge on login (recommended)
       
     </span>
   </a>
@@ -1941,10 +1997,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" class="md-nav__link">
+  <a href="#d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache" class="md-nav__link">
     <span class="md-ellipsis">
       
-        D — IndexedStack with manual tab state (no StatefulShellRoute)
+        D — Firestore subcollection with Firestore offline persistence as local cache
       
     </span>
   </a>
@@ -1995,7 +2051,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0005-main-navbar.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0007-save-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2003,181 +2059,282 @@
   
 
 
-<h1 id="prop-0005-main-navigation-bar">PROP-0005: Main Navigation Bar<a class="headerlink" href="#prop-0005-main-navigation-bar" title="Permanent link">&para;</a></h1>
+<h1 id="prop-0007-save-post">PROP-0007: Save Post<a class="headerlink" href="#prop-0007-save-post" title="Permanent link">&para;</a></h1>
 <p><strong>Status:</strong> APPROVED<br />
 <strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-05<br />
-<strong>Spec:</strong> <a href="../../tech-specs/0005-main-navbar/">SPEC-0005</a><br />
-<strong>Approved by:</strong> Pyae Sone Shin Thant</p>
+<strong>Date:</strong> 2026-05-07<br />
+<strong>Spec:</strong> (pending approval)<br />
+<strong>Approved by:</strong> Sai Zayar Hein</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The app currently has no persistent navigation surface for authenticated users. After sign-in, users land on a placeholder home screen with no mechanism to reach any core destination — Feed, My Posts, or Notifications are unreachable without manually typing deep-link URLs. The router serves three routes (<code>/welcome</code>, <code>/</code>, <code>/posts/create</code>) but nothing ties them into a navigable shell that persists across tab switches.</p>
-<p>All authenticated users are affected immediately upon sign-in. Until a main navbar exists, the app cannot be exercised as a product: the feed is reachable only because <code>/</code> happens to be the default redirect, and every other first-class destination is effectively hidden. Navigation is the prerequisite for every other feature; this is the highest-priority UX gap in the codebase.</p>
-<p>The Figma design specifies a <strong>4-tab bottom bar</strong>: FEED, POSTS, NOTIFS, MORE. The bar must be present on all authenticated, non-modal screens and absent from the auth flow (Welcome, Sign In, Sign Up) and from full-screen creation and detail flows (New Post steps 1–3, Post Details, Terms of Service, Privacy Policy).</p>
-<hr />
-<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Render a persistent 4-tab bottom bar on all authenticated shell screens.</li>
-<li>Match the Figma design tokens exactly: background <code>#f7f3ee</code>, active accent <code>#d97706</code>, Space Grotesk labels, border <code>#e2dad0</code>.</li>
-<li>Integrate cleanly with GoRouter so that deep links resolve to the correct tab and tab state is preserved across switches.</li>
-<li>Suppress the navbar entirely on auth screens and creation/detail flows — no conditional visibility hacks inside individual screens.</li>
-<li>Keep the Domain layer untouched — this is a Presentation-layer concern.</li>
-</ul>
-<hr />
-<h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Navigation within a tab (sub-routes under FEED, POSTS, etc.) — that belongs to each feature's own spec.</li>
-<li>The content of the MORE tab destinations (Profile, Saved, Departments, Requests) — each destination is a separate feature spec.</li>
-<li>Push notification badge wiring — badge count on NOTIFS is deferred to a separate proposal (see Open Questions).</li>
-<li>Guest-mode partial access — treated as out-of-scope for v1 (see Open Questions).</li>
-</ul>
+<p>Students encounter valuable academic posts — lecture notes, past papers, study summaries — while scrolling the feed, but the app provides no mechanism to mark or retrieve those posts later. The only retrieval path is scrolling the feed again from the top, which is impractical once the feed grows beyond one page and becomes impossible for content that has aged off the visible window. There is no personal study collection surface: a student preparing for finals cannot quickly access the five posts they found most useful last week.</p>
+<p>Two distinct user contexts make the storage strategy non-trivial:</p>
+<ol>
+<li>
+<p><strong>Guest users</strong> (browsing without an account) need save functionality immediately — blocking saves behind a login wall degrades the guest experience and reduces the perceived value of signing up. Guest saves must survive app restarts but have no server identity to sync against, so they can only be stored locally.</p>
+</li>
+<li>
+<p><strong>Authenticated users</strong> need their saved list to survive device changes, app reinstalls, and simultaneous access from multiple devices (e.g., phone + web). Local-only storage is insufficient. When a guest user later creates an account and signs in, their locally saved posts must not silently disappear — the transition from guest to authenticated must be handled explicitly.</p>
+</li>
+</ol>
+<p>The feature must also integrate cleanly into the existing navigation structure. PROP-0005 established <code>StatefulShellRoute</code> with a MORE tab containing <code>/more/saved</code> as a child route. The Saved screen exists as a stub (<code>SavedScreen</code> returning "Coming soon"). This proposal fills that stub with a real feature.</p>
 <hr />
 <h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>Use Flutter's <strong><code>StatefulShellRoute</code></strong> (part of <code>go_router</code> 7+) with a <strong>custom-painted bottom bar widget</strong> that mirrors the Figma spec pixel-accurately.</p>
-<h3 id="router-integration-statefulshellroute">Router integration — <code>StatefulShellRoute</code><a class="headerlink" href="#router-integration-statefulshellroute" title="Permanent link">&para;</a></h3>
-<p><code>StatefulShellRoute</code> was introduced specifically to solve the tab-bar navigation problem in GoRouter. It wraps a set of branches, each backed by its own <code>Navigator</code> stack, and preserves scroll position and navigation state independently per branch when the user switches tabs. This matches standard mobile tab-bar expectations.</p>
-<p>The shell route sits at the root of the authenticated route tree. The <code>_RouterNotifier</code> continues to redirect unauthenticated users to <code>/welcome</code> before they can reach the shell. Because the shell is a named parent route, any deep link under <code>/feed</code>, <code>/posts</code>, <code>/notifications</code>, or <code>/more</code> resolves inside the correct branch automatically — no manual tab-index synchronization is needed.</p>
-<p>The four branches map to:</p>
+<p><strong>Option C — Hybrid: Hive for all users as local cache, Firestore as sync layer for authenticated users, merge on login.</strong></p>
+<h3 id="summary-of-the-choice">Summary of the choice<a class="headerlink" href="#summary-of-the-choice" title="Permanent link">&para;</a></h3>
+<p>Option C is recommended because it satisfies all hard constraints without sacrificing any user context. Guest saves are durable across app restarts. Authenticated saves sync cross-device. The merge-on-login path preserves guest work rather than discarding it, which is the correct product behavior for a tool students rely on for study. The complexity cost of the merge is bounded and one-time; it does not recur after login.</p>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<p>The feature is scoped to a new <code>features/saved/</code> directory following the established Clean Architecture layer pattern.</p>
+<h4 id="domain-layer-pure-dart-zero-flutter-or-firebase-imports">Domain layer (pure Dart — zero Flutter or Firebase imports)<a class="headerlink" href="#domain-layer-pure-dart-zero-flutter-or-firebase-imports" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>features/saved/domain/
+  entities/
+    saved_post.dart          ← SavedPost { postId, savedAt, postSnapshot? }
+  repositories/
+    saved_post_repository.dart   ← abstract SavedPostRepository
+  usecases/
+    save_post.dart           ← validates postId non-empty, delegates to repository
+    unsave_post.dart         ← delegates to repository
+    get_saved_posts.dart     ← returns Stream&lt;List&lt;SavedPost&gt;&gt;
+    is_post_saved.dart       ← returns Stream&lt;bool&gt; for a given postId
+    merge_guest_saves.dart   ← copies local Hive saves into Firestore on login
+</code></pre></div>
+<p><code>SavedPost</code> carries a <code>postId</code> and <code>savedAt</code> timestamp. It optionally carries a <code>postSnapshot</code> — a denormalized copy of the post fields used to render the Saved tab without additional Firestore reads (see Open Question 2 and Firestore schema below).</p>
+<p><code>SavedPostRepository</code> defines the interface that both the Hive implementation (guest) and the Firestore implementation (authenticated) satisfy:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">SavedPostRepository</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SavedPost</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">watchSavedPosts</span><span class="p">();</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">savePost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span><span class="w"> </span><span class="n">PostSnapshot</span><span class="w"> </span><span class="n">snapshot</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">unsavePost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">isPostSaved</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mergeFrom</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SavedPost</span><span class="o">&gt;</span><span class="w"> </span><span class="n">guestSaves</span><span class="p">);</span><span class="w"> </span><span class="c1">// no-op on Hive impl</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="data-layer">Data layer<a class="headerlink" href="#data-layer" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
-<th>Tab</th>
-<th>Branch root path</th>
-<th>Initial screen</th>
+<th>File</th>
+<th>Responsibility</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>FEED</td>
-<td><code>/feed</code></td>
-<td>Feed screen (from PROP-0003)</td>
+<td><code>data/models/saved_post_hive_model.dart</code></td>
+<td><code>HiveObject</code> with manual <code>TypeAdapter</code> (typeId: 2 — next available after <code>PostDraftModelAdapter</code> at typeId 1); stores <code>postId</code>, <code>savedAt</code>, and denormalized snapshot fields</td>
 </tr>
 <tr>
-<td>POSTS</td>
-<td><code>/posts</code></td>
-<td>My Posts screen</td>
+<td><code>data/models/saved_post_dto.dart</code></td>
+<td>Freezed + <code>fromJson</code>/<code>toJson</code> for Firestore document mapping</td>
 </tr>
 <tr>
-<td>NOTIFS</td>
-<td><code>/notifications</code></td>
-<td>Notifications screen</td>
+<td><code>data/datasources/saved_post_hive_datasource.dart</code></td>
+<td>Opens <code>Box&lt;SavedPostHiveModel&gt;('saved_posts')</code>; CRUD via Hive box</td>
 </tr>
 <tr>
-<td>MORE</td>
-<td><code>/more</code></td>
-<td>More menu (see below)</td>
+<td><code>data/datasources/saved_post_firestore_datasource.dart</code></td>
+<td>Reads/writes <code>users/{uid}/savedPosts/{postId}</code></td>
+</tr>
+<tr>
+<td><code>data/repositories/saved_post_hive_repository_impl.dart</code></td>
+<td>Implements <code>SavedPostRepository</code> against Hive; <code>mergeFrom</code> is a no-op</td>
+</tr>
+<tr>
+<td><code>data/repositories/saved_post_firestore_repository_impl.dart</code></td>
+<td>Implements <code>SavedPostRepository</code> against Firestore; <code>mergeFrom</code> batch-writes all guest saves</td>
 </tr>
 </tbody>
 </table>
-<p>The existing <code>/</code> route is aliased to <code>/feed</code> via a redirect so existing deep links and the post-login redirect continue to work without breakage.</p>
-<p>Routes that must not show the navbar — Post Details, New Post steps 1–3, Terms of Service, Privacy Policy — are declared <strong>outside</strong> the <code>StatefulShellRoute</code> as top-level routes. They push modally or via standard navigation, which means the shell (and its bottom bar) is not in their widget tree at all. No per-screen <code>bottomNavigationBar: null</code> override is needed.</p>
-<p>Secondary destinations reachable from the MORE tab use paths nested under <code>/more</code> (e.g., <code>/more/profile</code>, <code>/more/saved</code>, <code>/more/departments</code>, <code>/more/requests</code>). They are registered as child routes on the MORE branch of the <code>StatefulShellRoute</code>, so the navbar remains visible when navigating into them and back-button behavior is handled by the branch's own <code>Navigator</code>.</p>
-<h3 id="bottom-bar-widget">Bottom bar widget<a class="headerlink" href="#bottom-bar-widget" title="Permanent link">&para;</a></h3>
-<p>Rather than using <code>NavigationBar</code> (Material 3) or <code>BottomNavigationBar</code> (Material 2), a <strong>custom widget</strong> is used. The Figma design does not follow Material Design conventions closely enough for either stock widget to reproduce it without fighting the theme. Specifically:</p>
-<ul>
-<li>The background color (<code>#f7f3ee</code>) is a warm off-white, not a Material surface.</li>
-<li>The top border (<code>#e2dad0</code>, 1 px) is a design-system token with no direct Material equivalent.</li>
-<li>Labels are uppercase, Space Grotesk, 11 px (Fira Code style, matching the project's tag convention) — not the default <code>NavigationBar</code> label style.</li>
-<li>The active indicator is an amber underline or tint, not Material's pill indicator.</li>
-</ul>
-<p>A custom widget avoids theme-fighting and guarantees pixel parity with Figma. The widget is a <code>Row</code> of four <code>InkWell</code>-wrapped tab items, each composed of a small icon and a label. The active tab receives the <code>#d97706</code> amber accent on both icon and label; inactive tabs use a muted foreground. The widget is stateless — it receives the current tab index and an <code>onTap</code> callback from the shell, which drives GoRouter navigation.</p>
-<h3 id="auth-awareness">Auth-awareness<a class="headerlink" href="#auth-awareness" title="Permanent link">&para;</a></h3>
-<p>The <code>_RouterNotifier</code> already redirects unauthenticated users away from <code>/</code> to <code>/welcome</code>. Because the <code>StatefulShellRoute</code> is declared inside the authenticated route tree, an unauthenticated user never reaches the shell and never sees the navbar. No additional auth check is needed inside the bar widget itself — the router is the single source of truth.</p>
-<h3 id="more-tab">MORE tab<a class="headerlink" href="#more-tab" title="Permanent link">&para;</a></h3>
-<p>The MORE tab navigates to a lightweight <strong>More screen</strong> (<code>/more</code>) that renders a scrollable list of secondary destinations: User Profile (<code>/more/profile</code>), Saved (<code>/more/saved</code>), Departments (<code>/more/departments</code>), Requests (<code>/more/requests</code>). This is preferred over a bottom sheet because:</p>
-<ol>
-<li>A dedicated route is deep-linkable — <code>/more/profile</code> can be reached from a push notification without opening a sheet first.</li>
-<li>It composes cleanly with the <code>StatefulShellRoute</code> branch — the More branch has its own <code>Navigator</code> stack, so tapping into Profile and pressing Back returns to the More list without resetting other tabs.</li>
-<li>A bottom sheet would need to be dismissed and re-opened on every entry, breaking the "persistent shell" mental model.</li>
-</ol>
-<p>Secondary destinations use <code>/more/</code>-prefixed paths so they remain within the MORE branch navigator and the navbar stays visible.</p>
-<p>The More screen itself is minimal — it is a styled list of <code>ListTile</code>s. Its content is out of scope for this proposal.</p>
-<h3 id="active-tab-highlight">Active-tab highlight<a class="headerlink" href="#active-tab-highlight" title="Permanent link">&para;</a></h3>
-<p>GoRouter exposes the current location via <code>GoRouterState</code>. The shell's <code>builder</code> receives a <code>navigationShell</code> parameter that includes the current branch index. The custom bar widget receives this index as <code>activeIndex</code> and applies the amber accent (<code>#d97706</code>) to the corresponding tab's icon and label. No external state management (Riverpod provider) is needed for the tab index — GoRouter owns that state.</p>
+<h4 id="presentation-layer">Presentation layer<a class="headerlink" href="#presentation-layer" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>presentation/providers/saved_post_repository_provider.dart</code></td>
+<td><code>@riverpod keepAlive</code> — returns the Hive impl when guest, the Firestore impl when authenticated; switches when auth state changes</td>
+</tr>
+<tr>
+<td><code>presentation/providers/saved_posts_provider.dart</code></td>
+<td><code>@riverpod</code> — <code>StreamProvider</code> wrapping <code>GetSavedPosts</code>; exposes <code>AsyncValue&lt;List&lt;SavedPost&gt;&gt;</code></td>
+</tr>
+<tr>
+<td><code>presentation/providers/is_post_saved_provider.dart</code></td>
+<td><code>@riverpod</code> family keyed on <code>postId</code> — <code>StreamProvider&lt;bool&gt;</code> for save-button state on <code>PostCard</code></td>
+</tr>
+<tr>
+<td><code>presentation/screens/saved_screen.dart</code></td>
+<td>Replaces the "Coming soon" stub; renders saved list or empty state</td>
+</tr>
+<tr>
+<td><code>presentation/widgets/saved_post_card.dart</code></td>
+<td>Renders a saved post from the denormalized snapshot — no additional Firestore reads</td>
+</tr>
+<tr>
+<td><code>presentation/widgets/save_button.dart</code></td>
+<td>Stateless toggle button; receives <code>isSaved</code> + <code>onTap</code>; placed on <code>PostCard</code> and <code>PostDetailScreen</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="firestore-schema">Firestore schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>users/{uid}/savedPosts/{postId}
+  postId:       string   (== document ID, for query convenience)
+  savedAt:      Timestamp
+  title:        string   (denormalized from post document at save time)
+  authorName:   string   (denormalized)
+  courseId:     string   (denormalized)
+  postType:     string   (denormalized — &quot;note&quot; | &quot;assignment&quot; | ...)
+  tags:         string[] (denormalized)
+</code></pre></div>
+<p>The <code>savedAt</code> field enables ordering the Saved tab by most-recently saved. Denormalized fields enable rendering the Saved tab as a flat list without issuing one <code>get()</code> per saved post. Staleness of denormalized fields is acceptable: the post's title and author are rarely edited after publication, and if they are, the Saved tab showing an outdated title is a minor cosmetic issue rather than a functional one. A background migration to refresh stale snapshots is deferred to a future proposal.</p>
+<h4 id="merge-on-login-flow">Merge-on-login flow<a class="headerlink" href="#merge-on-login-flow" title="Permanent link">&para;</a></h4>
+<p>When <code>authStateProvider</code> transitions from unauthenticated to authenticated, <code>saved_post_repository_provider</code> switches from the Hive implementation to the Firestore implementation. Before switching, <code>MergeGuestSaves</code> reads all entries from the Hive box and calls <code>SavedPostRepository.mergeFrom(guestSaves)</code>. The Firestore implementation batch-writes the guest saves into <code>users/{uid}/savedPosts/</code>, using <code>SetOptions(merge: true)</code> so that posts already saved on another device are not overwritten. After the merge, the Hive box is cleared to prevent duplicate saves from accumulating.</p>
+<p>The merge is triggered once per login event inside <code>saved_post_repository_provider</code>'s build method, which re-runs when <code>authStateProvider</code> changes. The result of the merge is not surfaced to the user unless it fails — on failure, local Hive saves are retained and the merge is retried on the next app launch.</p>
+<h4 id="hive-box-registration">Hive box registration<a class="headerlink" href="#hive-box-registration" title="Permanent link">&para;</a></h4>
+<p>A new <code>initSavedPostBox()</code> function is added to <code>core/storage/</code> following the existing pattern in <code>post_draft_box.dart</code>. It registers <code>SavedPostHiveModelAdapter</code> (typeId: 2) and opens the <code>saved_posts</code> box. It must be called from <code>main.dart</code> alongside <code>initPostDraftBox()</code>.</p>
+<h4 id="router-integration">Router integration<a class="headerlink" href="#router-integration" title="Permanent link">&para;</a></h4>
+<p><code>/more/saved</code> already exists as a child route of the MORE branch in <code>router.dart</code>. No router changes are required. The <code>SavedScreen</code> at that path is replaced in-place.</p>
+<p>The <code>PostCard</code> widget in the feed gains a <code>SaveButton</code> that calls <code>savePost</code> / <code>unsavePost</code> via a tap. The button's state is driven by <code>isPostSavedProvider(postId)</code>, which is a <code>StreamProvider</code> reflecting the current repository (Hive or Firestore). No <code>PostCard</code> structural changes are needed beyond adding the button to the existing action row.</p>
 <hr />
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-material-3-navigationbar-inside-statefulshellroute">A — Material 3 <code>NavigationBar</code> inside <code>StatefulShellRoute</code><a class="headerlink" href="#a-material-3-navigationbar-inside-statefulshellroute" title="Permanent link">&para;</a></h3>
-<p>Flutter's <code>NavigationBar</code> widget (Material 3) provides built-in semantics, animated indicators, badge support, and keyboard navigation out of the box. Paired with <code>StatefulShellRoute</code> it handles the GoRouter integration correctly.</p>
-<p><strong>Pros:</strong>
-- Zero custom painting — widget is maintained by the Flutter team.
-- Built-in <code>Badge</code> support for notification counts.
-- Accessibility labels and semantics are correct by default.
-- Significantly less code than a custom widget.</p>
-<p><strong>Cons:</strong>
-- Reproducing the Figma design requires overriding nearly every <code>NavigationBarThemeData</code> token: indicator color, background color, label style, icon size, height. The cumulative theme override is fragile and harder to maintain than a bespoke widget.
-- The animated pill indicator is a Material 3 affordance that does not exist in the Figma design; suppressing it cleanly requires a transparent <code>indicatorColor</code>, which can cause rendering artifacts in some Flutter versions.
-- Uppercase 11 px Space Grotesk labels conflict with <code>NavigationBar</code>'s default label treatment; forcing this through <code>labelTextStyle</code> is possible but adds theme complexity.</p>
-<p><strong>Effort:</strong> S (widget) + M (theme fight) = M overall. Risk of pixel drift against Figma over future Flutter upgrades.</p>
-<p><strong>Verdict:</strong> Not recommended. The theme-override surface is large enough that a custom widget would be cleaner in the long run.</p>
+<h3 id="a-hive-only-local-saves-no-firestore-sync">A — Hive-only local saves (no Firestore sync)<a class="headerlink" href="#a-hive-only-local-saves-no-firestore-sync" title="Permanent link">&para;</a></h3>
+<p>All saves, for all users, are stored in a local Hive box. No Firestore collection is introduced. The feature is symmetric across guest and authenticated users.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Simplest implementation. No new Firestore subcollection, no merge logic, no auth-switching repository.</li>
+<li>Works for guests and authenticated users identically.</li>
+<li>Zero Firestore reads/writes for the save feature — no impact on billing or quota.</li>
+<li>No sync latency — saves are instant and always available offline.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Authenticated users lose their saved list on device change, app reinstall, or when using the web version. This is a significant regression relative to user expectations for a signed-in experience.</li>
+<li>The feature's value proposition for authenticated users is substantially weaker than for a cloud-synced list.</li>
+<li>Cross-device access is impossible.</li>
+</ul>
+<p><strong>Effort:</strong> XS.</p>
+<p><strong>Verdict:</strong> Acceptable as a v1 MVP for guest users but inadequate for authenticated users. It is the correct choice only if cross-device sync is explicitly out of scope and communicated to users.</p>
 <hr />
-<h3 id="b-custom-painted-bottom-bar-proposed-solution-above">B — Custom-painted bottom bar (proposed solution above)<a class="headerlink" href="#b-custom-painted-bottom-bar-proposed-solution-above" title="Permanent link">&para;</a></h3>
-<p>Fully hand-crafted <code>Row</code> of tab items built from <code>InkWell</code>, <code>Icon</code>, and <code>Text</code>. No dependency on Material <code>NavigationBar</code> or <code>BottomNavigationBar</code>.</p>
-<p><strong>Pros:</strong>
-- Exact pixel control — every color, spacing, and typography token comes directly from the project's design system with no theme override indirection.
-- Isolated from Material widget changes in future Flutter upgrades — the widget's appearance is determined entirely by the project's token constants.
-- Easy to extend with custom affordances (e.g., animated underline, pulse on new notification) without working against a widget's internal state machine.</p>
-<p><strong>Cons:</strong>
-- No built-in accessibility semantics — <code>Semantics</code> wrappers must be added manually.
-- Badge support must be implemented from scratch.
-- More initial code than Option A.</p>
-<p><strong>Effort:</strong> M. Most of the code is mechanical; the design tokens are already defined.</p>
-<p><strong>Verdict:</strong> Recommended. The extra upfront code is justified by long-term fidelity and freedom from theme-fighting.</p>
+<h3 id="b-firestore-subcollection-only-usersuidsavedpostspostid">B — Firestore subcollection only (<code>users/{uid}/savedPosts/{postId}</code>)<a class="headerlink" href="#b-firestore-subcollection-only-usersuidsavedpostspostid" title="Permanent link">&para;</a></h3>
+<p>Saves are stored exclusively in Firestore. Guest users cannot save posts — the Save button is hidden or disabled when not authenticated, with a prompt to sign in.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>No Hive complexity for this feature. Only one storage backend to maintain.</li>
+<li>Authenticated saves are fully cross-device from day one.</li>
+<li>No merge logic on login.</li>
+<li>Simpler <code>SavedPostRepository</code> — one implementation, not two.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Guest users cannot save posts. This directly contradicts the stated requirement: "Guest users (not logged in): saved posts are stored locally using Hive (offline-first, no Firestore writes)."</li>
+<li>A guest who finds a useful post must either sign up immediately (friction) or lose the post (poor UX).</li>
+<li>On logout, all saves are inaccessible until the user signs back in, even on the same device.</li>
+</ul>
+<p><strong>Effort:</strong> S (single backend, no merge).</p>
+<p><strong>Verdict:</strong> Does not meet the guest requirement. Acceptable only if the product decision is explicitly made to require authentication before saving.</p>
 <hr />
-<h3 id="c-material-2-bottomnavigationbar">C — Material 2 <code>BottomNavigationBar</code><a class="headerlink" href="#c-material-2-bottomnavigationbar" title="Permanent link">&para;</a></h3>
-<p>The older Material 2 widget, available without enabling <code>useMaterial3: true</code>. Some teams use it because it is well-understood and has stable behavior across Flutter versions.</p>
-<p><strong>Pros:</strong>
-- Familiar API — most Flutter developers know it.
-- Stable, no active churn in the Flutter framework.</p>
-<p><strong>Cons:</strong>
-- Material 2 is in maintenance mode; the Flutter team recommends migrating to Material 3 <code>NavigationBar</code>.
-- The Figma design clearly does not follow Material 2 conventions (background color, label treatment, no ripple, amber accent) — the same theme-fighting problem as Option A applies here, arguably more so because M2's theming is less granular.
-- No <code>StatefulShellRoute</code>-specific drawbacks, but the widget itself is the wrong starting point for this design.</p>
-<p><strong>Effort:</strong> S (widget) + L (theme fight) = L overall.</p>
-<p><strong>Verdict:</strong> Ruled out. Deprecated direction and the heaviest customization burden of the three options.</p>
+<h3 id="c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended">C — Hybrid: Hive for guests, Firestore for authenticated users, merge on login (recommended)<a class="headerlink" href="#c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended" title="Permanent link">&para;</a></h3>
+<p>Described fully in Proposed Solution above.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Satisfies all stated requirements: guest saves work offline, authenticated saves sync cross-device.</li>
+<li>Guest saves are not lost on login — they are merged into Firestore.</li>
+<li>The domain repository interface is unified — the presentation layer is unaware of which backend is active.</li>
+<li>No new pub.dev dependencies. <code>hive_flutter</code> and <code>cloud_firestore</code> are already in <code>pubspec.yaml</code>.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Two repository implementations to maintain instead of one.</li>
+<li>Merge-on-login logic adds complexity. Edge cases must be handled: merge failure, partial merge on network drop, posts that were saved on both a guest session and an existing authenticated account.</li>
+<li>The <code>saved_post_repository_provider</code> must react to <code>authStateProvider</code> changes, which requires careful provider lifecycle management to avoid read-after-dispose errors when the provider switches implementations mid-session.</li>
+<li>Hive box for <code>saved_posts</code> adds a second registered adapter alongside <code>PostDraftModelAdapter</code>.</li>
+</ul>
+<p><strong>Effort:</strong> M.</p>
+<p><strong>Verdict:</strong> Recommended. The added complexity is concentrated in the Data layer and merge use case, leaving the Domain interface and Presentation layer clean. The product experience is correct for all user types.</p>
 <hr />
-<h3 id="d-indexedstack-with-manual-tab-state-no-statefulshellroute">D — <code>IndexedStack</code> with manual tab state (no <code>StatefulShellRoute</code>)<a class="headerlink" href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" title="Permanent link">&para;</a></h3>
-<p>Manage tab state inside a single <code>Scaffold</code> using an <code>IndexedStack</code> of four subtrees, with a manually maintained <code>currentIndex</code> Riverpod provider. GoRouter would treat the entire shell as a single route.</p>
-<p><strong>Pros:</strong>
-- Conceptually simple — no need to understand <code>StatefulShellRoute</code>.
-- Tab state is in a Riverpod provider, which is easy to test and observe.</p>
-<p><strong>Cons:</strong>
-- Deep-link compatibility is severely degraded. If a push notification deep-links to <code>/notifications/123</code>, GoRouter has no mechanism to set the active tab index — the app lands on the wrong tab or the home route. Workarounds require listening to <code>GoRouter.routeInformationProvider</code> and manually syncing with the index provider, which is exactly the problem <code>StatefulShellRoute</code> was designed to solve.
-- <code>IndexedStack</code> keeps all four tab subtrees in the widget tree simultaneously, increasing memory overhead regardless of which tabs have been visited.
-- Tab-level <code>Navigator</code> stacks are not isolated — navigating within one tab and then switching tabs resets back-stack state unexpectedly.</p>
-<p><strong>Effort:</strong> M (but produces an inferior result).</p>
-<p><strong>Verdict:</strong> Ruled out. Deep-link compatibility is a hard requirement, and this approach cannot satisfy it without significant fragile workarounds.</p>
+<h3 id="d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache">D — Firestore subcollection with Firestore offline persistence as local cache<a class="headerlink" href="#d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache" title="Permanent link">&para;</a></h3>
+<p>Use Firestore's built-in offline persistence (already enabled by <code>cloud_firestore</code>) as the offline layer for all users, including guests. Guest users are assigned an anonymous Firebase Auth UID (<code>signInAnonymously</code>), enabling Firestore writes. On explicit sign-in, the anonymous account is linked to the authenticated account, preserving all data.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Single storage backend (Firestore) for all users.</li>
+<li>No custom Hive model or merge logic.</li>
+<li>Firebase anonymous auth handles the guest identity problem cleanly.</li>
+<li>Offline reads are served from Firestore's local cache automatically.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Requires introducing anonymous Firebase Auth (<code>signInAnonymously</code>) — a new auth flow not currently in the codebase. The <code>_RouterNotifier</code> and <code>GuestMode</code> provider would need rearchitecting: currently guest mode is a simple boolean, not a Firebase identity.</li>
+<li>Anonymous accounts have a 30-day inactivity expiry on Firebase. A guest who returns after a month loses their saves silently.</li>
+<li>Linking anonymous accounts to authenticated accounts is a one-way operation that can fail (e.g., if the authenticated account already has data). Error handling for link failures is non-trivial.</li>
+<li><code>signInAnonymously</code> counts toward Firebase Auth monthly active users, which may affect billing at scale.</li>
+<li>Firestore offline persistence does not guarantee writes are durable across app reinstalls — the local cache is cleared on reinstall, meaning guest saves on a reinstalled app are lost even with this approach.</li>
+</ul>
+<p><strong>Effort:</strong> L (rearchitecting the guest auth model).</p>
+<p><strong>Verdict:</strong> Architecturally elegant but introduces a significant dependency on anonymous auth that rewrites the existing guest model. The merge problem is shifted from the data layer to the auth layer, where failure modes are harder to handle. Not recommended for this scope.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>MORE tab: bottom sheet vs dedicated screen</strong> — The proposed solution recommends a dedicated <code>/more</code> route with secondary destinations at <code>/more/profile</code>, <code>/more/saved</code>, etc. A bottom sheet alternative would be lighter but not deep-linkable. <strong>Resolved: dedicated <code>/more</code> screen with <code>/more/*</code> child paths.</strong> No team decision needed.</p>
+<p><strong>What happens to guest saves on login — merge, discard, or user choice?</strong>
+   The recommended approach (Option C) merges automatically and silently. An alternative is to present a modal at login time: "You have N saved posts from your guest session — would you like to add them to your account?" This gives the user control but adds a UI step and assumes the user understands the concept of guest session saves. The decision is a product judgment call that must be made before the tech spec is written. The default recommendation is silent auto-merge, as it is the least surprising behavior.</p>
 </li>
 <li>
-<p><strong>Guest-mode navbar</strong> — The <code>_RouterNotifier</code> currently tracks <code>guestModeProvider</code>. Should a guest-mode user see the navbar with certain tabs disabled (e.g., POSTS and NOTIFS are authentication-gated), or should guest mode always redirect to <code>/welcome</code>? v1 scope and behavior must be agreed before implementation.</p>
+<p><strong>Does the Saved tab render from denormalized snapshots or issue Firestore reads per saved record?</strong>
+   The proposal recommends denormalized snapshots (a subset of post fields stored on the save record). This avoids N+1 Firestore reads when the Saved tab loads. The tradeoff is that the saved title, author name, or course ID may become stale if the original post is edited. For v1, stale snapshots are acceptable — posts are rarely edited after publication. If staleness becomes a problem, a Cloud Function that updates save snapshots on post edits can be added later without a schema migration (the fields are already there).</p>
 </li>
 <li>
-<p><strong>NOTIFS badge count</strong> — The Figma design implies a badge on the NOTIFS tab when unread notifications exist. Should this count come from a Firestore real-time listener (accurate but adds a persistent listener per session) or from a client-side counter incremented locally (cheap but drifts)? This likely warrants its own proposal but the answer affects whether the navbar widget needs to accept a <code>badgeCount</code> parameter from day one.</p>
+<p><strong>What is the Firestore document shape for a save record — minimal reference or denormalized snapshot?</strong>
+   The proposal recommends a denormalized snapshot: <code>postId</code>, <code>savedAt</code>, <code>title</code>, <code>authorName</code>, <code>courseId</code>, <code>postType</code>, <code>tags</code>. The alternative is a minimal reference: just <code>postId</code> and <code>savedAt</code>, with each Saved tab load issuing one <code>posts/{postId}</code> read per entry. The minimal reference is simpler to write but produces N reads per tab load, which is expensive at scale and produces visible load latency per card. Denormalization is preferred. The Firestore document size for the proposed snapshot is well under 1 MB per document.</p>
 </li>
 <li>
-<p><strong>Tab-switch animation</strong> — The Figma file does not specify a transition between tabs. Should switching tabs use Flutter's default (instant swap with no animation), a fade, or a slide? An explicit decision prevents inconsistency across platform (iOS vs. Android).</p>
+<p><strong>Should un-saving a post that was merged from a guest session also delete from Hive, or only from Firestore?</strong>
+   After a successful merge, the Hive box is cleared entirely (all guest saves are moved to Firestore). Un-saving thereafter only removes the Firestore document — the Hive entry no longer exists. If the merge fails and Hive entries are retained, un-saving the same post in Hive and Firestore requires the <code>unsavePost</code> use case to call both backends, or the user must re-login to retry the merge first. The simplest safe rule: after a successful merge, Hive is the cleared; un-save targets only the active backend (Hive for guests, Firestore for authenticated users). The merge failure path retains Hive and retries on next login.</p>
 </li>
 <li>
-<p><strong>Back-gesture behavior on Android</strong> — When the user is on a non-FEED tab and presses the Android back button, should the app navigate to the FEED tab or exit the app? GoRouter's <code>StatefulShellRoute</code> does not standardize this — the behavior must be specified and implemented explicitly.</p>
+<p><strong>What does the Saved tab look like when there are zero saves?</strong>
+   The Saved tab must render a meaningful empty state rather than a blank screen. The proposed empty state shows an illustration or icon, the text "No saved posts yet", and a secondary call-to-action "Browse the feed to find posts worth saving" with a button that navigates to <code>/feed</code>. The empty state must be distinct for guest users (optionally adding "Sign in to sync saves across devices") versus authenticated users. The exact copy and illustration are design decisions deferred to the flutter-engineer and Figma audit, but the requirement that an empty state exists is a hard acceptance criterion.</p>
 </li>
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
+<p><strong>Guest user path:</strong></p>
 <ul>
-<li>Authenticated users see a persistent 4-tab bottom bar (FEED, POSTS, NOTIFS, MORE) on all shell screens after sign-in.</li>
-<li>The navbar is completely absent from: Welcome, Sign In, Sign Up, New Post (all steps), Post Details, Terms of Service, and Privacy Policy screens.</li>
-<li>Tapping each tab navigates to the correct branch root; tapping an already-active tab scrolls the branch's content to the top (standard mobile convention).</li>
-<li>Deep-linking to any route under <code>/feed</code>, <code>/posts</code>, <code>/notifications</code>, or <code>/more</code> resolves in the correct tab with the bar reflecting the correct active state.</li>
-<li>Tab navigation state is preserved independently per branch: navigating into a sub-screen on POSTS and switching to FEED, then switching back to POSTS, returns the user to the same sub-screen (not the branch root).</li>
-<li>The bottom bar's visual output matches the Figma design tokens: background <code>#f7f3ee</code>, active accent <code>#d97706</code>, inactive foreground muted, top border <code>#e2dad0</code> 1 px, Space Grotesk labels uppercase 11 px.</li>
-<li><code>flutter analyze</code> reports zero errors or warnings on all new code.</li>
-<li>Every new screen introduced under the shell has a corresponding widget test asserting the navbar is present and the correct tab is active.</li>
-<li>Auth-flow screens have a widget test asserting the navbar is absent.</li>
-<li>The implementation introduces no new pub.dev dependencies beyond the packages already in <code>pubspec.yaml</code>.</li>
+<li>A guest user can tap the Save button on a <code>PostCard</code> in the feed, and the post is immediately marked as saved (button state toggles, no loading spinner).</li>
+<li>Saved posts persist across app restarts for a guest user (Hive-backed; survives hot restart and cold start).</li>
+<li>The Saved tab (<code>/more/saved</code>) displays the guest user's saved posts as a list, rendered from the local Hive store without any Firestore reads.</li>
+<li>A guest user can unsave a post; the post is immediately removed from the Saved tab.</li>
+<li>The Save button does not require authentication — it is active for guest users.</li>
+<li>The Saved tab shows a non-empty empty state UI (illustration + descriptive text + CTA to feed) when no posts are saved.</li>
+</ul>
+<p><strong>Authenticated user path:</strong></p>
+<ul>
+<li>An authenticated user's saved posts are stored in <code>users/{uid}/savedPosts/{postId}</code> in Firestore.</li>
+<li>The Saved tab reflects the Firestore state in real time via a <code>snapshots()</code> stream — saves made on another device appear without a manual refresh.</li>
+<li>A saved post is retrievable on a second device after signing in with the same account, within one Firestore sync round-trip.</li>
+<li>Un-saving a post removes the Firestore document and the post disappears from the Saved tab within one round-trip.</li>
+</ul>
+<p><strong>Merge-on-login path:</strong></p>
+<ul>
+<li>When a guest user with locally saved posts signs in, all local saves are merged into <code>users/{uid}/savedPosts/</code> in Firestore automatically, without user intervention.</li>
+<li>Posts that were already saved on the authenticated account (from a previous session or another device) are not duplicated — <code>SetOptions(merge: true)</code> semantics apply.</li>
+<li>After a successful merge, the Hive box is cleared.</li>
+<li>If the merge fails (e.g., no network), the Hive box is retained and the merge is retried on the next login event.</li>
+<li>A guest user who has not saved any posts and then signs in sees no merge prompt and experiences no change in behavior.</li>
+</ul>
+<p><strong>Clean Architecture compliance:</strong></p>
+<ul>
+<li>All entities (<code>SavedPost</code>), repository interfaces (<code>SavedPostRepository</code>), and use cases (<code>SavePost</code>, <code>UnsavePost</code>, <code>GetSavedPosts</code>, <code>IsPostSaved</code>, <code>MergeGuestSaves</code>) are pure Dart — zero Flutter or Firebase imports in the domain layer.</li>
+<li>The presentation layer depends only on the domain interface, never on the Hive or Firestore implementations directly.</li>
+</ul>
+<p><strong>Quality gates:</strong></p>
+<ul>
+<li><code>flutter analyze</code> reports zero issues on all new code.</li>
+<li>Every new screen (<code>SavedScreen</code>) has a widget test covering: non-empty list state, empty state, and (for authenticated users) a loading state.</li>
+<li><code>SaveButton</code> has a widget test for both saved and unsaved visual states.</li>
+<li><code>MergeGuestSaves</code> use case has a unit test covering: successful merge, merge with pre-existing Firestore saves (no duplicate), and merge failure (Hive retained).</li>
+<li>No new pub.dev dependencies are introduced — <code>hive_flutter</code> and <code>cloud_firestore</code> are already declared in <code>pubspec.yaml</code>.</li>
 </ul>
 
 

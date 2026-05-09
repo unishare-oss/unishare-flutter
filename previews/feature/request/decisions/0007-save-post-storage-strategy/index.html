@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="The save-post feature stores saves in a local Hive box for guest users and in users/{uid}/savedPosts/{postId} for authenticated users, with an automatic merge when a guest signs in.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/request/stencils/tech-spec/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/request/decisions/0007-save-post-storage-strategy/">
       
       
-        <link rel="prev" href="../tech-proposal/">
+        <link rel="prev" href="../0007-file-preview-unified-route/">
       
       
-        <link rel="next" href="../../tech-proposals/">
+        <link rel="next" href="../../stencils/adr/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Tech Spec Template - Unishare Engineering Docs</title>
+        <title>0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tech-spec-template" class="md-skip">
+        <a href="#0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tech Spec Template
+              0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
             
           </span>
         </div>
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../decisions/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -262,13 +264,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../adr/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -396,26 +396,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -433,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -451,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -479,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -507,7 +512,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -542,7 +547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -577,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -612,7 +617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -647,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -675,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+      <a href="../0006-post-detail-data-loading-strategy/" class="md-nav__link">
         
   
   
@@ -703,7 +708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
+      <a href="../0007-file-preview-unified-route/" class="md-nav__link">
         
   
   
@@ -711,154 +716,6 @@
     
   
     0007: Unified /preview GoRoute with FilePreviewArgs extra
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Stencils
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Stencils
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../adr/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR Template
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tech-proposal/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tech Proposal Template
   
 
     
@@ -895,7 +752,7 @@
   <span class="md-ellipsis">
     
   
-    Tech Spec Template
+    0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
   
 
     
@@ -913,7 +770,7 @@
   <span class="md-ellipsis">
     
   
-    Tech Spec Template
+    0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
   
 
     
@@ -939,10 +796,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Problem
       
     </span>
   </a>
@@ -950,10 +807,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -964,6 +854,149 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stencils
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stencils
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposal Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Spec Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1625,10 +1658,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Problem
       
     </span>
   </a>
@@ -1636,10 +1669,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -1663,7 +1729,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/stencils/tech-spec.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0007-save-post-storage-strategy.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1671,108 +1737,69 @@
   
 
 
-<h1 id="tech-spec-template">Tech Spec Template<a class="headerlink" href="#tech-spec-template" title="Permanent link">&para;</a></h1>
-<p>Copy the markdown below into <code>tech-specs/NNNN-slug.md</code> on the <code>main</code> branch and fill it in.</p>
-<p><strong>When to write one:</strong> Any change spanning more than 2 files or with a defined test contract. Must be approved before coding begins.</p>
-<hr />
-<h2 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>---
-title: &quot;NNNN: Title&quot;
-<span class="gu">description: &quot;One-line summary of what is being built.&quot;</span>
-<span class="gu">---</span>
-
-<span class="gh"># SPEC-NNNN: Title</span>
-
-<span class="gs">**Status:**</span> DRAFT  
-<span class="gs">**Author:**</span>  
-<span class="gs">**Date:**</span> YYYY-MM-DD  
-<span class="gs">**Proposal:**</span> [<span class="nt">PROP-NNNN</span>](<span class="na">../tech-proposals/nnnn-slug.md</span>)  
-<span class="gs">**Approved by:**</span> (fill in when approved)
-
----
-
-<span class="gu">## Overview</span>
-
-One paragraph: what is being built and why.
-
-<span class="gu">## Architecture</span>
-
-<span class="sb">```mermaid</span>
-<span class="s">flowchart LR</span>
-<span class="s">    A[Presentation] --&gt; B[Domain]</span>
-<span class="s">    B --&gt; C[Data]</span>
-<span class="sb">```</span>
-
-<span class="gu">## File map</span>
-
-| Action | Path | Responsibility |
-|---|---|---|
-| Create | <span class="sb">`lib/features/&lt;name&gt;/domain/entities/foo.dart`</span> | |
-| Create | <span class="sb">`lib/features/&lt;name&gt;/data/models/foo_model.dart`</span> | |
-| Modify | <span class="sb">`lib/main.dart`</span> | |
-
-<span class="gu">## API contracts</span>
-
-<span class="sb">```dart</span>
-<span class="c1">// Public interfaces the implementation must expose</span>
-<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">FooRepository</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">doSomething</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="sb">```</span>
-
-<span class="gu">## Test plan</span>
-
-| Test file | Covers |
-|---|---|
-| <span class="sb">`test/unit/features/&lt;name&gt;/foo_test.dart`</span> | |
-| <span class="sb">`test/widget/features/&lt;name&gt;/foo_screen_test.dart`</span> | |
-
-<span class="gu">## Out of scope</span>
-
-<span class="k">-</span><span class="w"> </span>Explicitly list what this spec does NOT cover.
-
-<span class="gu">## Open questions</span>
-
-<span class="k">- [ ]</span> Must be resolved before status moves to APPROVED.
-</code></pre></div>
-<hr />
-<h2 id="status-values">Status values<a class="headerlink" href="#status-values" title="Permanent link">&para;</a></h2>
+<h1 id="0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login">0007 — Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login<a class="headerlink" href="#0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> PROPOSED<br />
+<strong>Author:</strong> architect<br />
+<strong>Date:</strong> 2026-05-07</p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>The save-post feature must serve two user contexts with incompatible storage requirements. Guest users have no server identity, so saves can only be stored locally; they must survive app restarts without requiring a Firebase account. Authenticated users expect saves to sync across devices and survive reinstalls, which requires Firestore. A single storage strategy cannot satisfy both contexts simultaneously, and the transition from guest to authenticated must not silently discard locally saved posts.</p>
+<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Status</th>
-<th>Meaning</th>
+<th>#</th>
+<th>Option</th>
+<th>Upside</th>
+<th>Downside</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>DRAFT</code></td>
-<td>Work in progress</td>
+<td>1</td>
+<td>Hive-only for all users</td>
+<td>Simplest; no Firestore writes; fully offline</td>
+<td>Authenticated users lose saves on device change or reinstall; no cross-device access</td>
 </tr>
 <tr>
-<td><code>REVIEW</code></td>
-<td>Ready for architect/QA review</td>
+<td>2</td>
+<td>Firestore-only; guests cannot save</td>
+<td>Single backend; no merge logic; full cross-device sync from day one</td>
+<td>Violates the stated guest requirement; forces sign-up before saving</td>
 </tr>
 <tr>
-<td><code>APPROVED</code></td>
-<td>Implementation can begin</td>
+<td>3</td>
+<td>Hive for guests + Firestore for authenticated, merge on login</td>
+<td>Satisfies all stated requirements; domain interface unified; no new dependencies</td>
+<td>Two repository implementations; merge logic adds complexity; provider must react to auth state transitions</td>
 </tr>
 <tr>
-<td><code>IMPLEMENTED</code></td>
-<td>Done and merged</td>
-</tr>
-<tr>
-<td><code>SUPERSEDED</code></td>
-<td>Replaced by a newer spec</td>
+<td>4</td>
+<td>Anonymous Firebase Auth for guests, link account on sign-in</td>
+<td>Single Firestore backend for all users; no custom merge logic</td>
+<td>Rewrites the guest auth model; anonymous account expiry risk; auth-link failure edge cases; higher implementation effort</td>
 </tr>
 </tbody>
 </table>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen:</strong> Option 3 — Hive for guest users, Firestore subcollection <code>users/{uid}/savedPosts/{postId}</code> for authenticated users, automatic merge on login.</p>
+<p><code>SavedPostRepository</code> is a unified domain interface implemented by two Data-layer classes: <code>SavedPostHiveRepositoryImpl</code> (active for guests) and <code>SavedPostFirestoreRepositoryImpl</code> (active for authenticated users). <code>saved_post_repository_provider</code> switches between them in response to <code>authStateProvider</code> changes. On the transition from unauthenticated to authenticated, <code>MergeGuestSaves</code> batch-writes all Hive entries into Firestore using <code>SetOptions(merge: true)</code> and then clears the Hive box. This approach is chosen because it satisfies all product requirements without introducing new dependencies or restructuring the existing guest-mode model, and the added complexity is confined entirely to the Data layer and one use case.</p>
+<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
+<p>Medium. Reverting to Hive-only (Option 1) removes the Firestore implementation, merge use case, and auth-reactive provider switch — roughly one day of work. Reverting to Firestore-only (Option 2) removes the Hive implementation and merge logic but requires a product decision to drop guest saves, which is a UX regression. Switching to anonymous auth (Option 4) requires restructuring <code>GuestMode</code> provider and <code>_RouterNotifier</code> — estimated at two to three days and affects the auth feature beyond the saved-posts scope.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Easier:</strong> Guest users save posts immediately without sign-up friction. Authenticated users get cross-device sync. The domain interface is unified, so the presentation layer never branches on storage backend.</li>
+<li><strong>Harder:</strong> Two <code>SavedPostRepository</code> implementations must be kept in sync with the interface. The merge-on-login path has failure-mode edge cases (partial merge on network drop, posts already saved on the authenticated account) that must be covered by unit tests. <code>saved_post_repository_provider</code> must be a <code>keepAlive</code> notifier that reacts correctly to auth state changes without causing read-after-dispose errors during the implementation switch.</li>
+<li><strong>Follow-up required:</strong> The Hive <code>typeId: 2</code> for <code>SavedPostHiveModelAdapter</code> must be reserved and documented alongside the existing <code>typeId: 1</code> for <code>PostDraftModelAdapter</code>. A future proposal may address refresh of denormalized post snapshots stored on save records if post-edit staleness becomes a reported issue.</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
