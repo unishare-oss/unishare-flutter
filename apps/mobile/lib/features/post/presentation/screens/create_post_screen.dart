@@ -314,7 +314,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     onPressed: _nextEnabled ? _goNext : null,
                     style: FilledButton.styleFrom(
                       backgroundColor: ac.amber,
-                      foregroundColor: Colors.white,
+                      foregroundColor: Theme.of(context).colorScheme.surface,
                       disabledBackgroundColor: ac.amber.withValues(alpha: 0.4),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
@@ -395,7 +395,7 @@ class _StepDot extends StatelessWidget {
 
     if (isCompleted) {
       bg = ac.amber;
-      child = const Icon(Icons.check, size: 13, color: Colors.white);
+      child = Icon(Icons.check, size: 13, color: Theme.of(context).colorScheme.surface);
     } else if (isActive) {
       bg = ac.amber;
       child = Text(
@@ -403,7 +403,7 @@ class _StepDot extends StatelessWidget {
         style: GoogleFonts.firaCode(
           fontSize: 11,
           fontWeight: FontWeight.w500,
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
         ),
       );
     } else {

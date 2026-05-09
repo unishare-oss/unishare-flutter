@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pdfrx/pdfrx.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 /// Horizontal carousel that renders image, PDF, and video attachments.
 ///
@@ -58,6 +59,8 @@ class AttachmentCarousel extends StatelessWidget {
   }
 
   Widget _buildSlot(BuildContext context, String url, String type) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
     switch (type) {
       case 'pdf':
         return _PdfSlot(url: url);
@@ -73,14 +76,14 @@ class AttachmentCarousel extends StatelessWidget {
             imageUrl: url,
             fit: BoxFit.cover,
             placeholder: (ctx, _) => Container(
-              color: const Color(0xFFe2dad0),
+              color: dividerColor,
               child: const Center(
                 child: CircularProgressIndicator(strokeWidth: 2),
               ),
             ),
             errorWidget: (ctx, _, e) => Container(
-              color: const Color(0xFFe2dad0),
-              child: const Icon(Icons.broken_image, color: Color(0xFF8a837e)),
+              color: dividerColor,
+              child: Icon(Icons.broken_image, color: ac.textMuted),
             ),
           ),
         );
@@ -95,6 +98,9 @@ class _PdfSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
+    final dividerColor = Theme.of(context).dividerColor;
     return GestureDetector(
       onTap: () => _openPdfViewer(context),
       child: Stack(
@@ -105,12 +111,12 @@ class _PdfSlot extends StatelessWidget {
             Uri.parse(url),
             builder: (ctx, document) => document == null
                 ? Container(
-                    color: const Color(0xFFe2dad0),
-                    child: const Center(
+                    color: dividerColor,
+                    child: Center(
                       child: Icon(
                         Icons.picture_as_pdf,
                         size: 48,
-                        color: Color(0xFF8a837e),
+                        color: ac.textMuted,
                       ),
                     ),
                   )
@@ -123,13 +129,13 @@ class _PdfSlot extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.black54,
+                color: cs.onSurface.withValues(alpha: 0.54),
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Text(
+              child: Text(
                 'PDF',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: cs.surface,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
@@ -170,15 +176,17 @@ class _VideoSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => context.push(
         '/preview',
         extra: (url: url, type: 'video', filename: _filename(url)),
       ),
       child: Container(
-        color: const Color(0xFF333333),
-        child: const Center(
-          child: Icon(Icons.play_circle_fill, color: Colors.white, size: 56),
+        color: ac.surfaceDark,
+        child: Center(
+          child: Icon(Icons.play_circle_fill, color: cs.surface, size: 56),
         ),
       ),
     );
