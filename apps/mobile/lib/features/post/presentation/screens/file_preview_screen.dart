@@ -99,10 +99,7 @@ class _ImageViewerState extends State<_ImageViewer> {
       appBar: AppBar(
         backgroundColor: ac.surfaceDark,
         iconTheme: IconThemeData(color: cs.surface),
-        title: Text(
-          widget.filename,
-          style: TextStyle(color: cs.surface),
-        ),
+        title: Text(widget.filename, style: TextStyle(color: cs.surface)),
       ),
       body: Column(
         children: [
@@ -131,10 +128,7 @@ class _ImageViewerState extends State<_ImageViewer> {
             padding: const EdgeInsets.only(bottom: 16),
             child: Text(
               'Pinch to zoom',
-              style: TextStyle(
-                color: ac.textMuted,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: ac.textMuted, fontSize: 12),
             ),
           ),
         ],
@@ -397,10 +391,7 @@ class _VideoViewerState extends State<_VideoViewer> {
       appBar: AppBar(
         backgroundColor: ac.surfaceDark,
         iconTheme: IconThemeData(color: cs.surface),
-        title: Text(
-          widget.filename,
-          style: TextStyle(color: cs.surface),
-        ),
+        title: Text(widget.filename, style: TextStyle(color: cs.surface)),
       ),
       body: _buildBody(context),
     );
@@ -457,7 +448,11 @@ class _VideoViewerState extends State<_VideoViewer> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.wifi_off, color: cs.surface.withValues(alpha: 0.54), size: 48),
+            Icon(
+              Icons.wifi_off,
+              color: cs.surface.withValues(alpha: 0.54),
+              size: 48,
+            ),
             const SizedBox(height: 12),
             Text(
               'Not available offline',

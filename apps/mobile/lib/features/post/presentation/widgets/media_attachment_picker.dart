@@ -129,7 +129,9 @@ class _FileChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: tooLarge ? Theme.of(context).colorScheme.errorContainer : ac.muted,
+        color: tooLarge
+            ? Theme.of(context).colorScheme.errorContainer
+            : ac.muted,
         border: Border.all(
           color: tooLarge ? errorColor : Theme.of(context).dividerColor,
         ),

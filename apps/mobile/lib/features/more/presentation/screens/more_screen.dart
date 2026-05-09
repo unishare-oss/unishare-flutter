@@ -60,8 +60,14 @@ class _MoreScreenState extends ConsumerState<MoreScreen>
           ),
           const Divider(),
           ListTile(
-            leading: Icon(Icons.logout, color: Theme.of(context).colorScheme.error),
-            title: Text('Sign out', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+            leading: Icon(
+              Icons.logout,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            title: Text(
+              'Sign out',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
             onTap: _signOut,
           ),
         ],

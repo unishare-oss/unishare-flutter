@@ -11,11 +11,12 @@ import 'package:unishare_mobile/shared/theme/app_colors.dart';
 // triggering GoogleFonts network/asset lookups (which fail in test hosts).
 ThemeData _testTheme() => ThemeData(
   useMaterial3: true,
-  colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFD97706)).copyWith(
-    error: const Color(0xFFDC2626),
-    surface: const Color(0xFFF7F3EE),
-    onSurface: const Color(0xFF1C1917),
-  ),
+  colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFD97706))
+      .copyWith(
+        error: const Color(0xFFDC2626),
+        surface: const Color(0xFFF7F3EE),
+        onSurface: const Color(0xFF1C1917),
+      ),
   scaffoldBackgroundColor: const Color(0xFFF7F3EE),
   dividerColor: const Color(0xFFE2DAD0),
   extensions: const [

@@ -395,7 +395,11 @@ class _StepDot extends StatelessWidget {
 
     if (isCompleted) {
       bg = ac.amber;
-      child = Icon(Icons.check, size: 13, color: Theme.of(context).colorScheme.surface);
+      child = Icon(
+        Icons.check,
+        size: 13,
+        color: Theme.of(context).colorScheme.surface,
+      );
     } else if (isActive) {
       bg = ac.amber;
       child = Text(

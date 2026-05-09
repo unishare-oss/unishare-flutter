@@ -133,7 +133,11 @@ class _TypeCard extends StatelessWidget {
                   color: ac.amber,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.check, size: 13, color: Theme.of(context).colorScheme.onPrimary),
+                child: Icon(
+                  Icons.check,
+                  size: 13,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
           ],
         ),
