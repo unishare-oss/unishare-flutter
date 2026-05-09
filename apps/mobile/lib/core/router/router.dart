@@ -59,7 +59,16 @@ class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(this._ref) {
     _ref.listen<AsyncValue<Object?>>(
       authStateProvider,
-      (prev, next) => notifyListeners(),
+      (prev, next) {
+        // When the user transitions from unauthenticated → authenticated while
+        // in guest mode, clear the guest flag so the auth shell is shown.
+        final wasAuthenticated = prev?.asData?.value != null;
+        final isNowAuthenticated = next.asData?.value != null;
+        if (!wasAuthenticated && isNowAuthenticated) {
+          _ref.read(guestModeProvider.notifier).exit();
+        }
+        notifyListeners();
+      },
     );
     _ref.listen<bool>(guestModeProvider, (prev, next) => notifyListeners());
   }
