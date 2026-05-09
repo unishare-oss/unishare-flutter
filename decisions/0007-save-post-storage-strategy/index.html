@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Replace scattered inline preview logic with a unified FilePreviewScreen that delivers pinch-to-zoom images, full PDF scrolling, and video playback with controls.">
+        <meta name="description" content="The save-post feature stores saves in a local Hive box for guest users and in users/{uid}/savedPosts/{postId} for authenticated users, with an automatic merge when a guest signs in.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0007-file-preview-screen/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0007-save-post-storage-strategy/">
       
       
-        <link rel="prev" href="../0006-post-detail-page/">
+        <link rel="prev" href="../0007-file-preview-unified-route/">
       
       
-        <link rel="next" href="../0007-save-post/">
+        <link rel="next" href="../../stencils/adr/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0007: File Preview Screen - Unishare Engineering Docs</title>
+        <title>0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0007-file-preview-screen" class="md-skip">
+        <a href="#0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0007: File Preview Screen
+              0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
             
           </span>
         </div>
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../decisions/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -282,13 +284,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../tech-proposals/" class="md-tabs__link">
           
   
   
@@ -396,26 +396,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -433,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -451,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -479,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -507,7 +512,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -542,7 +547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -577,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -612,7 +617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -647,7 +652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -675,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+      <a href="../0006-post-detail-data-loading-strategy/" class="md-nav__link">
         
   
   
@@ -703,7 +708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
+      <a href="../0007-file-preview-unified-route/" class="md-nav__link">
         
   
   
@@ -728,10 +733,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -747,6 +779,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -906,31 +1013,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -948,7 +1050,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -966,7 +1068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../tech-proposals/" class="md-nav__link">
         
   
   
@@ -994,7 +1096,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-post-feed/" class="md-nav__link">
+      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
         
   
   
@@ -1022,7 +1124,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1050,7 +1152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
+      <a href="../../tech-proposals/0005-feed-filtering-tags/" class="md-nav__link">
         
   
   
@@ -1078,7 +1180,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-proposals/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1106,7 +1208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-post-detail-page/" class="md-nav__link">
+      <a href="../../tech-proposals/0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1131,37 +1233,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0007: File Preview Screen
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0007-file-preview-screen/" class="md-nav__link">
         
   
   
@@ -1177,120 +1252,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Proposed Solution
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-patch-in-place-fix-_onview-without-extracting-a-screen" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Patch in place: fix _onView without extracting a screen
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-unified-filepreviewscreen-the-proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Unified FilePreviewScreen (the proposed solution)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-per-type-screens-imagepreviewscreen-pdfpreviewscreen-videopreviewscreen" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — Per-type screens: ImagePreviewScreen, PdfPreviewScreen, VideoPreviewScreen
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1303,7 +1264,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-save-post/" class="md-nav__link">
+      <a href="../../tech-proposals/0007-save-post/" class="md-nav__link">
         
   
   
@@ -1680,10 +1641,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Proposed Solution
+        Options Considered
       
     </span>
   </a>
@@ -1691,60 +1652,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
+  <a href="#decision" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-patch-in-place-fix-_onview-without-extracting-a-screen" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Patch in place: fix _onView without extracting a screen
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-unified-filepreviewscreen-the-proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Unified FilePreviewScreen (the proposed solution)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-per-type-screens-imagepreviewscreen-pdfpreviewscreen-videopreviewscreen" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — Per-type screens: ImagePreviewScreen, PdfPreviewScreen, VideoPreviewScreen
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
+        Decision
       
     </span>
   </a>
@@ -1752,10 +1663,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
+  <a href="#reversal-cost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Acceptance Criteria
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -1779,7 +1701,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0007-file-preview-screen.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0007-save-post-storage-strategy.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1787,69 +1709,59 @@
   
 
 
-<h1 id="prop-0007-file-preview-screen">PROP-0007: File Preview Screen<a class="headerlink" href="#prop-0007-file-preview-screen" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> ACCEPTED<br />
-<strong>Author:</strong> Architect<br />
-<strong>Date:</strong> 2026-05-07<br />
-<strong>Spec:</strong> (pending approval)<br />
-<strong>Approved by:</strong> Pyae Sone Shin Thant (2026-05-07)</p>
-<hr />
+<h1 id="0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login">0007 — Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login<a class="headerlink" href="#0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> PROPOSED<br />
+<strong>Author:</strong> architect<br />
+<strong>Date:</strong> 2026-05-07</p>
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>Every authenticated student who opens the Post Detail screen to view an academic attachment hits one of three broken experiences today:</p>
+<p>The save-post feature must serve two user contexts with incompatible storage requirements. Guest users have no server identity, so saves can only be stored locally; they must survive app restarts without requiring a Firebase account. Authenticated users expect saves to sync across devices and survive reinstalls, which requires Firestore. A single storage strategy cannot satisfy both contexts simultaneously, and the transition from guest to authenticated must not silently discard locally saved posts.</p>
+<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Option</th>
+<th>Upside</th>
+<th>Downside</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Hive-only for all users</td>
+<td>Simplest; no Firestore writes; fully offline</td>
+<td>Authenticated users lose saves on device change or reinstall; no cross-device access</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Firestore-only; guests cannot save</td>
+<td>Single backend; no merge logic; full cross-device sync from day one</td>
+<td>Violates the stated guest requirement; forces sign-up before saving</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Hive for guests + Firestore for authenticated, merge on login</td>
+<td>Satisfies all stated requirements; domain interface unified; no new dependencies</td>
+<td>Two repository implementations; merge logic adds complexity; provider must react to auth state transitions</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Anonymous Firebase Auth for guests, link account on sign-in</td>
+<td>Single Firestore backend for all users; no custom merge logic</td>
+<td>Rewrites the guest auth model; anonymous account expiry risk; auth-link failure edge cases; higher implementation effort</td>
+</tr>
+</tbody>
+</table>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen:</strong> Option 3 — Hive for guest users, Firestore subcollection <code>users/{uid}/savedPosts/{postId}</code> for authenticated users, automatic merge on login.</p>
+<p><code>SavedPostRepository</code> is a unified domain interface implemented by two Data-layer classes: <code>SavedPostHiveRepositoryImpl</code> (active for guests) and <code>SavedPostFirestoreRepositoryImpl</code> (active for authenticated users). <code>saved_post_repository_provider</code> switches between them in response to <code>authStateProvider</code> changes. On the transition from unauthenticated to authenticated, <code>MergeGuestSaves</code> batch-writes all Hive entries into Firestore using <code>SetOptions(merge: true)</code> and then clears the Hive box. This approach is chosen because it satisfies all product requirements without introducing new dependencies or restructuring the existing guest-mode model, and the added complexity is confined entirely to the Data layer and one use case.</p>
+<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
+<p>Medium. Reverting to Hive-only (Option 1) removes the Firestore implementation, merge use case, and auth-reactive provider switch — roughly one day of work. Reverting to Firestore-only (Option 2) removes the Hive implementation and merge logic but requires a product decision to drop guest saves, which is a UX regression. Switching to anonymous auth (Option 4) requires restructuring <code>GuestMode</code> provider and <code>_RouterNotifier</code> — estimated at two to three days and affects the auth feature beyond the saved-posts scope.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Images</strong> open in a plain <code>CachedNetworkImage</code> fullscreen scaffold with no gesture support. There is no pinch-to-zoom and no pan, making it impossible to read text in lecture slides or diagrams uploaded as images.</li>
-<li><strong>PDFs</strong> open via <code>PdfViewer.uri</code> from <code>pdfrx</code>, which renders but has never been tested. The viewer is assembled inline as an anonymous <code>MaterialPageRoute</code> builder — there is no shared logic, no error state, and no loading indicator beyond whatever <code>pdfrx</code> provides internally.</li>
-<li><strong>Videos</strong> show a <code>SnackBar</code> that reads "Video playback coming soon". Students who upload video recordings of lectures have no path to viewing them at all.</li>
-</ul>
-<p>The root technical cause is that preview routing is split across three separate <code>Navigator.push</code> blocks inside <code>_AttachmentRow._onView</code> in <code>attachment_list.dart</code>, plus a fourth duplicated <code>_openPdfViewer</code> method in <code>attachment_carousel.dart</code>. There is no shared abstraction. Fixing any behaviour requires touching multiple call sites, and the inconsistency will compound as more attachment types are added.</p>
-<p>The user impact is direct: the primary value proposition of Unishare is accessing peer-uploaded academic content. When that content cannot be viewed, the app fails its core job.</p>
-<hr />
-<h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>Introduce a single <code>FilePreviewScreen</code> widget under <code>features/post/presentation/screens/</code> that accepts a URL, a media type string (<code>"image"</code>, <code>"pdf"</code>, <code>"video"</code>), and an optional display filename. The screen is registered as a GoRouter route and receives its arguments via <code>extra</code>. All existing call sites (<code>_AttachmentRow._onView</code> and <code>_PdfSlot._openPdfViewer</code>) are replaced with a single <code>context.push('/preview', extra: previewArgs)</code> call.</p>
-<p>Inside <code>FilePreviewScreen</code>, a type-switch selects the appropriate viewer sub-widget:</p>
-<ul>
-<li><strong>Image viewer</strong> — <code>InteractiveViewer</code> wrapping <code>CachedNetworkImage</code>. <code>InteractiveViewer</code> is part of the Flutter SDK (no new dependency) and provides pinch-to-zoom and pan out of the box. A double-tap gesture resets zoom.</li>
-<li><strong>PDF viewer</strong> — <code>PdfViewer.uri</code> from <code>pdfrx</code> (already in <code>pubspec.yaml</code> at 2.3.0). The screen adds an explicit loading indicator and a retry-on-error state that the current inline usage omits.</li>
-<li><strong>Video viewer</strong> — <code>Chewie</code> widget backed by <code>video_player</code>. <code>video_player</code> is the Flutter-team-maintained package (free, open-source). <code>chewie</code> (free, open-source) adds a polished control layer: play/pause button, seek bar, mute toggle, and fullscreen toggle. Both packages must be added to <code>pubspec.yaml</code> — this must be flagged for team sign-off per the no-new-dependency rule (see Open Questions).</li>
-</ul>
-<p><code>AttachmentList</code> and <code>AttachmentCarousel</code> become thin callers: they each emit one <code>context.push</code> when the view action is triggered. No preview rendering logic remains in either widget.</p>
-<hr />
-<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-patch-in-place-fix-_onview-without-extracting-a-screen">A — Patch in place: fix <code>_onView</code> without extracting a screen<a class="headerlink" href="#a-patch-in-place-fix-_onview-without-extracting-a-screen" title="Permanent link">&para;</a></h3>
-<p>Each gap is fixed where it sits: add <code>InteractiveViewer</code> to the image block, add loading/error states to the PDF block, wire up <code>video_player</code> + <code>chewie</code> inside the video <code>else</code> branch. The two duplicated call sites (<code>attachment_list.dart</code> and <code>attachment_carousel.dart</code>) are patched independently.</p>
-<p><strong>Rejected:</strong> This is the lowest-friction path but leaves the structural problem intact. Two call sites means every future change (accessibility labels, analytics events, deep-link support) must be applied twice. The inline anonymous builders cannot be widget-tested without a full <code>PostDetailScreen</code> render tree. As more attachment types are added (e.g., audio, code files), the <code>if/else</code> chain grows without bound, and there is no natural boundary at which to stop. The short-term savings are real; the long-term cost is higher.</p>
-<h3 id="b-unified-filepreviewscreen-the-proposed-solution">B — Unified <code>FilePreviewScreen</code> (the proposed solution)<a class="headerlink" href="#b-unified-filepreviewscreen-the-proposed-solution" title="Permanent link">&para;</a></h3>
-<p>A named GoRouter route that centralises all preview logic. One widget to test, one call site to change, one place to add analytics or accessibility improvements.</p>
-<p>This is the recommended option — see Proposed Solution above.</p>
-<h3 id="c-per-type-screens-imagepreviewscreen-pdfpreviewscreen-videopreviewscreen">C — Per-type screens: <code>ImagePreviewScreen</code>, <code>PdfPreviewScreen</code>, <code>VideoPreviewScreen</code><a class="headerlink" href="#c-per-type-screens-imagepreviewscreen-pdfpreviewscreen-videopreviewscreen" title="Permanent link">&para;</a></h3>
-<p>Three separate screens, each registered as a GoRouter route. Callers choose the route based on type.</p>
-<p><strong>Rejected:</strong> This avoids a type-switch inside one screen by moving it into every caller. Each call site still branches on type to decide which route to push. There is no meaningful encapsulation gain over Option A. Three screens also triple the test surface for boilerplate concerns (AppBar title, back navigation, error states) that are identical across types. The only scenario where separate screens would be justified is if the routing arguments, lifecycle hooks, or state management differed substantially per type — they do not here.</p>
-<hr />
-<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p><strong>Video offline support.</strong> ✅ <strong>RESOLVED — in scope.</strong> Pre-download via <code>dio</code> to <code>getTemporaryDirectory()</code> (OS-managed cache, same as <code>CachedNetworkImage</code>). Files are invisible to the user, evicted automatically when storage is low. Requires adding <code>path_provider</code> dependency. First view downloads and caches; subsequent views play from local file URI offline.</p>
-</li>
-<li>
-<p><strong>Multi-image swipe navigation.</strong> ✅ <strong>RESOLVED — deferred.</strong> Single-image fullscreen for this release. Swipe navigation requires <code>PageView</code> + passing the full image list and starting index, making <code>FilePreviewScreen</code> stateful. Will be addressed in a follow-up.</p>
-</li>
-<li>
-<p><strong>New dependency approval.</strong> ✅ <strong>RESOLVED — approved.</strong> <code>video_player</code>, <code>chewie</code>, and <code>path_provider</code> approved by Pyae Sone Shin Thant (2026-05-07).</p>
-</li>
-<li>
-<p><strong>Unsupported types.</strong> ✅ <strong>RESOLVED — placeholder.</strong> Show "Preview not available" message. No <code>url_launcher</code> fallback.</p>
-</li>
-</ol>
-<hr />
-<h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Tapping the view action on an image attachment opens <code>FilePreviewScreen</code> with pinch-to-zoom and pan gesture support. Double-tap resets zoom to fit.</li>
-<li>Tapping the view action on a PDF attachment opens <code>FilePreviewScreen</code> showing the full document via <code>pdfrx</code>. A loading indicator is visible while the PDF fetches. An error state with a retry button is shown if loading fails.</li>
-<li>Tapping the view action on a video attachment opens <code>FilePreviewScreen</code> with a <code>chewie</code> player: play/pause, seek bar, mute toggle, and fullscreen toggle are all functional.</li>
-<li>All three preview types are reached via a single GoRouter route (<code>/preview</code>). No inline <code>MaterialPageRoute</code> builders remain in <code>attachment_list.dart</code> or <code>attachment_carousel.dart</code>.</li>
-<li><code>FilePreviewScreen</code> has a widget test for each media type branch (image, pdf, video, unknown/fallback).</li>
-<li>The screen is mobile-only (iOS + Android); web is explicitly out of scope.</li>
-<li>No new dependencies are added without team sign-off recorded in the decision log.</li>
+<li><strong>Easier:</strong> Guest users save posts immediately without sign-up friction. Authenticated users get cross-device sync. The domain interface is unified, so the presentation layer never branches on storage backend.</li>
+<li><strong>Harder:</strong> Two <code>SavedPostRepository</code> implementations must be kept in sync with the interface. The merge-on-login path has failure-mode edge cases (partial merge on network drop, posts already saved on the authenticated account) that must be covered by unit tests. <code>saved_post_repository_provider</code> must be a <code>keepAlive</code> notifier that reacts correctly to auth state changes without causing read-after-dispose errors during the implementation switch.</li>
+<li><strong>Follow-up required:</strong> The Hive <code>typeId: 2</code> for <code>SavedPostHiveModelAdapter</code> must be reserved and documented alongside the existing <code>typeId: 1</code> for <code>PostDraftModelAdapter</code>. A future proposal may address refresh of denormalized post snapshots stored on save records if post-edit staleness becomes a reported issue.</li>
 </ul>
 
 

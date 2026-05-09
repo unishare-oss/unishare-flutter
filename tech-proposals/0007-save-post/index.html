@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Proposal for a dedicated post-detail screen that renders full post content, attachments, and social interactions, and serves as the deep-link target for push notifications and shared URLs.">
+        <meta name="description" content="Persistent bookmarking of feed posts for later reference, with Hive-backed local storage for guest users and Firestore sync for authenticated users, merged on login.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0006-post-detail-page/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0007-save-post/">
       
       
-        <link rel="prev" href="../0005-main-navbar/">
+        <link rel="prev" href="../0007-file-preview-screen/">
       
       
-        <link rel="next" href="../0007-file-preview-screen/">
+        <link rel="next" href="../../tech-specs/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0006: Post Detail Page - Unishare Engineering Docs</title>
+        <title>0007: Save Post - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0006-post-detail-page" class="md-skip">
+        <a href="#prop-0007-save-post" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0006: Post Detail Page
+              0007: Save Post
             
           </span>
         </div>
@@ -1103,6 +1103,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-file-preview-screen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1122,7 +1178,7 @@
   <span class="md-ellipsis">
     
   
-    0006: Post Detail Page
+    0007: Save Post
   
 
     
@@ -1140,7 +1196,7 @@
   <span class="md-ellipsis">
     
   
-    0006: Post Detail Page
+    0007: Save Post
   
 
     
@@ -1189,10 +1245,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
+  <a href="#summary-of-the-choice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GoRouter route
+        Summary of the choice
       
     </span>
   </a>
@@ -1200,10 +1256,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clean Architecture layers
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domain-layer-pure-dart-zero-flutter-or-firebase-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain layer (pure Dart — zero Flutter or Firebase imports)
       
     </span>
   </a>
@@ -1211,10 +1279,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
+  <a href="#data-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data loading strategy (hybrid)
+        Data layer
       
     </span>
   </a>
@@ -1222,10 +1290,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
+  <a href="#presentation-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Comments subcollection
+        Presentation layer
       
     </span>
   </a>
@@ -1233,10 +1301,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
+  <a href="#firestore-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Like interaction
+        Firestore schema
       
     </span>
   </a>
@@ -1244,13 +1312,40 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
+  <a href="#merge-on-login-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Figma compliance
+        Merge-on-login flow
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-box-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hive box registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#router-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Router integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1272,10 +1367,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+  <a href="#a-hive-only-local-saves-no-firestore-sync" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Pass Post via GoRouter extra, no Firestore fetch
+        A — Hive-only local saves (no Firestore sync)
       
     </span>
   </a>
@@ -1283,10 +1378,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+  <a href="#b-firestore-subcollection-only-usersuidsavedpostspostid" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Always fetch post fresh from Firestore by ID
+        B — Firestore subcollection only (users/{uid}/savedPosts/{postId})
       
     </span>
   </a>
@@ -1294,10 +1389,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+  <a href="#c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+        C — Hybrid: Hive for guests, Firestore for authenticated users, merge on login (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Firestore subcollection with Firestore offline persistence as local cache
       
     </span>
   </a>
@@ -1335,62 +1441,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0007-file-preview-screen/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0007: File Preview Screen
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0007-save-post/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0007: Save Post
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1764,10 +1814,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
+  <a href="#summary-of-the-choice" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GoRouter route
+        Summary of the choice
       
     </span>
   </a>
@@ -1775,10 +1825,22 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clean Architecture layers
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domain-layer-pure-dart-zero-flutter-or-firebase-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain layer (pure Dart — zero Flutter or Firebase imports)
       
     </span>
   </a>
@@ -1786,10 +1848,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
+  <a href="#data-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data loading strategy (hybrid)
+        Data layer
       
     </span>
   </a>
@@ -1797,10 +1859,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
+  <a href="#presentation-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Comments subcollection
+        Presentation layer
       
     </span>
   </a>
@@ -1808,10 +1870,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
+  <a href="#firestore-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Like interaction
+        Firestore schema
       
     </span>
   </a>
@@ -1819,13 +1881,40 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
+  <a href="#merge-on-login-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Figma compliance
+        Merge-on-login flow
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hive-box-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hive box registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#router-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Router integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -1847,10 +1936,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+  <a href="#a-hive-only-local-saves-no-firestore-sync" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Pass Post via GoRouter extra, no Firestore fetch
+        A — Hive-only local saves (no Firestore sync)
       
     </span>
   </a>
@@ -1858,10 +1947,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+  <a href="#b-firestore-subcollection-only-usersuidsavedpostspostid" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Always fetch post fresh from Firestore by ID
+        B — Firestore subcollection only (users/{uid}/savedPosts/{postId})
       
     </span>
   </a>
@@ -1869,10 +1958,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+  <a href="#c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+        C — Hybrid: Hive for guests, Firestore for authenticated users, merge on login (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Firestore subcollection with Firestore offline persistence as local cache
       
     </span>
   </a>
@@ -1923,7 +2023,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0006-post-detail-page.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0007-save-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1931,219 +2031,282 @@
   
 
 
-<h1 id="prop-0006-post-detail-page">PROP-0006: Post Detail Page<a class="headerlink" href="#prop-0006-post-detail-page" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> ACCEPTED
+<h1 id="prop-0007-save-post">PROP-0007: Save Post<a class="headerlink" href="#prop-0007-save-post" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> APPROVED<br />
 <strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-06<br />
+<strong>Date:</strong> 2026-05-07<br />
 <strong>Spec:</strong> (pending approval)<br />
-<strong>Approved by:</strong></p>
+<strong>Approved by:</strong> Sai Zayar Hein</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The feed screen (PROP-0003) renders a scrollable list of <code>PostCard</code> widgets, but tapping a card has no destination. The <code>PostCard</code> tap handler is a no-op. Students have no way to read a post's full body, view all attached media, see comments, or like a post — the primary interaction surface of the app is unreachable.</p>
-<p>Beyond the tap-from-feed path, the detail screen must function as a <strong>standalone deep-link target</strong>. Push notifications and shared URLs reference a post by its Firestore document ID (e.g., <code>https://unishare.app/posts/abc123</code>), and the screen must render correctly when the app is cold-started directly into that route — meaning it cannot depend on feed state being populated in memory.</p>
-<p>Two structural concerns compound the data-loading problem:</p>
+<p>Students encounter valuable academic posts — lecture notes, past papers, study summaries — while scrolling the feed, but the app provides no mechanism to mark or retrieve those posts later. The only retrieval path is scrolling the feed again from the top, which is impractical once the feed grows beyond one page and becomes impossible for content that has aged off the visible window. There is no personal study collection surface: a student preparing for finals cannot quickly access the five posts they found most useful last week.</p>
+<p>Two distinct user contexts make the storage strategy non-trivial:</p>
 <ol>
-<li>The feed's <code>postFeedProvider</code> loads posts in pages. A post the user taps may be on page 1 of the current session or may have been obtained by a completely different session (deep link). Feed data is therefore unreliable as a sole source.</li>
-<li><code>likesCount</code> on the post document is updated by a Cloud Function, not by the client. A snapshot from the feed may be stale by the time the user opens the detail screen, particularly for popular posts. The detail screen should reflect live counts.</li>
+<li>
+<p><strong>Guest users</strong> (browsing without an account) need save functionality immediately — blocking saves behind a login wall degrades the guest experience and reduces the perceived value of signing up. Guest saves must survive app restarts but have no server identity to sync against, so they can only be stored locally.</p>
+</li>
+<li>
+<p><strong>Authenticated users</strong> need their saved list to survive device changes, app reinstalls, and simultaneous access from multiple devices (e.g., phone + web). Local-only storage is insufficient. When a guest user later creates an account and signs in, their locally saved posts must not silently disappear — the transition from guest to authenticated must be handled explicitly.</p>
+</li>
 </ol>
-<p>The UI must reproduce the Figma design exactly (https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare?node-id=0-1). The Figma introduces components — comments list, like button affordance, attachment carousel — that may not exist yet in the shared design system and must be audited before implementation begins.</p>
+<p>The feature must also integrate cleanly into the existing navigation structure. PROP-0005 established <code>StatefulShellRoute</code> with a MORE tab containing <code>/more/saved</code> as a child route. The Saved screen exists as a stub (<code>SavedScreen</code> returning "Coming soon"). This proposal fills that stub with a real feature.</p>
 <hr />
 <h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>Use <strong>Option C — Hybrid: optimistic display from feed data, then stream live updates from Firestore</strong>.</p>
-<h3 id="gorouter-route">GoRouter route<a class="headerlink" href="#gorouter-route" title="Permanent link">&para;</a></h3>
-<p>Declare <code>/posts/:postId</code> as a top-level route <strong>outside</strong> the <code>StatefulShellRoute</code> shell (following the same pattern established in PROP-0005 for New Post steps and Post Details). This means the navbar is automatically absent, and the route is reachable from both the feed tap and a cold-start deep link with no conditional logic.</p>
-<div class="highlight"><pre><span></span><code>/posts/:postId   →   PostDetailScreen(postId: postId)
+<p><strong>Option C — Hybrid: Hive for all users as local cache, Firestore as sync layer for authenticated users, merge on login.</strong></p>
+<h3 id="summary-of-the-choice">Summary of the choice<a class="headerlink" href="#summary-of-the-choice" title="Permanent link">&para;</a></h3>
+<p>Option C is recommended because it satisfies all hard constraints without sacrificing any user context. Guest saves are durable across app restarts. Authenticated saves sync cross-device. The merge-on-login path preserves guest work rather than discarding it, which is the correct product behavior for a tool students rely on for study. The complexity cost of the merge is bounded and one-time; it does not recur after login.</p>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<p>The feature is scoped to a new <code>features/saved/</code> directory following the established Clean Architecture layer pattern.</p>
+<h4 id="domain-layer-pure-dart-zero-flutter-or-firebase-imports">Domain layer (pure Dart — zero Flutter or Firebase imports)<a class="headerlink" href="#domain-layer-pure-dart-zero-flutter-or-firebase-imports" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>features/saved/domain/
+  entities/
+    saved_post.dart          ← SavedPost { postId, savedAt, postSnapshot? }
+  repositories/
+    saved_post_repository.dart   ← abstract SavedPostRepository
+  usecases/
+    save_post.dart           ← validates postId non-empty, delegates to repository
+    unsave_post.dart         ← delegates to repository
+    get_saved_posts.dart     ← returns Stream&lt;List&lt;SavedPost&gt;&gt;
+    is_post_saved.dart       ← returns Stream&lt;bool&gt; for a given postId
+    merge_guest_saves.dart   ← copies local Hive saves into Firestore on login
 </code></pre></div>
-<p>The <code>PostCard</code> tap handler calls <code>context.push('/posts/${post.id}', extra: post)</code>. GoRouter's <code>extra</code> carries the already-loaded <code>Post</code> entity for the warm-start case. For the cold-start case (deep link, push notification), <code>extra</code> is <code>null</code> — the screen falls back to fetching by ID.</p>
-<h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
+<p><code>SavedPost</code> carries a <code>postId</code> and <code>savedAt</code> timestamp. It optionally carries a <code>postSnapshot</code> — a denormalized copy of the post fields used to render the Saved tab without additional Firestore reads (see Open Question 2 and Firestore schema below).</p>
+<p><code>SavedPostRepository</code> defines the interface that both the Hive implementation (guest) and the Firestore implementation (authenticated) satisfy:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">SavedPostRepository</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SavedPost</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">watchSavedPosts</span><span class="p">();</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">savePost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span><span class="w"> </span><span class="n">PostSnapshot</span><span class="w"> </span><span class="n">snapshot</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">unsavePost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">isPostSaved</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mergeFrom</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">SavedPost</span><span class="o">&gt;</span><span class="w"> </span><span class="n">guestSaves</span><span class="p">);</span><span class="w"> </span><span class="c1">// no-op on Hive impl</span>
+<span class="p">}</span>
+</code></pre></div>
+<h4 id="data-layer">Data layer<a class="headerlink" href="#data-layer" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
-<th>Layer</th>
-<th>Addition</th>
+<th>File</th>
+<th>Responsibility</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>domain/entities/Comment</code></td>
-<td>Pure Dart entity: <code>id</code>, <code>authorId</code>, <code>authorName</code>, <code>authorAvatar</code>, <code>body</code>, <code>createdAt</code></td>
+<td><code>data/models/saved_post_hive_model.dart</code></td>
+<td><code>HiveObject</code> with manual <code>TypeAdapter</code> (typeId: 2 — next available after <code>PostDraftModelAdapter</code> at typeId 1); stores <code>postId</code>, <code>savedAt</code>, and denormalized snapshot fields</td>
 </tr>
 <tr>
-<td><code>domain/repositories/PostRepository</code></td>
-<td>New method: <code>Stream&lt;Post&gt; watchPost(String postId)</code></td>
+<td><code>data/models/saved_post_dto.dart</code></td>
+<td>Freezed + <code>fromJson</code>/<code>toJson</code> for Firestore document mapping</td>
 </tr>
 <tr>
-<td><code>domain/repositories/CommentRepository</code></td>
-<td>New interface: <code>Stream&lt;List&lt;Comment&gt;&gt; watchComments(String postId)</code>, <code>Future&lt;void&gt; addComment(String postId, String body)</code></td>
+<td><code>data/datasources/saved_post_hive_datasource.dart</code></td>
+<td>Opens <code>Box&lt;SavedPostHiveModel&gt;('saved_posts')</code>; CRUD via Hive box</td>
 </tr>
 <tr>
-<td><code>domain/usecases/WatchPost</code></td>
-<td>Wraps <code>PostRepository.watchPost</code></td>
+<td><code>data/datasources/saved_post_firestore_datasource.dart</code></td>
+<td>Reads/writes <code>users/{uid}/savedPosts/{postId}</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/WatchComments</code></td>
-<td>Wraps <code>CommentRepository.watchComments</code></td>
+<td><code>data/repositories/saved_post_hive_repository_impl.dart</code></td>
+<td>Implements <code>SavedPostRepository</code> against Hive; <code>mergeFrom</code> is a no-op</td>
 </tr>
 <tr>
-<td><code>domain/usecases/AddComment</code></td>
-<td>Validates body non-empty, delegates to <code>CommentRepository</code></td>
-</tr>
-<tr>
-<td><code>domain/usecases/ToggleLike</code></td>
-<td>Writes/removes <code>posts/{postId}/likes/{userId}</code>, server-side <code>likesCount</code> is managed by Cloud Function</td>
-</tr>
-<tr>
-<td><code>data/datasources/PostFirestoreDataSource</code></td>
-<td>Add <code>watchPost(String postId)</code> — <code>snapshots()</code> stream on <code>posts/{postId}</code></td>
-</tr>
-<tr>
-<td><code>data/datasources/CommentFirestoreDataSource</code></td>
-<td>Stream on <code>posts/{postId}/comments</code> ordered by <code>createdAt</code> ascending</td>
-</tr>
-<tr>
-<td><code>data/models/CommentDto</code></td>
-<td>Freezed + <code>fromJson</code>/<code>toJson</code></td>
-</tr>
-<tr>
-<td><code>data/repositories/CommentRepositoryImpl</code></td>
-<td>Maps <code>CommentDto</code> → <code>Comment</code> entity</td>
-</tr>
-<tr>
-<td><code>presentation/providers/postDetailProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;Post&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/providers/commentsProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;List&lt;Comment&gt;&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/screens/PostDetailScreen</code></td>
-<td>Full-screen layout per Figma</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/CommentTile</code></td>
-<td>Single comment row</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/AttachmentCarousel</code></td>
-<td>Horizontal media strip using <code>CachedNetworkImage</code></td>
-</tr>
-<tr>
-<td><code>presentation/widgets/LikeButton</code></td>
-<td>Stateless button; receives <code>isLiked</code> + <code>count</code> + <code>onTap</code></td>
+<td><code>data/repositories/saved_post_firestore_repository_impl.dart</code></td>
+<td>Implements <code>SavedPostRepository</code> against Firestore; <code>mergeFrom</code> batch-writes all guest saves</td>
 </tr>
 </tbody>
 </table>
-<h3 id="data-loading-strategy-hybrid">Data loading strategy (hybrid)<a class="headerlink" href="#data-loading-strategy-hybrid" title="Permanent link">&para;</a></h3>
-<p><code>postDetailProvider</code> is a family provider keyed on <code>postId</code>. On construction:</p>
-<ol>
-<li>If GoRouter <code>extra</code> carries a <code>Post</code> object, the provider emits it immediately as the initial value (zero-latency render).</li>
-<li>Simultaneously, <code>WatchPost(postId)</code> opens a Firestore <code>snapshots()</code> stream. When the first snapshot arrives it supersedes the seed value, and subsequent snapshots update live (e.g., <code>likesCount</code> incremented by Cloud Function).</li>
-</ol>
-<p>For the cold-start / deep-link case, there is no seed from <code>extra</code>, so the provider starts in <code>AsyncValue.loading()</code> and populates once the first Firestore snapshot arrives. The screen shows a skeleton loader during this window.</p>
-<p>This design satisfies both the warm-start (instant render from feed cache) and cold-start (fetch by ID) cases without branching logic in the presentation layer — the provider handles the difference internally.</p>
-<h3 id="comments-subcollection">Comments subcollection<a class="headerlink" href="#comments-subcollection" title="Permanent link">&para;</a></h3>
-<p>Comments are stored in <code>posts/{postId}/comments/{commentId}</code> — a new subcollection not present in PROP-0003's schema. The detail screen opens a real-time stream (<code>watchComments</code>) and appends new comments as they arrive. Adding a comment writes directly to this subcollection; <code>commentsCount</code> denormalization on the post document is deferred (see Open Questions).</p>
-<h3 id="like-interaction">Like interaction<a class="headerlink" href="#like-interaction" title="Permanent link">&para;</a></h3>
-<p><code>ToggleLike</code> checks <code>posts/{postId}/likes/{currentUserId}</code> for existence. If absent, it creates the document; if present, it deletes it. <code>likesCount</code> on the post is maintained exclusively by a Cloud Function — the client never writes it directly. The <code>LikeButton</code> widget performs an optimistic local toggle on tap and reconciles with the live stream when the Cloud Function updates <code>likesCount</code>.</p>
-<h3 id="figma-compliance">Figma compliance<a class="headerlink" href="#figma-compliance" title="Permanent link">&para;</a></h3>
-<p>The implementation must reproduce the Figma layout exactly. Before the flutter-engineer begins, the architect must audit the Figma node (<code>node-id=0-1</code>) and enumerate every UI component on the Post Detail screen. Any component not already present in <code>apps/mobile/lib/shared/widgets/</code> or the design system (<code>packages/</code>) must be listed in the tech spec as a new widget to build. No Material defaults should be used for components that Figma specifies with custom tokens.</p>
+<h4 id="presentation-layer">Presentation layer<a class="headerlink" href="#presentation-layer" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>presentation/providers/saved_post_repository_provider.dart</code></td>
+<td><code>@riverpod keepAlive</code> — returns the Hive impl when guest, the Firestore impl when authenticated; switches when auth state changes</td>
+</tr>
+<tr>
+<td><code>presentation/providers/saved_posts_provider.dart</code></td>
+<td><code>@riverpod</code> — <code>StreamProvider</code> wrapping <code>GetSavedPosts</code>; exposes <code>AsyncValue&lt;List&lt;SavedPost&gt;&gt;</code></td>
+</tr>
+<tr>
+<td><code>presentation/providers/is_post_saved_provider.dart</code></td>
+<td><code>@riverpod</code> family keyed on <code>postId</code> — <code>StreamProvider&lt;bool&gt;</code> for save-button state on <code>PostCard</code></td>
+</tr>
+<tr>
+<td><code>presentation/screens/saved_screen.dart</code></td>
+<td>Replaces the "Coming soon" stub; renders saved list or empty state</td>
+</tr>
+<tr>
+<td><code>presentation/widgets/saved_post_card.dart</code></td>
+<td>Renders a saved post from the denormalized snapshot — no additional Firestore reads</td>
+</tr>
+<tr>
+<td><code>presentation/widgets/save_button.dart</code></td>
+<td>Stateless toggle button; receives <code>isSaved</code> + <code>onTap</code>; placed on <code>PostCard</code> and <code>PostDetailScreen</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="firestore-schema">Firestore schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>users/{uid}/savedPosts/{postId}
+  postId:       string   (== document ID, for query convenience)
+  savedAt:      Timestamp
+  title:        string   (denormalized from post document at save time)
+  authorName:   string   (denormalized)
+  courseId:     string   (denormalized)
+  postType:     string   (denormalized — &quot;note&quot; | &quot;assignment&quot; | ...)
+  tags:         string[] (denormalized)
+</code></pre></div>
+<p>The <code>savedAt</code> field enables ordering the Saved tab by most-recently saved. Denormalized fields enable rendering the Saved tab as a flat list without issuing one <code>get()</code> per saved post. Staleness of denormalized fields is acceptable: the post's title and author are rarely edited after publication, and if they are, the Saved tab showing an outdated title is a minor cosmetic issue rather than a functional one. A background migration to refresh stale snapshots is deferred to a future proposal.</p>
+<h4 id="merge-on-login-flow">Merge-on-login flow<a class="headerlink" href="#merge-on-login-flow" title="Permanent link">&para;</a></h4>
+<p>When <code>authStateProvider</code> transitions from unauthenticated to authenticated, <code>saved_post_repository_provider</code> switches from the Hive implementation to the Firestore implementation. Before switching, <code>MergeGuestSaves</code> reads all entries from the Hive box and calls <code>SavedPostRepository.mergeFrom(guestSaves)</code>. The Firestore implementation batch-writes the guest saves into <code>users/{uid}/savedPosts/</code>, using <code>SetOptions(merge: true)</code> so that posts already saved on another device are not overwritten. After the merge, the Hive box is cleared to prevent duplicate saves from accumulating.</p>
+<p>The merge is triggered once per login event inside <code>saved_post_repository_provider</code>'s build method, which re-runs when <code>authStateProvider</code> changes. The result of the merge is not surfaced to the user unless it fails — on failure, local Hive saves are retained and the merge is retried on the next app launch.</p>
+<h4 id="hive-box-registration">Hive box registration<a class="headerlink" href="#hive-box-registration" title="Permanent link">&para;</a></h4>
+<p>A new <code>initSavedPostBox()</code> function is added to <code>core/storage/</code> following the existing pattern in <code>post_draft_box.dart</code>. It registers <code>SavedPostHiveModelAdapter</code> (typeId: 2) and opens the <code>saved_posts</code> box. It must be called from <code>main.dart</code> alongside <code>initPostDraftBox()</code>.</p>
+<h4 id="router-integration">Router integration<a class="headerlink" href="#router-integration" title="Permanent link">&para;</a></h4>
+<p><code>/more/saved</code> already exists as a child route of the MORE branch in <code>router.dart</code>. No router changes are required. The <code>SavedScreen</code> at that path is replaced in-place.</p>
+<p>The <code>PostCard</code> widget in the feed gains a <code>SaveButton</code> that calls <code>savePost</code> / <code>unsavePost</code> via a tap. The button's state is driven by <code>isPostSavedProvider(postId)</code>, which is a <code>StreamProvider</code> reflecting the current repository (Hive or Firestore). No <code>PostCard</code> structural changes are needed beyond adding the button to the existing action row.</p>
 <hr />
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-pass-post-via-gorouter-extra-no-firestore-fetch">A — Pass Post via GoRouter <code>extra</code>, no Firestore fetch<a class="headerlink" href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" title="Permanent link">&para;</a></h3>
-<p>The <code>PostCard</code> tap passes the full <code>Post</code> entity in GoRouter <code>extra</code>. The detail screen reads this object and renders it directly — no network call on open. The existing <code>postFeedProvider</code> is the sole data source.</p>
+<h3 id="a-hive-only-local-saves-no-firestore-sync">A — Hive-only local saves (no Firestore sync)<a class="headerlink" href="#a-hive-only-local-saves-no-firestore-sync" title="Permanent link">&para;</a></h3>
+<p>All saves, for all users, are stored in a local Hive box. No Firestore collection is introduced. The feature is symmetric across guest and authenticated users.</p>
 <p><strong>Pros:</strong></p>
 <ul>
-<li>Instant render with zero additional Firestore reads.</li>
-<li>No new domain use case or repository method needed for data loading.</li>
-<li>Simplest possible implementation.</li>
+<li>Simplest implementation. No new Firestore subcollection, no merge logic, no auth-switching repository.</li>
+<li>Works for guests and authenticated users identically.</li>
+<li>Zero Firestore reads/writes for the save feature — no impact on billing or quota.</li>
+<li>No sync latency — saves are instant and always available offline.</li>
 </ul>
 <p><strong>Cons:</strong></p>
 <ul>
-<li>Breaks on cold start. Deep links and push notifications provide only a <code>postId</code> in the URL path — <code>extra</code> is <code>null</code>. The screen has no fallback, so cold-start users see an error or blank screen.</li>
-<li>Data goes stale immediately. <code>likesCount</code>, <code>commentsCount</code> (if added), and <code>body</code> edits are frozen at the moment the feed loaded. A post with 200 likes shows the cached 150 from the feed snapshot.</li>
-<li>Comments are entirely unavailable — there is no <code>comments</code> field on the <code>Post</code> entity; comments live in a subcollection that the feed never fetches.</li>
-<li>Tightly couples the detail screen's data contract to the feed's load order, making the detail screen non-standalone.</li>
+<li>Authenticated users lose their saved list on device change, app reinstall, or when using the web version. This is a significant regression relative to user expectations for a signed-in experience.</li>
+<li>The feature's value proposition for authenticated users is substantially weaker than for a cloud-synced list.</li>
+<li>Cross-device access is impossible.</li>
 </ul>
-<p><strong>Effort:</strong> XS (implementation) but produces a product that is broken for deep-link users.</p>
-<p><strong>Rejected:</strong> Cannot satisfy the deep-link requirement, which is a hard constraint. Data staleness is also unacceptable for social interaction counts.</p>
+<p><strong>Effort:</strong> XS.</p>
+<p><strong>Verdict:</strong> Acceptable as a v1 MVP for guest users but inadequate for authenticated users. It is the correct choice only if cross-device sync is explicitly out of scope and communicated to users.</p>
 <hr />
-<h3 id="b-always-fetch-post-fresh-from-firestore-by-id">B — Always fetch post fresh from Firestore by ID<a class="headerlink" href="#b-always-fetch-post-fresh-from-firestore-by-id" title="Permanent link">&para;</a></h3>
-<p>Ignore <code>extra</code> entirely. Every time the detail screen opens, <code>postDetailProvider</code> issues a one-shot <code>get()</code> call on <code>posts/{postId}</code>. Comments are fetched separately.</p>
+<h3 id="b-firestore-subcollection-only-usersuidsavedpostspostid">B — Firestore subcollection only (<code>users/{uid}/savedPosts/{postId}</code>)<a class="headerlink" href="#b-firestore-subcollection-only-usersuidsavedpostspostid" title="Permanent link">&para;</a></h3>
+<p>Saves are stored exclusively in Firestore. Guest users cannot save posts — the Save button is hidden or disabled when not authenticated, with a prompt to sign in.</p>
 <p><strong>Pros:</strong></p>
 <ul>
-<li>Uniform code path for warm-start and cold-start — no conditional branching on <code>extra</code>.</li>
-<li>Data is fresh at open time regardless of how the screen was reached.</li>
-<li>Simpler provider implementation than the hybrid stream approach.</li>
+<li>No Hive complexity for this feature. Only one storage backend to maintain.</li>
+<li>Authenticated saves are fully cross-device from day one.</li>
+<li>No merge logic on login.</li>
+<li>Simpler <code>SavedPostRepository</code> — one implementation, not two.</li>
 </ul>
 <p><strong>Cons:</strong></p>
 <ul>
-<li>Visible loading spinner on every tap from the feed, even when the post data is already in memory. On a slow connection this creates a noticeable and unnecessary delay — the user just tapped a card they could already read in the feed.</li>
-<li>A one-shot <code>get()</code> does not update after open. <code>likesCount</code> incremented by a Cloud Function while the user is reading the post is not reflected. The user must leave and re-enter to see updated counts.</li>
-<li>No real-time comments — new comments posted by others while the user reads do not appear without a manual refresh.</li>
-<li>Firestore billing: one extra document read per detail screen open, even for posts already in Firestore's local cache from the feed query.</li>
+<li>Guest users cannot save posts. This directly contradicts the stated requirement: "Guest users (not logged in): saved posts are stored locally using Hive (offline-first, no Firestore writes)."</li>
+<li>A guest who finds a useful post must either sign up immediately (friction) or lose the post (poor UX).</li>
+<li>On logout, all saves are inaccessible until the user signs back in, even on the same device.</li>
 </ul>
-<p><strong>Effort:</strong> S. Straightforward <code>FutureProvider.family</code> implementation.</p>
-<p><strong>Rejected:</strong> The unnecessary loading spinner on feed taps degrades UX for the most common path. Lack of live updates makes social interactions (likes, comments) feel unresponsive. The hybrid approach adds only marginal complexity for substantially better UX.</p>
+<p><strong>Effort:</strong> S (single backend, no merge).</p>
+<p><strong>Verdict:</strong> Does not meet the guest requirement. Acceptable only if the product decision is explicitly made to require authentication before saving.</p>
 <hr />
-<h3 id="c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended">C — Hybrid: optimistic display from feed data, then stream live updates (recommended)<a class="headerlink" href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" title="Permanent link">&para;</a></h3>
+<h3 id="c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended">C — Hybrid: Hive for guests, Firestore for authenticated users, merge on login (recommended)<a class="headerlink" href="#c-hybrid-hive-for-guests-firestore-for-authenticated-users-merge-on-login-recommended" title="Permanent link">&para;</a></h3>
 <p>Described fully in Proposed Solution above.</p>
 <p><strong>Pros:</strong></p>
 <ul>
-<li>Instant render on feed tap (seed from <code>extra</code>) with no spinner for the common path.</li>
-<li>Correct cold-start behavior (falls back to Firestore fetch when <code>extra</code> is absent).</li>
-<li>Live updates via <code>snapshots()</code> stream keep <code>likesCount</code> and post content current throughout the session.</li>
-<li>Real-time comments via subcollection stream — new comments appear without refresh.</li>
-<li>Single provider interface for both cases — presentation layer is unaware of whether data came from <code>extra</code> or Firestore.</li>
+<li>Satisfies all stated requirements: guest saves work offline, authenticated saves sync cross-device.</li>
+<li>Guest saves are not lost on login — they are merged into Firestore.</li>
+<li>The domain repository interface is unified — the presentation layer is unaware of which backend is active.</li>
+<li>No new pub.dev dependencies. <code>hive_flutter</code> and <code>cloud_firestore</code> are already in <code>pubspec.yaml</code>.</li>
 </ul>
 <p><strong>Cons:</strong></p>
 <ul>
-<li>Slightly more complex provider implementation: the provider must accept an optional seed value and merge it with an incoming stream.</li>
-<li>Opens a persistent Firestore listener per active detail screen, which consumes one Firestore connection slot. This is negligible at current scale but worth monitoring.</li>
-<li><code>extra</code> carries a Dart object, which is not serializable by GoRouter's URL-based state restoration. If the OS kills the app and restores it to the detail screen, <code>extra</code> will be null and the screen will fall back to the Firestore fetch path — this is correct behavior but must be documented and tested.</li>
+<li>Two repository implementations to maintain instead of one.</li>
+<li>Merge-on-login logic adds complexity. Edge cases must be handled: merge failure, partial merge on network drop, posts that were saved on both a guest session and an existing authenticated account.</li>
+<li>The <code>saved_post_repository_provider</code> must react to <code>authStateProvider</code> changes, which requires careful provider lifecycle management to avoid read-after-dispose errors when the provider switches implementations mid-session.</li>
+<li>Hive box for <code>saved_posts</code> adds a second registered adapter alongside <code>PostDraftModelAdapter</code>.</li>
 </ul>
-<p><strong>Effort:</strong> M. The stream-seeding pattern in Riverpod requires a <code>StreamProvider.family</code> with a custom build step or an <code>AsyncNotifier</code> that combines seed + stream.</p>
-<p><strong>Recommended.</strong> The warm-start path is the dominant user flow (tapping from feed), so eliminating its loading spinner is the highest-impact UX win. The cold-start fallback is architecturally clean and correct. Real-time updates are table stakes for a social feature.</p>
+<p><strong>Effort:</strong> M.</p>
+<p><strong>Verdict:</strong> Recommended. The added complexity is concentrated in the Data layer and merge use case, leaving the Domain interface and Presentation layer clean. The product experience is correct for all user types.</p>
+<hr />
+<h3 id="d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache">D — Firestore subcollection with Firestore offline persistence as local cache<a class="headerlink" href="#d-firestore-subcollection-with-firestore-offline-persistence-as-local-cache" title="Permanent link">&para;</a></h3>
+<p>Use Firestore's built-in offline persistence (already enabled by <code>cloud_firestore</code>) as the offline layer for all users, including guests. Guest users are assigned an anonymous Firebase Auth UID (<code>signInAnonymously</code>), enabling Firestore writes. On explicit sign-in, the anonymous account is linked to the authenticated account, preserving all data.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Single storage backend (Firestore) for all users.</li>
+<li>No custom Hive model or merge logic.</li>
+<li>Firebase anonymous auth handles the guest identity problem cleanly.</li>
+<li>Offline reads are served from Firestore's local cache automatically.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Requires introducing anonymous Firebase Auth (<code>signInAnonymously</code>) — a new auth flow not currently in the codebase. The <code>_RouterNotifier</code> and <code>GuestMode</code> provider would need rearchitecting: currently guest mode is a simple boolean, not a Firebase identity.</li>
+<li>Anonymous accounts have a 30-day inactivity expiry on Firebase. A guest who returns after a month loses their saves silently.</li>
+<li>Linking anonymous accounts to authenticated accounts is a one-way operation that can fail (e.g., if the authenticated account already has data). Error handling for link failures is non-trivial.</li>
+<li><code>signInAnonymously</code> counts toward Firebase Auth monthly active users, which may affect billing at scale.</li>
+<li>Firestore offline persistence does not guarantee writes are durable across app reinstalls — the local cache is cleared on reinstall, meaning guest saves on a reinstalled app are lost even with this approach.</li>
+</ul>
+<p><strong>Effort:</strong> L (rearchitecting the guest auth model).</p>
+<p><strong>Verdict:</strong> Architecturally elegant but introduces a significant dependency on anonymous auth that rewrites the existing guest model. The merge problem is shifted from the data layer to the auth layer, where failure modes are harder to handle. Not recommended for this scope.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>Figma audit: new components</strong> — The Figma design at <code>node-id=0-1</code> must be inspected before the tech spec is written. Which UI components on the Post Detail screen (comment input bar, attachment carousel, like button, author chip, tag list) are already in the shared design system versus net-new widgets? The tech spec cannot be written without this inventory.</p>
+<p><strong>What happens to guest saves on login — merge, discard, or user choice?</strong>
+   The recommended approach (Option C) merges automatically and silently. An alternative is to present a modal at login time: "You have N saved posts from your guest session — would you like to add them to your account?" This gives the user control but adds a UI step and assumes the user understands the concept of guest session saves. The decision is a product judgment call that must be made before the tech spec is written. The default recommendation is silent auto-merge, as it is the least surprising behavior.</p>
 </li>
 <li>
-<p><strong>Comments subcollection schema</strong> — Does the <code>comments</code> subcollection need a <code>likesCount</code> or nested reply structure (threaded comments), or is it a flat list for v1? The answer changes the Firestore schema and domain entity design.</p>
+<p><strong>Does the Saved tab render from denormalized snapshots or issue Firestore reads per saved record?</strong>
+   The proposal recommends denormalized snapshots (a subset of post fields stored on the save record). This avoids N+1 Firestore reads when the Saved tab loads. The tradeoff is that the saved title, author name, or course ID may become stale if the original post is edited. For v1, stale snapshots are acceptable — posts are rarely edited after publication. If staleness becomes a problem, a Cloud Function that updates save snapshots on post edits can be added later without a schema migration (the fields are already there).</p>
 </li>
 <li>
-<p><strong><code>commentsCount</code> denormalization</strong> — Should the <code>posts/{postId}</code> document carry a <code>commentsCount</code> field (updated by Cloud Function) for display on <code>PostCard</code> in the feed, or is the count shown only on the detail screen (where the full subcollection is streamed)? If needed on the feed card, a Cloud Function trigger on <code>comments</code> subcollection writes must be added.</p>
+<p><strong>What is the Firestore document shape for a save record — minimal reference or denormalized snapshot?</strong>
+   The proposal recommends a denormalized snapshot: <code>postId</code>, <code>savedAt</code>, <code>title</code>, <code>authorName</code>, <code>courseId</code>, <code>postType</code>, <code>tags</code>. The alternative is a minimal reference: just <code>postId</code> and <code>savedAt</code>, with each Saved tab load issuing one <code>posts/{postId}</code> read per entry. The minimal reference is simpler to write but produces N reads per tab load, which is expensive at scale and produces visible load latency per card. Denormalization is preferred. The Firestore document size for the proposed snapshot is well under 1 MB per document.</p>
 </li>
 <li>
-<p><strong>Like state for the current user</strong> — The <code>LikeButton</code> must know whether the current user has already liked the post. The <code>posts/{postId}/likes/{userId}</code> document must be checked on screen open. Does this happen inside <code>WatchPost</code> (Firestore rules permitting a sub-read from the use case), or does <code>postDetailProvider</code> issue a separate existence check and pass <code>isLiked</code> as a field alongside the <code>Post</code>? A <code>userLikeStatusProvider</code> family keyed on <code>postId</code> may be the cleanest separation.</p>
+<p><strong>Should un-saving a post that was merged from a guest session also delete from Hive, or only from Firestore?</strong>
+   After a successful merge, the Hive box is cleared entirely (all guest saves are moved to Firestore). Un-saving thereafter only removes the Firestore document — the Hive entry no longer exists. If the merge fails and Hive entries are retained, un-saving the same post in Hive and Firestore requires the <code>unsavePost</code> use case to call both backends, or the user must re-login to retry the merge first. The simplest safe rule: after a successful merge, Hive is the cleared; un-save targets only the active backend (Hive for guests, Firestore for authenticated users). The merge failure path retains Hive and retries on next login.</p>
 </li>
 <li>
-<p><strong>Deep-link URL scheme</strong> — Push notifications from FCM and shared URLs must resolve to <code>/posts/:postId</code>. Is the path <code>/posts/:postId</code> the canonical deep-link path, or does the backend/notification service use a different scheme (e.g., <code>/p/:postId</code>, <code>unishare://post/:postId</code>)? The GoRouter route must match exactly.</p>
-</li>
-<li>
-<p><strong>Comment input and auth gate</strong> — Can unauthenticated (guest-mode) users view the detail screen read-only, with the comment input and like button disabled? Or does the detail route require authentication (redirect to <code>/welcome</code> if no session)? The current <code>_RouterNotifier</code> must be extended or the detail screen must handle this locally.</p>
-</li>
-<li>
-<p><strong>Attachment rendering</strong> — <code>mediaUrls</code> on the post document is a <code>string[]</code>. Are all entries image URLs, or can they include PDF or video links? The <code>AttachmentCarousel</code> widget design depends on whether it must handle heterogeneous media types or can assume images-only for v1.</p>
+<p><strong>What does the Saved tab look like when there are zero saves?</strong>
+   The Saved tab must render a meaningful empty state rather than a blank screen. The proposed empty state shows an illustration or icon, the text "No saved posts yet", and a secondary call-to-action "Browse the feed to find posts worth saving" with a button that navigates to <code>/feed</code>. The empty state must be distinct for guest users (optionally adding "Sign in to sync saves across devices") versus authenticated users. The exact copy and illustration are design decisions deferred to the flutter-engineer and Figma audit, but the requirement that an empty state exists is a hard acceptance criterion.</p>
 </li>
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
+<p><strong>Guest user path:</strong></p>
 <ul>
-<li>Tapping a <code>PostCard</code> in the feed navigates to <code>/posts/:postId</code> and renders the full post without a loading spinner (warm-start path).</li>
-<li>Cold-starting the app via a deep link to <code>/posts/:postId</code> renders a skeleton loader, then the full post once the Firestore snapshot arrives.</li>
-<li>The detail screen's visual layout matches the Figma design exactly — pixel-level fidelity is required for all components specified in the design.</li>
-<li><code>likesCount</code> displayed on the detail screen updates in real time when the Cloud Function increments it (no manual refresh required).</li>
-<li>The like button reflects the current user's like state on open and toggles correctly; optimistic local toggle is reconciled when the stream updates.</li>
-<li>Comments load from <code>posts/{postId}/comments</code> in ascending <code>createdAt</code> order and new comments from other users appear without refresh while the screen is open.</li>
-<li>Submitting a comment writes to the <code>comments</code> subcollection and appears in the list within one Firestore round-trip.</li>
-<li>The navbar (PROP-0005 shell) is absent from the Post Detail screen — the route is declared outside <code>StatefulShellRoute</code>.</li>
-<li>Android back button and iOS swipe-back return the user to the previous screen (feed or notification inbox) correctly.</li>
-<li>All new domain entities, repository interfaces, and use cases are pure Dart — zero Flutter or Firebase imports.</li>
+<li>A guest user can tap the Save button on a <code>PostCard</code> in the feed, and the post is immediately marked as saved (button state toggles, no loading spinner).</li>
+<li>Saved posts persist across app restarts for a guest user (Hive-backed; survives hot restart and cold start).</li>
+<li>The Saved tab (<code>/more/saved</code>) displays the guest user's saved posts as a list, rendered from the local Hive store without any Firestore reads.</li>
+<li>A guest user can unsave a post; the post is immediately removed from the Saved tab.</li>
+<li>The Save button does not require authentication — it is active for guest users.</li>
+<li>The Saved tab shows a non-empty empty state UI (illustration + descriptive text + CTA to feed) when no posts are saved.</li>
+</ul>
+<p><strong>Authenticated user path:</strong></p>
+<ul>
+<li>An authenticated user's saved posts are stored in <code>users/{uid}/savedPosts/{postId}</code> in Firestore.</li>
+<li>The Saved tab reflects the Firestore state in real time via a <code>snapshots()</code> stream — saves made on another device appear without a manual refresh.</li>
+<li>A saved post is retrievable on a second device after signing in with the same account, within one Firestore sync round-trip.</li>
+<li>Un-saving a post removes the Firestore document and the post disappears from the Saved tab within one round-trip.</li>
+</ul>
+<p><strong>Merge-on-login path:</strong></p>
+<ul>
+<li>When a guest user with locally saved posts signs in, all local saves are merged into <code>users/{uid}/savedPosts/</code> in Firestore automatically, without user intervention.</li>
+<li>Posts that were already saved on the authenticated account (from a previous session or another device) are not duplicated — <code>SetOptions(merge: true)</code> semantics apply.</li>
+<li>After a successful merge, the Hive box is cleared.</li>
+<li>If the merge fails (e.g., no network), the Hive box is retained and the merge is retried on the next login event.</li>
+<li>A guest user who has not saved any posts and then signs in sees no merge prompt and experiences no change in behavior.</li>
+</ul>
+<p><strong>Clean Architecture compliance:</strong></p>
+<ul>
+<li>All entities (<code>SavedPost</code>), repository interfaces (<code>SavedPostRepository</code>), and use cases (<code>SavePost</code>, <code>UnsavePost</code>, <code>GetSavedPosts</code>, <code>IsPostSaved</code>, <code>MergeGuestSaves</code>) are pure Dart — zero Flutter or Firebase imports in the domain layer.</li>
+<li>The presentation layer depends only on the domain interface, never on the Hive or Firestore implementations directly.</li>
+</ul>
+<p><strong>Quality gates:</strong></p>
+<ul>
 <li><code>flutter analyze</code> reports zero issues on all new code.</li>
-<li>Every new screen and widget has a corresponding widget test; the cold-start path has a unit test for <code>postDetailProvider</code> behavior when <code>extra</code> is null.</li>
+<li>Every new screen (<code>SavedScreen</code>) has a widget test covering: non-empty list state, empty state, and (for authenticated users) a loading state.</li>
+<li><code>SaveButton</code> has a widget test for both saved and unsaved visual states.</li>
+<li><code>MergeGuestSaves</code> use case has a unit test covering: successful merge, merge with pre-existing Firestore saves (no duplicate), and merge failure (Hive retained).</li>
+<li>No new pub.dev dependencies are introduced — <code>hive_flutter</code> and <code>cloud_firestore</code> are already declared in <code>pubspec.yaml</code>.</li>
 </ul>
 
 
