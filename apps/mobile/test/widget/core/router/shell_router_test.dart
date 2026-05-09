@@ -19,7 +19,10 @@ const _fakeUser = AppUser(id: 'u1', name: 'Test', email: 'test@test.com');
 /// from the [ProviderScope]'s container. Uses the [Consumer] element as the
 /// context, which is a direct child of [ProviderScope].
 GoRouter _router(WidgetTester tester) {
-  final consumerEl = tester.element(find.byType(Consumer));
+  // The router's StatefulShellRoute also uses a Consumer, so there are multiple
+  // in the tree. The outermost one (first in traversal) is always inside the
+  // ProviderScope from _buildApp, which is what we need.
+  final consumerEl = tester.element(find.byType(Consumer).first);
   final container = ProviderScope.containerOf(consumerEl);
   return container.read(routerProvider);
 }

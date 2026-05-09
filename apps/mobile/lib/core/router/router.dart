@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,6 +19,7 @@ import 'package:unishare_mobile/features/post/presentation/screens/post_detail_s
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
 import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen.dart';
+import 'package:unishare_mobile/core/router/guest_shell_scaffold.dart';
 import 'package:unishare_mobile/core/router/shell_scaffold.dart';
 
 part 'router.g.dart';
@@ -25,6 +27,10 @@ part 'router.g.dart';
 // ---------------------------------------------------------------------------
 // NavTab — branch index order must match StatefulShellRoute.branches order
 // ---------------------------------------------------------------------------
+
+/// Branch index of the guest /saved route in the StatefulShellRoute.
+/// Declared here to avoid a circular import between GuestNavBar and GuestShellScaffold.
+const kSavedBranchIndex = 4;
 
 // Simple in-memory flag — not a Riverpod provider to keep it out of codegen.
 bool academicProfileSessionDismissed = false;
@@ -55,10 +61,16 @@ enum NavTab {
 
 class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(this._ref) {
-    _ref.listen<AsyncValue<Object?>>(
-      authStateProvider,
-      (prev, next) => notifyListeners(),
-    );
+    _ref.listen<AsyncValue<Object?>>(authStateProvider, (prev, next) {
+      // When the user transitions from unauthenticated → authenticated while
+      // in guest mode, clear the guest flag so the auth shell is shown.
+      final wasAuthenticated = prev?.asData?.value != null;
+      final isNowAuthenticated = next.asData?.value != null;
+      if (!wasAuthenticated && isNowAuthenticated) {
+        _ref.read(guestModeProvider.notifier).exit();
+      }
+      notifyListeners();
+    });
     _ref.listen<bool>(guestModeProvider, (prev, next) => notifyListeners());
   }
 
@@ -96,7 +108,12 @@ class _RouterNotifier extends ChangeNotifier {
       return '/feed';
     }
 
-    // 4. Unknown path → /feed
+    // 4. Authenticated user on guest-only /saved → redirect to /more/saved
+    if (isAuthenticated && currentPath == '/saved') {
+      return '/more/saved';
+    }
+
+    // 5. Unknown path → /feed
     // authRoutes covers /welcome as exact-match only (no child routes exist).
     // knownPrefixes covers shell branches and their nested children.
     const knownPrefixes = {
@@ -104,6 +121,7 @@ class _RouterNotifier extends ChangeNotifier {
       '/posts',
       '/notifications',
       '/more',
+      '/saved',
       '/preview',
       '/upload-progress',
     };
@@ -166,8 +184,14 @@ GoRouter router(Ref ref) {
         },
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            ShellScaffold(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) => Consumer(
+          builder: (context, ref, _) {
+            final isGuest = ref.watch(guestModeProvider);
+            return isGuest
+                ? GuestShellScaffold(navigationShell: navigationShell)
+                : ShellScaffold(navigationShell: navigationShell);
+          },
+        ),
         branches: [
           // Branch 0 — FEED
           StatefulShellBranch(
@@ -229,6 +253,15 @@ GoRouter router(Ref ref) {
                     builder: (context, state) => const RequestsScreen(),
                   ),
                 ],
+              ),
+            ],
+          ),
+          // Branch 4 — SAVED (top-level; used by the guest shell nav bar)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/saved',
+                builder: (context, state) => const SavedScreen(),
               ),
             ],
           ),

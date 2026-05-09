@@ -16,6 +16,7 @@ class UnishareLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -23,7 +24,7 @@ class UnishareLogo extends StatelessWidget {
           width: iconSize,
           height: iconSize,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: cs.surface,
             borderRadius: BorderRadius.circular(6),
           ),
           clipBehavior: Clip.antiAlias,
@@ -38,8 +39,8 @@ class UnishareLogo extends StatelessWidget {
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: darkText
-                  ? const Color(0xFF1C1917)
-                  : const Color(0xFFF7F3EE),
+                  ? cs.onSurface
+                  : Theme.of(context).scaffoldBackgroundColor,
             ),
           ),
         ),

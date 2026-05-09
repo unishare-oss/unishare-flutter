@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/saved/domain/entities/saved_post_snapshot.dart';
+import 'package:unishare_mobile/features/saved/domain/usecases/save_post.dart';
+import 'package:unishare_mobile/features/saved/domain/usecases/unsave_post.dart';
+import 'package:unishare_mobile/features/saved/presentation/providers/is_post_saved_provider.dart';
+import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
+import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends ConsumerWidget {
   const PostCard({super.key, required this.post});
 
   final Post post;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSavedAsync = ref.watch(isPostSavedProvider(post.id));
+    final isSaved = isSavedAsync.asData?.value ?? false;
     final appColors = Theme.of(context).extension<AppColors>()!;
 
     return GestureDetector(
@@ -23,7 +32,7 @@ class PostCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildTopRow(context, appColors),
+            _buildTopRow(context, appColors, isSaved, ref),
             const SizedBox(height: 6),
             _buildTitle(context),
             if (post.tags.isNotEmpty) ...[
@@ -40,7 +49,44 @@ class PostCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTopRow(BuildContext context, AppColors appColors) {
+  Future<void> _toggleSave(
+    BuildContext context,
+    WidgetRef ref,
+    bool currentlySaved,
+  ) async {
+    final repository = ref.read(savedPostRepositoryProvider);
+    try {
+      if (currentlySaved) {
+        await UnsavePost(repository).call(post.id);
+      } else {
+        await SavePost(repository).call(
+          post.id,
+          SavedPostSnapshot(
+            title: post.title,
+            authorName: post.authorName,
+            authorAvatar: post.authorAvatar,
+            courseId: post.courseId,
+            postType: post.postType.name,
+            tags: post.tags,
+            commentsCount: 0,
+          ),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to update saved post')),
+        );
+      }
+    }
+  }
+
+  Widget _buildTopRow(
+    BuildContext context,
+    AppColors appColors,
+    bool isSaved,
+    WidgetRef ref,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -55,10 +101,10 @@ class PostCard extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        Icon(
-          Icons.bookmark_border_outlined,
+        SaveButton(
+          isSaved: isSaved,
+          onTap: () => _toggleSave(context, ref, isSaved),
           size: 18,
-          color: appColors.textMuted,
         ),
       ],
     );
