@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,9 +28,6 @@ Stream<ContentRequest> requestDetail(Ref ref, String requestId) {
         return RequestDto.fromJson(doc.data()!).toDomain();
       });
 }
-
-@riverpod
-String? currentUserId(Ref ref) => FirebaseAuth.instance.currentUser?.uid;
 
 class RequestDetailScreen extends ConsumerWidget {
   const RequestDetailScreen({super.key, required this.requestId});

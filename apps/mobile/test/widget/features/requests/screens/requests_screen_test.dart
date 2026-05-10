@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/requests/domain/entities/content_request.dart';
+import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/requests_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
 import 'package:unishare_mobile/features/post/data/datasources/course_firestore_datasource.dart';
@@ -58,6 +59,7 @@ void main() {
             courseFirestoreDatasourceProvider.overrideWithValue(
               _FakeCourseDatasource(),
             ),
+            currentUserIdProvider.overrideWithValue(null),
             requestsProvider.overrideWith((ref, filter) => controller.stream),
           ],
           child: MaterialApp(
@@ -78,6 +80,7 @@ void main() {
             courseFirestoreDatasourceProvider.overrideWithValue(
               _FakeCourseDatasource(),
             ),
+            currentUserIdProvider.overrideWithValue(null),
             requestsProvider.overrideWith((ref, filter) => Stream.value([])),
           ],
           child: MaterialApp(
@@ -100,6 +103,7 @@ void main() {
             courseFirestoreDatasourceProvider.overrideWithValue(
               _FakeCourseDatasource(),
             ),
+            currentUserIdProvider.overrideWithValue(null),
             requestsProvider.overrideWith(
               (ref, filter) => Stream.value([request]),
             ),
@@ -124,6 +128,7 @@ void main() {
             courseFirestoreDatasourceProvider.overrideWithValue(
               _FakeCourseDatasource(),
             ),
+            currentUserIdProvider.overrideWithValue(null),
             requestsProvider.overrideWith((ref, filter) => Stream.value([])),
           ],
           child: MaterialApp(

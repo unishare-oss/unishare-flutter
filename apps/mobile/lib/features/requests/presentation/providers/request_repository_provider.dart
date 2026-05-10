@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:unishare_mobile/features/requests/data/datasources/request_firestore_datasource.dart';
@@ -13,6 +14,9 @@ import 'package:unishare_mobile/features/requests/domain/usecases/watch_requests
 import 'package:unishare_mobile/features/requests/domain/usecases/watch_suggestions.dart';
 
 part 'request_repository_provider.g.dart';
+
+@riverpod
+String? currentUserId(Ref ref) => FirebaseAuth.instance.currentUser?.uid;
 
 @Riverpod(keepAlive: true)
 RequestFirestoreDatasource requestFirestoreDatasource(Ref ref) {

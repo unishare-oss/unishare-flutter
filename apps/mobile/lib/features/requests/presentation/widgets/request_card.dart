@@ -28,12 +28,20 @@ String _timeAgo(DateTime dt) {
 }
 
 class RequestCard extends ConsumerWidget {
-  const RequestCard({super.key, required this.request, this.tappable = true});
+  const RequestCard({
+    super.key,
+    required this.request,
+    this.tappable = true,
+    this.onDelete,
+  });
 
   final ContentRequest request;
 
   /// When [false], the card is not wrapped in an InkWell (use in detail screen).
   final bool tappable;
+
+  /// When non-null, a delete icon is shown in the meta row.
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -149,6 +157,19 @@ class RequestCard extends ConsumerWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    if (onDelete != null)
+                      IconButton(
+                        onPressed: onDelete,
+                        icon: Icon(
+                          Icons.delete_outline,
+                          size: 16,
+                          color: ac.mutedForeground,
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        visualDensity: VisualDensity.compact,
+                        tooltip: 'Delete request',
+                      ),
                   ],
                 ),
               ],

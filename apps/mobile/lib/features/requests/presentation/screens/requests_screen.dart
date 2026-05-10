@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/requests/domain/entities/content_request.dart';
+import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/requests_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/new_request_dialog.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/request_card.dart';
@@ -22,11 +23,45 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
   String? _selectedYear;
   String? _selectedCourseId;
 
+  Future<void> _onDeleteRequest(ContentRequest request) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete this request?'),
+        content: const Text(
+          'This action cannot be undone. The request and all its suggestions will be permanently removed.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    if (!mounted) return;
+    try {
+      await ref.read(deleteRequestUseCaseProvider).call(request.id);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to delete request: $e')));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
     final theme = Theme.of(context);
 
+    final currentUid = ref.watch(currentUserIdProvider);
     final filter = RequestsFilter(
       status: _selectedStatus,
       departmentId: _selectedDepartmentId,
@@ -110,8 +145,15 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
                   itemCount: requests.length,
                   separatorBuilder: (_, _) =>
                       Divider(height: 1, color: theme.dividerColor),
-                  itemBuilder: (context, index) =>
-                      RequestCard(request: requests[index]),
+                  itemBuilder: (context, index) {
+                    final r = requests[index];
+                    return RequestCard(
+                      request: r,
+                      onDelete: currentUid == r.requesterId
+                          ? () => _onDeleteRequest(r)
+                          : null,
+                    );
+                  },
                 );
               },
             ),
