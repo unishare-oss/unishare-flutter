@@ -52,6 +52,16 @@ class PostFirestoreDatasource {
         .map((snapshot) => snapshot.docs.map(_docToPost).toList());
   }
 
+  Stream<List<Post>> watchPostsByAuthor(String authorId, {int limit = 50}) {
+    return _firestore
+        .collection('posts')
+        .where('authorId', isEqualTo: authorId)
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map(_docToPost).toList());
+  }
+
   Stream<Post> watchPost(String postId) {
     return _firestore.collection('posts').doc(postId).snapshots().map((doc) {
       if (!doc.exists) throw StateError('post_not_found');

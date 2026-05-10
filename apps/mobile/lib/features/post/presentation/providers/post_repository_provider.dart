@@ -19,6 +19,7 @@ import 'package:unishare_mobile/features/post/domain/usecases/create_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/watch_my_posts.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_post.dart';
 
 part 'post_repository_provider.g.dart';
@@ -83,6 +84,11 @@ LikeRepository likeRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 WatchPost watchPostUseCase(Ref ref) {
   return WatchPost(ref.watch(postRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+WatchMyPosts watchMyPostsUseCase(Ref ref) {
+  return WatchMyPosts(ref.watch(postRepositoryProvider));
 }
 
 @Riverpod(keepAlive: true)

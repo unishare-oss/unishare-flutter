@@ -9,6 +9,7 @@ import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 abstract interface class PostRepository {
   Stream<List<Post>> watchFeed({int limit = 20});
   Stream<Post> watchPost(String postId);
+  Stream<List<Post>> watchPostsByAuthor(String authorId, {int limit = 50});
   Future<void> saveDraft(PostDraft draft);
   Future<void> removeDraft(String draftId);
   Future<List<PostDraft>> loadDraftQueue();
