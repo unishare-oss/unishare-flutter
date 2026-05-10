@@ -1,11 +1,11 @@
 ---
-title: "0008: Request Post"
-description: "Allow authenticated students to post content requests tied to a specific course, and allow uploaders to fulfill a request by linking one of their existing posts to it."
+title: '0008: Request Post'
+description: 'Allow authenticated students to post content requests tied to a specific course, and allow uploaders to fulfill a request by linking one of their existing posts to it.'
 ---
 
 # PROP-0008: Request Post
 
-**Status:** DRAFT  
+**Status:** APPROVED
 **Author:**  
 **Date:** 2026-05-09  
 **Spec:** (pending approval)  
@@ -56,6 +56,7 @@ requests/{requestId}
 There are no sub-collections on `requests`. The `fulfilledByPostId` is a plain string referencing a `posts` document; the client resolves it lazily when the user taps through to view the fulfilling post.
 
 Composite indexes required:
+
 - `courseId ASC, status ASC, createdAt DESC` — for scoped, status-filtered, chronological listing
 - `requesterId ASC, createdAt DESC` — for "my requests" view
 
@@ -69,17 +70,17 @@ Every request document carries a required `courseId`. The Create Request form re
 
 ### Clean Architecture layers
 
-| Layer | Artifact |
-|---|---|
-| `domain/entities/` | `ContentRequest` (pure Dart), `RequestStatus` enum |
-| `domain/repositories/` | `RequestRepository` abstract interface |
-| `domain/usecases/` | `WatchRequests`, `CreateRequest`, `FulfillRequest` |
-| `data/datasources/` | `RequestFirestoreDatasource` |
-| `data/models/` | `RequestDto` (Freezed + `json_serializable`) |
-| `data/repositories/` | `RequestRepositoryImpl` |
+| Layer                     | Artifact                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------ |
+| `domain/entities/`        | `ContentRequest` (pure Dart), `RequestStatus` enum                             |
+| `domain/repositories/`    | `RequestRepository` abstract interface                                         |
+| `domain/usecases/`        | `WatchRequests`, `CreateRequest`, `FulfillRequest`                             |
+| `data/datasources/`       | `RequestFirestoreDatasource`                                                   |
+| `data/models/`            | `RequestDto` (Freezed + `json_serializable`)                                   |
+| `data/repositories/`      | `RequestRepositoryImpl`                                                        |
 | `presentation/providers/` | `requestsProvider` (stream), `createRequestProvider`, `fulfillRequestProvider` |
-| `presentation/screens/` | `RequestsScreen` (list), `CreateRequestScreen` (form) |
-| `presentation/widgets/` | `RequestCard`, `FulfillBottomSheet` |
+| `presentation/screens/`   | `RequestsScreen` (list), `CreateRequestScreen` (form)                          |
+| `presentation/widgets/`   | `RequestCard`, `FulfillBottomSheet`                                            |
 
 The feature lives at `apps/mobile/lib/features/requests/`. The Domain layer carries zero Flutter or Firebase imports.
 

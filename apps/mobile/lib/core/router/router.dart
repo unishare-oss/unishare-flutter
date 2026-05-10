@@ -17,6 +17,7 @@ import 'package:unishare_mobile/features/post/presentation/screens/my_posts_scre
 import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
+import 'package:unishare_mobile/features/requests/presentation/screens/request_detail_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
 import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen.dart';
 import 'package:unishare_mobile/core/router/guest_shell_scaffold.dart';
@@ -251,6 +252,13 @@ GoRouter router(Ref ref) {
                   GoRoute(
                     path: 'requests',
                     builder: (context, state) => const RequestsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'requests/:requestId',
+                    builder: (context, state) {
+                      final requestId = state.pathParameters['requestId']!;
+                      return RequestDetailScreen(requestId: requestId);
+                    },
                   ),
                 ],
               ),
