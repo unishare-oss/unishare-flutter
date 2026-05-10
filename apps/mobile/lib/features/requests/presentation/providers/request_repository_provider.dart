@@ -3,7 +3,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unishare_mobile/features/requests/data/datasources/request_firestore_datasource.dart';
 import 'package:unishare_mobile/features/requests/data/repositories/request_repository_impl.dart';
 import 'package:unishare_mobile/features/requests/domain/repositories/request_repository.dart';
+import 'package:unishare_mobile/features/requests/domain/usecases/accept_suggestion.dart';
 import 'package:unishare_mobile/features/requests/domain/usecases/create_request.dart';
+import 'package:unishare_mobile/features/requests/domain/usecases/delete_request.dart';
+import 'package:unishare_mobile/features/requests/domain/usecases/remove_suggestion.dart';
 import 'package:unishare_mobile/features/requests/domain/usecases/suggest_fulfillment.dart';
 import 'package:unishare_mobile/features/requests/domain/usecases/toggle_upvote_request.dart';
 import 'package:unishare_mobile/features/requests/domain/usecases/watch_requests.dart';
@@ -46,4 +49,19 @@ SuggestFulfillment suggestFulfillmentUseCase(Ref ref) {
 @Riverpod(keepAlive: true)
 ToggleUpvoteRequest toggleUpvoteRequestUseCase(Ref ref) {
   return ToggleUpvoteRequest(ref.watch(requestRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+DeleteRequest deleteRequestUseCase(Ref ref) {
+  return DeleteRequest(ref.watch(requestRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+AcceptSuggestion acceptSuggestionUseCase(Ref ref) {
+  return AcceptSuggestion(ref.watch(requestRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+RemoveSuggestion removeSuggestionUseCase(Ref ref) {
+  return RemoveSuggestion(ref.watch(requestRepositoryProvider));
 }

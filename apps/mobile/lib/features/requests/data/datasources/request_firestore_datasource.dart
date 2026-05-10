@@ -200,6 +200,66 @@ class RequestFirestoreDatasource {
   }
 
   // ---------------------------------------------------------------------------
+  // Delete request
+  // ---------------------------------------------------------------------------
+
+  Future<void> deleteRequest(String requestId) async {
+    await _requests.doc(requestId).delete();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Accept suggestion
+  // ---------------------------------------------------------------------------
+
+  Future<void> acceptSuggestion({
+    required String requestId,
+    required String suggestionId,
+    required String postId,
+    required String postTitle,
+  }) async {
+    final requestRef = _requests.doc(requestId);
+    await _firestore.runTransaction((txn) async {
+      txn.update(requestRef, {
+        'status': 'fulfilled',
+        'fulfilledByPostId': postId,
+        'fulfilledByPostTitle': postTitle,
+        'updatedAt': Timestamp.now(),
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Remove suggestion
+  // ---------------------------------------------------------------------------
+
+  Future<void> removeSuggestion({
+    required String requestId,
+    required String suggestionId,
+  }) async {
+    final requestRef = _requests.doc(requestId);
+    final suggestionRef = requestRef
+        .collection('suggestions')
+        .doc(suggestionId);
+    await _firestore.runTransaction((txn) async {
+      final reqSnap = await txn.get(requestRef);
+      final suggSnap = await txn.get(suggestionRef);
+      final reqData = reqSnap.data();
+      final suggData = suggSnap.data();
+      if (reqData != null &&
+          suggData != null &&
+          reqData['fulfilledByPostId'] == suggData['postId']) {
+        txn.update(requestRef, {
+          'status': 'open',
+          'fulfilledByPostId': null,
+          'fulfilledByPostTitle': null,
+          'updatedAt': Timestamp.now(),
+        });
+      }
+      txn.delete(suggestionRef);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
   // Private helpers
   // ---------------------------------------------------------------------------
 

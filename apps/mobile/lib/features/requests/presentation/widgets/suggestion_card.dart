@@ -25,9 +25,25 @@ String _timeAgo(DateTime dt) {
 }
 
 class SuggestionCard extends StatelessWidget {
-  const SuggestionCard({super.key, required this.suggestion});
+  const SuggestionCard({
+    super.key,
+    required this.suggestion,
+    this.isAccepted = false,
+    this.isOwner = false,
+    this.onAccept,
+    this.onRemove,
+  });
 
   final Suggestion suggestion;
+
+  /// True when `request.fulfilledByPostId == suggestion.postId`.
+  final bool isAccepted;
+
+  /// True when `currentUser.uid == request.requesterId`.
+  final bool isOwner;
+
+  final VoidCallback? onAccept;
+  final VoidCallback? onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -35,75 +51,152 @@ class SuggestionCard extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  suggestion.postTitle,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: cs.onSurface,
+    return Container(
+      color: isAccepted
+          ? ac.success.withValues(alpha: 0.08)
+          : Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    suggestion.postTitle,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: cs.onSurface,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: ac.muted,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  suggestion.postType.toUpperCase(),
-                  style: GoogleFonts.firaCode(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    color: ac.mutedForeground,
-                    letterSpacing: 0.55,
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: ac.muted,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    suggestion.postType.toUpperCase(),
+                    style: GoogleFonts.firaCode(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: ac.mutedForeground,
+                      letterSpacing: 0.55,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              if (suggestion.suggestedByAvatar != null &&
-                  suggestion.suggestedByAvatar!.isNotEmpty)
-                CircleAvatar(
-                  radius: 10,
-                  backgroundImage: CachedNetworkImageProvider(
-                    suggestion.suggestedByAvatar!,
+                if (isAccepted) ...[
+                  const SizedBox(width: 8),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 14,
+                        color: ac.success,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'ACCEPTED',
+                        style: GoogleFonts.firaCode(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: ac.success,
+                          letterSpacing: 0.55,
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              else
-                CircleAvatar(
-                  radius: 10,
-                  backgroundColor: ac.muted,
-                  child: Icon(
-                    Icons.person,
-                    size: 12,
-                    color: ac.mutedForeground,
+                ] else if (isOwner) ...[
+                  const SizedBox(width: 4),
+                  TextButton.icon(
+                    onPressed: onAccept,
+                    icon: Icon(
+                      Icons.check_circle_outline,
+                      size: 14,
+                      color: ac.amber,
+                    ),
+                    label: Text(
+                      'ACCEPT',
+                      style: GoogleFonts.firaCode(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: ac.amber,
+                        letterSpacing: 0.55,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: onRemove,
+                    icon: Icon(
+                      Icons.delete_outline,
+                      size: 14,
+                      color: ac.mutedForeground,
+                    ),
+                    label: Text(
+                      'REMOVE',
+                      style: GoogleFonts.firaCode(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: ac.mutedForeground,
+                        letterSpacing: 0.55,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                if (suggestion.suggestedByAvatar != null &&
+                    suggestion.suggestedByAvatar!.isNotEmpty)
+                  CircleAvatar(
+                    radius: 10,
+                    backgroundImage: CachedNetworkImageProvider(
+                      suggestion.suggestedByAvatar!,
+                    ),
+                  )
+                else
+                  CircleAvatar(
+                    radius: 10,
+                    backgroundColor: ac.muted,
+                    child: Icon(
+                      Icons.person,
+                      size: 12,
+                      color: ac.mutedForeground,
+                    ),
+                  ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    'Suggested by ${suggestion.suggestedByName} · ${_timeAgo(suggestion.createdAt)}',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: ac.textMuted,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  'Suggested by ${suggestion.suggestedByName} · ${_timeAgo(suggestion.createdAt)}',
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: ac.textMuted,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -78,13 +78,16 @@ service cloud.firestore {
       allow update: if request.auth != null
         && request.resource.data.requesterId == resource.data.requesterId;
 
-      allow delete: if false;
+      allow delete: if request.auth != null
+        && resource.data.requesterId == request.auth.uid;
 
       match /suggestions/{suggestionId} {
         allow read: if request.auth != null;
         allow create: if request.auth != null
           && request.resource.data.suggestedByUserId == request.auth.uid;
-        allow update, delete: if false;
+        allow update: if false;
+        allow delete: if request.auth != null
+          && get(/databases/$(database)/documents/requests/$(requestId)).data.requesterId == request.auth.uid;
       }
 
       match /upvotes/{userId} {
