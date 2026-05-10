@@ -1735,6 +1735,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0008-request-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1960,7 +1988,7 @@
 
 
 <h1 id="prop-0008-request-post">PROP-0008: Request Post<a class="headerlink" href="#prop-0008-request-post" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> DRAFT<br />
+<p><strong>Status:</strong> APPROVED
 <strong>Author:</strong><br />
 <strong>Date:</strong> 2026-05-09<br />
 <strong>Spec:</strong> (pending approval)<br />
@@ -1993,9 +2021,11 @@
   updatedAt:           Timestamp
 </code></pre></div>
 <p>There are no sub-collections on <code>requests</code>. The <code>fulfilledByPostId</code> is a plain string referencing a <code>posts</code> document; the client resolves it lazily when the user taps through to view the fulfilling post.</p>
-<p>Composite indexes required:
-- <code>courseId ASC, status ASC, createdAt DESC</code> — for scoped, status-filtered, chronological listing
-- <code>requesterId ASC, createdAt DESC</code> — for "my requests" view</p>
+<p>Composite indexes required:</p>
+<ul>
+<li><code>courseId ASC, status ASC, createdAt DESC</code> — for scoped, status-filtered, chronological listing</li>
+<li><code>requesterId ASC, createdAt DESC</code> — for "my requests" view</li>
+</ul>
 <h3 id="real-time-updates">Real-time updates<a class="headerlink" href="#real-time-updates" title="Permanent link">&para;</a></h3>
 <p>The Requests screen subscribes to a Firestore <code>snapshots()</code> stream scoped by <code>courseId</code> and optionally by <code>status</code>. Riverpod exposes this as a <code>StreamProvider</code> (or <code>AsyncNotifier</code> with a stream) so that new requests and status changes propagate to the UI without a manual refresh. This is consistent with the existing <code>watchFeed</code> and <code>watchPost</code> patterns already in <code>PostFirestoreDatasource</code>.</p>
 <h3 id="course-scoping">Course scoping<a class="headerlink" href="#course-scoping" title="Permanent link">&para;</a></h3>
