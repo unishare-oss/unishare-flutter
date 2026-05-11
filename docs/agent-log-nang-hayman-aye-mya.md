@@ -49,3 +49,15 @@ Files:
   ? apps/mobile/lib/features/requests/presentation/providers/ (untracked)
   ? apps/mobile/lib/features/requests/presentation/widgets/ (untracked)
 
+---
+Date: 2026-05-10 10:00
+Member: Nang Hayman Aye Mya
+Agent: flutter-engineer
+Task: Implement My Posts screen — replace placeholder with live Firestore-backed list
+Prompt: Implement the "My Posts" feature. The /posts route already shows MyPostsScreen as a placeholder. Add watchPostsByAuthor to PostRepository, datasource, and impl; add WatchMyPosts use case; add myPostsProvider; replace the placeholder screen with a real implementation (AppBar + New Post button, loading/empty/error/data states, PostCard list, scroll controller).
+
+Outcome: Added watchPostsByAuthor to PostRepository interface, PostFirestoreDatasource, and PostRepositoryImpl. Created WatchMyPosts use case (pure Dart). Added watchMyPostsUseCase provider to post_repository_provider.dart. Created my_posts_provider.dart with @riverpod StreamProvider (returns Stream.empty() when unauthenticated). Replaced MyPostsScreen placeholder with full implementation: AppBar with amber FilledButton.icon "New Post" action, loading/error/empty/data states, ListView.separated with PostCard. Added 6 widget tests in my_posts_screen_test.dart. Also added watchPostsByAuthor stub to 5 existing fake PostRepository implementations to satisfy the updated interface. 277 tests, all pass. flutter analyze: 0 issues. dart format: 0 diff.
+Decisions: myPostsProvider directly overrides the stream using Stream.empty() when uid is null instead of throwing, to keep the loading state clean for unauthenticated edge cases. WatchMyPosts registered as a keepAlive provider in post_repository_provider.dart to follow the established pattern for all use-case providers in that file. No new composite Firestore index needed for current query — Firestore handles equality + orderBy with default single-field indexes, but a composite index on (authorId ASC, createdAt DESC) may be required at scale.
+Handoff: Needs QA and architect review before merge. If Firestore surfaces a missing-index error after real data loads, add a composite index on posts(authorId ASC, createdAt DESC) to firestore.indexes.json.
+Review: PENDING
+
