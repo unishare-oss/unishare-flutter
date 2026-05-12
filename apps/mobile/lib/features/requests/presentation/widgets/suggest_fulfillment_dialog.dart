@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/my_posts_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
@@ -19,19 +18,21 @@ class SuggestFulfillmentDialog extends ConsumerStatefulWidget {
 
 class _SuggestFulfillmentDialogState
     extends ConsumerState<SuggestFulfillmentDialog> {
-  Post? _selectedPost;
+  String? _selectedPostId;
   bool _isSubmitting = false;
 
   Future<void> _submit() async {
-    if (_selectedPost == null || _isSubmitting) return;
+    if (_selectedPostId == null || _isSubmitting) return;
     setState(() => _isSubmitting = true);
     try {
+      final posts = ref.read(myPostsProvider).value ?? [];
+      final post = posts.firstWhere((p) => p.id == _selectedPostId);
       final useCase = ref.read(suggestFulfillmentUseCaseProvider);
       await useCase(
         requestId: widget.requestId,
-        postId: _selectedPost!.id,
-        postTitle: _selectedPost!.title,
-        postType: _selectedPost!.postType.name,
+        postId: post.id,
+        postTitle: post.title,
+        postType: post.postType.name,
       );
       if (mounted) {
         Navigator.of(context).pop();
@@ -156,8 +157,8 @@ class _SuggestFulfillmentDialogState
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton<Post>(
-                        value: _selectedPost,
+                      child: DropdownButton<String>(
+                        value: _selectedPostId,
                         isExpanded: true,
                         hint: Text(
                           'Select a post',
@@ -174,8 +175,8 @@ class _SuggestFulfillmentDialogState
                           color: cs.onSurface,
                         ),
                         items: posts.map((p) {
-                          return DropdownMenuItem<Post>(
-                            value: p,
+                          return DropdownMenuItem<String>(
+                            value: p.id,
                             child: Text(
                               p.title,
                               overflow: TextOverflow.ellipsis,
@@ -185,7 +186,7 @@ class _SuggestFulfillmentDialogState
                             ),
                           );
                         }).toList(),
-                        onChanged: (v) => setState(() => _selectedPost = v),
+                        onChanged: (v) => setState(() => _selectedPostId = v),
                         focusColor: Colors.transparent,
                         dropdownColor: cs.surface,
                         borderRadius: BorderRadius.circular(6),
@@ -209,7 +210,7 @@ class _SuggestFulfillmentDialogState
                   ),
                   const SizedBox(width: 12),
                   FilledButton(
-                    onPressed: _selectedPost != null && !_isSubmitting
+                    onPressed: _selectedPostId != null && !_isSubmitting
                         ? _submit
                         : null,
                     style: FilledButton.styleFrom(

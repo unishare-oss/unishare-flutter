@@ -91,129 +91,156 @@ class RequestDetailScreen extends ConsumerWidget {
           final isOwner =
               currentUid != null && currentUid == request.requesterId;
 
-          return ListView(
-            children: [
-              Card(
-                margin: const EdgeInsets.all(16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
-                  side: BorderSide(color: theme.dividerColor),
-                ),
-                elevation: 1,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RequestCard(request: request, tappable: false),
-                    if (isOwner) ...[
-                      Divider(height: 1, color: theme.dividerColor),
-                      _DeleteButton(requestId: requestId),
+          return CustomScrollView(
+            slivers: [
+              // Header card: RequestCard + optional _DeleteButton
+              SliverToBoxAdapter(
+                child: Card(
+                  margin: const EdgeInsets.all(16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    side: BorderSide(color: theme.dividerColor),
+                  ),
+                  elevation: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RequestCard(request: request, tappable: false),
+                      if (isOwner) ...[
+                        Divider(height: 1, color: theme.dividerColor),
+                        _DeleteButton(requestId: requestId),
+                      ],
                     ],
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: [
-                    suggestionsAsync.when(
-                      loading: () => Text(
-                        'SUGGESTIONS',
-                        style: AppTypography.mono(
-                          base: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: ac.mutedForeground,
-                            letterSpacing: 0.55,
-                          ),
-                        ),
-                      ),
-                      error: (_, _) => Text(
-                        'SUGGESTIONS',
-                        style: AppTypography.mono(
-                          base: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: ac.mutedForeground,
-                            letterSpacing: 0.55,
-                          ),
-                        ),
-                      ),
-                      data: (suggestions) => Text(
-                        'SUGGESTIONS (${suggestions.length})',
-                        style: AppTypography.mono(
-                          base: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: ac.mutedForeground,
-                            letterSpacing: 0.55,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    TextButton.icon(
-                      onPressed: () => showDialog<void>(
-                        context: context,
-                        builder: (_) =>
-                            SuggestFulfillmentDialog(requestId: requestId),
-                      ),
-                      icon: Icon(
-                        Icons.check_circle_outline,
-                        size: 16,
-                        color: ac.amber,
-                      ),
-                      label: Text(
-                        'SUGGEST',
-                        style: AppTypography.mono(
-                          base: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: ac.amber,
-                            letterSpacing: 0.55,
-                          ),
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: Size.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1),
-              suggestionsAsync.when(
-                loading: () => const Padding(
-                  padding: EdgeInsets.all(32),
-                  child: Center(child: CircularProgressIndicator()),
-                ),
-                error: (e, _) => Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Text(
-                    'Failed to load suggestions.',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: ac.textMuted,
-                    ),
-                    textAlign: TextAlign.center,
                   ),
                 ),
-                data: (suggestions) {
-                  if (suggestions.isEmpty) {
-                    return Padding(
+              ),
+
+              // Suggestions section header: label + SUGGEST button
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    children: [
+                      suggestionsAsync.when(
+                        loading: () => Text(
+                          'SUGGESTIONS',
+                          style: AppTypography.mono(
+                            base: theme.textTheme.labelSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: ac.mutedForeground,
+                              letterSpacing: 0.55,
+                            ),
+                          ),
+                        ),
+                        error: (_, _) => Text(
+                          'SUGGESTIONS',
+                          style: AppTypography.mono(
+                            base: theme.textTheme.labelSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: ac.mutedForeground,
+                              letterSpacing: 0.55,
+                            ),
+                          ),
+                        ),
+                        data: (suggestions) => Text(
+                          'SUGGESTIONS (${suggestions.length})',
+                          style: AppTypography.mono(
+                            base: theme.textTheme.labelSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: ac.mutedForeground,
+                              letterSpacing: 0.55,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      TextButton.icon(
+                        onPressed: () => showDialog<void>(
+                          context: context,
+                          builder: (_) =>
+                              SuggestFulfillmentDialog(requestId: requestId),
+                        ),
+                        icon: Icon(
+                          Icons.check_circle_outline,
+                          size: 16,
+                          color: ac.amber,
+                        ),
+                        label: Text(
+                          'SUGGEST',
+                          style: AppTypography.mono(
+                            base: theme.textTheme.labelSmall?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: ac.amber,
+                              letterSpacing: 0.55,
+                            ),
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Divider between header and suggestions list
+              const SliverToBoxAdapter(child: Divider(height: 1)),
+
+              // Suggestions list
+              ...suggestionsAsync.when(
+                loading: () => [
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.all(32),
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
+                ],
+                error: (e, _) => [
+                  SliverToBoxAdapter(
+                    child: Padding(
                       padding: const EdgeInsets.all(32),
                       child: Text(
-                        'No suggestions yet. Be the first to suggest a fulfillment!',
+                        'Failed to load suggestions.',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: ac.textMuted,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                    );
+                    ),
+                  ),
+                ],
+                data: (suggestions) {
+                  if (suggestions.isEmpty) {
+                    return [
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: Text(
+                            'No suggestions yet. Be the first to suggest a fulfillment!',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: ac.textMuted,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ];
                   }
-                  return Column(
-                    children: [
-                      for (final suggestion in suggestions) ...[
-                        SuggestionCard(
+                  return [
+                    SliverList.separated(
+                      itemCount: suggestions.length,
+                      separatorBuilder: (_, _) =>
+                          Divider(height: 1, color: theme.dividerColor),
+                      itemBuilder: (_, index) {
+                        final suggestion = suggestions[index];
+                        return SuggestionCard(
                           suggestion: suggestion,
                           isAccepted:
                               request.fulfilledByPostId == suggestion.postId,
@@ -234,11 +261,10 @@ class RequestDetailScreen extends ConsumerWidget {
                                   suggestion,
                                 )
                               : null,
-                        ),
-                        Divider(height: 1, color: theme.dividerColor),
-                      ],
-                    ],
-                  );
+                        );
+                      },
+                    ),
+                  ];
                 },
               ),
             ],

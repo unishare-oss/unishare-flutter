@@ -68,18 +68,24 @@ service cloud.firestore {
 
       // Only authenticated users can create; requesterId must match caller
       allow create: if request.auth != null
+        && request.resource.data.keys().hasAll(['title', 'requesterId', 'status', 'upvoteCount', 'createdAt'])
         && request.resource.data.requesterId == request.auth.uid
+        && request.resource.data.status == 'open'
+        && request.resource.data.upvoteCount == 0
         && request.resource.data.title.size() <= 120
         && (!('description' in request.resource.data)
             || request.resource.data.description == null
             || request.resource.data.description.size() <= 500);
 
-      // Only upvoteCount and status/fulfilledBy fields may be updated.
+      // Any authenticated user may upvote (upvoteCount only);
+      // the requester may update status/fulfilledBy fields.
       allow update: if request.auth != null
-        && request.resource.data.requesterId == resource.data.requesterId
-        && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['upvoteCount', 'status', 'fulfilledByPostId',
-                       'fulfilledByPostTitle', 'updatedAt']);
+        && (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvoteCount'])
+          || (request.auth.uid == resource.data.requesterId
+              && request.resource.data.diff(resource.data).affectedKeys()
+                   .hasOnly(['status', 'fulfilledByPostId', 'fulfilledByPostTitle', 'updatedAt']))
+        );
 
       allow delete: if request.auth != null
         && resource.data.requesterId == request.auth.uid;
