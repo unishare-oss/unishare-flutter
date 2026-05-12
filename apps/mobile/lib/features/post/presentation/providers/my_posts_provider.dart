@@ -8,7 +8,7 @@ part 'my_posts_provider.g.dart';
 
 @riverpod
 Stream<List<Post>> myPosts(Ref ref) {
-  final uid = ref.watch(currentUserProvider).value?.uid;
+  final uid = ref.watch(currentUserProvider).value?.id;
   if (uid == null) {
     return const Stream.empty();
   }
