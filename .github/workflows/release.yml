@@ -155,14 +155,14 @@ jobs:
         working-directory: apps/mobile
         run: dart run pdfrx:remove_wasm_modules
 
-      - name: Build iOS IPA (unsigned)
+      - name: Build iOS app (unsigned)
         working-directory: apps/mobile
-        run: flutter build ipa --no-codesign --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
+        run: flutter build ios --release --no-codesign --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
 
       - name: Package unsigned IPA
         run: |
           mkdir -p Payload
-          cp -r apps/mobile/build/ios/archive/Runner.xcarchive/Products/Applications/Runner.app Payload/
+          cp -r apps/mobile/build/ios/iphoneos/Runner.app Payload/
           zip -r ios.ipa Payload/
           rm -rf Payload
 
