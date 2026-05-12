@@ -113,7 +113,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                   Text(
                     error.toString(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: appColors.textMuted, fontSize: 13),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: appColors.textMuted),
                   ),
                 ],
               ),
@@ -147,12 +147,13 @@ class _BreadcrumbBar extends StatelessWidget {
     final appColors = Theme.of(context).extension<AppColors>()!;
     final scheme = Theme.of(context).colorScheme;
 
-    final mutedStyle = TextStyle(fontSize: 11, color: appColors.textMuted);
+    final theme = Theme.of(context);
+    final mutedStyle = theme.textTheme.labelSmall?.copyWith(color: appColors.textMuted);
     final sep = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 3),
       child: Text(
         '›',
-        style: TextStyle(fontSize: 11, color: appColors.textMuted),
+        style: theme.textTheme.labelSmall?.copyWith(color: appColors.textMuted),
       ),
     );
 
@@ -188,8 +189,7 @@ class _BreadcrumbBar extends StatelessWidget {
         Flexible(
           child: Text(
             truncTitle,
-            style: TextStyle(
-              fontSize: 11,
+            style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: scheme.onSurface,
             ),
@@ -387,8 +387,7 @@ class _PostHeader extends ConsumerWidget {
               const SizedBox(width: 4),
               Text(
                 '$commentCount',
-                style: TextStyle(
-                  fontSize: 13,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: appColors.textMuted,
                   fontWeight: FontWeight.w500,
                 ),
@@ -437,8 +436,7 @@ class _PostHeader extends ConsumerWidget {
           Text(
             '$commentCount ${commentCount == 1 ? 'COMMENT' : 'COMMENTS'}',
             style: AppTypography.mono(
-              base: TextStyle(
-                fontSize: 10,
+              base: Theme.of(context).textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: appColors.textMuted,
                 letterSpacing: 0.8,
@@ -474,8 +472,7 @@ class _TealBadge extends StatelessWidget {
       child: Text(
         label,
         style: AppTypography.mono(
-          base: TextStyle(
-            fontSize: 10,
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: appColors.info,
             letterSpacing: 0.4,
@@ -531,8 +528,7 @@ class _SectionLabel extends StatelessWidget {
     return Text(
       label,
       style: AppTypography.mono(
-        base: TextStyle(
-          fontSize: 10,
+        base: Theme.of(context).textTheme.labelSmall?.copyWith(
           fontWeight: FontWeight.w600,
           color: appColors.textMuted,
           letterSpacing: 0.9,
@@ -578,8 +574,7 @@ class _AuthorChip extends StatelessWidget {
                   post.authorName.isNotEmpty
                       ? post.authorName[0].toUpperCase()
                       : '?',
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: appColors.amber,
                   ),
@@ -600,7 +595,7 @@ class _AuthorChip extends StatelessWidget {
               ),
               Text(
                 _relativeTime(post.createdAt),
-                style: TextStyle(fontSize: 11, color: appColors.textMuted),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
               ),
             ],
           ),
@@ -658,8 +653,7 @@ class _AiSummaryCardState extends State<_AiSummaryCard> {
                   Text(
                     'AI SUMMARY',
                     style: AppTypography.mono(
-                      base: TextStyle(
-                        fontSize: 11,
+                      base: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: appColors.amber,
                         letterSpacing: 0.6,
@@ -702,8 +696,7 @@ class _AiSummaryCardState extends State<_AiSummaryCard> {
                 label: Text(
                   'ASK AI',
                   style: AppTypography.mono(
-                    base: TextStyle(
-                      fontSize: 11,
+                    base: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: appColors.amber,
                       letterSpacing: 0.5,
@@ -804,7 +797,7 @@ class _CommentInputBar extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               hintText: 'Write a comment…',
-              hintStyle: TextStyle(color: appColors.textMuted, fontSize: 14),
+              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: appColors.textMuted),
               fillColor: Theme.of(context).scaffoldBackgroundColor,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
@@ -821,7 +814,7 @@ class _CommentInputBar extends StatelessWidget {
             children: [
               Text(
                 'Shift + Enter to submit',
-                style: TextStyle(fontSize: 10, color: appColors.textMuted),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
               ),
               const Spacer(),
               FilledButton(
@@ -838,9 +831,8 @@ class _CommentInputBar extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  textStyle: const TextStyle(
+                  textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w600,
-                    fontSize: 13,
                   ),
                 ),
                 child: isSubmitting

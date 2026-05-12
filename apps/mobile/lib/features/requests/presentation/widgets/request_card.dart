@@ -2,11 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:unishare_mobile/features/requests/domain/entities/content_request.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/upvote_button.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 String _timeAgo(DateTime dt) {
   final diff = DateTime.now().difference(dt);
@@ -106,10 +105,11 @@ class RequestCard extends ConsumerWidget {
                             'Fulfilled by: ${request.fulfilledByPostTitle}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: ac.amber,
-                              fontFamily: GoogleFonts.firaCode().fontFamily,
-                              letterSpacing: 0.55,
+                            style: AppTypography.mono(
+                              base: theme.textTheme.labelSmall?.copyWith(
+                                color: ac.amber,
+                                letterSpacing: 0.55,
+                              ),
                             ),
                           ),
                         ),
@@ -178,6 +178,7 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
+    final theme = Theme.of(context);
     final isFulfilled = status == RequestStatus.fulfilled;
     final bg = isFulfilled
         ? ac.success.withValues(alpha: 0.15)
@@ -193,11 +194,12 @@ class _StatusChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: GoogleFonts.firaCode(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: fg,
-          letterSpacing: 0.55,
+        style: AppTypography.mono(
+          base: theme.textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: fg,
+            letterSpacing: 0.55,
+          ),
         ),
       ),
     );
@@ -211,6 +213,7 @@ class _CourseChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
+    final theme = Theme.of(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -220,11 +223,12 @@ class _CourseChip extends StatelessWidget {
       ),
       child: Text(
         courseName.toUpperCase(),
-        style: GoogleFonts.firaCode(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          color: ac.mutedForeground,
-          letterSpacing: 0.55,
+        style: AppTypography.mono(
+          base: theme.textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: ac.mutedForeground,
+            letterSpacing: 0.55,
+          ),
         ),
       ),
     );

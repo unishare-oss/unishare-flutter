@@ -63,9 +63,8 @@ class _MyPostsScreenState extends ConsumerState<MyPostsScreen>
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),
-                textStyle: const TextStyle(
+                textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
-                  fontSize: 13,
                 ),
               ),
               icon: const Icon(Icons.add, size: 16),
@@ -115,9 +114,8 @@ class _MyPostsScreenState extends ConsumerState<MyPostsScreen>
                       onPressed: () => context.push('/posts/create'),
                       style: TextButton.styleFrom(
                         foregroundColor: ac.amber,
-                        textStyle: const TextStyle(
+                        textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w600,
-                          fontSize: 14,
                         ),
                       ),
                       child: const Text('Share your first resource'),

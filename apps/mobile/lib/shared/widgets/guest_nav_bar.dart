@@ -96,7 +96,6 @@ class _GuestNavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = isActive ? colors.amber : colors.textMuted;
     final labelStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
-      fontSize: 11,
       letterSpacing: 0.55,
       color: color,
     );

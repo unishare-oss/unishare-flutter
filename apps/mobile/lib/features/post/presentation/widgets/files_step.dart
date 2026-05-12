@@ -1,6 +1,5 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/code_snippet_widget.dart';
@@ -29,8 +28,7 @@ class FilesStep extends StatelessWidget {
       children: [
         Text(
           'Upload files',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 22,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w700,
             color: cs.onSurface,
           ),

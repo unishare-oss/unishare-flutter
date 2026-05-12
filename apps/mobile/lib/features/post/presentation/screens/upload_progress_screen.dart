@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class UploadProgressScreen extends ConsumerStatefulWidget {
   const UploadProgressScreen({super.key});
@@ -61,8 +60,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       titleSpacing: 20,
       title: Text(
         'Uploading Post',
-        style: GoogleFonts.spaceGrotesk(
-          fontSize: 18,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w700,
           color: cs.onSurface,
         ),
@@ -94,8 +92,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             ),
             child: Text(
               'Cancel',
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 13,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -150,8 +147,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       final pct = (state.overallProgress * 100).toInt();
       center = Text(
         '$pct%',
-        style: GoogleFonts.spaceGrotesk(
-          fontSize: 22,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w700,
           color: ac.amber,
         ),
@@ -214,8 +210,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
         children: [
           Text(
             '$done of $total files',
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 13,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: cs.onSurface,
             ),
@@ -224,9 +219,10 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             const SizedBox(height: 4),
             Text(
               'Uploading $uploading…',
-              style: GoogleFonts.firaCode(
-                fontSize: 11,
-                color: ac.mutedForeground,
+              style: AppTypography.mono(
+                base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: ac.mutedForeground,
+                ),
               ),
             ),
           ],
@@ -237,8 +233,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
         children: [
           Text(
             'Publishing…',
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 13,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: cs.onSurface,
             ),
@@ -246,9 +241,10 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           const SizedBox(height: 4),
           Text(
             'Finishing up…',
-            style: GoogleFonts.firaCode(
-              fontSize: 11,
-              color: ac.mutedForeground,
+            style: AppTypography.mono(
+              base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: ac.mutedForeground,
+              ),
             ),
           ),
         ],
@@ -256,8 +252,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
     } else if (state is CreatePostPublished) {
       return Text(
         'Post published!',
-        style: GoogleFonts.spaceGrotesk(
-          fontSize: 13,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
           fontWeight: FontWeight.w600,
           color: ac.success,
         ),
@@ -271,8 +266,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
         children: [
           Text(
             'Upload failed',
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 13,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               fontWeight: FontWeight.w600,
               color: cs.error,
             ),
@@ -281,9 +275,10 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             const SizedBox(height: 4),
             Text(
               '$failedFile could not be uploaded',
-              style: GoogleFonts.firaCode(
-                fontSize: 11,
-                color: ac.mutedForeground,
+              style: AppTypography.mono(
+                base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: ac.mutedForeground,
+                ),
               ),
             ),
           ],
@@ -323,7 +318,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       ),
       child: Text(
         'Your post is live. Taking you to the feed…',
-        style: GoogleFonts.spaceGrotesk(fontSize: 12, color: ac.success),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: ac.success),
       ),
     );
   }
@@ -334,8 +329,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       onPressed: () => context.go('/feed'),
       child: Text(
         'Go to feed — upload continues in background',
-        style: GoogleFonts.spaceGrotesk(
-          fontSize: 12,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
           color: ac.mutedForeground,
         ),
       ),
@@ -354,7 +348,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       ),
       child: Text(
         state.message,
-        style: GoogleFonts.spaceGrotesk(fontSize: 12, color: cs.error),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.error),
       ),
     );
   }
@@ -375,8 +369,7 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
         ),
         child: Text(
           'Retry',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 14,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -411,8 +404,7 @@ class _FileRow extends StatelessWidget {
                     Expanded(
                       child: Text(
                         file.filename,
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 12,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: file.phase == FileUploadPhase.queued
                               ? ac.mutedForeground
                               : cs.onSurface,
@@ -494,23 +486,29 @@ class _PhaseLabel extends StatelessWidget {
     return switch (file.phase) {
       FileUploadPhase.done => Text(
         'Done',
-        style: GoogleFonts.firaCode(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: ac.success,
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: ac.success,
+          ),
         ),
       ),
       FileUploadPhase.uploading => Text(
         '${(file.progress * 100).toInt()}%',
-        style: GoogleFonts.firaCode(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: ac.amber,
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: ac.amber,
+          ),
         ),
       ),
       FileUploadPhase.queued => Text(
         'Queued',
-        style: GoogleFonts.firaCode(fontSize: 11, color: ac.mutedForeground),
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: ac.mutedForeground,
+          ),
+        ),
       ),
     };
   }

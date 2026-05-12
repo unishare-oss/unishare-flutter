@@ -22,8 +22,7 @@ class FeedEmptyStateWidget extends StatelessWidget {
             Text(
               'No posts match your filter',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: cs.onSurface,
               ),
@@ -32,7 +31,9 @@ class FeedEmptyStateWidget extends StatelessWidget {
             Text(
               'Try selecting different tags or clear the filter to see all posts.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: ac.mutedForeground),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: ac.mutedForeground,
+              ),
             ),
             const SizedBox(height: 24),
             OutlinedButton(

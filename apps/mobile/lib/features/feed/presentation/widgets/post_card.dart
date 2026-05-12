@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
@@ -12,6 +11,7 @@ import 'package:unishare_mobile/features/saved/presentation/providers/is_post_sa
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class PostCard extends ConsumerWidget {
   const PostCard({super.key, required this.post});
@@ -37,12 +37,12 @@ class PostCard extends ConsumerWidget {
             _buildTitle(context),
             if (post.tags.isNotEmpty) ...[
               const SizedBox(height: 6),
-              _buildTagsWrap(appColors),
+              _buildTagsWrap(context, appColors),
             ],
             const SizedBox(height: 8),
             _buildAuthorRow(context, appColors),
             const SizedBox(height: 6),
-            _buildMetaRow(appColors),
+            _buildMetaRow(context, appColors),
           ],
         ),
       ),
@@ -94,10 +94,11 @@ class PostCard extends ConsumerWidget {
         const SizedBox(width: 6),
         Text(
           post.courseId,
-          style: GoogleFonts.firaCode(
-            fontSize: 11,
-            color: appColors.textMuted,
-            letterSpacing: 0.3,
+          style: AppTypography.mono(
+            base: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: appColors.textMuted,
+              letterSpacing: 0.3,
+            ),
           ),
         ),
         const Spacer(),
@@ -113,8 +114,7 @@ class PostCard extends ConsumerWidget {
   Widget _buildTitle(BuildContext context) {
     return Text(
       post.title,
-      style: TextStyle(
-        fontSize: 14,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
         fontWeight: FontWeight.w500,
         color: Theme.of(context).colorScheme.onSurface,
         height: 1.4,
@@ -124,7 +124,7 @@ class PostCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildTagsWrap(AppColors appColors) {
+  Widget _buildTagsWrap(BuildContext context, AppColors appColors) {
     return Wrap(
       spacing: 4,
       runSpacing: 4,
@@ -138,10 +138,11 @@ class PostCard extends ConsumerWidget {
               ),
               child: Text(
                 tag,
-                style: GoogleFonts.firaCode(
-                  fontSize: 10,
-                  color: appColors.textSecondary,
-                  letterSpacing: 0.3,
+                style: AppTypography.mono(
+                  base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: appColors.textSecondary,
+                    letterSpacing: 0.3,
+                  ),
                 ),
               ),
             ),
@@ -166,40 +167,42 @@ class PostCard extends ConsumerWidget {
           backgroundColor: appColors.amberSubtle,
           child: Text(
             initials,
-            style: GoogleFonts.firaCode(
-              fontSize: 7,
-              fontWeight: FontWeight.w600,
-              color: appColors.amber,
+            style: AppTypography.mono(
+              base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: appColors.amber,
+              ),
             ),
           ),
         ),
         const SizedBox(width: 6),
         Text(
           displayName,
-          style: TextStyle(fontSize: 12, color: appColors.textSecondary),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: appColors.textSecondary,
+          ),
         ),
         Text(
           ' · Year ${post.year}',
-          style: TextStyle(fontSize: 12, color: appColors.textMuted),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: appColors.textMuted,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildMetaRow(AppColors appColors) {
+  Widget _buildMetaRow(BuildContext context, AppColors appColors) {
+    final metaStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
+      color: appColors.textMuted,
+    );
     return Row(
       children: [
         Icon(Icons.favorite_border, size: 12, color: appColors.textMuted),
         const SizedBox(width: 3),
-        Text(
-          '${post.likesCount} likes',
-          style: TextStyle(fontSize: 11, color: appColors.textMuted),
-        ),
-        Text(' · ', style: TextStyle(fontSize: 11, color: appColors.textMuted)),
-        Text(
-          _timeAgo(post.createdAt),
-          style: TextStyle(fontSize: 11, color: appColors.textMuted),
-        ),
+        Text('${post.likesCount} likes', style: metaStyle),
+        Text(' · ', style: metaStyle),
+        Text(_timeAgo(post.createdAt), style: metaStyle),
       ],
     );
   }
@@ -235,11 +238,12 @@ class _TypeBadge extends StatelessWidget {
       ),
       child: Text(
         isNote ? 'NOTE' : 'EXERCISE',
-        style: GoogleFonts.firaCode(
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-          color: isNote ? appColors.info : appColors.amber,
-          letterSpacing: 0.55,
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: isNote ? appColors.info : appColors.amber,
+            letterSpacing: 0.55,
+          ),
         ),
       ),
     );

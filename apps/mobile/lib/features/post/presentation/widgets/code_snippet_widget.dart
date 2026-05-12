@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 const _kLanguages = [
   'TypeScript',
@@ -100,11 +100,12 @@ class _CodeSnippetWidgetState extends State<CodeSnippetWidget> {
         children: [
           Text(
             'CODE SNIPPET (OPTIONAL)',
-            style: GoogleFonts.firaCode(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: ac.mutedForeground,
-              letterSpacing: 0.55,
+            style: AppTypography.mono(
+              base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: ac.mutedForeground,
+                letterSpacing: 0.55,
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -139,12 +140,15 @@ class _CodeSnippetWidgetState extends State<CodeSnippetWidget> {
           TextField(
             controller: _contentCtrl,
             maxLines: 8,
-            style: GoogleFonts.firaCode(fontSize: 12, color: cs.onSurface),
+            style: AppTypography.mono(
+              base: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+            ),
             decoration: InputDecoration(
               hintText: '// paste your code here…',
-              hintStyle: GoogleFonts.firaCode(
-                fontSize: 12,
-                color: ac.mutedForeground,
+              hintStyle: AppTypography.mono(
+                base: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: ac.mutedForeground,
+                ),
               ),
               filled: true,
               fillColor: scaffoldBg,
@@ -199,7 +203,9 @@ class _LanguageDropdown extends StatelessWidget {
             color: ac.mutedForeground,
             size: 16,
           ),
-          style: GoogleFonts.firaCode(fontSize: 12, color: cs.onSurface),
+          style: AppTypography.mono(
+            base: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+          ),
           dropdownColor: cs.surface,
           borderRadius: BorderRadius.circular(4),
           items: _kLanguages
@@ -208,9 +214,10 @@ class _LanguageDropdown extends StatelessWidget {
                   value: l,
                   child: Text(
                     l,
-                    style: GoogleFonts.firaCode(
-                      fontSize: 12,
-                      color: cs.onSurface,
+                    style: AppTypography.mono(
+                      base: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: cs.onSurface,
+                      ),
                     ),
                   ),
                 ),
@@ -239,12 +246,15 @@ class _InlineTextField extends StatelessWidget {
       height: 38,
       child: TextField(
         controller: controller,
-        style: GoogleFonts.firaCode(fontSize: 12, color: cs.onSurface),
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+        ),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: GoogleFonts.firaCode(
-            fontSize: 12,
-            color: ac.mutedForeground,
+          hintStyle: AppTypography.mono(
+            base: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: ac.mutedForeground,
+            ),
           ),
           filled: true,
           fillColor: scaffoldBg,

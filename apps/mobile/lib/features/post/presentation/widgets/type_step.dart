@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
@@ -18,8 +17,7 @@ class TypeStep extends StatelessWidget {
       children: [
         Text(
           'What are you sharing?',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 22,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w700,
             color: cs.onSurface,
           ),
@@ -107,8 +105,7 @@ class _TypeCard extends StatelessWidget {
                 children: [
                   Text(
                     label,
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: cs.onSurface,
                     ),
@@ -116,8 +113,7 @@ class _TypeCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     description,
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 13,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: ac.mutedForeground,
                     ),
@@ -184,8 +180,7 @@ class _PastExamCard extends StatelessWidget {
                 children: [
                   Text(
                     'Past Exam',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 16,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: cs.onSurface,
                     ),
@@ -193,8 +188,7 @@ class _PastExamCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     'Old exam papers and question banks',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 13,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: ac.mutedForeground,
                     ),
@@ -210,8 +204,7 @@ class _PastExamCard extends StatelessWidget {
               ),
               child: Text(
                 'Unavailable',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 10,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w500,
                   color: ac.mutedForeground,
                 ),

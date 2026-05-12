@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class DetailsStep extends StatefulWidget {
   const DetailsStep({
@@ -77,8 +77,7 @@ class _DetailsStepState extends State<DetailsStep> {
         children: [
           Text(
             'Add details',
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 22,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w700,
               color: cs.onSurface,
             ),
@@ -158,8 +157,7 @@ class _DetailsStepState extends State<DetailsStep> {
           const SizedBox(height: 6),
           Text(
             'Add up to 5 tags to help others discover your post.',
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 12,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: ac.mutedForeground,
             ),
           ),
@@ -210,8 +208,7 @@ class _IdentitySelector extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           'Moderators can still review the post, but other users will not see your identity.',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 12,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: ac.mutedForeground,
           ),
         ),
@@ -264,8 +261,7 @@ class _IdentityCard extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               label,
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 14,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: cs.onSurface,
               ),
@@ -318,8 +314,7 @@ class _SemesterDropdown extends StatelessWidget {
                   value: s,
                   child: Text(
                     'Semester $s',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 14,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: cs.onSurface,
                     ),
@@ -371,11 +366,10 @@ class _TextField extends StatelessWidget {
       textInputAction: textInputAction,
       keyboardType: keyboardType,
       onSubmitted: onSubmitted,
-      style: GoogleFonts.spaceGrotesk(fontSize: 14, color: cs.onSurface),
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: GoogleFonts.spaceGrotesk(
-          fontSize: 14,
+        hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: ac.mutedForeground,
         ),
         filled: true,
@@ -412,20 +406,23 @@ class _FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
+    final theme = Theme.of(context);
+    final baseStyle = AppTypography.mono(
+      base: theme.textTheme.labelSmall?.copyWith(
+        fontWeight: FontWeight.w600,
+        color: ac.mutedForeground,
+        letterSpacing: 0.55,
+      ),
+    );
     return RichText(
       text: TextSpan(
-        style: GoogleFonts.firaCode(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: ac.mutedForeground,
-          letterSpacing: 0.55,
-        ),
+        style: baseStyle,
         children: [
           TextSpan(text: text),
           if (required)
             TextSpan(
               text: ' *',
-              style: TextStyle(color: ac.amber, fontSize: 13),
+              style: theme.textTheme.bodySmall?.copyWith(color: ac.amber),
             ),
           if (optional) const TextSpan(text: ' (optional)'),
         ],
@@ -456,10 +453,11 @@ class _TagChip extends StatelessWidget {
         children: [
           Text(
             '#$label',
-            style: GoogleFonts.firaCode(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: ac.mutedForeground,
+            style: AppTypography.mono(
+              base: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: ac.mutedForeground,
+              ),
             ),
           ),
           const SizedBox(width: 4),
