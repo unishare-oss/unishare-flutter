@@ -1003,3 +1003,7 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [09:54] Edit: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
   [09:57] Edit: apps/mobile/test/widget/features/requests/widgets/upvote_button_test.dart
   [09:58] Edit: apps/mobile/test/widget/features/requests/widgets/upvote_button_test.dart
+  [10:15] Edit: apps/mobile/lib/features/requests/presentation/providers/request_repository_provider.dart
+  [10:15] Write: apps/mobile/lib/features/requests/presentation/screens/request_detail_screen.dart
+  [10:16] Write: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [10:16] Write: apps/mobile/lib/features/requests/presentation/widgets/suggestion_card.dart

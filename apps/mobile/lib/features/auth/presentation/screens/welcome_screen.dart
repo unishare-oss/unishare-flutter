@@ -286,9 +286,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           Text(
             'Use your university account to continue',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: ac.textSecondary,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: ac.textSecondary),
           ),
           const SizedBox(height: 32),
 
@@ -311,9 +311,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
                   'or',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: ac.mutedForeground,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
                 ),
               ),
               Expanded(child: Divider(color: dividerColor, height: 1)),
@@ -347,9 +347,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 isExpanded: true,
                 hint: Text(
                   'No university',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: ac.textSecondary,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: ac.textSecondary),
                 ),
                 icon: Icon(
                   Icons.keyboard_arrow_down,
@@ -377,9 +377,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     borderSide: BorderSide(color: ac.amber, width: 1.5),
                   ),
                 ),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: cs.onSurface,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
                 items: universities
                     .map(
                       (u) => DropdownMenuItem(
@@ -474,9 +474,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 Expanded(
                   child: Text(
                     'I have read and agree to the Terms of Service and Privacy Policy.',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: ac.textSecondary,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: ac.textSecondary),
                   ),
                 ),
               ],
@@ -487,9 +487,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               const SizedBox(height: 4),
               Text(
                 'You must accept the Terms and Privacy Policy to create an account',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: cs.error,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: cs.error),
               ),
             ],
           ] else ...[
@@ -528,9 +528,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             const SizedBox(height: 8),
             Text(
               _serverError!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: cs.error,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.error),
             ),
           ],
 
@@ -571,9 +571,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 isSignUp
                     ? 'Already have an account? '
                     : "Don't have an account? ",
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: ac.mutedForeground,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
               ),
               TextButton(
                 onPressed: _switchMode,
@@ -610,9 +610,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               ),
               child: Text(
                 'Continue as guest',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: ac.mutedForeground,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
               ),
             ),
           ),
@@ -622,9 +622,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             Text(
               'By continuing with Google or Microsoft you agree to our Terms and Privacy Policy.',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: ac.mutedForeground,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
             ),
           ],
           const SizedBox(height: 8),

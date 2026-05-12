@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/requests/domain/entities/content_request.dart';
 import 'package:unishare_mobile/features/requests/domain/entities/suggestion.dart';
+import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/suggestions_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/upvote_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/request_detail_screen.dart';
@@ -52,6 +53,7 @@ Widget _wrap(
         (ref, requestId) => Stream.value(suggestions),
       ),
       hasUpvotedProvider.overrideWith((ref, requestId) async => false),
+      currentUserIdProvider.overrideWithValue(null),
     ],
     child: MaterialApp(theme: AppTheme.build(AppThemes.unishare), home: child),
   );

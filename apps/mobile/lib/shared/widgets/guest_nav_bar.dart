@@ -95,10 +95,9 @@ class _GuestNavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isActive ? colors.amber : colors.textMuted;
-    final labelStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
-      letterSpacing: 0.55,
-      color: color,
-    );
+    final labelStyle = Theme.of(
+      context,
+    ).textTheme.labelSmall?.copyWith(letterSpacing: 0.55, color: color);
     return Semantics(
       label: semanticsLabel,
       button: true,

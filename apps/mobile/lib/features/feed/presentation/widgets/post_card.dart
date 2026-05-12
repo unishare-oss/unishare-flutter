@@ -178,24 +178,24 @@ class PostCard extends ConsumerWidget {
         const SizedBox(width: 6),
         Text(
           displayName,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: appColors.textSecondary,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: appColors.textSecondary),
         ),
         Text(
           ' · Year ${post.year}',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: appColors.textMuted,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: appColors.textMuted),
         ),
       ],
     );
   }
 
   Widget _buildMetaRow(BuildContext context, AppColors appColors) {
-    final metaStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
-      color: appColors.textMuted,
-    );
+    final metaStyle = Theme.of(
+      context,
+    ).textTheme.labelSmall?.copyWith(color: appColors.textMuted);
     return Row(
       children: [
         Icon(Icons.favorite_border, size: 12, color: appColors.textMuted),

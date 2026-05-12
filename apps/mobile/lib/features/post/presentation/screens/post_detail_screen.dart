@@ -113,7 +113,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                   Text(
                     error.toString(),
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: appColors.textMuted),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: appColors.textMuted),
                   ),
                 ],
               ),
@@ -148,7 +150,9 @@ class _BreadcrumbBar extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
 
     final theme = Theme.of(context);
-    final mutedStyle = theme.textTheme.labelSmall?.copyWith(color: appColors.textMuted);
+    final mutedStyle = theme.textTheme.labelSmall?.copyWith(
+      color: appColors.textMuted,
+    );
     final sep = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 3),
       child: Text(
@@ -595,7 +599,9 @@ class _AuthorChip extends StatelessWidget {
               ),
               Text(
                 _relativeTime(post.createdAt),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
               ),
             ],
           ),
@@ -797,7 +803,9 @@ class _CommentInputBar extends StatelessWidget {
             controller: controller,
             decoration: InputDecoration(
               hintText: 'Write a comment…',
-              hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: appColors.textMuted),
+              hintStyle: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: appColors.textMuted),
               fillColor: Theme.of(context).scaffoldBackgroundColor,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
@@ -814,7 +822,9 @@ class _CommentInputBar extends StatelessWidget {
             children: [
               Text(
                 'Shift + Enter to submit',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
               ),
               const Spacer(),
               FilledButton(
@@ -831,9 +841,9 @@ class _CommentInputBar extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  textStyle: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  textStyle: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 child: isSubmitting
                     ? SizedBox(

@@ -336,10 +336,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
         controller: _searchController,
         focusNode: _searchFocusNode,
         onChanged: (value) => setState(() => _searchQuery = value.trim()),
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
         decoration: InputDecoration(
           hintText: 'Search posts or #tags...',
-          hintStyle: Theme.of(context).textTheme.bodySmall?.copyWith(color: ac.textMuted),
+          hintStyle: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: ac.textMuted),
           filled: true,
           fillColor: ac.muted,
           prefixIcon: Icon(Icons.search, size: 18, color: ac.textMuted),
@@ -504,9 +508,9 @@ class _FiltersButton extends StatelessWidget {
             icon: const Icon(Icons.tune, size: 14),
             label: Text(
               'Filters',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
             ),
           ),
           if (activeCount > 0)

@@ -128,7 +128,9 @@ class _ImageViewerState extends State<_ImageViewer> {
             padding: const EdgeInsets.only(bottom: 16),
             child: Text(
               'Pinch to zoom',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: ac.textMuted),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: ac.textMuted),
             ),
           ),
         ],

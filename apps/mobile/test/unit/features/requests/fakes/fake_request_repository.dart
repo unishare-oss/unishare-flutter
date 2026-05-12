@@ -79,6 +79,23 @@ class FakeRequestRepository implements RequestRepository {
 
   @override
   Future<bool> hasUpvoted(String requestId) async => hasUpvotedResult;
+
+  @override
+  Future<void> deleteRequest(String requestId) async {}
+
+  @override
+  Future<void> acceptSuggestion({
+    required String requestId,
+    required String suggestionId,
+    required String postId,
+    required String postTitle,
+  }) async {}
+
+  @override
+  Future<void> removeSuggestion({
+    required String requestId,
+    required String suggestionId,
+  }) async {}
 }
 
 // ---------------------------------------------------------------------------

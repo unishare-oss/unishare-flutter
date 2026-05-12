@@ -105,12 +105,13 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
                             Text(
                               tag,
                               style: AppTypography.mono(
-                                base: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                  color: checked ? ac.amber : cs.onSurface,
-                                  fontWeight: checked
-                                      ? FontWeight.w600
-                                      : FontWeight.normal,
-                                ),
+                                base: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: checked ? ac.amber : cs.onSurface,
+                                      fontWeight: checked
+                                          ? FontWeight.w600
+                                          : FontWeight.normal,
+                                    ),
                               ),
                             ),
                           ],

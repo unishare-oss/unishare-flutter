@@ -92,9 +92,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             ),
             child: Text(
               'Cancel',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
             ),
           ),
         ),
@@ -220,9 +220,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             Text(
               'Uploading $uploading…',
               style: AppTypography.mono(
-                base: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: ac.mutedForeground,
-                ),
+                base: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(color: ac.mutedForeground),
               ),
             ),
           ],
@@ -242,9 +242,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
           Text(
             'Finishing up…',
             style: AppTypography.mono(
-              base: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: ac.mutedForeground,
-              ),
+              base: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: ac.mutedForeground),
             ),
           ),
         ],
@@ -276,9 +276,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
             Text(
               '$failedFile could not be uploaded',
               style: AppTypography.mono(
-                base: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: ac.mutedForeground,
-                ),
+                base: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(color: ac.mutedForeground),
               ),
             ),
           ],
@@ -318,7 +318,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       ),
       child: Text(
         'Your post is live. Taking you to the feed…',
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: ac.success),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: ac.success),
       ),
     );
   }
@@ -329,9 +331,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
       onPressed: () => context.go('/feed'),
       child: Text(
         'Go to feed — upload continues in background',
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: ac.mutedForeground,
-        ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
       ),
     );
   }
@@ -369,9 +371,9 @@ class _UploadProgressScreenState extends ConsumerState<UploadProgressScreen> {
         ),
         child: Text(
           'Retry',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
     );
@@ -505,9 +507,9 @@ class _PhaseLabel extends StatelessWidget {
       FileUploadPhase.queued => Text(
         'Queued',
         style: AppTypography.mono(
-          base: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: ac.mutedForeground,
-          ),
+          base: Theme.of(
+            context,
+          ).textTheme.labelSmall?.copyWith(color: ac.mutedForeground),
         ),
       ),
     };

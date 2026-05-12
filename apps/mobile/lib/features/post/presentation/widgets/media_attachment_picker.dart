@@ -149,13 +149,17 @@ class _FileChip extends StatelessWidget {
               Text(
                 name.length > 24 ? '${name.substring(0, 24)}…' : name,
                 style: AppTypography.mono(
-                  base: Theme.of(context).textTheme.labelSmall?.copyWith(color: fg),
+                  base: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: fg),
                 ),
               ),
               Text(
                 tooLarge ? '$sizeLabel — exceeds 10 MB' : sizeLabel,
                 style: AppTypography.mono(
-                  base: Theme.of(context).textTheme.labelSmall?.copyWith(color: fg),
+                  base: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: fg),
                 ),
               ),
             ],

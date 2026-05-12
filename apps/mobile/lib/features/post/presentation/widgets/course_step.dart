@@ -239,9 +239,9 @@ class _DropdownField<T> extends StatelessWidget {
           value: value,
           hint: Text(
             hint,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: ac.mutedForeground,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
           ),
           isExpanded: true,
           icon: Icon(
@@ -249,7 +249,9 @@ class _DropdownField<T> extends StatelessWidget {
             color: ac.mutedForeground,
             size: 18,
           ),
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
           items: items,
           onChanged: onChanged,
           focusColor: Colors.transparent,

@@ -169,9 +169,9 @@ class GoogleSignInButton extends StatelessWidget {
                   const SizedBox(width: 12),
                   Text(
                     'Continue with Google',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: cs.onSurface,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
                   ),
                 ],
               ),
@@ -209,9 +209,9 @@ class MicrosoftSignInButton extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               'Continue with Microsoft',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: cs.onSurface,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
             ),
           ],
         ),

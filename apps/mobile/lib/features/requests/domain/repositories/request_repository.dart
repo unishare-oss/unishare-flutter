@@ -39,4 +39,21 @@ abstract interface class RequestRepository {
 
   Future<void> toggleUpvote(String requestId);
   Future<bool> hasUpvoted(String requestId);
+
+  /// Deletes a request. Only the request owner may call this.
+  Future<void> deleteRequest(String requestId);
+
+  /// Owner accepts a suggestion — sets request status to fulfilled.
+  Future<void> acceptSuggestion({
+    required String requestId,
+    required String suggestionId,
+    required String postId,
+    required String postTitle,
+  });
+
+  /// Owner removes a suggestion from the list.
+  Future<void> removeSuggestion({
+    required String requestId,
+    required String suggestionId,
+  });
 }

@@ -83,4 +83,30 @@ class RequestRepositoryImpl implements RequestRepository {
 
   @override
   Future<bool> hasUpvoted(String requestId) => datasource.hasUpvoted(requestId);
+
+  @override
+  Future<void> deleteRequest(String requestId) =>
+      datasource.deleteRequest(requestId);
+
+  @override
+  Future<void> acceptSuggestion({
+    required String requestId,
+    required String suggestionId,
+    required String postId,
+    required String postTitle,
+  }) => datasource.acceptSuggestion(
+    requestId: requestId,
+    suggestionId: suggestionId,
+    postId: postId,
+    postTitle: postTitle,
+  );
+
+  @override
+  Future<void> removeSuggestion({
+    required String requestId,
+    required String suggestionId,
+  }) => datasource.removeSuggestion(
+    requestId: requestId,
+    suggestionId: suggestionId,
+  );
 }

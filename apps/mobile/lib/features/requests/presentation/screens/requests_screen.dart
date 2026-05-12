@@ -1,11 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/requests_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/new_request_dialog.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/request_card.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/request_filter_bar.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+
+Future<void> _deleteRequest(
+  BuildContext context,
+  WidgetRef ref,
+  String id,
+) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('Delete this request?'),
+      content: const Text(
+        'This action cannot be undone. The request and all its suggestions will be permanently removed.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(ctx).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(ctx).pop(true),
+          child: const Text('Delete'),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true) return;
+  try {
+    await ref.read(deleteRequestUseCaseProvider).call(id);
+  } catch (e) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to delete request: $e')));
+    }
+  }
+}
 
 class RequestsScreen extends ConsumerWidget {
   const RequestsScreen({super.key});
@@ -15,6 +52,7 @@ class RequestsScreen extends ConsumerWidget {
     final ac = Theme.of(context).extension<AppColors>()!;
     final theme = Theme.of(context);
 
+    final currentUid = ref.watch(currentUserIdProvider);
     final filter = ref.watch(requestsFilterStateProvider);
     final filterNotifier = ref.read(requestsFilterStateProvider.notifier);
     final requestsAsync = ref.watch(requestsProvider(filter));
@@ -75,15 +113,20 @@ class RequestsScreen extends ConsumerWidget {
                 message: 'Unable to load requests. Check your connection.',
               ),
               data: (requests) {
-                if (requests.isEmpty) {
-                  return const _EmptyState();
-                }
+                if (requests.isEmpty) return const _EmptyState();
                 return ListView.separated(
                   itemCount: requests.length,
-                  separatorBuilder: (context, index) =>
+                  separatorBuilder: (_, _) =>
                       Divider(height: 1, color: theme.dividerColor),
-                  itemBuilder: (context, index) =>
-                      RequestCard(request: requests[index]),
+                  itemBuilder: (context, index) {
+                    final r = requests[index];
+                    return RequestCard(
+                      request: r,
+                      onDelete: currentUid == r.requesterId
+                          ? () => _deleteRequest(context, ref, r.id)
+                          : null,
+                    );
+                  },
                 );
               },
             ),

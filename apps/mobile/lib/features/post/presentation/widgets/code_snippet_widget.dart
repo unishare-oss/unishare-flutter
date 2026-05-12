@@ -141,14 +141,16 @@ class _CodeSnippetWidgetState extends State<CodeSnippetWidget> {
             controller: _contentCtrl,
             maxLines: 8,
             style: AppTypography.mono(
-              base: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+              base: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
             ),
             decoration: InputDecoration(
               hintText: '// paste your code here…',
               hintStyle: AppTypography.mono(
-                base: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: ac.mutedForeground,
-                ),
+                base: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
               ),
               filled: true,
               fillColor: scaffoldBg,
@@ -204,7 +206,9 @@ class _LanguageDropdown extends StatelessWidget {
             size: 16,
           ),
           style: AppTypography.mono(
-            base: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+            base: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
           ),
           dropdownColor: cs.surface,
           borderRadius: BorderRadius.circular(4),
@@ -215,9 +219,9 @@ class _LanguageDropdown extends StatelessWidget {
                   child: Text(
                     l,
                     style: AppTypography.mono(
-                      base: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: cs.onSurface,
-                      ),
+                      base: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
                     ),
                   ),
                 ),
@@ -247,14 +251,16 @@ class _InlineTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         style: AppTypography.mono(
-          base: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+          base: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
         ),
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: AppTypography.mono(
-            base: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: ac.mutedForeground,
-            ),
+            base: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
           ),
           filled: true,
           fillColor: scaffoldBg,

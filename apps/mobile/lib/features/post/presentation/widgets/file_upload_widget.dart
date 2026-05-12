@@ -112,9 +112,9 @@ class FileUploadWidget extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     'Drop files here or click to browse',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: ac.mutedForeground,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
                   ),
                   Text(
                     'max 50 MB per file',
@@ -197,15 +197,17 @@ class _FileRow extends StatelessWidget {
                 Text(
                   name.length > 30 ? '${name.substring(0, 30)}…' : name,
                   style: AppTypography.mono(
-                    base: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: cs.onSurface,
-                    ),
+                    base: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
                   ),
                 ),
                 Text(
                   tooLarge ? '$sizeLabel — exceeds 50 MB' : sizeLabel,
                   style: AppTypography.mono(
-                    base: Theme.of(context).textTheme.labelSmall?.copyWith(color: fg),
+                    base: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: fg),
                   ),
                 ),
               ],

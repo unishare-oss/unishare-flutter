@@ -157,9 +157,9 @@ class _DetailsStepState extends State<DetailsStep> {
           const SizedBox(height: 6),
           Text(
             'Add up to 5 tags to help others discover your post.',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: ac.mutedForeground,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
           ),
           if (widget.tags.isNotEmpty) ...[
             const SizedBox(height: 8),
@@ -208,9 +208,9 @@ class _IdentitySelector extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           'Moderators can still review the post, but other users will not see your identity.',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: ac.mutedForeground,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
         ),
       ],
     );
@@ -366,12 +366,14 @@ class _TextField extends StatelessWidget {
       textInputAction: textInputAction,
       keyboardType: keyboardType,
       onSubmitted: onSubmitted,
-      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
+      style: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: ac.mutedForeground,
-        ),
+        hintStyle: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
         filled: true,
         fillColor: cs.surface,
         contentPadding: const EdgeInsets.symmetric(

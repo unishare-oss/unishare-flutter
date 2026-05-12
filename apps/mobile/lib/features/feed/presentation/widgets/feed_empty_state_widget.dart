@@ -31,9 +31,9 @@ class FeedEmptyStateWidget extends StatelessWidget {
             Text(
               'Try selecting different tags or clear the filter to see all posts.',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: ac.mutedForeground,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
             ),
             const SizedBox(height: 24),
             OutlinedButton(
