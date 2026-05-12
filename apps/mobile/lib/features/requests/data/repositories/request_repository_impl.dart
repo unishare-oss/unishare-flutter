@@ -26,6 +26,10 @@ class RequestRepositoryImpl implements RequestRepository {
   );
 
   @override
+  Stream<ContentRequest> watchRequest(String requestId) =>
+      datasource.watchRequest(requestId);
+
+  @override
   Future<void> createRequest({
     required String departmentId,
     required String departmentName,

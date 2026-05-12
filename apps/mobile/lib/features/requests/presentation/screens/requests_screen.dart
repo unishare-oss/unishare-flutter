@@ -1,38 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import 'package:unishare_mobile/features/requests/domain/entities/content_request.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/requests_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/new_request_dialog.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/request_card.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/request_filter_bar.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
-class RequestsScreen extends ConsumerStatefulWidget {
+class RequestsScreen extends ConsumerWidget {
   const RequestsScreen({super.key});
 
   @override
-  ConsumerState<RequestsScreen> createState() => _RequestsScreenState();
-}
-
-class _RequestsScreenState extends ConsumerState<RequestsScreen> {
-  RequestStatus? _selectedStatus;
-  String? _selectedDepartmentId;
-  String? _selectedYear;
-  String? _selectedCourseId;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ac = Theme.of(context).extension<AppColors>()!;
     final theme = Theme.of(context);
 
-    final filter = RequestsFilter(
-      status: _selectedStatus,
-      departmentId: _selectedDepartmentId,
-      year: _selectedYear,
-      courseId: _selectedCourseId,
-    );
+    final filter = ref.watch(requestsFilterStateProvider);
+    final filterNotifier = ref.read(requestsFilterStateProvider.notifier);
     final requestsAsync = ref.watch(requestsProvider(filter));
 
     return Scaffold(
@@ -50,8 +34,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
               icon: const Icon(Icons.add, size: 16),
               label: Text(
                 'New Request',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 13,
+                style: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -75,40 +58,29 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
       body: Column(
         children: [
           RequestFilterBar(
-            selectedStatus: _selectedStatus,
-            selectedDepartmentId: _selectedDepartmentId,
-            selectedYear: _selectedYear,
-            selectedCourseId: _selectedCourseId,
-            onStatusChanged: (v) => setState(() {
-              _selectedStatus = v;
-            }),
-            onDepartmentChanged: (v) => setState(() {
-              _selectedDepartmentId = v;
-              _selectedYear = null;
-              _selectedCourseId = null;
-            }),
-            onYearChanged: (v) => setState(() {
-              _selectedYear = v;
-              _selectedCourseId = null;
-            }),
-            onCourseChanged: (v) => setState(() {
-              _selectedCourseId = v;
-            }),
+            selectedStatus: filter.status,
+            selectedDepartmentId: filter.departmentId,
+            selectedYear: filter.year,
+            selectedCourseId: filter.courseId,
+            onStatusChanged: filterNotifier.setStatus,
+            onDepartmentChanged: filterNotifier.setDepartmentId,
+            onYearChanged: filterNotifier.setYear,
+            onCourseChanged: filterNotifier.setCourseId,
           ),
           Divider(height: 1, color: theme.dividerColor),
           Expanded(
             child: requestsAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => _OfflineBanner(
+              error: (e, _) => const _OfflineBanner(
                 message: 'Unable to load requests. Check your connection.',
               ),
               data: (requests) {
                 if (requests.isEmpty) {
-                  return _EmptyState();
+                  return const _EmptyState();
                 }
                 return ListView.separated(
                   itemCount: requests.length,
-                  separatorBuilder: (_, _) =>
+                  separatorBuilder: (context, index) =>
                       Divider(height: 1, color: theme.dividerColor),
                   itemBuilder: (context, index) =>
                       RequestCard(request: requests[index]),
@@ -123,6 +95,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
 }
 
 class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
@@ -152,19 +126,32 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-class _OfflineBanner extends StatelessWidget {
+class _OfflineBanner extends StatefulWidget {
   const _OfflineBanner({required this.message});
   final String message;
 
   @override
+  State<_OfflineBanner> createState() => _OfflineBannerState();
+}
+
+class _OfflineBannerState extends State<_OfflineBanner> {
+  bool _dismissed = false;
+
+  @override
   Widget build(BuildContext context) {
+    if (_dismissed) return const SizedBox.shrink();
     final ac = Theme.of(context).extension<AppColors>()!;
     return Column(
       children: [
         MaterialBanner(
-          content: Text(message),
+          content: Text(widget.message),
           backgroundColor: ac.amber.withValues(alpha: 0.1),
-          actions: [TextButton(onPressed: () {}, child: const Text('Dismiss'))],
+          actions: [
+            TextButton(
+              onPressed: () => setState(() => _dismissed = true),
+              child: const Text('Dismiss'),
+            ),
+          ],
         ),
       ],
     );

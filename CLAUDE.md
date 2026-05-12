@@ -199,6 +199,7 @@ To regenerate: `dart run build_runner build`
 - No hardcoded colors — always use `cs.*` or `ac.*`
 - No hardcoded text styles or font sizes — always use `Theme.of(context).textTheme`
 - No hardcoded `FontFamily` strings — typography is Space Grotesk (body) and Fira Code (mono), defined once in `shared/theme/`
+- Never import `google_fonts` directly in widget code — use `theme.textTheme.*` for Space Grotesk and `AppTypography.mono(base: style)` for Fira Code
 - No hardcoded spacing magic numbers — use the spacing scale defined in `shared/theme/`
 - All icons from the project's defined icon set; avoid mixing icon packs
 

@@ -5,7 +5,6 @@ import 'package:unishare_mobile/features/requests/presentation/providers/request
 
 part 'requests_provider.g.dart';
 
-/// Filter params for the requests stream.
 class RequestsFilter {
   const RequestsFilter({
     this.departmentId,
@@ -19,6 +18,26 @@ class RequestsFilter {
   final String? courseId;
   final RequestStatus? status;
 
+  RequestsFilter copyWith({
+    String? departmentId,
+    String? year,
+    String? courseId,
+    RequestStatus? status,
+    bool clearDepartmentId = false,
+    bool clearYear = false,
+    bool clearCourseId = false,
+    bool clearStatus = false,
+  }) {
+    return RequestsFilter(
+      departmentId: clearDepartmentId
+          ? null
+          : (departmentId ?? this.departmentId),
+      year: clearYear ? null : (year ?? this.year),
+      courseId: clearCourseId ? null : (courseId ?? this.courseId),
+      status: clearStatus ? null : (status ?? this.status),
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -31,6 +50,37 @@ class RequestsFilter {
 
   @override
   int get hashCode => Object.hash(departmentId, year, courseId, status);
+}
+
+@riverpod
+class RequestsFilterState extends _$RequestsFilterState {
+  @override
+  RequestsFilter build() => const RequestsFilter();
+
+  void setStatus(RequestStatus? status) {
+    state = state.copyWith(status: status, clearStatus: status == null);
+  }
+
+  void setDepartmentId(String? id) {
+    state = state.copyWith(
+      departmentId: id,
+      clearDepartmentId: id == null,
+      clearYear: true,
+      clearCourseId: true,
+    );
+  }
+
+  void setYear(String? year) {
+    state = state.copyWith(
+      year: year,
+      clearYear: year == null,
+      clearCourseId: true,
+    );
+  }
+
+  void setCourseId(String? id) {
+    state = state.copyWith(courseId: id, clearCourseId: id == null);
+  }
 }
 
 @riverpod

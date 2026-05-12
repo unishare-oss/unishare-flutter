@@ -19,7 +19,7 @@ class UpvoteButton extends ConsumerWidget {
     final ac = Theme.of(context).extension<AppColors>()!;
     final cs = Theme.of(context).colorScheme;
     final hasUpvotedAsync = ref.watch(hasUpvotedProvider(requestId));
-    final toggleState = ref.watch(toggleUpvoteProvider);
+    final toggleState = ref.watch(toggleUpvoteProvider(requestId));
 
     final isActive = hasUpvotedAsync.asData?.value ?? false;
     final isLoading = toggleState.isLoading;
@@ -30,7 +30,7 @@ class UpvoteButton extends ConsumerWidget {
       child: InkWell(
         onTap: isLoading
             ? null
-            : () => ref.read(toggleUpvoteProvider.notifier).toggle(requestId),
+            : () => ref.read(toggleUpvoteProvider(requestId).notifier).toggle(),
         borderRadius: BorderRadius.circular(6),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

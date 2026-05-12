@@ -52,6 +52,13 @@ class RequestFirestoreDatasource {
     return q.snapshots().map((snap) => snap.docs.map(_docToEntity).toList());
   }
 
+  Stream<ContentRequest> watchRequest(String requestId) {
+    return _requests.doc(requestId).snapshots().map((doc) {
+      if (!doc.exists) throw StateError('request_not_found');
+      return _docToEntity(doc);
+    });
+  }
+
   // ---------------------------------------------------------------------------
   // Create request
   // ---------------------------------------------------------------------------

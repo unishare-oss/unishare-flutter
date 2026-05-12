@@ -1,37 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:unishare_mobile/features/requests/domain/entities/content_request.dart';
+import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/suggestions_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/request_card.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/suggestion_card.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/suggest_fulfillment_dialog.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
-
-// We need to watch the full request from the requests stream.
-// For the detail screen we use a simple FutureProvider approach
-// by re-using the requests provider with no filter and extracting by id.
-// The easiest pattern is to pass the request as extra or fetch once.
-// Per the spec, the route is /more/requests/:requestId.
-// We load the request via a dedicated provider below.
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:unishare_mobile/features/requests/data/models/request_dto.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 part 'request_detail_screen.g.dart';
 
 @riverpod
 Stream<ContentRequest> requestDetail(Ref ref, String requestId) {
-  return FirebaseFirestore.instance
-      .collection('requests')
-      .doc(requestId)
-      .snapshots()
-      .map((doc) {
-        if (!doc.exists) throw StateError('request_not_found');
-        return RequestDto.fromJson(doc.data()!).toDomain();
-      });
+  return ref.watch(watchRequestUseCaseProvider).call(requestId);
 }
 
 class RequestDetailScreen extends ConsumerWidget {
@@ -60,7 +44,6 @@ class RequestDetailScreen extends ConsumerWidget {
         ),
         data: (request) => ListView(
           children: [
-            // Request card (non-tappable)
             Card(
               margin: const EdgeInsets.all(16),
               shape: RoundedRectangleBorder(
@@ -70,8 +53,6 @@ class RequestDetailScreen extends ConsumerWidget {
               elevation: 1,
               child: RequestCard(request: request, tappable: false),
             ),
-
-            // Suggestions header
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
@@ -79,29 +60,32 @@ class RequestDetailScreen extends ConsumerWidget {
                   suggestionsAsync.when(
                     loading: () => Text(
                       'SUGGESTIONS',
-                      style: GoogleFonts.firaCode(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: ac.mutedForeground,
-                        letterSpacing: 0.55,
+                      style: AppTypography.mono(
+                        base: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: ac.mutedForeground,
+                          letterSpacing: 0.55,
+                        ),
                       ),
                     ),
                     error: (_, _) => Text(
                       'SUGGESTIONS',
-                      style: GoogleFonts.firaCode(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: ac.mutedForeground,
-                        letterSpacing: 0.55,
+                      style: AppTypography.mono(
+                        base: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: ac.mutedForeground,
+                          letterSpacing: 0.55,
+                        ),
                       ),
                     ),
                     data: (suggestions) => Text(
                       'SUGGESTIONS (${suggestions.length})',
-                      style: GoogleFonts.firaCode(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: ac.mutedForeground,
-                        letterSpacing: 0.55,
+                      style: AppTypography.mono(
+                        base: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: ac.mutedForeground,
+                          letterSpacing: 0.55,
+                        ),
                       ),
                     ),
                   ),
@@ -119,11 +103,12 @@ class RequestDetailScreen extends ConsumerWidget {
                     ),
                     label: Text(
                       'SUGGEST',
-                      style: GoogleFonts.firaCode(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: ac.amber,
-                        letterSpacing: 0.55,
+                      style: AppTypography.mono(
+                        base: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: ac.amber,
+                          letterSpacing: 0.55,
+                        ),
                       ),
                     ),
                     style: TextButton.styleFrom(
@@ -135,10 +120,7 @@ class RequestDetailScreen extends ConsumerWidget {
                 ],
               ),
             ),
-
             const Divider(height: 1),
-
-            // Suggestions list
             suggestionsAsync.when(
               loading: () => const Padding(
                 padding: EdgeInsets.all(32),

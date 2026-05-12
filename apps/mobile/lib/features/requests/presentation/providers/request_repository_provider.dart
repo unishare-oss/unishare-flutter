@@ -6,6 +6,7 @@ import 'package:unishare_mobile/features/requests/domain/repositories/request_re
 import 'package:unishare_mobile/features/requests/domain/usecases/create_request.dart';
 import 'package:unishare_mobile/features/requests/domain/usecases/suggest_fulfillment.dart';
 import 'package:unishare_mobile/features/requests/domain/usecases/toggle_upvote_request.dart';
+import 'package:unishare_mobile/features/requests/domain/usecases/watch_request.dart';
 import 'package:unishare_mobile/features/requests/domain/usecases/watch_requests.dart';
 import 'package:unishare_mobile/features/requests/domain/usecases/watch_suggestions.dart';
 
@@ -46,4 +47,9 @@ SuggestFulfillment suggestFulfillmentUseCase(Ref ref) {
 @Riverpod(keepAlive: true)
 ToggleUpvoteRequest toggleUpvoteRequestUseCase(Ref ref) {
   return ToggleUpvoteRequest(ref.watch(requestRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+WatchRequest watchRequestUseCase(Ref ref) {
+  return WatchRequest(ref.watch(requestRepositoryProvider));
 }

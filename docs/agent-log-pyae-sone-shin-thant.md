@@ -972,3 +972,34 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [11:46] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
   [11:46] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
   [11:46] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+
+2026-05-12
+  [09:50] Edit: apps/mobile/lib/features/requests/domain/repositories/request_repository.dart
+  [09:50] Edit: apps/mobile/lib/features/requests/data/datasources/request_firestore_datasource.dart
+  [09:50] Edit: apps/mobile/lib/features/requests/data/repositories/request_repository_impl.dart
+  [09:50] Write: apps/mobile/lib/features/requests/domain/usecases/watch_request.dart
+  [09:50] Edit: apps/mobile/lib/features/requests/presentation/providers/request_repository_provider.dart
+  [09:50] Edit: apps/mobile/lib/features/requests/presentation/providers/request_repository_provider.dart
+  [09:50] Write: apps/mobile/lib/features/requests/presentation/screens/request_detail_screen.dart
+  [09:50] Write: apps/mobile/lib/features/requests/presentation/providers/upvote_provider.dart
+  [09:51] Write: apps/mobile/lib/features/requests/presentation/widgets/upvote_button.dart
+  [09:51] Write: apps/mobile/lib/features/requests/presentation/widgets/request_filter_bar.dart
+  [09:51] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:51] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:51] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:51] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:51] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:51] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:52] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:52] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:52] Edit: apps/mobile/lib/features/requests/presentation/widgets/new_request_dialog.dart
+  [09:52] Write: apps/mobile/lib/features/requests/presentation/widgets/suggest_fulfillment_dialog.dart
+  [09:52] Write: apps/mobile/lib/features/requests/presentation/providers/requests_provider.dart
+  [09:53] Write: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [09:54] Edit: apps/mobile/test/unit/features/requests/fakes/fake_request_repository.dart
+  [09:54] Edit: apps/mobile/test/widget/features/requests/widgets/upvote_button_test.dart
+  [09:54] Edit: apps/mobile/test/widget/features/requests/widgets/upvote_button_test.dart
+  [09:54] Edit: apps/mobile/test/widget/features/requests/widgets/upvote_button_test.dart
+  [09:54] Edit: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [09:57] Edit: apps/mobile/test/widget/features/requests/widgets/upvote_button_test.dart
+  [09:58] Edit: apps/mobile/test/widget/features/requests/widgets/upvote_button_test.dart

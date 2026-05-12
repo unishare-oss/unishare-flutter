@@ -46,8 +46,8 @@ void main() {
         ProviderScope(
           overrides: [
             hasUpvotedProvider.overrideWith((ref, requestId) async => false),
-            toggleUpvoteProvider.overrideWith(
-              () => _FakeToggleUpvote(onToggle: () => toggled = true),
+            toggleUpvoteProvider.overrideWith2(
+              (requestId) => _FakeToggleUpvote(onToggle: () => toggled = true),
             ),
           ],
           child: MaterialApp(
@@ -113,10 +113,10 @@ class _FakeToggleUpvote extends ToggleUpvote {
   final void Function() onToggle;
 
   @override
-  AsyncValue<void> build() => const AsyncData(null);
+  AsyncValue<void> build(String requestId) => const AsyncData(null);
 
   @override
-  Future<void> toggle(String requestId) async {
+  Future<void> toggle() async {
     onToggle();
   }
 }
