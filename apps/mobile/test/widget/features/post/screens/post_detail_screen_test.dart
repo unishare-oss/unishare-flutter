@@ -36,6 +36,10 @@ class _FakePostRepository implements PostRepository {
   Stream<List<Post>> watchFeed({int limit = 20}) => throw UnimplementedError();
 
   @override
+  Stream<List<Post>> watchPostsByAuthor(String authorId, {int limit = 50}) =>
+      throw UnimplementedError();
+
+  @override
   Future<void> saveDraft(PostDraft draft) => throw UnimplementedError();
 
   @override

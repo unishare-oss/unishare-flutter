@@ -1,9 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 const _maxBytes = 50 * 1024 * 1024; // 50 MB per spec
 const _allowedExtensions = [
@@ -112,17 +112,17 @@ class FileUploadWidget extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     'Drop files here or click to browse',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 13,
-                      color: ac.mutedForeground,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
                   ),
                   Text(
                     'max 50 MB per file',
-                    style: GoogleFonts.firaCode(
-                      fontSize: 11,
-                      color: ac.mutedForeground,
-                      letterSpacing: 0.4,
+                    style: AppTypography.mono(
+                      base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: ac.mutedForeground,
+                        letterSpacing: 0.4,
+                      ),
                     ),
                   ),
                 ],
@@ -196,14 +196,19 @@ class _FileRow extends StatelessWidget {
               children: [
                 Text(
                   name.length > 30 ? '${name.substring(0, 30)}…' : name,
-                  style: GoogleFonts.firaCode(
-                    fontSize: 12,
-                    color: cs.onSurface,
+                  style: AppTypography.mono(
+                    base: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
                   ),
                 ),
                 Text(
                   tooLarge ? '$sizeLabel — exceeds 50 MB' : sizeLabel,
-                  style: GoogleFonts.firaCode(fontSize: 11, color: fg),
+                  style: AppTypography.mono(
+                    base: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: fg),
+                  ),
                 ),
               ],
             ),

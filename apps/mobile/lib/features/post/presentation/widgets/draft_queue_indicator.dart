@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/draft_queue_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class DraftQueueIndicator extends ConsumerWidget {
   const DraftQueueIndicator({super.key});
@@ -35,10 +35,11 @@ class DraftQueueIndicator extends ConsumerWidget {
           const SizedBox(width: 4),
           Text(
             '$pending queued',
-            style: GoogleFonts.firaCode(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: ac.textMuted,
+            style: AppTypography.mono(
+              base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: ac.textMuted,
+              ),
             ),
           ),
         ],

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_posts_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/saved_post_card.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class SavedScreen extends ConsumerWidget {
   const SavedScreen({super.key});
@@ -97,7 +98,11 @@ class _ErrorState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: Color(0xFF8a837e)),
+          Icon(
+            Icons.error_outline,
+            size: 48,
+            color: Theme.of(context).extension<AppColors>()!.mutedForeground,
+          ),
           const SizedBox(height: 12),
           const Text('Something went wrong'),
           const SizedBox(height: 8),
@@ -113,13 +118,14 @@ class _SkeletonList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
     return ListView.builder(
       itemCount: 5,
       itemBuilder: (_, i) => Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         height: 100,
         decoration: BoxDecoration(
-          color: const Color(0xFFf5f4f2),
+          color: ac.muted,
           borderRadius: BorderRadius.circular(6),
         ),
       ),

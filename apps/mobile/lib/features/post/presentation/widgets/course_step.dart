@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class CourseStep extends ConsumerWidget {
   const CourseStep({
@@ -44,8 +44,7 @@ class CourseStep extends ConsumerWidget {
       children: [
         Text(
           'Which course is this for?',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 22,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w700,
             color: cs.onSurface,
           ),
@@ -77,8 +76,7 @@ class CourseStep extends ConsumerWidget {
                     value: d.id,
                     child: Text(
                       d.name,
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 14,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: cs.onSurface,
                       ),
@@ -108,8 +106,7 @@ class CourseStep extends ConsumerWidget {
                   value: y,
                   child: Text(
                     'Year $y',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 14,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: cs.onSurface,
                     ),
@@ -175,8 +172,7 @@ class CourseStep extends ConsumerWidget {
                 value: c.id,
                 child: Text(
                   c.name,
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: cs.onSurface,
                   ),
@@ -198,13 +194,15 @@ class _FieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
+    final theme = Theme.of(context);
     return Text(
       text,
-      style: GoogleFonts.firaCode(
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-        color: ac.mutedForeground,
-        letterSpacing: 0.55,
+      style: AppTypography.mono(
+        base: theme.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: ac.mutedForeground,
+          letterSpacing: 0.55,
+        ),
       ),
     );
   }
@@ -241,10 +239,9 @@ class _DropdownField<T> extends StatelessWidget {
           value: value,
           hint: Text(
             hint,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 14,
-              color: ac.mutedForeground,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
           ),
           isExpanded: true,
           icon: Icon(
@@ -252,7 +249,9 @@ class _DropdownField<T> extends StatelessWidget {
             color: ac.mutedForeground,
             size: 18,
           ),
-          style: GoogleFonts.spaceGrotesk(fontSize: 14, color: cs.onSurface),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
           items: items,
           onChanged: onChanged,
           focusColor: Colors.transparent,

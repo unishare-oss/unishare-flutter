@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class MediaAttachmentPicker extends StatelessWidget {
   const MediaAttachmentPicker({
@@ -86,7 +86,7 @@ class MediaAttachmentPicker extends StatelessWidget {
           icon: const Icon(Icons.attach_file, size: 16),
           label: Text(
             'Add attachment',
-            style: GoogleFonts.spaceGrotesk(fontSize: 13),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           style: OutlinedButton.styleFrom(
             foregroundColor: ac.mutedForeground,
@@ -148,11 +148,19 @@ class _FileChip extends StatelessWidget {
             children: [
               Text(
                 name.length > 24 ? '${name.substring(0, 24)}…' : name,
-                style: GoogleFonts.firaCode(fontSize: 11, color: fg),
+                style: AppTypography.mono(
+                  base: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: fg),
+                ),
               ),
               Text(
                 tooLarge ? '$sizeLabel — exceeds 10 MB' : sizeLabel,
-                style: GoogleFonts.firaCode(fontSize: 10, color: fg),
+                style: AppTypography.mono(
+                  base: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: fg),
+                ),
               ),
             ],
           ),

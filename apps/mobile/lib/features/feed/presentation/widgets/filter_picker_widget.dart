@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class FilterPickerWidget extends StatefulWidget {
   const FilterPickerWidget({
@@ -104,12 +104,14 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
                             ),
                             Text(
                               tag,
-                              style: GoogleFonts.firaCode(
-                                fontSize: 13,
-                                color: checked ? ac.amber : cs.onSurface,
-                                fontWeight: checked
-                                    ? FontWeight.w600
-                                    : FontWeight.normal,
+                              style: AppTypography.mono(
+                                base: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: checked ? ac.amber : cs.onSurface,
+                                      fontWeight: checked
+                                          ? FontWeight.w600
+                                          : FontWeight.normal,
+                                    ),
                               ),
                             ),
                           ],
@@ -143,6 +145,7 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
   }
 
   Widget _buildHeader(ColorScheme cs, AppColors ac) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -150,8 +153,7 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
         children: [
           Text(
             'Filter by tags',
-            style: TextStyle(
-              fontSize: 16,
+            style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
               color: cs.onSurface,
             ),
@@ -159,7 +161,7 @@ class _FilterPickerWidgetState extends State<FilterPickerWidget> {
           if (_selected.isNotEmpty)
             Text(
               '${_selected.length} selected',
-              style: TextStyle(fontSize: 12, color: ac.amber),
+              style: theme.textTheme.bodySmall?.copyWith(color: ac.amber),
             ),
         ],
       ),

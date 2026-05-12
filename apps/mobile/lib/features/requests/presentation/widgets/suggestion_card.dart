@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:unishare_mobile/features/requests/domain/entities/suggestion.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 String _timeAgo(DateTime dt) {
   final diff = DateTime.now().difference(dt);
@@ -35,13 +34,8 @@ class SuggestionCard extends StatelessWidget {
   });
 
   final Suggestion suggestion;
-
-  /// True when `request.fulfilledByPostId == suggestion.postId`.
   final bool isAccepted;
-
-  /// True when `currentUser.uid == request.requesterId`.
   final bool isOwner;
-
   final VoidCallback? onAccept;
   final VoidCallback? onRemove;
 
@@ -83,11 +77,12 @@ class SuggestionCard extends StatelessWidget {
                   ),
                   child: Text(
                     suggestion.postType.toUpperCase(),
-                    style: GoogleFonts.firaCode(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: ac.mutedForeground,
-                      letterSpacing: 0.55,
+                    style: AppTypography.mono(
+                      base: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: ac.mutedForeground,
+                        letterSpacing: 0.55,
+                      ),
                     ),
                   ),
                 ),
@@ -104,11 +99,12 @@ class SuggestionCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text(
                         'ACCEPTED',
-                        style: GoogleFonts.firaCode(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: ac.success,
-                          letterSpacing: 0.55,
+                        style: AppTypography.mono(
+                          base: theme.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: ac.success,
+                            letterSpacing: 0.55,
+                          ),
                         ),
                       ),
                     ],
@@ -124,11 +120,12 @@ class SuggestionCard extends StatelessWidget {
                     ),
                     label: Text(
                       'ACCEPT',
-                      style: GoogleFonts.firaCode(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: ac.amber,
-                        letterSpacing: 0.55,
+                      style: AppTypography.mono(
+                        base: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: ac.amber,
+                          letterSpacing: 0.55,
+                        ),
                       ),
                     ),
                     style: TextButton.styleFrom(
@@ -146,11 +143,12 @@ class SuggestionCard extends StatelessWidget {
                     ),
                     label: Text(
                       'REMOVE',
-                      style: GoogleFonts.firaCode(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: ac.mutedForeground,
-                        letterSpacing: 0.55,
+                      style: AppTypography.mono(
+                        base: theme.textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: ac.mutedForeground,
+                          letterSpacing: 0.55,
+                        ),
                       ),
                     ),
                     style: TextButton.styleFrom(

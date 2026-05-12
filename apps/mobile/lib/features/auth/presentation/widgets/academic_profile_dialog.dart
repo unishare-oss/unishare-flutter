@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
@@ -75,8 +74,7 @@ class _AcademicProfileBottomSheetState
           Text(
             'Complete your profile',
             textAlign: TextAlign.center,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 20,
+            style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w700,
               color: theme.colorScheme.onSurface,
             ),
@@ -87,8 +85,7 @@ class _AcademicProfileBottomSheetState
           Text(
             'Tell us a bit about your academic background. You can update this later in your profile.',
             textAlign: TextAlign.center,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 14,
+            style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
               height: 1.5,
             ),
@@ -102,8 +99,7 @@ class _AcademicProfileBottomSheetState
               isExpanded: true,
               hint: Text(
                 'Select your department',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
@@ -123,7 +119,7 @@ class _AcademicProfileBottomSheetState
                       child: Text(
                         d.name,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.spaceGrotesk(fontSize: 14),
+                        style: theme.textTheme.bodyMedium,
                       ),
                     ),
                   )
@@ -143,11 +139,10 @@ class _AcademicProfileBottomSheetState
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(4),
             ],
-            style: GoogleFonts.spaceGrotesk(fontSize: 14),
+            style: theme.textTheme.bodyMedium,
             decoration: InputDecoration(
               hintText: 'Enrollment year (e.g. 2023)',
-              hintStyle: GoogleFonts.spaceGrotesk(
-                fontSize: 14,
+              hintStyle: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
               border: OutlineInputBorder(
@@ -168,8 +163,7 @@ class _AcademicProfileBottomSheetState
                       : () => Navigator.of(context).pop(false),
                   child: Text(
                     'Do it later',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 14,
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
@@ -199,8 +193,7 @@ class _AcademicProfileBottomSheetState
                         )
                       : Text(
                           'Continue',
-                          style: GoogleFonts.spaceGrotesk(
-                            fontSize: 14,
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),

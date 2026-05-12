@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/features/requests/domain/entities/content_request.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
@@ -34,9 +34,14 @@ class RequestFilterBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ac = Theme.of(context).extension<AppColors>()!;
     final cs = Theme.of(context).colorScheme;
-    final dividerColor = Theme.of(context).dividerColor;
+    final theme = Theme.of(context);
+    final dividerColor = theme.dividerColor;
 
-    final deptsAsync = ref.watch(departmentsForUniversityProvider(''));
+    final universityId =
+        ref.watch(currentUserProvider).value?.universityId ?? '';
+    final deptsAsync = ref.watch(
+      departmentsForUniversityProvider(universityId),
+    );
     final coursesAsync = (selectedDepartmentId != null && selectedYear != null)
         ? ref.watch(
             coursesProvider(
@@ -53,31 +58,30 @@ class RequestFilterBar extends ConsumerWidget {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            // Status filter
             _FilterDropdown<RequestStatus>(
               value: selectedStatus,
               hint: 'Status',
               items: [
                 DropdownMenuItem(
                   value: null,
-                  child: _dropdownText('All', cs, ac),
+                  child: _dropdownText('All', theme, cs),
                 ),
                 DropdownMenuItem(
                   value: RequestStatus.open,
-                  child: _dropdownText('Open', cs, ac),
+                  child: _dropdownText('Open', theme, cs),
                 ),
                 DropdownMenuItem(
                   value: RequestStatus.fulfilled,
-                  child: _dropdownText('Fulfilled', cs, ac),
+                  child: _dropdownText('Fulfilled', theme, cs),
                 ),
               ],
               onChanged: onStatusChanged,
               ac: ac,
               cs: cs,
+              theme: theme,
               dividerColor: dividerColor,
             ),
             const SizedBox(width: 8),
-            // Department filter
             deptsAsync.when(
               loading: () => _FilterDropdown<String>(
                 value: null,
@@ -86,6 +90,7 @@ class RequestFilterBar extends ConsumerWidget {
                 onChanged: null,
                 ac: ac,
                 cs: cs,
+                theme: theme,
                 dividerColor: dividerColor,
               ),
               error: (_, _) => _FilterDropdown<String>(
@@ -95,6 +100,7 @@ class RequestFilterBar extends ConsumerWidget {
                 onChanged: null,
                 ac: ac,
                 cs: cs,
+                theme: theme,
                 dividerColor: dividerColor,
               ),
               data: (depts) => _FilterDropdown<String>(
@@ -103,12 +109,12 @@ class RequestFilterBar extends ConsumerWidget {
                 items: [
                   DropdownMenuItem(
                     value: null,
-                    child: _dropdownText('All Depts', cs, ac),
+                    child: _dropdownText('All Depts', theme, cs),
                   ),
                   ...depts.map(
                     (d) => DropdownMenuItem(
                       value: d.id,
-                      child: _dropdownText(d.name, cs, ac),
+                      child: _dropdownText(d.name, theme, cs),
                     ),
                   ),
                 ],
@@ -119,23 +125,23 @@ class RequestFilterBar extends ConsumerWidget {
                 },
                 ac: ac,
                 cs: cs,
+                theme: theme,
                 dividerColor: dividerColor,
               ),
             ),
             const SizedBox(width: 8),
-            // Year filter
             _FilterDropdown<String>(
               value: selectedYear,
               hint: 'Year',
               items: [
                 DropdownMenuItem(
                   value: null,
-                  child: _dropdownText('All Years', cs, ac),
+                  child: _dropdownText('All Years', theme, cs),
                 ),
                 ..._years.map(
                   (y) => DropdownMenuItem(
                     value: y,
-                    child: _dropdownText('Year $y', cs, ac),
+                    child: _dropdownText('Year $y', theme, cs),
                   ),
                 ),
               ],
@@ -145,10 +151,10 @@ class RequestFilterBar extends ConsumerWidget {
               },
               ac: ac,
               cs: cs,
+              theme: theme,
               dividerColor: dividerColor,
             ),
             const SizedBox(width: 8),
-            // Course filter
             coursesAsync.when(
               loading: () => _FilterDropdown<String>(
                 value: null,
@@ -157,6 +163,7 @@ class RequestFilterBar extends ConsumerWidget {
                 onChanged: null,
                 ac: ac,
                 cs: cs,
+                theme: theme,
                 dividerColor: dividerColor,
               ),
               error: (_, _) => _FilterDropdown<String>(
@@ -166,6 +173,7 @@ class RequestFilterBar extends ConsumerWidget {
                 onChanged: null,
                 ac: ac,
                 cs: cs,
+                theme: theme,
                 dividerColor: dividerColor,
               ),
               data: (courses) => _FilterDropdown<String>(
@@ -174,12 +182,12 @@ class RequestFilterBar extends ConsumerWidget {
                 items: [
                   DropdownMenuItem(
                     value: null,
-                    child: _dropdownText('All Courses', cs, ac),
+                    child: _dropdownText('All Courses', theme, cs),
                   ),
                   ...courses.map(
                     (c) => DropdownMenuItem(
                       value: c.id,
-                      child: _dropdownText(c.name, cs, ac),
+                      child: _dropdownText(c.name, theme, cs),
                     ),
                   ),
                 ],
@@ -188,6 +196,7 @@ class RequestFilterBar extends ConsumerWidget {
                     : onCourseChanged,
                 ac: ac,
                 cs: cs,
+                theme: theme,
                 dividerColor: dividerColor,
               ),
             ),
@@ -197,10 +206,10 @@ class RequestFilterBar extends ConsumerWidget {
     );
   }
 
-  Widget _dropdownText(String text, ColorScheme cs, AppColors ac) {
+  Widget _dropdownText(String text, ThemeData theme, ColorScheme cs) {
     return Text(
       text,
-      style: GoogleFonts.spaceGrotesk(fontSize: 13, color: cs.onSurface),
+      style: theme.textTheme.bodySmall?.copyWith(color: cs.onSurface),
       overflow: TextOverflow.ellipsis,
     );
   }
@@ -214,6 +223,7 @@ class _FilterDropdown<T> extends StatelessWidget {
     required this.onChanged,
     required this.ac,
     required this.cs,
+    required this.theme,
     required this.dividerColor,
   });
 
@@ -223,6 +233,7 @@ class _FilterDropdown<T> extends StatelessWidget {
   final ValueChanged<T?>? onChanged;
   final AppColors ac;
   final ColorScheme cs;
+  final ThemeData theme;
   final Color dividerColor;
 
   @override
@@ -241,8 +252,7 @@ class _FilterDropdown<T> extends StatelessWidget {
           value: value,
           hint: Text(
             hint,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 13,
+            style: theme.textTheme.bodySmall?.copyWith(
               color: ac.mutedForeground,
             ),
           ),
@@ -252,7 +262,7 @@ class _FilterDropdown<T> extends StatelessWidget {
             color: ac.mutedForeground,
             size: 16,
           ),
-          style: GoogleFonts.spaceGrotesk(fontSize: 13, color: cs.onSurface),
+          style: theme.textTheme.bodySmall?.copyWith(color: cs.onSurface),
           items: items,
           onChanged: onChanged,
           focusColor: Colors.transparent,

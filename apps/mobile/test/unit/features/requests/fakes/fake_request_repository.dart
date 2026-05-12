@@ -31,6 +31,15 @@ class FakeRequestRepository implements RequestRepository {
   }) => requestsController.stream;
 
   @override
+  Stream<ContentRequest> watchRequest(String requestId) =>
+      requestsController.stream.map(
+        (list) => list.firstWhere(
+          (r) => r.id == requestId,
+          orElse: () => throw StateError('request_not_found'),
+        ),
+      );
+
+  @override
   Future<void> createRequest({
     required String departmentId,
     required String departmentName,

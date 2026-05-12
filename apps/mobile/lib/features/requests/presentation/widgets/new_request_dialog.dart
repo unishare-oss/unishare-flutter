@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class NewRequestDialog extends ConsumerStatefulWidget {
   const NewRequestDialog({super.key});
@@ -79,7 +80,11 @@ class _NewRequestDialogState extends ConsumerState<NewRequestDialog> {
     final cs = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
 
-    final deptsAsync = ref.watch(departmentsForUniversityProvider(''));
+    final universityId =
+        ref.watch(currentUserProvider).value?.universityId ?? '';
+    final deptsAsync = ref.watch(
+      departmentsForUniversityProvider(universityId),
+    );
     final coursesAsync =
         (_selectedDepartmentId != null && _selectedYear != null)
         ? ref.watch(
@@ -132,8 +137,7 @@ class _NewRequestDialogState extends ConsumerState<NewRequestDialog> {
                 onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   hintText: 'e.g. Data Structures midterm notes',
-                  hintStyle: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
+                  hintStyle: theme.textTheme.bodyMedium?.copyWith(
                     color: ac.mutedForeground,
                   ),
                   counterText: '',
@@ -195,10 +199,8 @@ class _NewRequestDialogState extends ConsumerState<NewRequestDialog> {
                                     child: Text(
                                       d.name,
                                       overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.spaceGrotesk(
-                                        fontSize: 13,
-                                        color: cs.onSurface,
-                                      ),
+                                      style: theme.textTheme.bodySmall
+                                          ?.copyWith(color: cs.onSurface),
                                     ),
                                   ),
                                 )
@@ -243,8 +245,7 @@ class _NewRequestDialogState extends ConsumerState<NewRequestDialog> {
                                   value: y,
                                   child: Text(
                                     'Year $y',
-                                    style: GoogleFonts.spaceGrotesk(
-                                      fontSize: 13,
+                                    style: theme.textTheme.bodySmall?.copyWith(
                                       color: cs.onSurface,
                                     ),
                                   ),
@@ -326,8 +327,7 @@ class _NewRequestDialogState extends ConsumerState<NewRequestDialog> {
                             child: Text(
                               c.name,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.spaceGrotesk(
-                                fontSize: 13,
+                              style: theme.textTheme.bodySmall?.copyWith(
                                 color: cs.onSurface,
                               ),
                             ),
@@ -365,8 +365,7 @@ class _NewRequestDialogState extends ConsumerState<NewRequestDialog> {
                 decoration: InputDecoration(
                   hintText:
                       'Add more context — which chapter, what semester, etc.',
-                  hintStyle: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
+                  hintStyle: theme.textTheme.bodyMedium?.copyWith(
                     color: ac.mutedForeground,
                   ),
                   counterText: '',
@@ -442,13 +441,15 @@ class _FieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Text(
       text,
-      style: GoogleFonts.firaCode(
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-        color: ac.mutedForeground,
-        letterSpacing: 0.55,
+      style: AppTypography.mono(
+        base: theme.textTheme.labelSmall?.copyWith(
+          fontWeight: FontWeight.w600,
+          color: ac.mutedForeground,
+          letterSpacing: 0.55,
+        ),
       ),
     );
   }
@@ -488,10 +489,9 @@ class _DropdownField<T> extends StatelessWidget {
           value: value,
           hint: Text(
             hint,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 13,
-              color: ac.mutedForeground,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
           ),
           isExpanded: true,
           icon: Icon(
@@ -499,7 +499,9 @@ class _DropdownField<T> extends StatelessWidget {
             color: ac.mutedForeground,
             size: 16,
           ),
-          style: GoogleFonts.spaceGrotesk(fontSize: 13, color: cs.onSurface),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
           items: items,
           onChanged: onChanged,
           focusColor: Colors.transparent,

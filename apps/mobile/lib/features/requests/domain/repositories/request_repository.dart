@@ -12,6 +12,9 @@ abstract interface class RequestRepository {
     RequestStatus? status,
   });
 
+  /// Streams a single request by ID.
+  Stream<ContentRequest> watchRequest(String requestId);
+
   Future<void> createRequest({
     required String departmentId,
     required String departmentName,

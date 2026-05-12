@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class UnishareLogo extends StatelessWidget {
   const UnishareLogo({
@@ -35,7 +34,7 @@ class UnishareLogo extends StatelessWidget {
           child: Text(
             'Unishare',
             overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.spaceGrotesk(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: darkText

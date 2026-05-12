@@ -13,6 +13,7 @@ class CommentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
     final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -29,17 +30,15 @@ class CommentTile extends StatelessWidget {
                   children: [
                     Text(
                       comment.authorName,
-                      style: TextStyle(
+                      style: theme.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
-                        fontSize: 13,
                         color: scheme.onSurface,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       _formatTimestamp(comment.createdAt),
-                      style: TextStyle(
-                        fontSize: 11,
+                      style: theme.textTheme.labelSmall?.copyWith(
                         color: appColors.textMuted,
                       ),
                     ),
@@ -48,8 +47,7 @@ class CommentTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   comment.body,
-                  style: TextStyle(
-                    fontSize: 14,
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     color: scheme.onSurface,
                     height: 1.4,
                   ),
@@ -101,8 +99,7 @@ class _Avatar extends StatelessWidget {
       backgroundColor: appColors.muted,
       child: Text(
         initials,
-        style: TextStyle(
-          fontSize: 14,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           fontWeight: FontWeight.w600,
           color: scheme.onSurface,
         ),

@@ -2,8 +2,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
@@ -14,6 +12,7 @@ import 'package:unishare_mobile/features/post/presentation/widgets/draft_queue_i
 import 'package:unishare_mobile/features/post/presentation/widgets/files_step.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/type_step.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});
@@ -177,8 +176,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         titleSpacing: 20,
         title: Text(
           'New Post',
-          style: GoogleFonts.spaceGrotesk(
-            fontSize: 18,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w700,
             color: cs.onSurface,
           ),
@@ -300,8 +298,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   ),
                   child: Text(
                     'Back',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 14,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -323,8 +320,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     ),
                     child: Text(
                       _step == 3 ? 'Submit' : 'Next',
-                      style: GoogleFonts.spaceGrotesk(
-                        fontSize: 14,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -404,20 +400,22 @@ class _StepDot extends StatelessWidget {
       bg = ac.amber;
       child = Text(
         '$number',
-        style: GoogleFonts.firaCode(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          color: Theme.of(context).colorScheme.surface,
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).colorScheme.surface,
+          ),
         ),
       );
     } else {
       bg = scaffoldBg;
       child = Text(
         '$number',
-        style: GoogleFonts.firaCode(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          color: ac.mutedForeground,
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: ac.mutedForeground,
+          ),
         ),
       );
     }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class AuthTextField extends StatefulWidget {
@@ -44,9 +43,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
-    final baseStyle = GoogleFonts.spaceGrotesk(
-      fontSize: 14,
-      color: Theme.of(context).colorScheme.onSurface,
+    final theme = Theme.of(context);
+    final baseStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.onSurface,
     );
 
     return TextFormField(
@@ -61,12 +60,11 @@ class _AuthTextFieldState extends State<AuthTextField> {
       style: baseStyle,
       decoration: InputDecoration(
         hintText: widget.hint,
-        hintStyle: baseStyle.copyWith(color: colors.textSecondary),
+        hintStyle: baseStyle?.copyWith(color: colors.textSecondary),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
         isDense: true,
-        errorStyle: GoogleFonts.spaceGrotesk(
-          fontSize: 12,
-          color: Theme.of(context).colorScheme.error,
+        errorStyle: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.error,
         ),
         // Fixed 36×36 slot on every field keeps all heights identical.
         suffixIconConstraints: const BoxConstraints.tightFor(

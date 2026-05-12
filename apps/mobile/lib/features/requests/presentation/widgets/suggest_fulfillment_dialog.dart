@@ -1,23 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+import 'package:unishare_mobile/features/post/presentation/providers/my_posts_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
-
-/// Minimal post summary for the dropdown.
-class _PostSummary {
-  const _PostSummary({
-    required this.id,
-    required this.title,
-    required this.postType,
-  });
-  final String id;
-  final String title;
-  final String postType;
-}
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class SuggestFulfillmentDialog extends ConsumerStatefulWidget {
   const SuggestFulfillmentDialog({super.key, required this.requestId});
@@ -31,39 +18,21 @@ class SuggestFulfillmentDialog extends ConsumerStatefulWidget {
 
 class _SuggestFulfillmentDialogState
     extends ConsumerState<SuggestFulfillmentDialog> {
-  _PostSummary? _selectedPost;
+  String? _selectedPostId;
   bool _isSubmitting = false;
 
-  late final Future<List<_PostSummary>> _postsFuture = _fetchUserPosts();
-
-  Future<List<_PostSummary>> _fetchUserPosts() async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) return [];
-    final snap = await FirebaseFirestore.instance
-        .collection('posts')
-        .where('authorId', isEqualTo: uid)
-        .orderBy('createdAt', descending: true)
-        .get();
-    return snap.docs.map((doc) {
-      final data = doc.data();
-      return _PostSummary(
-        id: doc.id,
-        title: data['title'] as String? ?? '',
-        postType: data['postType'] as String? ?? '',
-      );
-    }).toList();
-  }
-
   Future<void> _submit() async {
-    if (_selectedPost == null || _isSubmitting) return;
+    if (_selectedPostId == null || _isSubmitting) return;
     setState(() => _isSubmitting = true);
     try {
+      final posts = ref.read(myPostsProvider).value ?? [];
+      final post = posts.firstWhere((p) => p.id == _selectedPostId);
       final useCase = ref.read(suggestFulfillmentUseCaseProvider);
       await useCase(
         requestId: widget.requestId,
-        postId: _selectedPost!.id,
-        postTitle: _selectedPost!.title,
-        postType: _selectedPost!.postType,
+        postId: post.id,
+        postTitle: post.title,
+        postType: post.postType.name,
       );
       if (mounted) {
         Navigator.of(context).pop();
@@ -88,6 +57,8 @@ class _SuggestFulfillmentDialogState
     final cs = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
 
+    final postsAsync = ref.watch(myPostsProvider);
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: ConstrainedBox(
@@ -98,7 +69,6 @@ class _SuggestFulfillmentDialogState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
               Row(
                 children: [
                   Expanded(
@@ -120,30 +90,50 @@ class _SuggestFulfillmentDialogState
                 ],
               ),
               const SizedBox(height: 20),
-
               Text(
                 'LINK ONE OF YOUR POSTS',
-                style: GoogleFonts.firaCode(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: ac.mutedForeground,
-                  letterSpacing: 0.55,
+                style: AppTypography.mono(
+                  base: theme.textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: ac.mutedForeground,
+                    letterSpacing: 0.55,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
-
-              FutureBuilder<List<_PostSummary>>(
-                future: _postsFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox(
-                      height: 42,
-                      child: Center(
-                        child: CircularProgressIndicator(strokeWidth: 2),
+              postsAsync.when(
+                loading: () => const SizedBox(
+                  height: 42,
+                  child: Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                ),
+                error: (e, _) => Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: theme.dividerColor),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 16,
+                        color: ac.mutedForeground,
                       ),
-                    );
-                  }
-                  final posts = snapshot.data ?? [];
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Failed to load your posts. Please try again.',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: ac.mutedForeground,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                data: (posts) {
                   if (posts.isEmpty) {
                     return Container(
                       padding: const EdgeInsets.all(12),
@@ -153,8 +143,7 @@ class _SuggestFulfillmentDialogState
                       ),
                       child: Text(
                         'You have no posts yet.',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 14,
+                        style: theme.textTheme.bodySmall?.copyWith(
                           color: ac.mutedForeground,
                         ),
                       ),
@@ -168,13 +157,12 @@ class _SuggestFulfillmentDialogState
                     ),
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButton<_PostSummary>(
-                        value: _selectedPost,
+                      child: DropdownButton<String>(
+                        value: _selectedPostId,
                         isExpanded: true,
                         hint: Text(
                           'Select a post',
-                          style: GoogleFonts.spaceGrotesk(
-                            fontSize: 14,
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             color: ac.mutedForeground,
                           ),
                         ),
@@ -183,24 +171,22 @@ class _SuggestFulfillmentDialogState
                           color: ac.mutedForeground,
                           size: 18,
                         ),
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 14,
+                        style: theme.textTheme.bodyMedium?.copyWith(
                           color: cs.onSurface,
                         ),
                         items: posts.map((p) {
-                          return DropdownMenuItem<_PostSummary>(
-                            value: p,
+                          return DropdownMenuItem<String>(
+                            value: p.id,
                             child: Text(
                               p.title,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.spaceGrotesk(
-                                fontSize: 14,
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 color: cs.onSurface,
                               ),
                             ),
                           );
                         }).toList(),
-                        onChanged: (v) => setState(() => _selectedPost = v),
+                        onChanged: (v) => setState(() => _selectedPostId = v),
                         focusColor: Colors.transparent,
                         dropdownColor: cs.surface,
                         borderRadius: BorderRadius.circular(6),
@@ -210,8 +196,6 @@ class _SuggestFulfillmentDialogState
                 },
               ),
               const SizedBox(height: 24),
-
-              // Actions
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -226,7 +210,7 @@ class _SuggestFulfillmentDialogState
                   ),
                   const SizedBox(width: 12),
                   FilledButton(
-                    onPressed: _selectedPost != null && !_isSubmitting
+                    onPressed: _selectedPostId != null && !_isSubmitting
                         ? _submit
                         : null,
                     style: FilledButton.styleFrom(

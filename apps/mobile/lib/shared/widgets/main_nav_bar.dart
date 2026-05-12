@@ -113,11 +113,9 @@ class _NavTabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = isActive ? colors.amber : colors.textMuted;
-    final labelStyle = Theme.of(context).textTheme.labelSmall?.copyWith(
-      fontSize: 11,
-      letterSpacing: 0.55,
-      color: color,
-    );
+    final labelStyle = Theme.of(
+      context,
+    ).textTheme.labelSmall?.copyWith(letterSpacing: 0.55, color: color);
 
     Widget iconWidget = Icon(_icon, color: color, size: 24);
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/auth_exception.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
@@ -198,8 +197,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   constraints: const BoxConstraints(maxWidth: 480),
                   child: Text(
                     "Every lecture note and study guide — shared by students who've been there.",
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 30,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w300,
                       color: Theme.of(context).scaffoldBackgroundColor,
                       letterSpacing: -0.5,
@@ -277,8 +275,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           Text(
             isSignUp ? 'Create account' : 'Sign in',
             textAlign: TextAlign.center,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 24,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w600,
               color: cs.onSurface,
             ),
@@ -289,10 +286,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           Text(
             'Use your university account to continue',
             textAlign: TextAlign.center,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 14,
-              color: ac.textSecondary,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: ac.textSecondary),
           ),
           const SizedBox(height: 32),
 
@@ -315,10 +311,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
                   'or',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 12,
-                    color: ac.mutedForeground,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
                 ),
               ),
               Expanded(child: Divider(color: dividerColor, height: 1)),
@@ -352,10 +347,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 isExpanded: true,
                 hint: Text(
                   'No university',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
-                    color: ac.textSecondary,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: ac.textSecondary),
                 ),
                 icon: Icon(
                   Icons.keyboard_arrow_down,
@@ -383,17 +377,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     borderSide: BorderSide(color: ac.amber, width: 1.5),
                   ),
                 ),
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
-                  color: cs.onSurface,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
                 items: universities
                     .map(
                       (u) => DropdownMenuItem(
                         value: u.id,
                         child: Text(
                           u.name,
-                          style: GoogleFonts.spaceGrotesk(fontSize: 14),
+                          style: Theme.of(context).textTheme.bodyMedium,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -481,10 +474,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 Expanded(
                   child: Text(
                     'I have read and agree to the Terms of Service and Privacy Policy.',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 12,
-                      color: ac.textSecondary,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: ac.textSecondary),
                   ),
                 ),
               ],
@@ -495,7 +487,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               const SizedBox(height: 4),
               Text(
                 'You must accept the Terms and Privacy Policy to create an account',
-                style: GoogleFonts.spaceGrotesk(fontSize: 12, color: cs.error),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: cs.error),
               ),
             ],
           ] else ...[
@@ -534,7 +528,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             const SizedBox(height: 8),
             Text(
               _serverError!,
-              style: GoogleFonts.spaceGrotesk(fontSize: 12, color: cs.error),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.error),
             ),
           ],
 
@@ -558,8 +554,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 _isLoading
                     ? 'Please wait…'
                     : (isSignUp ? 'Create account' : 'Sign in'),
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                   color: cs.surface,
                 ),
@@ -576,10 +571,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 isSignUp
                     ? 'Already have an account? '
                     : "Don't have an account? ",
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
-                  color: ac.mutedForeground,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
               ),
               TextButton(
                 onPressed: _switchMode,
@@ -591,8 +585,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ),
                 child: Text(
                   isSignUp ? 'Sign in' : 'Sign up',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: cs.onSurface,
                     fontWeight: FontWeight.w500,
                   ),
@@ -617,10 +610,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               ),
               child: Text(
                 'Continue as guest',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
-                  color: ac.mutedForeground,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
               ),
             ),
           ),
@@ -630,10 +622,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             Text(
               'By continuing with Google or Microsoft you agree to our Terms and Privacy Policy.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 12,
-                color: ac.mutedForeground,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
             ),
           ],
           const SizedBox(height: 8),

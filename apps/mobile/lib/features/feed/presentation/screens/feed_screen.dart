@@ -266,8 +266,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                 children: [
                   Text(
                     'Feed',
-                    style: TextStyle(
-                      fontSize: 18,
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -316,8 +315,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
               ),
               child: Text(
                 s,
-                style: TextStyle(
-                  fontSize: 12,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: isTag ? ac.amber : cs.onSurface,
                   fontWeight: FontWeight.w500,
                 ),
@@ -338,10 +336,14 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
         controller: _searchController,
         focusNode: _searchFocusNode,
         onChanged: (value) => setState(() => _searchQuery = value.trim()),
-        style: TextStyle(fontSize: 13, color: cs.onSurface),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
         decoration: InputDecoration(
           hintText: 'Search posts or #tags...',
-          hintStyle: TextStyle(fontSize: 13, color: ac.textMuted),
+          hintStyle: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: ac.textMuted),
           filled: true,
           fillColor: ac.muted,
           prefixIcon: Icon(Icons.search, size: 18, color: ac.textMuted),
@@ -455,13 +457,11 @@ class _TabRow extends StatelessWidget {
               dividerColor: Colors.transparent,
               labelColor: ac.amber,
               unselectedLabelColor: ac.textMuted,
-              labelStyle: const TextStyle(
-                fontSize: 12,
+              labelStyle: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.55,
               ),
-              unselectedLabelStyle: const TextStyle(
-                fontSize: 12,
+              unselectedLabelStyle: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.55,
               ),
@@ -506,9 +506,11 @@ class _FiltersButton extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             icon: const Icon(Icons.tune, size: 14),
-            label: const Text(
+            label: Text(
               'Filters',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
             ),
           ),
           if (activeCount > 0)
@@ -525,8 +527,7 @@ class _FiltersButton extends StatelessWidget {
                 ),
                 child: Text(
                   '$activeCount',
-                  style: TextStyle(
-                    fontSize: 9,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: cs.onPrimary,
                     fontWeight: FontWeight.bold,
                   ),

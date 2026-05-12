@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // ---------------------------------------------------------------------------
 // Google logo painter
@@ -170,10 +169,9 @@ class GoogleSignInButton extends StatelessWidget {
                   const SizedBox(width: 12),
                   Text(
                     'Continue with Google',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 14,
-                      color: cs.onSurface,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
                   ),
                 ],
               ),
@@ -211,10 +209,9 @@ class MicrosoftSignInButton extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               'Continue with Microsoft',
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 14,
-                color: cs.onSurface,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
             ),
           ],
         ),

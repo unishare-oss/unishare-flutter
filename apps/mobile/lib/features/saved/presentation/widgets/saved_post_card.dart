@@ -5,6 +5,7 @@ import 'package:unishare_mobile/features/saved/domain/entities/saved_post.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class SavedPostCard extends ConsumerWidget {
   const SavedPostCard({super.key, required this.savedPost, this.onTap});
@@ -122,7 +123,8 @@ class _TypeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
@@ -131,11 +133,12 @@ class _TypeBadge extends StatelessWidget {
       ),
       child: Text(
         postType.toUpperCase(),
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          color: scheme.onSurface,
-          letterSpacing: 0.5,
+        style: AppTypography.mono(
+          base: theme.textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w700,
+            color: scheme.onSurface,
+            letterSpacing: 0.5,
+          ),
         ),
       ),
     );
@@ -161,8 +164,7 @@ class _AuthorAvatar extends StatelessWidget {
           ? Icon(Icons.person_outline, size: 12, color: appColors.textMuted)
           : Text(
               _initials,
-              style: TextStyle(
-                fontSize: 8,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: appColors.textSecondary,
               ),
