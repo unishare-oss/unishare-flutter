@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 import 'package:unishare_mobile/features/departments/presentation/screens/departments_screen.dart';
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
