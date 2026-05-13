@@ -94,9 +94,9 @@ class _YearTab extends ConsumerWidget {
             final course = courses[index];
             return GestureDetector(
               onTap: () {
-                ref
-                    .read(feedFilterProvider.notifier)
-                    .setCourse(course.id, course.name);
+                final notifier = ref.read(feedFilterProvider.notifier);
+                notifier.setYear(year);
+                notifier.setCourse(course.id, course.name);
                 context.go('/feed');
               },
               child: Container(

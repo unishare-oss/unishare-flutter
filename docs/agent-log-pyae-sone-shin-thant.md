@@ -1030,3 +1030,6 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [14:25] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+  [14:29] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+  [14:30] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
