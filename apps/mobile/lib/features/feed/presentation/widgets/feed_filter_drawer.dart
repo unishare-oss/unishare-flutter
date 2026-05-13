@@ -167,7 +167,9 @@ class _FeedFilterDrawerState extends ConsumerState<FeedFilterDrawer> {
               const SizedBox(width: 12),
               Expanded(
                 child: _DropdownField<String?>(
-                  value: _moduleNumber,
+                  value: moduleOptions.contains(_moduleNumber)
+                      ? _moduleNumber
+                      : null,
                   hint: 'All modules',
                   items: [
                     const DropdownMenuItem(
