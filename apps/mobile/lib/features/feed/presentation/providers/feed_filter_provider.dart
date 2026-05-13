@@ -66,7 +66,11 @@ class FeedFilter extends _$FeedFilter {
   FeedFilterState build() => const FeedFilterState();
 
   void setCourse(String? courseId, String? courseName) {
-    state = state.copyWith(courseId: courseId, courseName: courseName);
+    state = state.copyWith(
+      courseId: courseId,
+      courseName: courseId == null ? null : courseName,
+      moduleNumber: null,
+    );
   }
 
   void setYear(int? year) {
