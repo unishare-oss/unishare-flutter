@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
@@ -41,8 +42,16 @@ class DepartmentsScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             itemCount: departments.length,
             separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemBuilder: (context, index) =>
-                _DepartmentTile(name: departments[index].name),
+            itemBuilder: (context, index) {
+              final dept = departments[index];
+              return GestureDetector(
+                onTap: () => context.push(
+                  '/more/departments/${dept.id}'
+                  '?name=${Uri.encodeComponent(dept.name)}',
+                ),
+                child: _DepartmentTile(name: dept.name),
+              );
+            },
           );
         },
       ),
