@@ -202,16 +202,22 @@ class _FeedFilterDrawerState extends ConsumerState<FeedFilterDrawer> {
               onChanged: null,
             ),
             data: (courses) {
-              final effectiveCourseId =
-                  courses.any((c) => c.id == _courseId) ? _courseId : null;
+              final inList = courses.any((c) => c.id == _courseId);
               return _DropdownField<String?>(
-                value: effectiveCourseId,
+                value: _courseId,
                 hint: 'All courses',
                 items: [
                   const DropdownMenuItem(
                     value: null,
                     child: Text('All courses'),
                   ),
+                  // Keep the pre-selected course visible even if it belongs
+                  // to a different year than currently loaded.
+                  if (_courseId != null && !inList && _courseName != null)
+                    DropdownMenuItem(
+                      value: _courseId,
+                      child: Text(_courseName!),
+                    ),
                   for (final c in courses)
                     DropdownMenuItem(value: c.id, child: Text(c.name)),
                 ],
@@ -219,7 +225,9 @@ class _FeedFilterDrawerState extends ConsumerState<FeedFilterDrawer> {
                   _courseId = v;
                   _courseName = v == null
                       ? null
-                      : courses.firstWhere((c) => c.id == v).name;
+                      : (courses.any((c) => c.id == v)
+                            ? courses.firstWhere((c) => c.id == v).name
+                            : _courseName);
                   _moduleNumber = null;
                 }),
               );
