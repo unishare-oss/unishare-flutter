@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:unishare_mobile/features/departments/presentation/screens/courses_screen.dart';
 import 'package:unishare_mobile/features/departments/presentation/screens/departments_screen.dart';
 import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
 import 'package:unishare_mobile/features/more/presentation/screens/more_screen.dart';
@@ -248,6 +249,15 @@ GoRouter router(Ref ref) {
                   GoRoute(
                     path: 'departments',
                     builder: (context, state) => const DepartmentsScreen(),
+                    routes: [
+                      GoRoute(
+                        path: ':deptId',
+                        builder: (context, state) => CoursesScreen(
+                          deptId: state.pathParameters['deptId']!,
+                          departmentName: state.uri.queryParameters['name'] ?? 'Courses',
+                        ),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'requests',
