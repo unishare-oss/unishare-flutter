@@ -6,7 +6,7 @@ import 'package:unishare_mobile/features/feed/presentation/providers/feed_filter
 import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
-class CoursesScreen extends ConsumerStatefulWidget {
+class CoursesScreen extends ConsumerWidget {
   const CoursesScreen({
     super.key,
     required this.deptId,
@@ -17,137 +17,131 @@ class CoursesScreen extends ConsumerStatefulWidget {
   final String departmentName;
 
   @override
-  ConsumerState<CoursesScreen> createState() => _CoursesScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final ac = theme.extension<AppColors>()!;
+
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          title: Text(departmentName),
+          leading: const BackButton(),
+          bottom: TabBar(
+            indicatorColor: ac.amber,
+            labelColor: ac.amber,
+            unselectedLabelColor: ac.textMuted,
+            labelStyle: theme.textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+            tabs: const [
+              Tab(text: 'Year 1'),
+              Tab(text: 'Year 2'),
+              Tab(text: 'Year 3'),
+              Tab(text: 'Year 4'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            1,
+            2,
+            3,
+            4,
+          ].map((year) => _YearTab(deptId: deptId, year: year)).toList(),
+        ),
+      ),
+    );
+  }
 }
 
-class _CoursesScreenState extends ConsumerState<CoursesScreen>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
-  int _selectedYear = 1;
+class _YearTab extends ConsumerWidget {
+  const _YearTab({required this.deptId, required this.year});
+
+  final String deptId;
+  final int year;
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 4, vsync: this);
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        setState(() => _selectedYear = _tabController.index + 1);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final ac = theme.extension<AppColors>()!;
     final cs = theme.colorScheme;
-    final coursesAsync = ref.watch(
-      coursesProvider(widget.deptId, _selectedYear),
-    );
+    final coursesAsync = ref.watch(coursesProvider(deptId, year));
 
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(widget.departmentName),
-        leading: const BackButton(),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: ac.amber,
-          labelColor: ac.amber,
-          unselectedLabelColor: ac.textMuted,
-          labelStyle: theme.textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-          tabs: const [
-            Tab(text: 'Year 1'),
-            Tab(text: 'Year 2'),
-            Tab(text: 'Year 3'),
-            Tab(text: 'Year 4'),
-          ],
+    return coursesAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(
+        child: Text(
+          'Failed to load courses.',
+          style: theme.textTheme.bodyMedium?.copyWith(color: ac.textMuted),
         ),
       ),
-      body: coursesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(
-          child: Text(
-            'Failed to load courses.',
-            style: theme.textTheme.bodyMedium?.copyWith(color: ac.textMuted),
-          ),
-        ),
-        data: (courses) {
-          if (courses.isEmpty) {
-            return Center(
-              child: Text(
-                'No courses for Year $_selectedYear.',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: ac.textMuted,
+      data: (courses) {
+        if (courses.isEmpty) {
+          return Center(
+            child: Text(
+              'No courses for Year $year.',
+              style: theme.textTheme.bodyMedium?.copyWith(color: ac.textMuted),
+            ),
+          );
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: courses.length,
+          separatorBuilder: (_, _) => const SizedBox(height: 8),
+          itemBuilder: (context, index) {
+            final course = courses[index];
+            return GestureDetector(
+              onTap: () {
+                ref
+                    .read(feedFilterProvider.notifier)
+                    .setCourse(course.id, course.name);
+                context.go('/feed');
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
+                decoration: BoxDecoration(
+                  color: cs.surface,
+                  border: Border.all(color: theme.dividerColor),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: ac.muted,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Icon(
+                        Icons.book_outlined,
+                        size: 20,
+                        color: ac.mutedForeground,
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        course.name,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: cs.onSurface,
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.chevron_right, size: 20, color: ac.textMuted),
+                  ],
                 ),
               ),
             );
-          }
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: courses.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final course = courses[index];
-              return GestureDetector(
-                onTap: () {
-                  ref
-                      .read(feedFilterProvider.notifier)
-                      .setCourse(course.id, course.name);
-                  context.go('/feed');
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    color: cs.surface,
-                    border: Border.all(color: theme.dividerColor),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: ac.muted,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          Icons.book_outlined,
-                          size: 20,
-                          color: ac.mutedForeground,
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Text(
-                          course.name,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: cs.onSurface,
-                          ),
-                        ),
-                      ),
-                      Icon(Icons.chevron_right, size: 20, color: ac.textMuted),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
+          },
+        );
+      },
     );
   }
 }

@@ -159,6 +159,8 @@ class _FeedFilterDrawerState extends ConsumerState<FeedFilterDrawer> {
                   onChanged: (v) => setState(() {
                     _year = v;
                     _moduleNumber = null;
+                    _courseId = null;
+                    _courseName = null;
                   }),
                 ),
               ),

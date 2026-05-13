@@ -24,6 +24,28 @@ class FeedFilterState {
       (courseId != null ? 1 : 0) +
       (moduleNumber != null ? 1 : 0);
 
+  static const _absent = Object();
+
+  FeedFilterState copyWith({
+    FeedSortOrder? sortOrder,
+    Object? year = _absent,
+    Object? courseId = _absent,
+    Object? courseName = _absent,
+    Object? moduleNumber = _absent,
+  }) => FeedFilterState(
+    sortOrder: sortOrder ?? this.sortOrder,
+    year: identical(year, _absent) ? this.year : year as int?,
+    courseId: identical(courseId, _absent)
+        ? this.courseId
+        : courseId as String?,
+    courseName: identical(courseName, _absent)
+        ? this.courseName
+        : courseName as String?,
+    moduleNumber: identical(moduleNumber, _absent)
+        ? this.moduleNumber
+        : moduleNumber as String?,
+  );
+
   @override
   bool operator ==(Object other) =>
       other is FeedFilterState &&
@@ -44,43 +66,19 @@ class FeedFilter extends _$FeedFilter {
   FeedFilterState build() => const FeedFilterState();
 
   void setCourse(String? courseId, String? courseName) {
-    state = FeedFilterState(
-      sortOrder: state.sortOrder,
-      year: state.year,
-      courseId: courseId,
-      courseName: courseName,
-      moduleNumber: state.moduleNumber,
-    );
+    state = state.copyWith(courseId: courseId, courseName: courseName);
   }
 
   void setYear(int? year) {
-    state = FeedFilterState(
-      sortOrder: state.sortOrder,
-      year: year,
-      courseId: state.courseId,
-      courseName: state.courseName,
-      moduleNumber: state.moduleNumber,
-    );
+    state = state.copyWith(year: year);
   }
 
   void setModule(String? moduleNumber) {
-    state = FeedFilterState(
-      sortOrder: state.sortOrder,
-      year: state.year,
-      courseId: state.courseId,
-      courseName: state.courseName,
-      moduleNumber: moduleNumber,
-    );
+    state = state.copyWith(moduleNumber: moduleNumber);
   }
 
   void setSortOrder(FeedSortOrder order) {
-    state = FeedFilterState(
-      sortOrder: order,
-      year: state.year,
-      courseId: state.courseId,
-      courseName: state.courseName,
-      moduleNumber: state.moduleNumber,
-    );
+    state = state.copyWith(sortOrder: order);
   }
 
   void clear() => state = const FeedFilterState();
