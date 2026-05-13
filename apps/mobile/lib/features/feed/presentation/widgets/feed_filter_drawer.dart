@@ -201,22 +201,29 @@ class _FeedFilterDrawerState extends ConsumerState<FeedFilterDrawer> {
               ],
               onChanged: null,
             ),
-            data: (courses) => _DropdownField<String?>(
-              value: _courseId,
-              hint: 'All courses',
-              items: [
-                const DropdownMenuItem(value: null, child: Text('All courses')),
-                for (final c in courses)
-                  DropdownMenuItem(value: c.id, child: Text(c.name)),
-              ],
-              onChanged: (v) => setState(() {
-                _courseId = v;
-                _courseName = v == null
-                    ? null
-                    : courses.firstWhere((c) => c.id == v).name;
-                _moduleNumber = null;
-              }),
-            ),
+            data: (courses) {
+              final effectiveCourseId =
+                  courses.any((c) => c.id == _courseId) ? _courseId : null;
+              return _DropdownField<String?>(
+                value: effectiveCourseId,
+                hint: 'All courses',
+                items: [
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text('All courses'),
+                  ),
+                  for (final c in courses)
+                    DropdownMenuItem(value: c.id, child: Text(c.name)),
+                ],
+                onChanged: (v) => setState(() {
+                  _courseId = v;
+                  _courseName = v == null
+                      ? null
+                      : courses.firstWhere((c) => c.id == v).name;
+                  _moduleNumber = null;
+                }),
+              );
+            },
           ),
           const SizedBox(height: 24),
           // Actions
