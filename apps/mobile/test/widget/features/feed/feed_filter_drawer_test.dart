@@ -8,8 +8,6 @@ import 'package:unishare_mobile/features/auth/presentation/providers/auth_reposi
 import 'package:unishare_mobile/features/feed/presentation/providers/feed_filter_provider.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/feed_filter_drawer.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
-import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
-import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
@@ -42,27 +40,6 @@ class _FakeAuthRepository implements AuthRepository {
   }) async {}
 }
 
-Post _post({required String id, required String courseId, int year = 1, String moduleNumber = ''}) =>
-    Post(
-      id: id,
-      authorId: 'uid',
-      authorName: 'Test',
-      authorAvatar: '',
-      postType: PostType.lectureNote,
-      year: year,
-      courseId: courseId,
-      title: 'Title',
-      description: '',
-      postingIdentity: PostingIdentity.named,
-      semester: 1,
-      moduleNumber: moduleNumber,
-      mediaUrls: const [],
-      tags: const [],
-      likesCount: 0,
-      createdAt: DateTime(2026),
-      updatedAt: DateTime(2026),
-    );
-
 Widget _buildSubject({List<Post> posts = const []}) {
   return ProviderScope(
     overrides: [
@@ -70,9 +47,7 @@ Widget _buildSubject({List<Post> posts = const []}) {
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
-      home: Scaffold(
-        body: FeedFilterDrawer(loadedPosts: posts),
-      ),
+      home: Scaffold(body: FeedFilterDrawer(loadedPosts: posts)),
     ),
   );
 }
@@ -99,9 +74,11 @@ void main() {
   });
 
   testWidgets('tapping Clear calls feedFilterProvider.clear()', (tester) async {
-    final container = ProviderContainer(overrides: [
-      authRepositoryProvider.overrideWithValue(_FakeAuthRepository()),
-    ]);
+    final container = ProviderContainer(
+      overrides: [
+        authRepositoryProvider.overrideWithValue(_FakeAuthRepository()),
+      ],
+    );
     addTearDown(container.dispose);
 
     container.read(feedFilterProvider.notifier).setYear(2);
@@ -112,9 +89,7 @@ void main() {
         container: container,
         child: MaterialApp(
           theme: AppTheme.build(AppThemes.unishare),
-          home: Scaffold(
-            body: FeedFilterDrawer(loadedPosts: const []),
-          ),
+          home: Scaffold(body: FeedFilterDrawer(loadedPosts: const [])),
         ),
       ),
     );

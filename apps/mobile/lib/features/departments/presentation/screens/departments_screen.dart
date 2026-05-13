@@ -34,7 +34,9 @@ class DepartmentsScreen extends ConsumerWidget {
             return Center(
               child: Text(
                 'No departments found.',
-                style: theme.textTheme.bodyMedium?.copyWith(color: ac.textMuted),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: ac.textMuted,
+                ),
               ),
             );
           }
@@ -86,7 +88,11 @@ class _DepartmentTile extends StatelessWidget {
               color: ac.muted,
               borderRadius: BorderRadius.circular(6),
             ),
-            child: Icon(Icons.domain_outlined, size: 20, color: ac.mutedForeground),
+            child: Icon(
+              Icons.domain_outlined,
+              size: 20,
+              color: ac.mutedForeground,
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(

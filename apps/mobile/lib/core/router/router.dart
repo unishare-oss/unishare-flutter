@@ -254,7 +254,8 @@ GoRouter router(Ref ref) {
                         path: ':deptId',
                         builder: (context, state) => CoursesScreen(
                           deptId: state.pathParameters['deptId']!,
-                          departmentName: state.uri.queryParameters['name'] ?? 'Courses',
+                          departmentName:
+                              state.uri.queryParameters['name'] ?? 'Courses',
                         ),
                       ),
                     ],

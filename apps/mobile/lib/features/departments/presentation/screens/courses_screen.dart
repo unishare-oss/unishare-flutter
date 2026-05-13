@@ -139,11 +139,7 @@ class _CoursesScreenState extends ConsumerState<CoursesScreen>
                           ),
                         ),
                       ),
-                      Icon(
-                        Icons.chevron_right,
-                        size: 20,
-                        color: ac.textMuted,
-                      ),
+                      Icon(Icons.chevron_right, size: 20, color: ac.textMuted),
                     ],
                   ),
                 ),

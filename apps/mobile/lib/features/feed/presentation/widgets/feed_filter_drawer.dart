@@ -124,9 +124,8 @@ class _FeedFilterDrawerState extends ConsumerState<FeedFilterDrawer> {
                   label: 'RECENT',
                   icon: Icons.access_time_outlined,
                   selected: _sortOrder == FeedSortOrder.recent,
-                  onTap: () => setState(
-                    () => _sortOrder = FeedSortOrder.recent,
-                  ),
+                  onTap: () =>
+                      setState(() => _sortOrder = FeedSortOrder.recent),
                 ),
               ),
               const SizedBox(width: 12),
@@ -192,7 +191,7 @@ class _FeedFilterDrawerState extends ConsumerState<FeedFilterDrawer> {
               items: [],
               onChanged: null,
             ),
-            error: (_, __) => const _DropdownField<String?>(
+            error: (_, _) => const _DropdownField<String?>(
               value: null,
               hint: 'All courses',
               items: [
@@ -204,10 +203,7 @@ class _FeedFilterDrawerState extends ConsumerState<FeedFilterDrawer> {
               value: _courseId,
               hint: 'All courses',
               items: [
-                const DropdownMenuItem(
-                  value: null,
-                  child: Text('All courses'),
-                ),
+                const DropdownMenuItem(value: null, child: Text('All courses')),
                 for (final c in courses)
                   DropdownMenuItem(value: c.id, child: Text(c.name)),
               ],
@@ -364,11 +360,7 @@ class _DropdownField<T> extends StatelessWidget {
             style: theme.textTheme.bodySmall?.copyWith(color: ac.textMuted),
           ),
           dropdownColor: cs.surface,
-          icon: Icon(
-            Icons.keyboard_arrow_down,
-            size: 18,
-            color: ac.textMuted,
-          ),
+          icon: Icon(Icons.keyboard_arrow_down, size: 18, color: ac.textMuted),
           style: theme.textTheme.bodySmall?.copyWith(color: cs.onSurface),
           onChanged: onChanged,
           items: items,

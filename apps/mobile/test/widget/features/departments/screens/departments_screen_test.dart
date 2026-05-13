@@ -34,10 +34,14 @@ void main() {
   });
 
   testWidgets('renders department names', (tester) async {
-    await tester.pumpWidget(_buildSubject(departments: [
-      (id: 'eng', name: 'Engineering'),
-      (id: 'sci', name: 'Science'),
-    ]));
+    await tester.pumpWidget(
+      _buildSubject(
+        departments: [
+          (id: 'eng', name: 'Engineering'),
+          (id: 'sci', name: 'Science'),
+        ],
+      ),
+    );
     await tester.pump();
     expect(find.text('Engineering'), findsOneWidget);
     expect(find.text('Science'), findsOneWidget);
@@ -46,9 +50,9 @@ void main() {
   testWidgets('department tiles are tappable (GestureDetector present)', (
     tester,
   ) async {
-    await tester.pumpWidget(_buildSubject(departments: [
-      (id: 'eng', name: 'Engineering'),
-    ]));
+    await tester.pumpWidget(
+      _buildSubject(departments: [(id: 'eng', name: 'Engineering')]),
+    );
     await tester.pump();
     expect(find.byType(GestureDetector), findsWidgets);
   });

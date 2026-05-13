@@ -19,10 +19,7 @@ Widget _buildSubject({
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
-      home: const CoursesScreen(
-        deptId: 'dept1',
-        departmentName: 'Engineering',
-      ),
+      home: const CoursesScreen(deptId: 'dept1', departmentName: 'Engineering'),
     ),
   );
 }
@@ -43,10 +40,14 @@ void main() {
   });
 
   testWidgets('shows course names when courses exist', (tester) async {
-    await tester.pumpWidget(_buildSubject(year1Courses: [
-      (id: 'c1', name: 'Calculus I'),
-      (id: 'c2', name: 'Programming I'),
-    ]));
+    await tester.pumpWidget(
+      _buildSubject(
+        year1Courses: [
+          (id: 'c1', name: 'Calculus I'),
+          (id: 'c2', name: 'Programming I'),
+        ],
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Calculus I'), findsOneWidget);
     expect(find.text('Programming I'), findsOneWidget);
@@ -59,9 +60,9 @@ void main() {
   });
 
   testWidgets('course tiles are tappable', (tester) async {
-    await tester.pumpWidget(_buildSubject(year1Courses: [
-      (id: 'c1', name: 'Calculus I'),
-    ]));
+    await tester.pumpWidget(
+      _buildSubject(year1Courses: [(id: 'c1', name: 'Calculus I')]),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(GestureDetector), findsWidgets);
   });

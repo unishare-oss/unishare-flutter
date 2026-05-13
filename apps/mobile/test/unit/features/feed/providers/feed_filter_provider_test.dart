@@ -11,7 +11,11 @@ void main() {
     });
 
     test('counts year, courseId, moduleNumber independently', () {
-      const state = FeedFilterState(year: 2, courseId: 'CSC101', moduleNumber: 'M3');
+      const state = FeedFilterState(
+        year: 2,
+        courseId: 'CSC101',
+        moduleNumber: 'M3',
+      );
       expect(state.activeCount, 3);
     });
 
@@ -21,7 +25,10 @@ void main() {
     });
 
     test('courseName does not contribute to activeCount', () {
-      const state = FeedFilterState(courseId: 'CSC101', courseName: 'Calculus I');
+      const state = FeedFilterState(
+        courseId: 'CSC101',
+        courseName: 'Calculus I',
+      );
       expect(state.activeCount, 1);
     });
   });
