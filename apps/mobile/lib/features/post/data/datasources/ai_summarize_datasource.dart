@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
-const _workerBaseUrl = String.fromEnvironment(
-  'WORKER_BASE_URL',
-  defaultValue: 'https://unishare-upload.workers.dev',
-);
+const _workerBaseUrl = String.fromEnvironment('WORKER_URL');
 
 class AiSummarizeDatasource {
   AiSummarizeDatasource({http.Client? client})
