@@ -98,7 +98,7 @@ void main() {
       expect(find.text('?'), findsOneWidget);
     });
 
-    testWidgets('shows Reply button when onReply callback is provided', (
+    testWidgets('shows REPLY button when onReply callback is provided', (
       tester,
     ) async {
       final comment = Comment(
@@ -120,10 +120,10 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('Reply'), findsOneWidget);
+      expect(find.text('REPLY'), findsOneWidget);
     });
 
-    testWidgets('hides Reply button when onReply is null', (tester) async {
+    testWidgets('hides REPLY button when onReply is null', (tester) async {
       final comment = Comment(
         id: 'c-1',
         authorId: 'author-1',
@@ -141,10 +141,10 @@ void main() {
       );
       await tester.pump();
 
-      expect(find.text('Reply'), findsNothing);
+      expect(find.text('REPLY'), findsNothing);
     });
 
-    testWidgets('tapping Reply invokes onReply callback', (tester) async {
+    testWidgets('tapping REPLY invokes onReply callback', (tester) async {
       var called = false;
       final comment = Comment(
         id: 'c-1',
@@ -165,7 +165,80 @@ void main() {
       );
       await tester.pump();
 
-      await tester.tap(find.text('Reply'));
+      await tester.tap(find.text('REPLY'));
+      expect(called, isTrue);
+    });
+
+    testWidgets('shows delete icon when onDelete callback is provided', (
+      tester,
+    ) async {
+      final comment = Comment(
+        id: 'c-1',
+        authorId: 'author-1',
+        authorName: 'Alice',
+        authorAvatar: '',
+        body: 'Hello',
+        createdAt: DateTime.now(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.build(AppThemes.unishare),
+          home: Scaffold(
+            body: CommentTile(comment: comment, onDelete: () {}),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
+    });
+
+    testWidgets('hides delete icon when onDelete is null', (tester) async {
+      final comment = Comment(
+        id: 'c-1',
+        authorId: 'author-1',
+        authorName: 'Alice',
+        authorAvatar: '',
+        body: 'Hello',
+        createdAt: DateTime.now(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.build(AppThemes.unishare),
+          home: Scaffold(body: CommentTile(comment: comment)),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.byIcon(Icons.delete_outline), findsNothing);
+    });
+
+    testWidgets('tapping delete icon invokes onDelete callback', (
+      tester,
+    ) async {
+      var called = false;
+      final comment = Comment(
+        id: 'c-1',
+        authorId: 'author-1',
+        authorName: 'Alice',
+        authorAvatar: '',
+        body: 'Hello',
+        createdAt: DateTime.now(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.build(AppThemes.unishare),
+          home: Scaffold(
+            body: CommentTile(comment: comment, onDelete: () => called = true),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      await tester.tap(find.byIcon(Icons.delete_outline));
       expect(called, isTrue);
     });
 

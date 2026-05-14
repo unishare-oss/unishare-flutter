@@ -12,4 +12,8 @@ abstract interface class CommentRepository {
   /// Sets authorId, authorName, authorAvatar from the current Firebase Auth user.
   /// [parentId] non-null for replies; null for top-level comments.
   Future<void> addComment(String postId, String body, {String? parentId});
+
+  /// Deletes [commentId] from [postId]. If it is a top-level comment, also
+  /// deletes all replies whose parentId equals [commentId].
+  Future<void> deleteComment(String postId, String commentId);
 }

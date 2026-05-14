@@ -14,4 +14,8 @@ class CommentRepositoryImpl implements CommentRepository {
   @override
   Future<void> addComment(String postId, String body, {String? parentId}) =>
       datasource.addComment(postId, body, parentId: parentId);
+
+  @override
+  Future<void> deleteComment(String postId, String commentId) =>
+      datasource.deleteComment(postId, commentId);
 }

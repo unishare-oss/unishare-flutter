@@ -11,13 +11,28 @@ class FakeCommentRepository implements CommentRepository {
   String? lastAddedBody;
   String? lastAddedParentId;
 
+  String? lastDeletedPostId;
+  String? lastDeletedCommentId;
+  Exception? deleteError;
+
   @override
   Stream<List<Comment>> watchComments(String postId) => controller.stream;
 
   @override
-  Future<void> addComment(String postId, String body, {String? parentId}) async {
+  Future<void> addComment(
+    String postId,
+    String body, {
+    String? parentId,
+  }) async {
     lastAddedPostId = postId;
     lastAddedBody = body;
     lastAddedParentId = parentId;
+  }
+
+  @override
+  Future<void> deleteComment(String postId, String commentId) async {
+    if (deleteError != null) throw deleteError!;
+    lastDeletedPostId = postId;
+    lastDeletedCommentId = commentId;
   }
 }

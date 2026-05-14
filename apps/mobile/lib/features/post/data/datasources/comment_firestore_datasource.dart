@@ -26,6 +26,23 @@ class CommentFirestoreDatasource {
         );
   }
 
+  Future<void> deleteComment(String postId, String commentId) async {
+    final col = _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments');
+    final batch = _firestore.batch();
+
+    batch.delete(col.doc(commentId));
+
+    final replies = await col.where('parentId', isEqualTo: commentId).get();
+    for (final doc in replies.docs) {
+      batch.delete(doc.reference);
+    }
+
+    await batch.commit();
+  }
+
   Future<void> addComment(
     String postId,
     String body, {
