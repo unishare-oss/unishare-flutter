@@ -137,6 +137,15 @@ class RequestFirestoreDatasource {
     final suggestionsRef = requestRef.collection('suggestions');
     final now = Timestamp.now();
 
+    // Reject duplicate suggestions for the same post on the same request.
+    final existingSnap = await suggestionsRef
+        .where('postId', isEqualTo: postId)
+        .limit(1)
+        .get();
+    if (existingSnap.docs.isNotEmpty) {
+      throw Exception('This post has already been suggested for this request.');
+    }
+
     // Write the new suggestion document first.
     final newSuggestionRef = suggestionsRef.doc();
     await newSuggestionRef.set({
@@ -204,6 +213,17 @@ class RequestFirestoreDatasource {
         .doc(uid)
         .get();
     return snap.exists;
+  }
+
+  Stream<bool> watchHasUpvoted(String requestId) {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return Stream.value(false);
+    return _requests
+        .doc(requestId)
+        .collection('upvotes')
+        .doc(uid)
+        .snapshots()
+        .map((snap) => snap.exists);
   }
 
   // ---------------------------------------------------------------------------

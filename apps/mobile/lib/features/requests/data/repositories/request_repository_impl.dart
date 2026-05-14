@@ -85,6 +85,10 @@ class RequestRepositoryImpl implements RequestRepository {
   Future<bool> hasUpvoted(String requestId) => datasource.hasUpvoted(requestId);
 
   @override
+  Stream<bool> watchHasUpvoted(String requestId) =>
+      datasource.watchHasUpvoted(requestId);
+
+  @override
   Future<void> deleteRequest(String requestId) =>
       datasource.deleteRequest(requestId);
 

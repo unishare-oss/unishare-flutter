@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:unishare_mobile/features/post/presentation/providers/my_posts_provider.dart';
 import 'package:unishare_mobile/features/requests/presentation/providers/request_repository_provider.dart';
+import 'package:unishare_mobile/features/requests/presentation/providers/suggestions_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
@@ -58,6 +59,11 @@ class _SuggestFulfillmentDialogState
     final theme = Theme.of(context);
 
     final postsAsync = ref.watch(myPostsProvider);
+    final suggestionsAsync = ref.watch(suggestionsProvider(widget.requestId));
+    final alreadySuggestedPostIds =
+        (suggestionsAsync.asData?.value ?? const [])
+            .map((s) => s.postId)
+            .toSet();
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -134,7 +140,15 @@ class _SuggestFulfillmentDialogState
                   ),
                 ),
                 data: (posts) {
-                  if (posts.isEmpty) {
+                  final availablePosts = posts
+                      .where((p) => !alreadySuggestedPostIds.contains(p.id))
+                      .toList();
+
+                  final emptyMessage = posts.isEmpty
+                      ? 'You have no posts yet.'
+                      : 'All your posts are already suggested.';
+
+                  if (availablePosts.isEmpty) {
                     return Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -142,13 +156,22 @@ class _SuggestFulfillmentDialogState
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        'You have no posts yet.',
+                        emptyMessage,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: ac.mutedForeground,
                         ),
                       ),
                     );
                   }
+
+                  // Clear selection if previously selected post is no longer available.
+                  if (_selectedPostId != null &&
+                      !availablePosts.any((p) => p.id == _selectedPostId)) {
+                    WidgetsBinding.instance.addPostFrameCallback(
+                      (_) => setState(() => _selectedPostId = null),
+                    );
+                  }
+
                   return Container(
                     height: 42,
                     decoration: BoxDecoration(
@@ -174,7 +197,7 @@ class _SuggestFulfillmentDialogState
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: cs.onSurface,
                         ),
-                        items: posts.map((p) {
+                        items: availablePosts.map((p) {
                           return DropdownMenuItem<String>(
                             value: p.id,
                             child: Text(

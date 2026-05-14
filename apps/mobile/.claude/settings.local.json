@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /d \"D:\\\\Desktop\\\\KMUTT\\\\SYSS\\\\CSC234\\\\unishare-flutter\\\\apps\\\\mobile\")",
+      "Bash(find lib *)",
+      "Bash(findstr /v \"bin\\\\bash\")",
+      "Bash(dart run *)",
+      "Bash(flutter analyze *)",
+      "Bash(flutter test *)"
+    ]
+  }
+}
