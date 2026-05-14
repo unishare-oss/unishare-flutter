@@ -26,7 +26,11 @@ class CommentFirestoreDatasource {
         );
   }
 
-  Future<void> addComment(String postId, String body) async {
+  Future<void> addComment(
+    String postId,
+    String body, {
+    String? parentId,
+  }) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw StateError('not_authenticated');
 
@@ -43,6 +47,7 @@ class CommentFirestoreDatasource {
       'authorAvatar': user.photoURL ?? '',
       'body': body,
       'createdAt': Timestamp.now(),
+      'parentId': ?parentId,
     });
   }
 }

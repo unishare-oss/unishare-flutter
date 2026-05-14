@@ -12,6 +12,6 @@ class CommentRepositoryImpl implements CommentRepository {
       datasource.watchComments(postId);
 
   @override
-  Future<void> addComment(String postId, String body) =>
-      datasource.addComment(postId, body);
+  Future<void> addComment(String postId, String body, {String? parentId}) =>
+      datasource.addComment(postId, body, parentId: parentId);
 }

@@ -26,6 +26,7 @@ abstract class CommentDto with _$CommentDto {
     required String authorAvatar,
     required String body,
     @TimestampConverter() required DateTime createdAt,
+    String? parentId,
   }) = _CommentDto;
 
   factory CommentDto.fromJson(Map<String, dynamic> json) =>
@@ -40,5 +41,6 @@ extension CommentDtoMapper on CommentDto {
     authorAvatar: authorAvatar,
     body: body,
     createdAt: createdAt,
+    parentId: parentId,
   );
 }

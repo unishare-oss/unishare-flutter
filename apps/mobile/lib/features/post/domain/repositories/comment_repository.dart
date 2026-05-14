@@ -10,5 +10,6 @@ abstract interface class CommentRepository {
   /// Writes a new comment document to posts/{postId}/comments.
   /// [body] must be trimmed and non-empty; the use case enforces this.
   /// Sets authorId, authorName, authorAvatar from the current Firebase Auth user.
-  Future<void> addComment(String postId, String body);
+  /// [parentId] non-null for replies; null for top-level comments.
+  Future<void> addComment(String postId, String body, {String? parentId});
 }

@@ -67,7 +67,7 @@ class _FakeCommentRepository implements CommentRepository {
   Stream<List<Comment>> watchComments(String postId) => controller.stream;
 
   @override
-  Future<void> addComment(String postId, String body) async {}
+  Future<void> addComment(String postId, String body, {String? parentId}) async {}
 }
 
 class _FakeLikeRepository implements LikeRepository {
@@ -209,6 +209,75 @@ void main() {
       await tester.pump();
 
       expect(find.byType(BottomNavigationBar), findsNothing);
+    });
+
+    testWidgets('tapping Reply shows replying-to banner with author name', (
+      tester,
+    ) async {
+      // Use a tall viewport so the comment tile is fully above the input bar.
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final commentRepo = _FakeCommentRepository();
+      await tester.pumpWidget(
+        _buildSubject(seed: _fakePost(), commentRepo: commentRepo),
+      );
+      // Extra pumps ensure Riverpod subscribes to the stream before we emit.
+      await tester.pump();
+      await tester.pump();
+
+      commentRepo.controller.add([
+        Comment(
+          id: 'c-1',
+          authorId: 'u-1',
+          authorName: 'Alice',
+          authorAvatar: '',
+          body: 'Great post!',
+          createdAt: DateTime.now(),
+        ),
+      ]);
+      await tester.pump();
+      await tester.pump();
+
+      await tester.tap(find.text('Reply').first);
+      await tester.pump();
+
+      expect(find.text('Replying to Alice'), findsOneWidget);
+    });
+
+    testWidgets('tapping cancel on reply banner clears it', (tester) async {
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final commentRepo = _FakeCommentRepository();
+      await tester.pumpWidget(
+        _buildSubject(seed: _fakePost(), commentRepo: commentRepo),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      commentRepo.controller.add([
+        Comment(
+          id: 'c-1',
+          authorId: 'u-1',
+          authorName: 'Alice',
+          authorAvatar: '',
+          body: 'Great post!',
+          createdAt: DateTime.now(),
+        ),
+      ]);
+      await tester.pump();
+      await tester.pump();
+
+      await tester.tap(find.text('Reply').first);
+      await tester.pump();
+      expect(find.text('Replying to Alice'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pump();
+      expect(find.text('Replying to Alice'), findsNothing);
     });
   });
 }

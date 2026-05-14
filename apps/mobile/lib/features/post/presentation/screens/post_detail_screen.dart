@@ -12,6 +12,7 @@ import 'package:unishare_mobile/features/post/presentation/providers/post_detail
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/user_like_status_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_list.dart';
+import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/comment_tile.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/like_button.dart';
 import 'package:unishare_mobile/features/saved/domain/entities/saved_post_snapshot.dart';
@@ -34,6 +35,8 @@ class PostDetailScreen extends ConsumerStatefulWidget {
 class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   final _commentController = TextEditingController();
   bool _isSubmitting = false;
+  String? _replyingToId;
+  String? _replyingToName;
 
   @override
   void dispose() {
@@ -41,14 +44,32 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     super.dispose();
   }
 
+  void _startReply(String commentId, String authorName) {
+    setState(() {
+      _replyingToId = commentId;
+      _replyingToName = authorName;
+    });
+  }
+
+  void _cancelReply() {
+    setState(() {
+      _replyingToId = null;
+      _replyingToName = null;
+    });
+  }
+
   Future<void> _submitComment() async {
     final text = _commentController.text.trim();
     if (text.isEmpty || _isSubmitting) return;
 
+    final parentId = _replyingToId;
     setState(() => _isSubmitting = true);
     try {
-      await ref.read(addCommentUseCaseProvider).call(widget.postId, text);
+      await ref
+          .read(addCommentUseCaseProvider)
+          .call(widget.postId, text, parentId: parentId);
       _commentController.clear();
+      if (mounted) setState(() { _replyingToId = null; _replyingToName = null; });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -129,6 +150,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           commentController: _commentController,
           isSubmitting: _isSubmitting,
           onSubmitComment: _submitComment,
+          replyingToName: _replyingToName,
+          onReply: _startReply,
+          onCancelReply: _cancelReply,
         ),
       ),
     );
@@ -218,6 +242,9 @@ class _PostBody extends ConsumerWidget {
     required this.commentController,
     required this.isSubmitting,
     required this.onSubmitComment,
+    this.replyingToName,
+    required this.onReply,
+    required this.onCancelReply,
   });
 
   final Post post;
@@ -226,6 +253,9 @@ class _PostBody extends ConsumerWidget {
   final TextEditingController commentController;
   final bool isSubmitting;
   final VoidCallback onSubmitComment;
+  final String? replyingToName;
+  final void Function(String commentId, String authorName) onReply;
+  final VoidCallback onCancelReply;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -233,10 +263,18 @@ class _PostBody extends ConsumerWidget {
     final likeStatusAsync = ref.watch(userLikeStatusProvider(post.id));
 
     final isLiked = likeStatusAsync.value ?? false;
-    final comments = commentsAsync.value ?? [];
-    final hasComments = comments.isNotEmpty;
-    // item 0 = post header; 1..N = comment tiles; when empty: +1 for empty state
-    final itemCount = 1 + comments.length + (hasComments ? 0 : 1);
+    final allComments = commentsAsync.value ?? [];
+
+    // Group into top-level comments and a parentId → replies map.
+    final topLevel = allComments.where((c) => c.parentId == null).toList();
+    final repliesMap = <String, List<Comment>>{};
+    for (final c in allComments) {
+      if (c.parentId != null) {
+        repliesMap.putIfAbsent(c.parentId!, () => []).add(c);
+      }
+    }
+
+    final itemCount = 1 + topLevel.length + (topLevel.isEmpty ? 1 : 0);
 
     return Column(
       children: [
@@ -250,11 +288,16 @@ class _PostBody extends ConsumerWidget {
                   isLiked: isLiked,
                   isGuest: isGuest,
                   onToggleLike: onToggleLike,
-                  commentCount: comments.length,
+                  commentCount: allComments.where((c) => c.parentId == null).length,
                 );
               }
-              if (!hasComments) return const _EmptyComments();
-              return CommentTile(comment: comments[index - 1]);
+              if (topLevel.isEmpty) return const _EmptyComments();
+              final c = topLevel[index - 1];
+              return CommentTile(
+                comment: c,
+                replies: repliesMap[c.id] ?? [],
+                onReply: isGuest ? null : () => onReply(c.id, c.authorName),
+              );
             },
           ),
         ),
@@ -263,6 +306,8 @@ class _PostBody extends ConsumerWidget {
           controller: commentController,
           isSubmitting: isSubmitting,
           onSubmit: onSubmitComment,
+          replyingToName: replyingToName,
+          onCancelReply: onCancelReply,
         ),
       ],
     );
@@ -759,12 +804,16 @@ class _CommentInputBar extends StatelessWidget {
     required this.controller,
     required this.isSubmitting,
     required this.onSubmit,
+    this.replyingToName,
+    required this.onCancelReply,
   });
 
   final bool isGuest;
   final TextEditingController controller;
   final bool isSubmitting;
   final VoidCallback onSubmit;
+  final String? replyingToName;
+  final VoidCallback onCancelReply;
 
   @override
   Widget build(BuildContext context) {
@@ -799,6 +848,26 @@ class _CommentInputBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (replyingToName != null) ...[
+            Row(
+              children: [
+                Icon(Icons.reply, size: 14, color: appColors.textMuted),
+                const SizedBox(width: 4),
+                Text(
+                  'Replying to $replyingToName',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: appColors.textMuted,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: onCancelReply,
+                  child: Icon(Icons.close, size: 14, color: appColors.textMuted),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+          ],
           TextField(
             controller: controller,
             decoration: InputDecoration(
