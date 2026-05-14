@@ -60,10 +60,9 @@ class _SuggestFulfillmentDialogState
 
     final postsAsync = ref.watch(myPostsProvider);
     final suggestionsAsync = ref.watch(suggestionsProvider(widget.requestId));
-    final alreadySuggestedPostIds =
-        (suggestionsAsync.asData?.value ?? const [])
-            .map((s) => s.postId)
-            .toSet();
+    final alreadySuggestedPostIds = (suggestionsAsync.asData?.value ?? const [])
+        .map((s) => s.postId)
+        .toSet();
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
