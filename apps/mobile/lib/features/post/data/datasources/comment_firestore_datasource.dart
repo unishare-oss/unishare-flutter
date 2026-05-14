@@ -26,7 +26,33 @@ class CommentFirestoreDatasource {
         );
   }
 
-  Future<void> addComment(String postId, String body) async {
+  Future<void> deleteComment(String postId, String commentId) async {
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
+    final col = _firestore
+        .collection('posts')
+        .doc(postId)
+        .collection('comments');
+    final batch = _firestore.batch();
+
+    batch.delete(col.doc(commentId));
+
+    if (currentUid != null) {
+      final replies = await col.where('parentId', isEqualTo: commentId).get();
+      for (final doc in replies.docs) {
+        if (doc.data()['authorId'] == currentUid) {
+          batch.delete(doc.reference);
+        }
+      }
+    }
+
+    await batch.commit();
+  }
+
+  Future<void> addComment(
+    String postId,
+    String body, {
+    String? parentId,
+  }) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw StateError('not_authenticated');
 
@@ -43,6 +69,7 @@ class CommentFirestoreDatasource {
       'authorAvatar': user.photoURL ?? '',
       'body': body,
       'createdAt': Timestamp.now(),
+      'parentId': ?parentId,
     });
   }
 }

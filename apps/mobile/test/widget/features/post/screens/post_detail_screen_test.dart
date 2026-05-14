@@ -14,6 +14,7 @@ import 'package:unishare_mobile/features/post/domain/repositories/comment_reposi
 import 'package:unishare_mobile/features/post/domain/repositories/like_repository.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/add_comment.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/delete_comment.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_post.dart';
@@ -67,7 +68,14 @@ class _FakeCommentRepository implements CommentRepository {
   Stream<List<Comment>> watchComments(String postId) => controller.stream;
 
   @override
-  Future<void> addComment(String postId, String body) async {}
+  Future<void> addComment(
+    String postId,
+    String body, {
+    String? parentId,
+  }) async {}
+
+  @override
+  Future<void> deleteComment(String postId, String commentId) async {}
 }
 
 class _FakeLikeRepository implements LikeRepository {
@@ -131,6 +139,7 @@ Widget _buildSubject({
       watchCommentsUseCaseProvider.overrideWithValue(WatchComments(c)),
       likeRepositoryProvider.overrideWithValue(l),
       addCommentUseCaseProvider.overrideWithValue(AddComment(c)),
+      deleteCommentUseCaseProvider.overrideWithValue(DeleteComment(c)),
       toggleLikeUseCaseProvider.overrideWithValue(ToggleLike(l)),
     ],
     child: MaterialApp(
@@ -209,6 +218,75 @@ void main() {
       await tester.pump();
 
       expect(find.byType(BottomNavigationBar), findsNothing);
+    });
+
+    testWidgets('tapping Reply shows replying-to banner with author name', (
+      tester,
+    ) async {
+      // Use a tall viewport so the comment tile is fully above the input bar.
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final commentRepo = _FakeCommentRepository();
+      await tester.pumpWidget(
+        _buildSubject(seed: _fakePost(), commentRepo: commentRepo),
+      );
+      // Extra pumps ensure Riverpod subscribes to the stream before we emit.
+      await tester.pump();
+      await tester.pump();
+
+      commentRepo.controller.add([
+        Comment(
+          id: 'c-1',
+          authorId: 'u-1',
+          authorName: 'Alice',
+          authorAvatar: '',
+          body: 'Great post!',
+          createdAt: DateTime.now(),
+        ),
+      ]);
+      await tester.pump();
+      await tester.pump();
+
+      await tester.tap(find.text('REPLY').first);
+      await tester.pump();
+
+      expect(find.text('Replying to Alice'), findsOneWidget);
+    });
+
+    testWidgets('tapping cancel on reply banner clears it', (tester) async {
+      tester.view.physicalSize = const Size(800, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      final commentRepo = _FakeCommentRepository();
+      await tester.pumpWidget(
+        _buildSubject(seed: _fakePost(), commentRepo: commentRepo),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      commentRepo.controller.add([
+        Comment(
+          id: 'c-1',
+          authorId: 'u-1',
+          authorName: 'Alice',
+          authorAvatar: '',
+          body: 'Great post!',
+          createdAt: DateTime.now(),
+        ),
+      ]);
+      await tester.pump();
+      await tester.pump();
+
+      await tester.tap(find.text('REPLY').first);
+      await tester.pump();
+      expect(find.text('Replying to Alice'), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pump();
+      expect(find.text('Replying to Alice'), findsNothing);
     });
   });
 }
