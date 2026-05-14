@@ -60,6 +60,7 @@ dependencies:
   video_player: ^2.10.0
   chewie: ^1.8.5
   path_provider: ^2.1.4
+  http: ^1.2.0
 
 
 dev_dependencies:

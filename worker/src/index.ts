@@ -1,6 +1,8 @@
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { verifyFirebaseJwt } from './jwt';
+import { handleAiSummarize } from './ai-summarize';
+import { handleAiChat } from './ai-chat';
 
 export interface Env {
   FIREBASE_PROJECT_ID: string;
@@ -9,6 +11,8 @@ export interface Env {
   R2_ACCESS_KEY_ID: string;
   R2_SECRET_ACCESS_KEY: string;
   R2_BUCKET: string;
+  GROQ_API_KEY: string;
+  GROQ_MODEL?: string;
 }
 
 const MIME_TO_EXT: Record<string, string> = {
@@ -69,6 +73,21 @@ export default {
     // CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
+    }
+
+    const url = new URL(request.url);
+
+    // AI routes — auth required, POST only
+    if (request.method === 'POST' && url.pathname === '/ai/summarize') {
+      const uid = await requireAuth(request, env);
+      if (uid instanceof Response) return uid;
+      return handleAiSummarize(request, env);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/ai/chat') {
+      const uid = await requireAuth(request, env);
+      if (uid instanceof Response) return uid;
+      return handleAiChat(request, env);
     }
 
     if (request.method !== 'POST') {
@@ -133,6 +152,17 @@ export default {
     return json({ uploadUrl, publicUrl }, 200);
   },
 };
+
+async function requireAuth(request: Request, env: Env): Promise<string | Response> {
+  const auth = request.headers.get('Authorization') ?? '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+  if (!token) return json({ error: 'Missing token' }, 401);
+  try {
+    return await verifyFirebaseJwt(token, env.FIREBASE_PROJECT_ID);
+  } catch (e) {
+    return json({ error: `Unauthorized: ${(e as Error).message}` }, 401);
+  }
+}
 
 function json(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {

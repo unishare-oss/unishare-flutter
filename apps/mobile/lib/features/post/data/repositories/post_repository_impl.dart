@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 
+import 'package:unishare_mobile/features/post/data/datasources/ai_summarize_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
@@ -181,6 +182,15 @@ class PostRepositoryImpl implements PostRepository {
       );
       feedCache.invalidate();
       await removeDraft(draft.id);
+
+      final supportedIndex = mediaTypes.indexWhere(
+        (t) => t == 'pdf' || t == 'docx',
+      );
+      if (supportedIndex != -1) {
+        final fileUrl = mediaUrls[supportedIndex];
+        final filename = fileUrl.split('/').last;
+        _triggerSummarize(current.id, fileUrl, filename);
+      }
     } catch (e) {
       await saveDraft(
         current.copyWith(
@@ -190,6 +200,25 @@ class PostRepositoryImpl implements PostRepository {
       );
       rethrow;
     }
+  }
+
+  void _triggerSummarize(String postId, String fileUrl, String filename) {
+    AiSummarizeDatasource()
+        .call(fileUrl: fileUrl, filename: filename)
+        .then(
+          (data) {
+            final summaryStatus = data['summaryStatus'] as String? ?? 'error';
+            final summary = data['summary'] as String?;
+            firestoreDatasource.updatePostSummary(
+              postId,
+              summary,
+              summaryStatus,
+            );
+          },
+          onError: (_) {
+            firestoreDatasource.updatePostSummary(postId, null, 'error');
+          },
+        );
   }
 
   static String _mediaTypeFromPath(String path) {
@@ -202,6 +231,8 @@ class PostRepositoryImpl implements PostRepository {
         return 'image';
       case 'pdf':
         return 'pdf';
+      case 'docx':
+        return 'docx';
       case 'mp4':
       case 'mov':
       case 'avi':

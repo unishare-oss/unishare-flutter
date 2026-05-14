@@ -6,3 +6,7 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 FIREBASE_PROJECT_ID = "unishare-flutter"
 R2_PUBLIC_URL = "https://cdn.psstee.dev"
+# GROQ_MODEL = "llama-3.3-70b-versatile"   # optional override
+
+# Secrets (set via: wrangler secret put GROQ_API_KEY)
+# GROQ_API_KEY
