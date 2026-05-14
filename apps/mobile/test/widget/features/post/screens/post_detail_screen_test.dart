@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 
 import 'package:flutter/material.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/ai_summary_panel.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/ask_ai_section.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
@@ -288,5 +290,88 @@ void main() {
       await tester.pump();
       expect(find.text('Replying to Alice'), findsNothing);
     });
+  });
+
+  group('PostDetailScreen — AI summary panel', () {
+    Post postWith({SummaryStatus? summaryStatus, String? summary}) => Post(
+      id: 'post-1',
+      authorId: 'author-1',
+      authorName: 'Test Author',
+      authorAvatar: '',
+      postType: PostType.lectureNote,
+      year: 1,
+      courseId: 'csc101',
+      title: 'Test Title',
+      description: 'Test body content',
+      postingIdentity: PostingIdentity.named,
+      semester: 1,
+      moduleNumber: '',
+      mediaUrls: const ['https://r2.example.com/posts/file.pdf'],
+      mediaTypes: const ['pdf'],
+      tags: const [],
+      likesCount: 0,
+      createdAt: DateTime(2026, 1, 1),
+      updatedAt: DateTime(2026, 1, 1),
+      summaryStatus: summaryStatus,
+      summary: summary,
+    );
+
+    testWidgets(
+      'no summaryStatus — AiSummaryPanel hidden, AskAiSection absent',
+      (tester) async {
+        await tester.pumpWidget(_buildSubject(seed: postWith()));
+        await tester.pump();
+
+        expect(find.text('AI SUMMARY'), findsNothing);
+        expect(find.byType(AskAiSection), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'summaryStatus pending — shows AI SUMMARY header, no AskAiSection',
+      (tester) async {
+        await tester.pumpWidget(
+          _buildSubject(seed: postWith(summaryStatus: SummaryStatus.pending)),
+        );
+        await tester.pump();
+
+        expect(find.text('AI SUMMARY'), findsOneWidget);
+        expect(find.byType(AskAiSection), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'summaryStatus done — shows AI SUMMARY, summary text, and AskAiSection',
+      (tester) async {
+        const fakeSummary = 'An intro sentence.\n• Topic one\n• Topic two';
+        await tester.pumpWidget(
+          _buildSubject(
+            seed: postWith(
+              summaryStatus: SummaryStatus.done,
+              summary: fakeSummary,
+            ),
+          ),
+        );
+        await tester.pump();
+
+        expect(find.text('AI SUMMARY'), findsOneWidget);
+        expect(find.byType(AiSummaryPanel), findsOneWidget);
+        expect(find.byType(AskAiSection), findsOneWidget);
+        expect(find.text('ASK AI'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'summaryStatus error — shows AI SUMMARY header, no AskAiSection',
+      (tester) async {
+        await tester.pumpWidget(
+          _buildSubject(seed: postWith(summaryStatus: SummaryStatus.error)),
+        );
+        await tester.pump();
+
+        expect(find.text('AI SUMMARY'), findsOneWidget);
+        expect(find.byType(AskAiSection), findsNothing);
+      },
+    );
   });
 }

@@ -3,6 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { verifyFirebaseJwt } from './jwt';
 import { handleAiSummarize } from './ai-summarize';
 import { handleAiChat } from './ai-chat';
+import { CORS_HEADERS, json } from './response';
 
 export interface Env {
   FIREBASE_PROJECT_ID: string;
@@ -62,11 +63,6 @@ const MIME_TO_EXT: Record<string, string> = {
 
 const ALLOWED_CONTENT_TYPES = new Set(Object.keys(MIME_TO_EXT));
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Authorization, Content-Type',
-};
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -164,9 +160,3 @@ async function requireAuth(request: Request, env: Env): Promise<string | Respons
   }
 }
 
-function json(body: unknown, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
-  });
-}

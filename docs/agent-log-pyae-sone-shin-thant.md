@@ -1046,3 +1046,13 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [13:26] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
   [13:26] Edit: apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
   [13:26] Edit: apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_summary_panel.dart
+  [14:39] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [14:40] Edit: apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  [14:40] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:40] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:41] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:41] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart

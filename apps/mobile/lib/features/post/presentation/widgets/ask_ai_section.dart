@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unishare_mobile/features/post/domain/entities/ai_message.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/ask_ai_repository.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/ask_ai_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/ai_message_bubble.dart';
@@ -90,14 +91,14 @@ class _AskAiSectionState extends ConsumerState<AskAiSection> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Row(
           children: [
-            const Icon(Icons.smart_toy_outlined, size: 13, color: Colors.blue),
+            Icon(Icons.smart_toy_outlined, size: 13, color: ac.info),
             const SizedBox(width: 6),
             Text(
               'ASK AI',
               style: AppTypography.mono(
                 base: theme.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: Colors.blue,
+                  color: ac.info,
                   letterSpacing: 0.6,
                   fontSize: 11,
                 ),
@@ -120,7 +121,7 @@ class _AskAiSectionState extends ConsumerState<AskAiSection> {
     AppColors ac,
     ThemeData theme,
     ColorScheme cs,
-    List messages,
+    List<AiMessage> messages,
   ) {
     if (messages.isEmpty) {
       return Padding(

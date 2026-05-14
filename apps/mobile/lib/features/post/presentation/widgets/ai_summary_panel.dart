@@ -22,7 +22,21 @@ class _AiSummaryPanelState extends State<AiSummaryPanel>
     _shimmerController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 900),
-    )..repeat(reverse: true);
+    );
+    if (widget.status == SummaryStatus.pending) {
+      _shimmerController.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(AiSummaryPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.status == SummaryStatus.pending) {
+      if (!_shimmerController.isAnimating)
+        _shimmerController.repeat(reverse: true);
+    } else {
+      if (_shimmerController.isAnimating) _shimmerController.stop();
+    }
   }
 
   @override

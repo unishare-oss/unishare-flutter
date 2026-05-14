@@ -1,5 +1,6 @@
 import Groq from 'groq-sdk'
 import type { Env } from './index'
+import { json, jsonError } from './response'
 
 const SYSTEM_PROMPT = `You are a study assistant for university students.
 Answer ONLY questions that are directly related to the document summary provided below.
@@ -12,6 +13,7 @@ Document summary:
 const OFF_TOPIC_REPLY = "I can only answer questions about this document."
 const MAX_HISTORY_TURNS = 10
 const MAX_QUESTION_LENGTH = 500
+const VALID_ROLES = new Set(['user', 'assistant'])
 
 export async function handleAiChat(request: Request, env: Env): Promise<Response> {
   let body: {
@@ -33,6 +35,16 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
   }
   if (!Array.isArray(history) || history.length > MAX_HISTORY_TURNS * 2) {
     return jsonError('history too long', 400)
+  }
+  for (const msg of history) {
+    if (
+      !msg ||
+      typeof msg !== 'object' ||
+      !VALID_ROLES.has(msg.role) ||
+      typeof msg.content !== 'string'
+    ) {
+      return jsonError('invalid history entry', 400)
+    }
   }
 
   const groq = new Groq({ apiKey: env.GROQ_API_KEY })
@@ -62,15 +74,4 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
     reply: isOffTopic ? OFF_TOPIC_REPLY : reply,
     isOffTopic,
   })
-}
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
-
-function jsonError(message: string, status: number): Response {
-  return json({ error: message }, status)
 }

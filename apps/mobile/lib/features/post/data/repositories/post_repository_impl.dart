@@ -206,17 +206,17 @@ class PostRepositoryImpl implements PostRepository {
     AiSummarizeDatasource()
         .call(fileUrl: fileUrl, filename: filename)
         .then(
-          (data) {
+          (data) async {
             final summaryStatus = data['summaryStatus'] as String? ?? 'error';
             final summary = data['summary'] as String?;
-            firestoreDatasource.updatePostSummary(
+            await firestoreDatasource.updatePostSummary(
               postId,
               summary,
               summaryStatus,
             );
           },
-          onError: (_) {
-            firestoreDatasource.updatePostSummary(postId, null, 'error');
+          onError: (_) async {
+            await firestoreDatasource.updatePostSummary(postId, null, 'error');
           },
         );
   }

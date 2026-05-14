@@ -113,9 +113,10 @@ class PostFirestoreDatasource {
   ) async {
     await _firestore.collection('posts').doc(postId).update({
       'summaryStatus': summaryStatus,
-      // ignore: use_null_aware_elements
-      if (summary != null) 'summary': summary,
-      if (summaryStatus == 'done') 'summarizedAt': FieldValue.serverTimestamp(),
+      'summary': summary ?? FieldValue.delete(),
+      'summarizedAt': summaryStatus == 'done'
+          ? FieldValue.serverTimestamp()
+          : FieldValue.delete(),
     });
   }
 }

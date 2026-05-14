@@ -1,6 +1,7 @@
 import Groq from 'groq-sdk'
 import { extractText } from './text-extractor'
 import type { Env } from './index'
+import { json, jsonError } from './response'
 
 const SUMMARY_PROMPT = `You are summarizing an academic document for university students.
 Respond with exactly this format — no extra text, no markdown headers:
@@ -24,6 +25,11 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
   const { fileUrl, filename } = body
   if (!fileUrl || typeof fileUrl !== 'string') return jsonError('fileUrl required', 400)
   if (!filename || typeof filename !== 'string') return jsonError('filename required', 400)
+
+  const expectedPrefix = `${env.R2_PUBLIC_URL}/posts/`
+  if (!fileUrl.startsWith(expectedPrefix)) {
+    return jsonError('fileUrl must reference a file in this service', 400)
+  }
 
   // Download file from its public R2 URL
   const fileRes = await fetch(fileUrl)
@@ -69,15 +75,4 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
   }
 
   return json({ summaryStatus: 'done', summary })
-}
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
-
-function jsonError(message: string, status: number): Response {
-  return json({ error: message }, status)
 }
