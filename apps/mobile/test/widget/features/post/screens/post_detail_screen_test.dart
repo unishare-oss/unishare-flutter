@@ -14,6 +14,7 @@ import 'package:unishare_mobile/features/post/domain/repositories/comment_reposi
 import 'package:unishare_mobile/features/post/domain/repositories/like_repository.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/add_comment.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/delete_comment.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_post.dart';
@@ -138,6 +139,7 @@ Widget _buildSubject({
       watchCommentsUseCaseProvider.overrideWithValue(WatchComments(c)),
       likeRepositoryProvider.overrideWithValue(l),
       addCommentUseCaseProvider.overrideWithValue(AddComment(c)),
+      deleteCommentUseCaseProvider.overrideWithValue(DeleteComment(c)),
       toggleLikeUseCaseProvider.overrideWithValue(ToggleLike(l)),
     ],
     child: MaterialApp(
@@ -247,7 +249,7 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      await tester.tap(find.text('Reply').first);
+      await tester.tap(find.text('REPLY').first);
       await tester.pump();
 
       expect(find.text('Replying to Alice'), findsOneWidget);
@@ -278,7 +280,7 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      await tester.tap(find.text('Reply').first);
+      await tester.tap(find.text('REPLY').first);
       await tester.pump();
       expect(find.text('Replying to Alice'), findsOneWidget);
 

@@ -119,6 +119,14 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     }
   }
 
+  String? _safeCurrentUid() {
+    try {
+      return FirebaseAuth.instance.currentUser?.uid;
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> _toggleLike() async {
     try {
       await ref.read(toggleLikeUseCaseProvider).call(widget.postId);
@@ -184,6 +192,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         data: (post) => _PostBody(
           post: post,
           isGuest: isGuest,
+          currentUid: _safeCurrentUid(),
           onToggleLike: _toggleLike,
           commentController: _commentController,
           isSubmitting: _isSubmitting,
@@ -277,6 +286,7 @@ class _PostBody extends ConsumerWidget {
   const _PostBody({
     required this.post,
     required this.isGuest,
+    this.currentUid,
     required this.onToggleLike,
     required this.commentController,
     required this.isSubmitting,
@@ -289,6 +299,7 @@ class _PostBody extends ConsumerWidget {
 
   final Post post;
   final bool isGuest;
+  final String? currentUid;
   final VoidCallback onToggleLike;
   final TextEditingController commentController;
   final bool isSubmitting;
@@ -305,7 +316,6 @@ class _PostBody extends ConsumerWidget {
 
     final isLiked = likeStatusAsync.value ?? false;
     final allComments = commentsAsync.value ?? [];
-    final currentUid = FirebaseAuth.instance.currentUser?.uid;
 
     // Group into top-level comments and a parentId → replies map.
     final topLevel = allComments.where((c) => c.parentId == null).toList();

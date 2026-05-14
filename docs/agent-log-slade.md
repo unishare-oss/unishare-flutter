@@ -256,3 +256,9 @@ Summary:  1 file changed, 5 insertions(+), 1 deletion(-)
 
   [12:25] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
   [12:30] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [12:39] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [12:39] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [12:39] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [12:40] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [12:40] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [12:40] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
