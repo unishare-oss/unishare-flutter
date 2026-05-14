@@ -325,6 +325,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           if (isSignUp) ...[
             // Full name
             AuthTextField(
+              label: 'Full name',
               hint: 'Full name',
               controller: _nameController,
               keyboardType: TextInputType.name,
@@ -341,7 +342,19 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             const SizedBox(height: 12),
 
             // University dropdown
-            universitiesAsync.when(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'University',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                universitiesAsync.when(
               data: (universities) => DropdownButtonFormField<String>(
                 initialValue: _selectedUniversityId,
                 isExpanded: true,
@@ -397,10 +410,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               loading: () => LinearProgressIndicator(color: ac.amber),
               error: (e, st) => const SizedBox.shrink(),
             ),
+              ],
+            ),
             const SizedBox(height: 12),
 
             // Email
             AuthTextField(
+              label: 'Email',
               hint: 'Email',
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
@@ -418,6 +434,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
             // Password (min 8 chars)
             AuthTextField(
+              label: 'Password',
               hint: 'Password',
               controller: _passwordController,
               obscureText: true,
@@ -435,6 +452,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
             // Confirm password
             AuthTextField(
+              label: 'Confirm password',
               hint: 'Confirm password',
               controller: _confirmPasswordController,
               obscureText: true,
@@ -495,6 +513,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           ] else ...[
             // Sign-in fields: Email + Password
             AuthTextField(
+              label: 'Email',
               hint: 'Email',
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
@@ -510,6 +529,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             ),
             const SizedBox(height: 12),
             AuthTextField(
+              label: 'Password',
               hint: 'Password',
               controller: _passwordController,
               obscureText: true,
