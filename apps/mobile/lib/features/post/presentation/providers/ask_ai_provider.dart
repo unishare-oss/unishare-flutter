@@ -27,7 +27,7 @@ class AskAi extends _$AskAi {
         question: question,
       );
       final reply = await ref.read(askAiUseCaseProvider).call(params);
-      final updated = [...(state.value ?? [])];
+      final updated = <AiMessage>[...(state.value ?? [])];
       updated[updated.length - 1] = reply;
       state = AsyncData(updated);
     } on AskAiException catch (e, st) {
