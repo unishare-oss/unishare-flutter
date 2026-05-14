@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/saved/domain/entities/saved_post.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
@@ -123,21 +124,24 @@ class _TypeBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final isNote = postType == PostType.lectureNote.name;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        border: Border.all(color: scheme.onSurface.withValues(alpha: 0.3)),
-        borderRadius: BorderRadius.circular(4),
+        color: isNote
+            ? appColors.info.withValues(alpha: 0.12)
+            : appColors.amberSubtle,
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        postType.toUpperCase(),
+        isNote ? 'NOTE' : 'EXERCISE',
         style: AppTypography.mono(
-          base: theme.textTheme.labelSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: scheme.onSurface,
-            letterSpacing: 0.5,
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: isNote ? appColors.info : appColors.amber,
+            letterSpacing: 0.55,
           ),
         ),
       ),
