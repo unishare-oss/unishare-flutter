@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 
@@ -21,13 +22,16 @@ class PostRepositoryImpl implements PostRepository {
     required this.draftBox,
     required this.feedCache,
     this.cacheTtl = const Duration(minutes: 5),
-  });
+    AiSummarizeDatasource? aiSummarizeDatasource,
+  }) : _aiSummarizeDatasource =
+           aiSummarizeDatasource ?? AiSummarizeDatasource();
 
   final PostFirestoreDatasource firestoreDatasource;
   final PostStorageDatasource storageDatasource;
   final Box<PostDraftModel> draftBox;
   final FeedCache feedCache;
   final Duration cacheTtl;
+  final AiSummarizeDatasource _aiSummarizeDatasource;
 
   @override
   Stream<List<Post>> watchFeed({int limit = 20}) async* {
@@ -189,7 +193,7 @@ class PostRepositoryImpl implements PostRepository {
       if (supportedIndex != -1) {
         final fileUrl = mediaUrls[supportedIndex];
         final filename = fileUrl.split('/').last;
-        _triggerSummarize(current.id, fileUrl, filename);
+        triggerSummarize(current.id, fileUrl, filename);
       }
     } catch (e) {
       await saveDraft(
@@ -202,8 +206,9 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-  void _triggerSummarize(String postId, String fileUrl, String filename) {
-    AiSummarizeDatasource()
+  @visibleForTesting
+  void triggerSummarize(String postId, String fileUrl, String filename) {
+    _aiSummarizeDatasource
         .call(fileUrl: fileUrl, filename: filename)
         .then(
           (data) async {

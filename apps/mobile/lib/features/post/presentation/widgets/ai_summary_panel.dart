@@ -32,8 +32,9 @@ class _AiSummaryPanelState extends State<AiSummaryPanel>
   void didUpdateWidget(AiSummaryPanel oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.status == SummaryStatus.pending) {
-      if (!_shimmerController.isAnimating)
+      if (!_shimmerController.isAnimating) {
         _shimmerController.repeat(reverse: true);
+      }
     } else {
       if (_shimmerController.isAnimating) _shimmerController.stop();
     }

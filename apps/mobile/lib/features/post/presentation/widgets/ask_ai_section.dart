@@ -61,7 +61,7 @@ class _AskAiSectionState extends ConsumerState<AskAiSection> {
     final messages = ref.watch(askAiProvider(widget.postId)).value ?? [];
 
     return DecoratedBox(
-        color: cs.surface,
+      decoration: BoxDecoration(
         color: ac.muted,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: theme.dividerColor),
