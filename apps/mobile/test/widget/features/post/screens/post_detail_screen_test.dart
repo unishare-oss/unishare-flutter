@@ -67,7 +67,14 @@ class _FakeCommentRepository implements CommentRepository {
   Stream<List<Comment>> watchComments(String postId) => controller.stream;
 
   @override
-  Future<void> addComment(String postId, String body, {String? parentId}) async {}
+  Future<void> addComment(
+    String postId,
+    String body, {
+    String? parentId,
+  }) async {}
+
+  @override
+  Future<void> deleteComment(String postId, String commentId) async {}
 }
 
 class _FakeLikeRepository implements LikeRepository {
