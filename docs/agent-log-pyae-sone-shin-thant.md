@@ -1033,3 +1033,16 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [14:25] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
   [14:29] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
   [14:30] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+
+2026-05-14
+  [13:25] Edit: apps/mobile/lib/features/post/data/datasources/comment_firestore_datasource.dart
+  [13:25] Edit: apps/mobile/lib/features/post/data/datasources/comment_firestore_datasource.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/providers/comments_provider.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:26] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:26] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:26] Edit: apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
+  [13:26] Edit: apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart

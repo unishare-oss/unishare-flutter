@@ -27,6 +27,7 @@ class CommentFirestoreDatasource {
   }
 
   Future<void> deleteComment(String postId, String commentId) async {
+    final currentUid = FirebaseAuth.instance.currentUser?.uid;
     final col = _firestore
         .collection('posts')
         .doc(postId)
@@ -35,9 +36,13 @@ class CommentFirestoreDatasource {
 
     batch.delete(col.doc(commentId));
 
-    final replies = await col.where('parentId', isEqualTo: commentId).get();
-    for (final doc in replies.docs) {
-      batch.delete(doc.reference);
+    if (currentUid != null) {
+      final replies = await col.where('parentId', isEqualTo: commentId).get();
+      for (final doc in replies.docs) {
+        if (doc.data()['authorId'] == currentUid) {
+          batch.delete(doc.reference);
+        }
+      }
     }
 
     await batch.commit();

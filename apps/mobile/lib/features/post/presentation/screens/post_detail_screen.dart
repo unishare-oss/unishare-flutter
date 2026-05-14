@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/comments_provider.dart';
@@ -36,8 +36,6 @@ class PostDetailScreen extends ConsumerStatefulWidget {
 class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   final _commentController = TextEditingController();
   bool _isSubmitting = false;
-  String? _replyingToId;
-  String? _replyingToName;
 
   @override
   void dispose() {
@@ -46,24 +44,20 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   }
 
   void _startReply(String commentId, String authorName) {
-    setState(() {
-      _replyingToId = commentId;
-      _replyingToName = authorName;
-    });
+    ref
+        .read(replyStateProvider(widget.postId).notifier)
+        .startReply(commentId, authorName);
   }
 
   void _cancelReply() {
-    setState(() {
-      _replyingToId = null;
-      _replyingToName = null;
-    });
+    ref.read(replyStateProvider(widget.postId).notifier).cancel();
   }
 
   Future<void> _submitComment() async {
     final text = _commentController.text.trim();
     if (text.isEmpty || _isSubmitting) return;
 
-    final parentId = _replyingToId;
+    final parentId = ref.read(replyStateProvider(widget.postId))?.id;
     setState(() => _isSubmitting = true);
     try {
       await ref
@@ -71,10 +65,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           .call(widget.postId, text, parentId: parentId);
       _commentController.clear();
       if (mounted) {
-        setState(() {
-          _replyingToId = null;
-          _replyingToName = null;
-        });
+        ref.read(replyStateProvider(widget.postId).notifier).cancel();
       }
     } catch (e) {
       if (mounted) {
@@ -119,14 +110,6 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     }
   }
 
-  String? _safeCurrentUid() {
-    try {
-      return FirebaseAuth.instance.currentUser?.uid;
-    } catch (_) {
-      return null;
-    }
-  }
-
   Future<void> _toggleLike() async {
     try {
       await ref.read(toggleLikeUseCaseProvider).call(widget.postId);
@@ -145,6 +128,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       postDetailProvider(widget.postId, seed: widget.seed),
     );
     final isGuest = ref.watch(guestModeProvider);
+    final currentUid = ref.watch(currentUserProvider).asData?.value?.id;
+    final replyTarget = ref.watch(replyStateProvider(widget.postId));
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -192,12 +177,12 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         data: (post) => _PostBody(
           post: post,
           isGuest: isGuest,
-          currentUid: _safeCurrentUid(),
+          currentUid: currentUid,
           onToggleLike: _toggleLike,
           commentController: _commentController,
           isSubmitting: _isSubmitting,
           onSubmitComment: _submitComment,
-          replyingToName: _replyingToName,
+          replyingToName: replyTarget?.name,
           onReply: _startReply,
           onCancelReply: _cancelReply,
           onDeleteComment: _deleteComment,
