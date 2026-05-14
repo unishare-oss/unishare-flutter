@@ -130,6 +130,7 @@ void main() {
 
       expect(capturedRef.read(guestModeProvider), isFalse);
 
+      await tester.ensureVisible(find.text('Continue as guest'));
       await tester.tap(find.text('Continue as guest'));
       await tester.pump();
 
