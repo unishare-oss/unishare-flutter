@@ -70,11 +70,12 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           .read(addCommentUseCaseProvider)
           .call(widget.postId, text, parentId: parentId);
       _commentController.clear();
-      if (mounted)
+      if (mounted) {
         setState(() {
           _replyingToId = null;
           _replyingToName = null;
         });
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
