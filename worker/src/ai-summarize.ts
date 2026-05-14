@@ -26,15 +26,42 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
   if (!fileUrl || typeof fileUrl !== 'string') return jsonError('fileUrl required', 400)
   if (!filename || typeof filename !== 'string') return jsonError('filename required', 400)
 
-  const expectedPrefix = `${env.R2_PUBLIC_URL}/posts/`
-  if (!fileUrl.startsWith(expectedPrefix)) {
+  let parsed: URL
+  try {
+    parsed = new URL(fileUrl)
+  } catch {
+    return jsonError('invalid fileUrl', 400)
+  }
+  const allowedOrigin = new URL(env.R2_PUBLIC_URL).origin
+  if (
+    parsed.protocol !== 'https:' ||
+    parsed.origin !== allowedOrigin ||
+    !parsed.pathname.startsWith('/posts/')
+  ) {
     return jsonError('fileUrl must reference a file in this service', 400)
   }
 
-  // Download file from its public R2 URL
-  const fileRes = await fetch(fileUrl)
+  // Download file with size and time guards
+  const MAX_BYTES = 20 * 1024 * 1024 // 20 MB
+  const abort = new AbortController()
+  const timeout = setTimeout(() => abort.abort(), 10_000)
+
+  let fileRes: Response
+  try {
+    fileRes = await fetch(fileUrl, { signal: abort.signal })
+  } catch {
+    return jsonError('Failed to fetch file', 502)
+  } finally {
+    clearTimeout(timeout)
+  }
+
   if (!fileRes.ok) return jsonError('Failed to fetch file', 502)
+
+  const contentLength = Number(fileRes.headers.get('content-length') ?? 0)
+  if (contentLength > MAX_BYTES) return jsonError('File too large', 413)
+
   const buffer = await fileRes.arrayBuffer()
+  if (buffer.byteLength > MAX_BYTES) return jsonError('File too large', 413)
 
   let text: string
   try {

@@ -29,8 +29,9 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
 
   const { summary, question, history = [] } = body
 
-  if (!summary || typeof summary !== 'string') return jsonError('summary required', 400)
-  if (!question || typeof question !== 'string' || question.length > MAX_QUESTION_LENGTH) {
+  if (!summary || typeof summary !== 'string' || !summary.trim()) return jsonError('summary required', 400)
+  const trimmedQuestion = typeof question === 'string' ? question.trim() : ''
+  if (!trimmedQuestion || trimmedQuestion.length > MAX_QUESTION_LENGTH) {
     return jsonError('question must be a non-empty string under 500 chars', 400)
   }
   if (!Array.isArray(history) || history.length > MAX_HISTORY_TURNS * 2) {
@@ -59,7 +60,7 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
       messages: [
         { role: 'system', content: systemPrompt },
         ...history,
-        { role: 'user', content: question },
+        { role: 'user', content: trimmedQuestion },
       ],
       max_tokens: 512,
       temperature: 0.3,
