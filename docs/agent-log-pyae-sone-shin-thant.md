@@ -1046,3 +1046,40 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [13:26] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
   [13:26] Edit: apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
   [13:26] Edit: apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_summary_panel.dart
+  [14:39] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [14:40] Edit: apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  [14:40] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:40] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:41] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:41] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:13] Edit: apps/mobile/lib/features/post/presentation/providers/ask_ai_repository_provider.dart
+  [15:13] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+  [15:14] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:14] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:14] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:14] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:14] Write: apps/mobile/test/widget/features/post/widgets/ai_message_bubble_test.dart
+  [15:14] Write: apps/mobile/test/widget/features/post/widgets/ai_summary_panel_test.dart
+  [15:14] Write: apps/mobile/test/widget/features/post/widgets/ask_ai_section_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [20:30] Edit: apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+Files:
+  ~ apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+Summary:  1 file changed, 7 insertions(+), 3 deletions(-)
+
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+Files:
+  ~ apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+Summary:  2 files changed, 10 insertions(+), 6 deletions(-)
+

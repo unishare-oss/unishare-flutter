@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 
+import 'package:unishare_mobile/features/post/data/datasources/ai_summarize_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
@@ -20,13 +22,16 @@ class PostRepositoryImpl implements PostRepository {
     required this.draftBox,
     required this.feedCache,
     this.cacheTtl = const Duration(minutes: 5),
-  });
+    AiSummarizeDatasource? aiSummarizeDatasource,
+  }) : _aiSummarizeDatasource =
+           aiSummarizeDatasource ?? AiSummarizeDatasource();
 
   final PostFirestoreDatasource firestoreDatasource;
   final PostStorageDatasource storageDatasource;
   final Box<PostDraftModel> draftBox;
   final FeedCache feedCache;
   final Duration cacheTtl;
+  final AiSummarizeDatasource _aiSummarizeDatasource;
 
   @override
   Stream<List<Post>> watchFeed({int limit = 20}) async* {
@@ -181,6 +186,15 @@ class PostRepositoryImpl implements PostRepository {
       );
       feedCache.invalidate();
       await removeDraft(draft.id);
+
+      final supportedIndex = mediaTypes.indexWhere(
+        (t) => t == 'pdf' || t == 'docx',
+      );
+      if (supportedIndex != -1) {
+        final fileUrl = mediaUrls[supportedIndex];
+        final filename = fileUrl.split('/').last;
+        triggerSummarize(current.id, fileUrl, filename);
+      }
     } catch (e) {
       await saveDraft(
         current.copyWith(
@@ -190,6 +204,26 @@ class PostRepositoryImpl implements PostRepository {
       );
       rethrow;
     }
+  }
+
+  @visibleForTesting
+  void triggerSummarize(String postId, String fileUrl, String filename) {
+    _aiSummarizeDatasource
+        .call(fileUrl: fileUrl, filename: filename)
+        .then(
+          (data) async {
+            final summaryStatus = data['summaryStatus'] as String? ?? 'error';
+            final summary = data['summary'] as String?;
+            await firestoreDatasource.updatePostSummary(
+              postId,
+              summary,
+              summaryStatus,
+            );
+          },
+          onError: (_) async {
+            await firestoreDatasource.updatePostSummary(postId, null, 'error');
+          },
+        );
   }
 
   static String _mediaTypeFromPath(String path) {
@@ -202,6 +236,8 @@ class PostRepositoryImpl implements PostRepository {
         return 'image';
       case 'pdf':
         return 'pdf';
+      case 'docx':
+        return 'docx';
       case 'mp4':
       case 'mov':
       case 'avi':

@@ -12,6 +12,8 @@ import 'package:unishare_mobile/features/post/presentation/providers/comments_pr
 import 'package:unishare_mobile/features/post/presentation/providers/post_detail_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/user_like_status_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/ai_summary_panel.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/ask_ai_section.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_list.dart';
 import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/comment_tile.dart';
@@ -495,8 +497,13 @@ class _PostHeader extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // ── AI Summary ────────────────────────────────────────────────────
-          const _AiSummaryCard(),
-          const SizedBox(height: 16),
+          AiSummaryPanel(status: post.summaryStatus, summary: post.summary),
+          const SizedBox(height: 8),
+          if (post.summaryStatus == SummaryStatus.done) ...[
+            AskAiSection(postId: post.id, summary: post.summary!),
+            const SizedBox(height: 8),
+          ],
+          const SizedBox(height: 8),
 
           // ── DESCRIPTION ───────────────────────────────────────────────────
           _SectionLabel(label: 'DESCRIPTION'),
@@ -695,121 +702,6 @@ class _AuthorChip extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// AI Summary card — collapsible, amber accent border
-// ---------------------------------------------------------------------------
-
-class _AiSummaryCard extends StatefulWidget {
-  const _AiSummaryCard();
-
-  @override
-  State<_AiSummaryCard> createState() => _AiSummaryCardState();
-}
-
-class _AiSummaryCardState extends State<_AiSummaryCard> {
-  bool _expanded = true;
-
-  @override
-  Widget build(BuildContext context) {
-    final appColors = Theme.of(context).extension<AppColors>()!;
-    final scheme = Theme.of(context).colorScheme;
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: appColors.amberSubtle,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: appColors.amber.withValues(alpha: 0.35)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header — tappable to expand/collapse
-          InkWell(
-            onTap: () => setState(() => _expanded = !_expanded),
-            borderRadius: BorderRadius.vertical(
-              top: const Radius.circular(8),
-              bottom: _expanded ? Radius.zero : const Radius.circular(8),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.auto_awesome_rounded,
-                    size: 13,
-                    color: appColors.amber,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    'AI SUMMARY',
-                    style: AppTypography.mono(
-                      base: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: appColors.amber,
-                        letterSpacing: 0.6,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  Icon(
-                    _expanded ? Icons.expand_less : Icons.expand_more,
-                    size: 16,
-                    color: appColors.amber,
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          if (_expanded) ...[
-            Divider(height: 1, color: appColors.amber.withValues(alpha: 0.25)),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
-              child: Text(
-                // TODO: wire to real AI summary API
-                'AI-generated summary not yet available for this post.',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: scheme.onSurface,
-                  height: 1.5,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
-              child: TextButton.icon(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.auto_awesome_rounded,
-                  size: 13,
-                  color: appColors.amber,
-                ),
-                label: Text(
-                  'ASK AI',
-                  style: AppTypography.mono(
-                    base: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: appColors.amber,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
     );
   }
 }
