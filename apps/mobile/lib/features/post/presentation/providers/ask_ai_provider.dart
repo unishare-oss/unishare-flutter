@@ -8,9 +8,13 @@ part 'ask_ai_provider.g.dart';
 
 @riverpod
 class AskAi extends _$AskAi {
+  late final AskAiUseCase _useCase;
+
   @override
-  AsyncValue<List<AiMessage>> build(String postId) =>
-      const AsyncData(<AiMessage>[]);
+  AsyncValue<List<AiMessage>> build(String postId) {
+    _useCase = ref.watch(askAiUseCaseProvider);
+    return const AsyncData(<AiMessage>[]);
+  }
 
   Future<void> sendMessage(String question, {required String summary}) async {
     final history = state.value ?? [];
@@ -26,7 +30,7 @@ class AskAi extends _$AskAi {
         history: [...history, userMsg],
         question: question,
       );
-      final reply = await ref.read(askAiUseCaseProvider).call(params);
+      final reply = await _useCase.call(params);
       final updated = <AiMessage>[...(state.value ?? [])];
       updated[updated.length - 1] = reply;
       state = AsyncData(updated);

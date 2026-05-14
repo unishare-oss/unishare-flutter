@@ -19,7 +19,7 @@ class AiMessageBubble extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: cs.surface,
+            color: ac.info.withValues(alpha: 0.12),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(12),
               topRight: Radius.circular(12),
@@ -66,7 +66,7 @@ class AiMessageBubble extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           constraints: const BoxConstraints(maxWidth: 280),
           decoration: BoxDecoration(
-            color: cs.surface,
+            color: ac.info.withValues(alpha: 0.12),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(12),
               topRight: Radius.circular(12),
@@ -110,7 +110,7 @@ class AiMessageBubble extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         constraints: const BoxConstraints(maxWidth: 280),
         decoration: BoxDecoration(
-          color: cs.surface,
+          color: ac.info.withValues(alpha: 0.12),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(12),
             topRight: Radius.circular(12),

@@ -1070,3 +1070,16 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
   [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
   [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [20:30] Edit: apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+Files:
+  ~ apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+Summary:  1 file changed, 7 insertions(+), 3 deletions(-)
+
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+Files:
+  ~ apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+Summary:  2 files changed, 10 insertions(+), 6 deletions(-)
+
