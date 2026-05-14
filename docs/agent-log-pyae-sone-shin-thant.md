@@ -1009,3 +1009,27 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [10:16] Write: apps/mobile/lib/features/requests/presentation/widgets/suggestion_card.dart
   [10:33] Edit: apps/mobile/lib/features/post/presentation/providers/my_posts_provider.dart
   [10:57] Edit: apps/mobile/lib/features/post/presentation/providers/my_posts_provider.dart
+  [12:14] Write: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+
+2026-05-13
+  [12:48] Write: apps/mobile/test/unit/features/feed/providers/feed_filter_provider_test.dart
+  [12:48] Write: apps/mobile/lib/features/feed/presentation/providers/feed_filter_provider.dart
+  [12:53] Write: apps/mobile/test/widget/features/departments/screens/departments_screen_test.dart
+  [13:03] Edit: apps/mobile/lib/core/router/router.dart
+  [13:03] Edit: apps/mobile/lib/core/router/router.dart
+  [13:03] Write: apps/mobile/test/widget/features/departments/screens/courses_screen_test.dart
+  [13:03] Write: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+  [13:05] Write: apps/mobile/test/widget/features/feed/feed_filter_drawer_test.dart
+  [13:05] Write: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_empty_state_widget.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [14:25] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+  [14:29] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+  [14:30] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart

@@ -6,7 +6,7 @@ part 'filter_preferences_provider.g.dart';
 
 // Deferred to the data-layer phase alongside PreferencesRepositoryImpl.
 // Requires currentUserProvider and preferencesRepositoryProvider, neither of
-// which is implemented yet. Not read by any UI — activeTagFiltersProvider
+// which is implemented yet. Not read by any UI — feedFilterProvider
 // handles session-local filter state in the meantime.
 @riverpod
 class FilterPreferencesNotifier extends _$FilterPreferencesNotifier {
