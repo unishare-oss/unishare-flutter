@@ -1,5 +1,5 @@
 import mammoth from 'mammoth'
-import { extractText as extractPdfText } from 'unpdf'
+import * as pdfjsLib from 'pdfjs-dist'
 
 const MAX_CHARS = 6000
 
@@ -7,8 +7,16 @@ export async function extractText(buffer: ArrayBuffer, filename: string): Promis
   const lower = filename.toLowerCase()
 
   if (lower.endsWith('.pdf')) {
-    const { text } = await extractPdfText(new Uint8Array(buffer), { mergePages: true })
-    return text.slice(0, MAX_CHARS)
+    const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(buffer) }).promise
+    const pages = await Promise.all(
+      Array.from({ length: pdf.numPages }, (_, i) =>
+        pdf.getPage(i + 1).then(async (page) => {
+          const content = await page.getTextContent()
+          return content.items.map((item) => ('str' in item ? item.str : '')).join(' ')
+        }),
+      ),
+    )
+    return pages.join('\n').slice(0, MAX_CHARS)
   }
 
   if (lower.endsWith('.docx')) {
