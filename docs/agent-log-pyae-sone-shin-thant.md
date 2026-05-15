@@ -1114,3 +1114,12 @@ Summary:  2 files changed, 9 insertions(+), 10 deletions(-)
   [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
   [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
   [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:33] Write: apps/mobile/lib/features/profile/presentation/widgets/profile_field_label.dart
+  [14:33] Write: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:34] Write: apps/mobile/lib/features/profile/presentation/widgets/profile_form_card.dart
+  [14:34] Write: apps/mobile/lib/features/profile/presentation/widgets/change_password_card.dart
+  [14:34] Write: apps/mobile/lib/features/profile/presentation/widgets/connected_accounts_card.dart
+  [14:34] Write: apps/mobile/lib/features/profile/presentation/widgets/appearance_section.dart
+  [14:35] Write: apps/mobile/lib/features/profile/presentation/widgets/danger_zone_card.dart
+  [14:35] Write: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:36] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
