@@ -29,6 +29,30 @@ service cloud.firestore {
       match /savedPosts/{postId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
+
+      // Notification inbox — server (Admin SDK) writes; client reads and marks read only.
+      match /notifications/{notifId} {
+        // Owner can read their own notifications.
+        allow read: if request.auth != null && request.auth.uid == userId;
+
+        // No client creates — all documents are written by Cloud Functions via Admin SDK.
+        allow create: if false;
+
+        // Owner may update only the isRead field.
+        allow update: if request.auth != null
+                      && request.auth.uid == userId
+                      && request.resource.data.diff(resource.data).affectedKeys()
+                           .hasOnly(['isRead'])
+                      && request.resource.data.isRead is bool;
+
+        // No client deletes — retention is managed by the scheduled Cloud Function.
+        allow delete: if false;
+      }
+
+      // FCM tokens — owner manages their own device tokens only.
+      match /fcmTokens/{tokenHash} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
     }
 
     // Collection-group rule for collectionGroup('comments') queries.

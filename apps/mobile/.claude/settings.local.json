@@ -8,7 +8,9 @@
       "Bash(flutter analyze *)",
       "Bash(flutter test *)",
       "Bash(Get-ChildItem -Path \"D:/Desktop/KMUTT/SYSS/CSC234/unishare-flutter/apps/mobile/lib\" -Recurse -Directory)",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(flutter pub *)",
+      "Bash(dart format *)"
     ]
   }
 }

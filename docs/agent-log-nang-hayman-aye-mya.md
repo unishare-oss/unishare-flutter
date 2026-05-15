@@ -77,3 +77,16 @@ Outcome: Wrote tech-proposals/0001-notification.md (PROP-0001, DRAFT). Proposal 
 Decisions: Recommended Option D (hybrid) because it is the only approach satisfying both hard constraints (push when closed, persistent in-app history) without client-to-client Firestore writes. Option B rejected on security grounds (FCM server key exposure). Option C rejected because flutter_local_notifications cannot wake a terminated process. Option A is a valid subset of Option D; unified as the recommendation to make the data model clear.
 Handoff: Proposal is DRAFT — team must resolve Open Questions 1 (notification types at launch), 2 (FCM token storage strategy), 3 (read/unread write ownership), 4 (web push timeline), 5 (retention/TTL policy), and 6 (guest UX) before a tech spec can be written. Blaze plan upgrade must be confirmed by the team before spec authoring begins.
 Review: PENDING
+
+---
+
+Date: 2026-05-15 00:00
+Member: Nang Hayman Aye Mya
+Agent: flutter-engineer
+Task: Implement SPEC-0001 Notification System — data layer, presentation layer, FCM service, firestore rules
+Prompt: Implement the notification feature for the Unishare Flutter app, strictly following SPEC-0001. Implement data models, datasource, repository impl, Riverpod providers, notification_item_tile widget, notifications_screen, FcmService, update main.dart and firestore.rules.
+
+Outcome: Full SPEC-0001 Notification System implemented. Data layer: NotificationModel (Freezed DTO with _TimestampConverter, toDomain() extension, _snakeToCamel type mapping), NotificationFirestoreDatasource (watchNotifications, markAsRead, markAllAsRead with 500-doc batch writes, registerFcmToken, removeFcmToken), NotificationRepositoryImpl. Presentation layer: 3 Riverpod providers (notification_repository_provider, notifications_provider, unread_count_provider), NotificationItemTile widget (amber left-bar + dot for unread, amberSubtle tinted background, relative time, semantics label), NotificationsScreen (loading/error/empty/guest/list states, Mark all read action). Core: FcmService (init + removeToken, kIsWeb guard, onTokenRegistered/onTokenRemoved callbacks). main.dart: FCM init side-effect via ref.listen on authStateProvider. firestore.rules: notifications and fcmTokens subcollection rules added. firestore.indexes.json: notifications composite index added. firebase_messaging upgraded to ^16.2.1 (^15.0.0 incompatible with firebase_auth ^6.5.0). build_runner ran successfully (96 outputs). flutter analyze: 0 issues. dart format: clean. 339 tests, all pass.
+Decisions: Removed firebase_auth import from NotificationFirestoreDatasource — all methods accept explicit userId parameter so _uid getter was not needed. Used token.hashCode.toRadixString(16) as document ID for FCM tokens instead of SHA-256 (avoids adding crypto dependency; instruction allowed this fallback). firebase_messaging version bumped to ^16.2.1 to resolve firebase_core_platform_interface version conflict with firebase_auth ^6.5.0.
+Handoff: Cloud Functions (functions/ directory) are out of scope for the flutter-engineer and must be implemented separately. The notifications screen is live at /notifications. FCM token registration fires once on sign-in. The unread badge (unreadNotificationCountProvider) is available for the shell AppBar to consume.
+Review: PENDING
