@@ -21,6 +21,7 @@ class AskAi extends _$AskAi {
     final userMsg = AiMessage(content: question, isUser: true);
     const pending = AiMessage(content: '', isUser: false, isPending: true);
 
+    final assistantIndex = history.length + 1;
     state = AsyncData([...history, userMsg, pending]);
 
     try {
@@ -38,10 +39,9 @@ class AskAi extends _$AskAi {
         }
       }
     } on AskAiException catch (e, st) {
-      final withoutPending = (state.value ?? [])
-          .where((m) => !m.isPending)
-          .toList();
-      state = AsyncData(withoutPending);
+      final current = List<AiMessage>.from(state.value ?? []);
+      if (assistantIndex < current.length) current.removeAt(assistantIndex);
+      state = AsyncData(current);
       Error.throwWithStackTrace(e, st);
     }
   }

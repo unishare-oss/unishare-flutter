@@ -46,6 +46,8 @@ class AskAiRepositoryImpl implements AskAiRepository {
               isUser: false,
               isOffTopic: true,
             );
+          } else if (accumulated.isEmpty) {
+            yield const AiMessage(content: '…', isUser: false);
           }
         }
       }
