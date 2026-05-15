@@ -391,3 +391,33 @@ Outcome: Implemented SPEC-0011 across 15 files — domain interface extended, tw
 Decisions: firebase_storage ^12.3.7 was incompatible with firebase_remote_config ^6.5.1; bumped to ^13.4.1 as suggested by pub resolver. The `override_on_non_overriding_member` warning in edit_post_provider.dart is expected until build_runner regenerates edit_post_provider.g.dart — not a real error.
 Handoff: Run `dart run build_runner build` from apps/mobile to generate edit_post_provider.g.dart and regenerate post_repository_provider.g.dart. After codegen, run `flutter analyze` and `flutter test` to confirm clean. Submit for QA/architect review — do not self-approve.
 Review: PENDING
+
+2026-05-20
+  [12:39] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:40] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:40] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:40] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [12:40] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [12:41] Write: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+Files:
+  ~ apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/core/router/shell_scaffold.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  ~ apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  ~ apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+Summary:  9 files changed, 149 insertions(+), 31 deletions(-)
+

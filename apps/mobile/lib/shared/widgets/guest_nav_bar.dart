@@ -10,8 +10,10 @@ class GuestNavBar extends StatefulWidget {
     super.key,
     required this.isOnFeed,
     required this.isOnSaved,
+    required this.isOnDepartments,
     required this.onFeedTap,
     required this.onSavedTap,
+    required this.onDepartmentsTap,
   });
 
   /// True when the current route is `/feed` (or its descendants).
@@ -20,8 +22,12 @@ class GuestNavBar extends StatefulWidget {
   /// True when the current route is `/saved`.
   final bool isOnSaved;
 
+  /// True when the current route is `/departments` (or its descendants).
+  final bool isOnDepartments;
+
   final VoidCallback onFeedTap;
   final VoidCallback onSavedTap;
+  final VoidCallback onDepartmentsTap;
 
   static const double _barHeight = 64;
   static const double _hMargin = 16;
@@ -35,9 +41,9 @@ class GuestNavBar extends StatefulWidget {
   /// behind the floating nav bar. Excludes system safe area.
   static const double bottomInset = _barHeight + _bottomGap;
 
-  /// Drag-snap is limited to "real" branches — Feed (0) and Saved (1).
-  /// Sign In (index 2) is a one-shot action, not a destination.
-  static const int _draggableTabCount = 2;
+  /// Drag-snap is limited to real destinations — Feed (0), Saved (1), Depts (2).
+  /// Sign In (index 3) is a one-shot action, not a destination.
+  static const int _draggableTabCount = 3;
 
   @override
   State<GuestNavBar> createState() => _GuestNavBarState();
@@ -50,6 +56,7 @@ class _GuestNavBarState extends State<GuestNavBar> {
   int get _selectedTab {
     if (widget.isOnFeed) return 0;
     if (widget.isOnSaved) return 1;
+    if (widget.isOnDepartments) return 2;
     return -1;
   }
 
@@ -60,6 +67,8 @@ class _GuestNavBarState extends State<GuestNavBar> {
       case 1:
         widget.onSavedTap();
       case 2:
+        widget.onDepartmentsTap();
+      case 3:
         context.go('/welcome');
     }
   }
@@ -81,7 +90,7 @@ class _GuestNavBarState extends State<GuestNavBar> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final barWidth = constraints.maxWidth;
-          const tabCount = 3;
+          const tabCount = 4;
           final tabWidth = barWidth / tabCount;
           final pillWidth = tabWidth - GuestNavBar._pillHPad * 2;
           final pillHeight = GuestNavBar._barHeight - GuestNavBar._pillVPad * 2;
@@ -112,6 +121,16 @@ class _GuestNavBarState extends State<GuestNavBar> {
               semanticsLabel: 'Saved posts',
               isActive: effectiveTab == 1,
               onTap: isDragging ? null : widget.onSavedTap,
+              ac: ac,
+            ),
+            _GuestTab(
+              icon: effectiveTab == 2
+                  ? Icons.apartment_rounded
+                  : Icons.apartment_outlined,
+              label: 'Depts',
+              semanticsLabel: 'Departments',
+              isActive: effectiveTab == 2,
+              onTap: isDragging ? null : widget.onDepartmentsTap,
               ac: ac,
             ),
             _GuestTab(
@@ -274,7 +293,7 @@ class _GuestNavBarState extends State<GuestNavBar> {
     required double tabWidth,
     required double pillWidth,
   }) {
-    // Drag range is the first N tabs (Feed + Saved). Sign In is excluded.
+    // Drag range covers real destinations (Feed + Saved + Depts). Sign In is excluded.
     final minLeft = GuestNavBar._pillHPad;
     final maxLeft =
         tabWidth * (GuestNavBar._draggableTabCount - 1) + GuestNavBar._pillHPad;

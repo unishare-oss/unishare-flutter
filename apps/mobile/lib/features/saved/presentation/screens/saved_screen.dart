@@ -48,11 +48,11 @@ class SavedScreen extends ConsumerWidget {
   }
 }
 
-class _GuestBanner extends StatelessWidget {
+class _GuestBanner extends ConsumerWidget {
   const _GuestBanner();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -67,7 +67,10 @@ class _GuestBanner extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () => context.go('/welcome'),
+            onPressed: () {
+              ref.read(guestModeProvider.notifier).exit();
+              context.go('/welcome');
+            },
             child: const Text('→ Sign in to sync'),
           ),
         ],

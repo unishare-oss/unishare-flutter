@@ -137,8 +137,8 @@ class _RouterNotifier extends ChangeNotifier {
       return null;
     }
 
-    // 2. Authenticated on an auth route → honour redirect param or go to /feed
-    if (isAuthenticated && authRoutes.contains(currentPath)) {
+    // 2. Authenticated or guest on an auth route → honour redirect param or go to /feed
+    if ((isAuthenticated || isGuest) && authRoutes.contains(currentPath)) {
       final redirectParam = state.uri.queryParameters['redirect'];
       if (redirectParam != null && redirectParam.isNotEmpty) {
         final decoded = Uri.decodeComponent(redirectParam);
@@ -299,7 +299,9 @@ GoRouter router(Ref ref) {
               ),
               GoRoute(
                 path: '/departments',
-                builder: (context, state) => const DepartmentsScreen(),
+                builder: (context, state) => DepartmentsScreen(
+                  scrollKey: ShellScaffold.guestDepartmentsScrollKey,
+                ),
                 routes: [
                   GoRoute(
                     path: ':deptId',
