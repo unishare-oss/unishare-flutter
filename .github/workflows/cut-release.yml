@@ -13,7 +13,7 @@ on:
           - minor
           - major
       dry_run:
-        description: "Compute the new tag but do not commit or push"
+        description: "Compute the new tag but do not push"
         required: false
         type: boolean
         default: false
@@ -42,29 +42,25 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
-      - name: Read current version from pubspec.yaml
+      - name: Read latest release tag
         id: current
         run: |
           set -euo pipefail
-          line=$(grep -E '^version:' apps/mobile/pubspec.yaml | head -1)
-          version=$(echo "$line" | sed -E 's/^version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+).*/\1/')
-          build=$(echo "$line"   | sed -E 's/^version:[[:space:]]*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+).*/\2/')
-
-          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || [[ ! "$build" =~ ^[0-9]+$ ]]; then
-            echo "::error::Failed to parse version from pubspec.yaml (got '$line')"
-            exit 1
+          tag=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
+          if [[ -z "$tag" ]]; then
+            tag='v0.0.0'
+            echo "No prior tags; starting from v0.0.0"
           fi
-
+          version="${tag#v}"
+          echo "tag=$tag"         >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "build=$build"     >> "$GITHUB_OUTPUT"
-          echo "Current: $version+$build"
+          echo "Current: $tag"
 
       - name: Compute next version
         id: next
         run: |
           set -euo pipefail
           IFS='.' read -r MAJ MIN PAT <<< '${{ steps.current.outputs.version }}'
-          BUILD='${{ steps.current.outputs.build }}'
           case '${{ inputs.bump_type }}' in
             major) MAJ=$((MAJ + 1)); MIN=0; PAT=0 ;;
             minor) MIN=$((MIN + 1)); PAT=0 ;;
@@ -72,13 +68,10 @@ jobs:
             *)     echo "::error::Unknown bump_type"; exit 1 ;;
           esac
           NEW_VERSION="$MAJ.$MIN.$PAT"
-          NEW_BUILD=$((BUILD + 1))
           TAG="v$NEW_VERSION"
-
           echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
-          echo "build=$NEW_BUILD"     >> "$GITHUB_OUTPUT"
           echo "tag=$TAG"             >> "$GITHUB_OUTPUT"
-          echo "Next:    $NEW_VERSION+$NEW_BUILD ($TAG)"
+          echo "Next:    $TAG"
 
       - name: Fail if tag already exists
         run: |
@@ -93,33 +86,13 @@ jobs:
             exit 1
           fi
 
-      - name: Update pubspec.yaml
-        run: |
-          set -euo pipefail
-          new='${{ steps.next.outputs.version }}+${{ steps.next.outputs.build }}'
-          # awk avoids the BSD-vs-GNU `sed -i` portability footgun.
-          awk -v new="$new" '
-            BEGIN { done = 0 }
-            /^version:/ && !done { sub(/version:.*/, "version: " new); done = 1 }
-            { print }
-          ' apps/mobile/pubspec.yaml > apps/mobile/pubspec.yaml.tmp
-          mv apps/mobile/pubspec.yaml.tmp apps/mobile/pubspec.yaml
-          echo "Updated pubspec.yaml:"
-          grep -E '^version:' apps/mobile/pubspec.yaml
-
-      - name: Commit, tag, and push
+      - name: Tag and push
         if: ${{ !inputs.dry_run }}
         run: |
           set -euo pipefail
           tag='${{ steps.next.outputs.tag }}'
           ver='${{ steps.next.outputs.version }}'
-
-          git add apps/mobile/pubspec.yaml
-          git commit -m "chore(release): cut $tag"
           git tag -a "$tag" -m "Release $ver"
-
-          # Push branch first so the tagged commit is reachable.
-          git push origin "HEAD:${GITHUB_REF#refs/heads/}"
           git push origin "$tag"
 
       - name: Summary
@@ -130,13 +103,12 @@ jobs:
             echo "| Field    | Value |"
             echo "| -------- | ----- |"
             echo "| Bump     | \`${{ inputs.bump_type }}\` |"
-            echo "| Previous | \`${{ steps.current.outputs.version }}+${{ steps.current.outputs.build }}\` |"
-            echo "| New      | \`${{ steps.next.outputs.version }}+${{ steps.next.outputs.build }}\` |"
-            echo "| Tag      | \`${{ steps.next.outputs.tag }}\` |"
+            echo "| Previous | \`${{ steps.current.outputs.tag }}\` |"
+            echo "| New      | \`${{ steps.next.outputs.tag }}\` |"
             echo "| Dry run  | \`${{ inputs.dry_run }}\` |"
             echo ""
             if [[ '${{ inputs.dry_run }}' == 'true' ]]; then
-              echo "Dry run only — no commit, no tag pushed."
+              echo "Dry run only — no tag pushed."
             else
               echo "Tag pushed. The **Release** workflow will run for \`${{ steps.next.outputs.tag }}\` next."
             fi
