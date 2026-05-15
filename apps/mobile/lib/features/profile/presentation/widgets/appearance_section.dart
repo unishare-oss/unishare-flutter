@@ -66,73 +66,80 @@ class AppearanceSection extends ConsumerWidget {
             itemBuilder: (_, i) {
               final t = themes[i];
               final isSelected = t.id == selectedId;
-              return GestureDetector(
+              return Semantics(
+                button: true,
+                selected: isSelected,
+                label: 'Theme ${t.name}',
                 onTap: () => ref.read(themeProvider.notifier).setTheme(t.id),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: isSelected ? ac.amber : theme.dividerColor,
-                      width: isSelected ? 2 : 1,
+                excludeSemantics: true,
+                child: GestureDetector(
+                  onTap: () => ref.read(themeProvider.notifier).setTheme(t.id),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: isSelected ? ac.amber : theme.dividerColor,
+                        width: isSelected ? 2 : 1,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: ac.amber.withValues(alpha: 0.28),
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                              ),
+                            ]
+                          : null,
                     ),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: ac.amber.withValues(alpha: 0.28),
-                              blurRadius: 10,
-                              spreadRadius: 1,
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(9),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        CustomPaint(painter: _ThemePreviewPainter(t)),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 4,
-                            ),
-                            color: t.card.withValues(alpha: 0.92),
-                            child: Text(
-                              t.name,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: t.foreground,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.1,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                        if (isSelected)
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(9),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CustomPaint(painter: _ThemePreviewPainter(t)),
                           Positioned(
-                            top: 5,
-                            right: 5,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
                             child: Container(
-                              width: 16,
-                              height: 16,
-                              decoration: BoxDecoration(
-                                color: ac.amber,
-                                shape: BoxShape.circle,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 4,
                               ),
-                              child: const Icon(
-                                Icons.check,
-                                size: 10,
-                                color: Colors.white,
+                              color: t.card.withValues(alpha: 0.92),
+                              child: Text(
+                                t.name,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: t.foreground,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.1,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ),
-                      ],
+                          if (isSelected)
+                            Positioned(
+                              top: 5,
+                              right: 5,
+                              child: Container(
+                                width: 16,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: ac.amber,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.check,
+                                  size: 10,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -353,20 +360,30 @@ class _StepButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onTap != null;
-    return GestureDetector(
+    final label = icon == Icons.add
+        ? 'Increase text size'
+        : 'Decrease text size';
+    return Semantics(
+      button: true,
+      enabled: enabled,
+      label: label,
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        width: 36,
-        height: 36,
-        decoration: BoxDecoration(
-          color: enabled
-              ? ac.amberSubtle
-              : theme.dividerColor.withValues(alpha: 0.3),
-          shape: BoxShape.circle,
-          border: Border.all(color: enabled ? ac.amber : theme.dividerColor),
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: enabled
+                ? ac.amberSubtle
+                : theme.dividerColor.withValues(alpha: 0.3),
+            shape: BoxShape.circle,
+            border: Border.all(color: enabled ? ac.amber : theme.dividerColor),
+          ),
+          child: Icon(icon, size: 16, color: enabled ? ac.amber : ac.textMuted),
         ),
-        child: Icon(icon, size: 16, color: enabled ? ac.amber : ac.textMuted),
       ),
     );
   }

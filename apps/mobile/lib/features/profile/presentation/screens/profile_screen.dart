@@ -104,40 +104,53 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       ),
       body: userAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, st) {
+          debugPrint('ProfileScreen userAsync error: $e\n$st');
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Text(
+                "We couldn't load your profile right now. Please try again.",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        },
         data: (user) {
           if (user == null) return const SizedBox.shrink();
           _initForm(user);
-          return ListView(
+          final sections = <Widget>[
+            ProfileCard(user: user),
+            const SizedBox(height: 16),
+            ProfileFormCard(
+              user: user,
+              nameCtrl: _nameCtrl,
+              bioCtrl: _bioCtrl,
+              selectedUniversityId: _selectedUniversityId,
+              selectedDepartmentId: _selectedDepartmentId,
+              enrollmentYear: _enrollmentYear,
+              saving: _saving,
+              onUniversityChanged: (id) =>
+                  setState(() => _selectedUniversityId = id),
+              onDepartmentChanged: (id) =>
+                  setState(() => _selectedDepartmentId = id),
+              onYearChanged: (y) => setState(() => _enrollmentYear = y),
+              onSave: () => _save(user),
+            ),
+            const SizedBox(height: 16),
+            const ChangePasswordCard(),
+            const SizedBox(height: 16),
+            const ConnectedAccountsCard(),
+            const SizedBox(height: 16),
+            const AppearanceSection(),
+            const SizedBox(height: 16),
+            const DangerZoneCard(),
+            const SizedBox(height: 32),
+          ];
+          return ListView.builder(
             padding: const EdgeInsets.all(16),
-            children: [
-              ProfileCard(user: user),
-              const SizedBox(height: 16),
-              ProfileFormCard(
-                user: user,
-                nameCtrl: _nameCtrl,
-                bioCtrl: _bioCtrl,
-                selectedUniversityId: _selectedUniversityId,
-                selectedDepartmentId: _selectedDepartmentId,
-                enrollmentYear: _enrollmentYear,
-                saving: _saving,
-                onUniversityChanged: (id) =>
-                    setState(() => _selectedUniversityId = id),
-                onDepartmentChanged: (id) =>
-                    setState(() => _selectedDepartmentId = id),
-                onYearChanged: (y) => setState(() => _enrollmentYear = y),
-                onSave: () => _save(user),
-              ),
-              const SizedBox(height: 16),
-              const ChangePasswordCard(),
-              const SizedBox(height: 16),
-              const ConnectedAccountsCard(),
-              const SizedBox(height: 16),
-              const AppearanceSection(),
-              const SizedBox(height: 16),
-              const DangerZoneCard(),
-              const SizedBox(height: 32),
-            ],
+            itemCount: sections.length,
+            itemBuilder: (_, i) => sections[i],
           );
         },
       ),
