@@ -825,7 +825,9 @@ class _CommentInputBar extends StatelessWidget {
                     ),
                   ),
                   textInputAction: TextInputAction.newline,
-                  maxLines: null,
+                  // Grow up to 5 lines, then scroll internally — prevents
+                  // the bar from pushing comments off-screen on long input.
+                  maxLines: 5,
                   minLines: 1,
                   keyboardType: TextInputType.multiline,
                 ),
