@@ -61,6 +61,7 @@ dependencies:
   chewie: ^1.8.5
   path_provider: ^2.1.4
   http: ^1.2.0
+  liquid_glass_renderer: ^0.2.0-dev.4
 
 
 dev_dependencies:

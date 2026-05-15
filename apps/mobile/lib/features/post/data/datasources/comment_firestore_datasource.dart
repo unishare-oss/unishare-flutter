@@ -48,6 +48,17 @@ class CommentFirestoreDatasource {
     await batch.commit();
   }
 
+  /// Server-side count of comments authored by [uid] across all posts.
+  /// One aggregation round-trip — no documents transferred.
+  Future<int> countCommentsByAuthor(String uid) async {
+    final snap = await _firestore
+        .collectionGroup('comments')
+        .where('authorId', isEqualTo: uid)
+        .count()
+        .get();
+    return snap.count ?? 0;
+  }
+
   Future<void> addComment(
     String postId,
     String body, {

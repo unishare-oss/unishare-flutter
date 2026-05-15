@@ -43,6 +43,9 @@ class _FakePostRepository implements PostRepository {
       throw UnimplementedError();
 
   @override
+  Future<int> countPostsByAuthor(String authorId) async => 0;
+
+  @override
   Future<void> saveDraft(PostDraft draft) => throw UnimplementedError();
 
   @override
@@ -78,6 +81,9 @@ class _FakeCommentRepository implements CommentRepository {
 
   @override
   Future<void> deleteComment(String postId, String commentId) async {}
+
+  @override
+  Future<int> countCommentsByAuthor(String uid) async => 0;
 }
 
 class _FakeLikeRepository implements LikeRepository {

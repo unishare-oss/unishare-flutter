@@ -18,4 +18,8 @@ class CommentRepositoryImpl implements CommentRepository {
   @override
   Future<void> deleteComment(String postId, String commentId) =>
       datasource.deleteComment(postId, commentId);
+
+  @override
+  Future<int> countCommentsByAuthor(String uid) =>
+      datasource.countCommentsByAuthor(uid);
 }

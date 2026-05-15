@@ -38,6 +38,8 @@ class _StubRepo implements PostRepository {
   Stream<List<Post>> watchPostsByAuthor(String authorId, {int limit = 50}) =>
       throw UnimplementedError();
   @override
+  Future<int> countPostsByAuthor(String authorId) async => 0;
+  @override
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,

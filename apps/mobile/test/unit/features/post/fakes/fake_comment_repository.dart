@@ -35,4 +35,7 @@ class FakeCommentRepository implements CommentRepository {
     lastDeletedPostId = postId;
     lastDeletedCommentId = commentId;
   }
+
+  @override
+  Future<int> countCommentsByAuthor(String uid) async => 0;
 }

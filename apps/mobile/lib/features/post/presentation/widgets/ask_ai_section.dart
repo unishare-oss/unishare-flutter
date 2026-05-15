@@ -160,7 +160,9 @@ class _AskAiSectionState extends ConsumerState<AskAiSection> {
             child: TextField(
               controller: _controller,
               maxLength: 500,
-              maxLines: null,
+              // Cap at 5 so pasted/long input scrolls internally rather
+              // than growing the input bar.
+              maxLines: 5,
               minLines: 1,
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => _send(),
