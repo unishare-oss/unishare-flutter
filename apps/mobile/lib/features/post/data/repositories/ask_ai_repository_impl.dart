@@ -17,7 +17,12 @@ class AskAiRepositoryImpl implements AskAiRepository {
   }) async* {
     final serialized = history
         .where((m) => !m.isPending)
-        .map((m) => {'role': m.isUser ? 'user' : 'assistant', 'content': m.content})
+        .map(
+          (m) => {
+            'role': m.isUser ? 'user' : 'assistant',
+            'content': m.content,
+          },
+        )
         .toList();
 
     try {
