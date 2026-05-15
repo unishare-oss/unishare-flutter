@@ -2,6 +2,8 @@
 
 How to cut a release. The build/upload pipeline is fully automated — you just trigger a version bump.
 
+**Source of truth: the latest `v*.*.*` git tag.** The Cut Release workflow reads the highest existing tag, computes the next version, and pushes a new annotated tag. `pubspec.yaml` is ignored for versioning — the build pipeline passes `--build-name` / `--build-number` derived from the tag into `flutter build`.
+
 ---
 
 ## Overview
@@ -40,10 +42,9 @@ Run.
 
 **3. Wait ~30 seconds.** Cut Release:
 
-- Reads `version: X.Y.Z+N` from `apps/mobile/pubspec.yaml`
-- Computes the next version
-- Commits the bump to `main`
-- Tags `vX.Y.Z` and pushes the tag
+- Reads the highest existing `v*.*.*` tag (e.g., `v0.3.0`)
+- Computes the next version (e.g., `v0.4.0` for `minor`, `v1.0.0` for `major`)
+- Creates and pushes an annotated tag — no commit to any branch
 
 **4. The Release workflow auto-fires on the tag push.** Three build jobs (web, Android, iOS) run in parallel after the release shell is created. ~15-20 minutes total.
 
@@ -71,7 +72,7 @@ The job parses pubspec and prints "Previous: A+B, New: C+D" in the summary but d
 
 ### Cut Release fails before pushing the tag
 
-Causes: tag already exists, branch protection blocks the bot, pubspec version line is malformed.
+Causes: tag already exists; tag protection rule blocks the bot.
 
 → Nothing is on the remote. Fix the cause, re-run Cut Release.
 
@@ -85,10 +86,10 @@ The tag and version-bump commit are already on `main`. The Release exists (possi
 
 ```bash
 git push origin :refs/tags/vX.Y.Z      # delete remote tag
-# Delete the GitHub Release in the UI
-git revert <bump-commit-sha>           # undo the pubspec bump
-git push origin main
+# Then delete the GitHub Release in the UI
 ```
+
+That's it — there's no source-side commit to revert.
 
 ---
 
@@ -108,13 +109,11 @@ Scenario: shipped `v1.2.0`, found a critical bug, but `main` is already on `v1.3
 
 These have to be in place once per repo for the workflows to function.
 
-### Branch protection on `main`
+### Tag protection (optional)
 
-If `main` is protected, `github-actions[bot]` must be allowed to bypass the PR requirement so Cut Release can push the version-bump commit.
+Branch protection on `main` does **not** affect this workflow — Cut Release only pushes a tag, never a commit.
 
-Settings → Branches → Branch protection rule for `main` → "Allow specified actors to bypass required pull requests" → add `github-actions[bot]`.
-
-Alternative: create a PAT with `contents:write`, save as `RELEASE_TOKEN`, and replace `token: ${{ secrets.GITHUB_TOKEN }}` in `cut-release.yml` with `${{ secrets.RELEASE_TOKEN }}`.
+If you've configured tag protection rules under Settings → Tags, you must allow `github-actions[bot]` to bypass them (or switch the workflow token to a PAT with `contents:write` saved as `RELEASE_TOKEN`).
 
 ### Workflow permissions
 
@@ -145,6 +144,6 @@ Settings → Actions → General → Workflow permissions → **Read and write p
 
 ## Source files
 
-- `.github/workflows/cut-release.yml` — the version-bump + tag-push trigger
-- `.github/workflows/release.yml` — the build/upload pipeline
-- `apps/mobile/pubspec.yaml` — version of record
+- `.github/workflows/cut-release.yml` — reads latest tag, pushes the next tag
+- `.github/workflows/release.yml` — on tag push: resolves version from tag, builds, releases
+- `apps/mobile/pubspec.yaml` — used for local dev only; ignored at release-build time
