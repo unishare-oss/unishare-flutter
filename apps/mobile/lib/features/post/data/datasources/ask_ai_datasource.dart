@@ -9,31 +9,43 @@ class AskAiDatasource {
 
   final http.Client _client;
 
-  Future<Map<String, dynamic>> call({
+  Stream<Map<String, dynamic>> stream({
     required String summary,
     required String question,
     required List<Map<String, String>> history,
-  }) async {
+  }) async* {
     final token = await FirebaseAuth.instance.currentUser?.getIdToken();
     if (token == null) throw Exception('not_authenticated');
 
-    final response = await _client.post(
-      Uri.parse('$_workerBaseUrl/ai/chat'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
+    final request = http.Request('POST', Uri.parse('$_workerBaseUrl/ai/chat'))
+      ..headers['Content-Type'] = 'application/json'
+      ..headers['Authorization'] = 'Bearer $token'
+      ..body = jsonEncode({
         'summary': summary,
         'question': question,
         'history': history,
-      }),
-    );
+      });
+
+    final response = await _client.send(request);
 
     if (response.statusCode != 200) {
-      throw Exception('Worker error ${response.statusCode}: ${response.body}');
+      final body = await response.stream.bytesToString();
+      throw Exception('Worker error ${response.statusCode}: $body');
     }
 
-    return Map<String, dynamic>.from(jsonDecode(response.body) as Map);
+    String buffer = '';
+    await for (final chunk in response.stream.transform(utf8.decoder)) {
+      buffer += chunk;
+      final lines = buffer.split('\n');
+      buffer = lines.removeLast();
+      for (final line in lines) {
+        if (line.startsWith('data: ')) {
+          final jsonStr = line.substring(6).trim();
+          if (jsonStr.isNotEmpty) {
+            yield Map<String, dynamic>.from(jsonDecode(jsonStr) as Map);
+          }
+        }
+      }
+    }
   }
 }

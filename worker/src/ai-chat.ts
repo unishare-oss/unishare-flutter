@@ -1,6 +1,6 @@
 import Groq from 'groq-sdk'
 import type { Env } from './index'
-import { json, jsonError } from './response'
+import { CORS_HEADERS, jsonError } from './response'
 
 const SYSTEM_PROMPT = `You are a study assistant for university students.
 Answer ONLY questions that are directly related to the document summary provided below.
@@ -50,12 +50,11 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
 
   const groq = new Groq({ apiKey: env.GROQ_API_KEY })
   const model = env.GROQ_MODEL ?? 'llama-3.3-70b-versatile'
-
   const systemPrompt = SYSTEM_PROMPT.replace('{SUMMARY}', summary)
 
-  let reply: string
+  let groqStream: AsyncIterable<Groq.Chat.Completions.ChatCompletionChunk>
   try {
-    const response = await groq.chat.completions.create({
+    groqStream = await groq.chat.completions.create({
       model,
       messages: [
         { role: 'system', content: systemPrompt },
@@ -64,15 +63,40 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
       ],
       max_tokens: 512,
       temperature: 0.3,
+      stream: true,
     })
-    reply = response.choices[0]?.message?.content?.trim() ?? ''
   } catch {
     return jsonError('LLM call failed', 502)
   }
 
-  const isOffTopic = reply.toUpperCase() === 'OFF_TOPIC'
-  return json({
-    reply: isOffTopic ? OFF_TOPIC_REPLY : reply,
-    isOffTopic,
+  const encoder = new TextEncoder()
+  let accumulated = ''
+
+  const readable = new ReadableStream({
+    async start(controller) {
+      try {
+        for await (const chunk of groqStream) {
+          const token = chunk.choices[0]?.delta?.content ?? ''
+          if (token) {
+            accumulated += token
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ t: token })}\n\n`))
+          }
+        }
+        const isOffTopic = accumulated.trim().toUpperCase() === 'OFF_TOPIC'
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true, isOffTopic })}\n\n`))
+      } catch {
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: 'LLM call failed' })}\n\n`))
+      } finally {
+        controller.close()
+      }
+    },
+  })
+
+  return new Response(readable, {
+    headers: {
+      ...CORS_HEADERS,
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+    },
   })
 }
