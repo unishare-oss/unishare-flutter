@@ -1107,3 +1107,10 @@ Files:
   ~ apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
 Summary:  2 files changed, 9 insertions(+), 10 deletions(-)
 
+  [14:07] Edit: apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  [14:07] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:07] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:07] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart

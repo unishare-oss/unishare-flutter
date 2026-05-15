@@ -31,6 +31,12 @@ service cloud.firestore {
       }
     }
 
+    // Required for collectionGroup('comments') queries — nested rules alone
+    // are not evaluated for collection group queries.
+    match /{path=**}/comments/{commentId} {
+      allow read: if true;
+    }
+
     match /posts/{postId} {
       allow read: if true;
       allow create: if request.auth != null

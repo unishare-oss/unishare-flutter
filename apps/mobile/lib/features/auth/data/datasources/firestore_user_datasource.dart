@@ -71,6 +71,15 @@ class FirestoreUserDatasource {
     });
   }
 
+  Stream<int> streamCommentCountByAuthor(String uid) {
+    return _firestore
+        .collectionGroup('comments')
+        .where('authorId', isEqualTo: uid)
+        .snapshots()
+        .map((snap) => snap.docs.length)
+        .handleError((_) {});
+  }
+
   Stream<List<({String id, String name})>> getUniversities() {
     return Stream.fromFuture(
       _universities.get().then(

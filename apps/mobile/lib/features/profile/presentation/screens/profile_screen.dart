@@ -89,7 +89,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
-    final cs = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
     final userAsync = ref.watch(currentUserProvider);
 
@@ -172,6 +171,7 @@ class _ProfileCard extends ConsumerWidget {
         )
         .name;
     final postsAsync = ref.watch(_userPostsCountProvider(user.id));
+    final commentsAsync = ref.watch(_userCommentsCountProvider(user.id));
     final savedCount = ref.watch(savedPostsProvider).asData?.value.length ?? 0;
 
     final joinedYear = user.enrollmentYear ?? DateTime.now().year;
@@ -261,7 +261,10 @@ class _ProfileCard extends ConsumerWidget {
                 value: postsAsync.asData?.value.toString() ?? '—',
               ),
               const SizedBox(width: 28),
-              _Stat(label: 'COMMENTS', value: '—'),
+              _Stat(
+                label: 'COMMENTS',
+                value: commentsAsync.asData?.value.toString() ?? '—',
+              ),
               const SizedBox(width: 28),
               _Stat(label: 'SAVED', value: savedCount.toString()),
             ],
@@ -1034,4 +1037,12 @@ class _DangerRow extends StatelessWidget {
 final _userPostsCountProvider = StreamProvider.family<int, String>((ref, uid) {
   final repo = ref.watch(postRepositoryProvider);
   return repo.watchPostsByAuthor(uid).map((posts) => posts.length);
+});
+
+final _userCommentsCountProvider = StreamProvider.family<int, String>((
+  ref,
+  uid,
+) {
+  final ds = ref.watch(firestoreUserDatasourceProvider);
+  return ds.streamCommentCountByAuthor(uid);
 });
