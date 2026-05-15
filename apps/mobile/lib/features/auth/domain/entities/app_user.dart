@@ -7,6 +7,7 @@ class AppUser {
     this.universityId,
     this.departmentId,
     this.enrollmentYear,
+    this.bio,
     this.role = 'student',
   });
 
@@ -18,4 +19,5 @@ class AppUser {
   final String? universityId;
   final String? departmentId;
   final int? enrollmentYear;
+  final String? bio;
 }

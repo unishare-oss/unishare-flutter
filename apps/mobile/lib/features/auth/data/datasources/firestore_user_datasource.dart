@@ -43,6 +43,23 @@ class FirestoreUserDatasource {
     });
   }
 
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    String? bio,
+    String? universityId,
+    String? departmentId,
+    int? enrollmentYear,
+  }) async {
+    await _users.doc(uid).update({
+      'name': name,
+      if (bio != null) 'bio': bio else 'bio': null,
+      'universityId': ?universityId,
+      'departmentId': ?departmentId,
+      'enrollmentYear': ?enrollmentYear,
+    });
+  }
+
   Future<void> updateAcademicProfile({
     required String uid,
     required String departmentId,

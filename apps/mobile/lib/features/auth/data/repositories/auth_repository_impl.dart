@@ -120,6 +120,23 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    String? bio,
+    String? universityId,
+    String? departmentId,
+    int? enrollmentYear,
+  }) => _firestore.updateProfile(
+    uid: uid,
+    name: name,
+    bio: bio,
+    universityId: universityId,
+    departmentId: departmentId,
+    enrollmentYear: enrollmentYear,
+  );
+
+  @override
   Future<void> updateAcademicProfile({
     required String uid,
     required String departmentId,

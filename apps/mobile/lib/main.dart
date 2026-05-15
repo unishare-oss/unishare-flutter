@@ -9,6 +9,7 @@ import 'package:unishare_mobile/core/storage/post_draft_box.dart';
 import 'package:unishare_mobile/core/storage/saved_post_box.dart';
 import 'package:unishare_mobile/core/router/router.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
+import 'package:unishare_mobile/shared/theme/providers/font_size_provider.dart';
 import 'package:unishare_mobile/shared/theme/providers/theme_provider.dart';
 
 void main() async {
@@ -31,10 +32,15 @@ class App extends ConsumerWidget {
     ref.watch(mergeGuestSavesOnLoginProvider);
     final router = ref.watch(routerProvider);
     final theme = ref.watch(activeThemeProvider);
-    return MaterialApp.router(
-      title: 'Unishare',
-      theme: theme,
-      routerConfig: router,
+    final fontSize = ref.watch(fontSizeProvider);
+    final textScale = fontSize == AppFontSize.large ? 1.15 : 1.0;
+    return MediaQuery(
+      data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
+      child: MaterialApp.router(
+        title: 'Unishare',
+        theme: theme,
+        routerConfig: router,
+      ),
     );
   }
 }
