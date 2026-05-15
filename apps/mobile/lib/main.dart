@@ -34,17 +34,32 @@ class App extends ConsumerWidget {
     final theme = ref.watch(activeThemeProvider);
     final fontStep = ref.watch(fontSizeProvider);
     final textScale = fontSizeScales[fontStep];
-    return MediaQuery(
-      data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
-      child: MaterialApp.router(
-        title: 'Unishare',
-        theme: theme,
-        // Cross-fade ThemeData over 240ms so a theme switch reads as a
-        // smooth transition instead of a single-frame layout snap.
-        themeAnimationDuration: const Duration(milliseconds: 240),
-        themeAnimationCurve: Curves.easeOutCubic,
-        routerConfig: router,
-      ),
+    return MaterialApp.router(
+      title: 'Unishare',
+      theme: theme,
+      // Cross-fade ThemeData over 240ms so a theme switch reads as a
+      // smooth transition instead of a single-frame layout snap.
+      themeAnimationDuration: const Duration(milliseconds: 240),
+      themeAnimationCurve: Curves.easeOutCubic,
+      routerConfig: router,
+      // Apply the app's font-size preference *on top of* the existing
+      // MediaQuery (which carries the user's platform/accessibility text
+      // scale + RTL, viewInsets, etc.). We multiply the platform scaler
+      // by the app preference instead of replacing it, so a user who has
+      // both OS accessibility scaling AND an in-app "Large" preference
+      // gets the compound effect they expect.
+      builder: (context, child) {
+        final mq = MediaQuery.of(context);
+        // `scale(1.0)` extracts the platform's linear multiplier without
+        // assuming the scaler is linear-by-construction.
+        final platformFactor = mq.textScaler.scale(1.0);
+        return MediaQuery(
+          data: mq.copyWith(
+            textScaler: TextScaler.linear(platformFactor * textScale),
+          ),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
   }
 }

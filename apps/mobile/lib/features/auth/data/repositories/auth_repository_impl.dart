@@ -158,8 +158,4 @@ class AuthRepositoryImpl implements AuthRepository {
     departmentId: departmentId,
     enrollmentYear: enrollmentYear,
   );
-
-  @override
-  Stream<int> watchCommentCountByAuthor(String uid) =>
-      _firestore.streamCommentCountByAuthor(uid);
 }

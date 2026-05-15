@@ -12,14 +12,19 @@ class ProfileFormState {
   const ProfileFormState({
     this.universityId,
     this.departmentId,
-    this.enrollmentYear,
+    this.enrollmentYearText = '',
     this.saving = false,
     this.seededFromUid,
   });
 
   final String? universityId;
   final String? departmentId;
-  final int? enrollmentYear;
+
+  /// Raw enrollment-year input as typed by the user. Stored as text so
+  /// unparseable input (e.g. "20a3") survives a rebuild and is surfaced to
+  /// validation rather than being silently coerced to null.
+  final String enrollmentYearText;
+
   final bool saving;
 
   /// UID of the [AppUser] the form was last seeded from. Used so the form
@@ -31,7 +36,7 @@ class ProfileFormState {
   ProfileFormState copyWith({
     Object? universityId = _sentinel,
     Object? departmentId = _sentinel,
-    Object? enrollmentYear = _sentinel,
+    String? enrollmentYearText,
     bool? saving,
     Object? seededFromUid = _sentinel,
   }) {
@@ -42,9 +47,7 @@ class ProfileFormState {
       departmentId: identical(departmentId, _sentinel)
           ? this.departmentId
           : departmentId as String?,
-      enrollmentYear: identical(enrollmentYear, _sentinel)
-          ? this.enrollmentYear
-          : enrollmentYear as int?,
+      enrollmentYearText: enrollmentYearText ?? this.enrollmentYearText,
       saving: saving ?? this.saving,
       seededFromUid: identical(seededFromUid, _sentinel)
           ? this.seededFromUid
@@ -69,7 +72,7 @@ class ProfileForm extends _$ProfileForm {
     state = ProfileFormState(
       universityId: user.universityId,
       departmentId: user.departmentId,
-      enrollmentYear: user.enrollmentYear,
+      enrollmentYearText: user.enrollmentYear?.toString() ?? '',
       seededFromUid: user.id,
     );
   }
@@ -81,8 +84,8 @@ class ProfileForm extends _$ProfileForm {
 
   void setDepartment(String? id) => state = state.copyWith(departmentId: id);
 
-  void setEnrollmentYear(int? year) =>
-      state = state.copyWith(enrollmentYear: year);
+  void setEnrollmentYearText(String text) =>
+      state = state.copyWith(enrollmentYearText: text);
 
   void setSaving(bool saving) => state = state.copyWith(saving: saving);
 }

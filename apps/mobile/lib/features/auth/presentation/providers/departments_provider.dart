@@ -1,10 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 
 part 'departments_provider.g.dart';
 
+/// All departments, unscoped. Mostly used by admin/seed flows; user-facing
+/// pickers should prefer [departmentsForUniversity].
 @riverpod
 Stream<List<({String id, String name})>> departments(Ref ref) {
   final datasource = ref.watch(firestoreUserDatasourceProvider);
@@ -12,13 +13,15 @@ Stream<List<({String id, String name})>> departments(Ref ref) {
 }
 
 /// Departments scoped to a single university. Empty list when [universityId]
-/// is null. Hand-written rather than generated so we can add it without
-/// rerunning build_runner.
-final departmentsForUniversityProvider = StreamProvider.autoDispose
-    .family<List<({String id, String name})>, String?>((ref, universityId) {
-      if (universityId == null || universityId.isEmpty) {
-        return Stream.value(const []);
-      }
-      final ds = ref.watch(firestoreUserDatasourceProvider);
-      return ds.getDepartmentsForUniversity(universityId);
-    });
+/// is null/empty. Server-side filter (no client-side over-fetch).
+@riverpod
+Stream<List<({String id, String name})>> departmentsForUniversity(
+  Ref ref,
+  String? universityId,
+) {
+  if (universityId == null || universityId.isEmpty) {
+    return Stream.value(const []);
+  }
+  final ds = ref.watch(firestoreUserDatasourceProvider);
+  return ds.getDepartmentsForUniversity(universityId);
+}

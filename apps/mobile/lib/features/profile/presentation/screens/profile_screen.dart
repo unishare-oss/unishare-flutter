@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/core/logging/app_logger.dart';
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
@@ -47,18 +49,34 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     _bioCtrl.text = user.bio ?? '';
   }
 
+  /// Parses [form.enrollmentYearText]. Returns:
+  /// - `(null, null)` when the field is empty (intentional clear),
+  /// - `(year, null)` when the input is a valid year, or
+  /// - `(null, errorMessage)` when the input is non-empty but invalid.
+  ({int? year, String? error}) _parseYear(ProfileFormState form) {
+    final raw = form.enrollmentYearText.trim();
+    if (raw.isEmpty) return (year: null, error: null);
+    final parsed = int.tryParse(raw);
+    final currentYear = DateTime.now().year;
+    if (parsed == null) {
+      return (year: null, error: 'Enrollment year must be a number');
+    }
+    if (parsed < 1900 || parsed > currentYear) {
+      return (
+        year: null,
+        error: 'Enrollment year must be between 1900 and $currentYear',
+      );
+    }
+    return (year: parsed, error: null);
+  }
+
   /// Returns an error message if invalid, null if OK.
   String? _validate(ProfileFormState form) {
     if (_nameCtrl.text.trim().isEmpty) {
       return 'Display name is required';
     }
-    final year = form.enrollmentYear;
-    if (year != null) {
-      final nextYear = DateTime.now().year + 1;
-      if (year < 1900 || year > nextYear) {
-        return 'Enrollment year must be between 1900 and $nextYear';
-      }
-    }
+    final parsed = _parseYear(form);
+    if (parsed.error != null) return parsed.error;
     return null;
   }
 
@@ -82,7 +100,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             bio: _bioCtrl.text.trim().isEmpty ? null : _bioCtrl.text.trim(),
             universityId: form.universityId,
             departmentId: form.departmentId,
-            enrollmentYear: form.enrollmentYear,
+            enrollmentYear: _parseYear(form).year,
           );
       ref.invalidate(currentUserProvider);
       if (mounted) {
@@ -91,7 +109,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ).showSnackBar(const SnackBar(content: Text('Profile saved')));
       }
     } catch (e, st) {
-      debugPrint('ProfileScreen save error: $e\n$st');
+      AppLogger.error('ProfileScreen save error', error: e, stackTrace: st);
       if (mounted) {
         ScaffoldMessenger.of(
           context,
@@ -133,7 +151,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       body: userAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, st) {
-          debugPrint('ProfileScreen userAsync error: $e\n$st');
+          AppLogger.error(
+            'ProfileScreen userAsync error',
+            error: e,
+            stackTrace: st,
+          );
           return const Center(
             child: Padding(
               padding: EdgeInsets.all(24),
@@ -145,7 +167,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           );
         },
         data: (user) {
-          if (user == null) return const SizedBox.shrink();
+          if (user == null) {
+            // Guest / unauthenticated landing on /more/profile. Don't
+            // strand them on a blank screen — surface a sign-in CTA.
+            return const _SignInPrompt();
+          }
           _seedControllers(user);
           // Initialize form state after the build pass so we don't mutate
           // providers during a widget build.
@@ -164,11 +190,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               bioCtrl: _bioCtrl,
               selectedUniversityId: form.universityId,
               selectedDepartmentId: form.departmentId,
-              enrollmentYear: form.enrollmentYear,
+              enrollmentYearText: form.enrollmentYearText,
               saving: form.saving,
               onUniversityChanged: notifier.setUniversity,
               onDepartmentChanged: notifier.setDepartment,
-              onYearChanged: notifier.setEnrollmentYear,
+              onYearChanged: notifier.setEnrollmentYearText,
               onSave: () => _save(user),
             ),
             const SizedBox(height: 16),
@@ -185,6 +211,48 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             itemBuilder: (_, i) => sections[i],
           );
         },
+      ),
+    );
+  }
+}
+
+class _SignInPrompt extends StatelessWidget {
+  const _SignInPrompt();
+
+  @override
+  Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final theme = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.person_outline, size: 48, color: ac.textMuted),
+            const SizedBox(height: 12),
+            Text(
+              'Sign in to view your profile',
+              style: theme.textTheme.titleMedium,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'You need an account to edit your profile, manage posts, and track activity.',
+              style: theme.textTheme.bodySmall?.copyWith(color: ac.textMuted),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () => context.go('/welcome'),
+              style: FilledButton.styleFrom(
+                backgroundColor: ac.amber,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Sign in'),
+            ),
+          ],
+        ),
       ),
     );
   }

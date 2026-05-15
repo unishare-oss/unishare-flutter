@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
-import 'package:unishare_mobile/features/auth/presentation/providers/universities_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/providers/profile_stats_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_posts_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
@@ -20,7 +19,6 @@ class ProfileCard extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final depts = ref.watch(departmentsProvider).asData?.value ?? [];
-    ref.watch(universitiesProvider);
     final deptName = depts
         .firstWhere(
           (d) => d.id == user.departmentId,

@@ -16,7 +16,7 @@ class ProfileFormCard extends ConsumerWidget {
     required this.bioCtrl,
     required this.selectedUniversityId,
     required this.selectedDepartmentId,
-    required this.enrollmentYear,
+    required this.enrollmentYearText,
     required this.saving,
     required this.onUniversityChanged,
     required this.onDepartmentChanged,
@@ -29,11 +29,15 @@ class ProfileFormCard extends ConsumerWidget {
   final TextEditingController bioCtrl;
   final String? selectedUniversityId;
   final String? selectedDepartmentId;
-  final int? enrollmentYear;
+  final String enrollmentYearText;
   final bool saving;
   final ValueChanged<String?> onUniversityChanged;
   final ValueChanged<String?> onDepartmentChanged;
-  final ValueChanged<int?> onYearChanged;
+
+  /// Receives the raw input string (possibly invalid). The parent decides
+  /// whether to accept, reject, or stash for validation. Empty string means
+  /// "cleared".
+  final ValueChanged<String> onYearChanged;
   final VoidCallback onSave;
 
   @override
@@ -50,11 +54,26 @@ class ProfileFormCard extends ConsumerWidget {
             .asData
             ?.value ??
         const [];
-    // Drop a stale selection that no longer matches the current uni list.
+
+    // Clamp uni value to the loaded list — Dropdown asserts if `value` has
+    // no matching item (e.g., the stored uni was renamed/removed).
+    final uniIds = unis.map((u) => u.id).toSet();
+    final effectiveUni = uniIds.contains(selectedUniversityId)
+        ? selectedUniversityId
+        : null;
+
+    // Drop a stale dept selection that no longer matches the current uni
+    // list. We also push the cleared value back into form state via a
+    // post-frame callback so `_save` doesn't persist the stale id.
     final deptIds = depts.map((d) => d.id).toSet();
     final effectiveDept = deptIds.contains(selectedDepartmentId)
         ? selectedDepartmentId
         : null;
+    if (effectiveDept != selectedDepartmentId) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        onDepartmentChanged(null);
+      });
+    }
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -102,7 +121,7 @@ class ProfileFormCard extends ConsumerWidget {
           const ProfileFieldLabel('UNIVERSITY'),
           const SizedBox(height: 6),
           DropdownButtonFormField<String>(
-            initialValue: selectedUniversityId,
+            initialValue: effectiveUni,
             isExpanded: true,
             decoration: const InputDecoration(),
             items: unis
@@ -129,10 +148,10 @@ class ProfileFormCard extends ConsumerWidget {
           const ProfileFieldLabel('ENROLLMENT YEAR'),
           const SizedBox(height: 6),
           TextFormField(
-            initialValue: enrollmentYear?.toString(),
+            initialValue: enrollmentYearText,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(),
-            onChanged: (v) => onYearChanged(int.tryParse(v)),
+            onChanged: onYearChanged,
           ),
           const SizedBox(height: 4),
           Text(

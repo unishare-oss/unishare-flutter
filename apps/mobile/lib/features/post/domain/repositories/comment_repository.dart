@@ -16,4 +16,8 @@ abstract interface class CommentRepository {
   /// Deletes [commentId] from [postId]. If it is a top-level comment, also
   /// deletes all replies whose parentId equals [commentId].
   Future<void> deleteComment(String postId, String commentId);
+
+  /// Total number of comments authored by [uid] across all posts.
+  /// One-shot aggregation read (not streamed) — call again to refresh.
+  Future<int> countCommentsByAuthor(String uid);
 }

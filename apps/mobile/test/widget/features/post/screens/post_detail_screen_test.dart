@@ -81,6 +81,9 @@ class _FakeCommentRepository implements CommentRepository {
 
   @override
   Future<void> deleteComment(String postId, String commentId) async {}
+
+  @override
+  Future<int> countCommentsByAuthor(String uid) async => 0;
 }
 
 class _FakeLikeRepository implements LikeRepository {

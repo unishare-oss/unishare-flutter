@@ -33,9 +33,6 @@ class _FakeAuthRepository implements AuthRepository {
   @override
   Future<AppUser?> getCurrentUser() async => null;
   @override
-  Stream<int> watchCommentCountByAuthor(String uid) => const Stream.empty();
-
-  @override
   Future<void> updateProfile({
     required String uid,
     required String name,
