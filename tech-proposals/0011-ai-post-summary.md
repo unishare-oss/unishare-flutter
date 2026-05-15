@@ -1,9 +1,9 @@
 ---
-title: '0009: AI Post Summary'
+title: '0011: AI Post Summary'
 description: 'Pre-generate an AI summary and auto-tags for every uploaded post so students can judge relevance without opening the file, and enable an in-context "Ask AI" chat grounded on the document.'
 ---
 
-# PROP-0009: AI Post Summary
+# PROP-0011: AI Post Summary
 
 **Status:** PROPOSED
 **Author:** Slade

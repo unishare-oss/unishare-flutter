@@ -1,14 +1,14 @@
 ---
-title: "0005: Feed Filtering by Tags"
+title: "0007: Feed Filtering by Tags"
 description: "Proposal for server-side tag filtering on the post feed using Firestore array-contains-any queries, with Hive offline cache support."
 ---
 
-# PROP-0005: Feed Filtering by Tags
+# PROP-0007: Feed Filtering by Tags
 
 **Status:** APPROVED  
 **Author:** Sudakarn  
 **Date:** 2026-05-05  
-**Spec:** [SPEC-0005](../tech-specs/0005-feed-filtering-tags.md)  
+**Spec:** [SPEC-0007](../tech-specs/0007-feed-filtering-tags.md)  
 **Approved by:** Sudakarn
 
 ---

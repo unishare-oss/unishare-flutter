@@ -1,14 +1,14 @@
 ---
-title: "0009: AI Post Summary"
+title: "0011: AI Post Summary"
 description: "AI-generated document summaries and an in-context Q&A interface for PDF/DOCX attachments on post detail screens."
 ---
 
-# SPEC-0009: AI Post Summary
+# SPEC-0011: AI Post Summary
 
 **Status:** REVIEW
 **Author:** Slade
 **Date:** 2026-05-14
-**Proposal:** [PROP-0009](../tech-proposals/0009-ai-post-summary.md)
+**Proposal:** [PROP-0011](../tech-proposals/0011-ai-post-summary.md)
 **Approved by:** (fill in when approved)
 
 ---
@@ -151,7 +151,7 @@ enum SummaryStatus {
 
 ```dart
 // New optional fields added to the existing Post class.
-// All three are nullable for backward-compatibility with pre-SPEC-0009 documents.
+// All three are nullable for backward-compatibility with pre-SPEC-0011 documents.
 final String? summary;           // bullet text, newline-separated, written by CF
 final SummaryStatus? summaryStatus;
 final DateTime? summarizedAt;

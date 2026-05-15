@@ -1,14 +1,14 @@
 ---
-title: '0007: Save Post'
+title: '0009: Save Post'
 description: 'Hybrid bookmarking — Hive-backed local saves for guest users, Firestore subcollection sync for authenticated users, with silent merge-on-login.'
 ---
 
-# SPEC-0007: Save Post
+# SPEC-0009: Save Post
 
 **Status:** APPROVED
 **Author:** architect
 **Date:** 2026-05-07
-**Proposal:** [PROP-0007](../tech-proposals/0007-save-post.md)
+**Proposal:** [PROP-0009](../tech-proposals/0009-save-post.md)
 **Approved by:** Nang Hayman Aye Mya
 
 ---

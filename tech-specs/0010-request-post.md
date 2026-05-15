@@ -1,14 +1,14 @@
 ---
-title: '0008: Request Post'
+title: '0010: Request Post'
 description: 'Course-scoped content request surface where authenticated students signal demand for study materials and uploaders suggest fulfillments by linking existing posts.'
 ---
 
-# SPEC-0008: Request Post
+# SPEC-0010: Request Post
 
 **Status:** APPROVED  
 **Author:**  
 **Date:** 2026-05-09  
-**Proposal:** [PROP-0008](../tech-proposals/0008-request-post.md)  
+**Proposal:** [PROP-0010](../tech-proposals/0010-request-post.md)  
 **Approved by:** (fill in when approved)
 
 ---
@@ -333,7 +333,7 @@ match /requests/{requestId} {
 
 - Push notifications to the requester when a suggestion is submitted
 - Voting on individual suggestions (only request-level upvotes are in scope)
-- Anonymous requests — ruled out in PROP-0008
+- Anonymous requests — ruled out in PROP-0010
 - Request expiry / `expiresAt` field — deferred; no Cloud Function needed for v1
 - Per-user-per-course request limit enforcement — deferred
 - Web keyboard shortcut "Ctrl + Enter to submit" (shown in designs) — deferred to a follow-up

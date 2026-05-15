@@ -9,7 +9,7 @@ description: "Proposal for reverse-chronological post feed backed by Firestore w
 **Author:** architect  
 **Date:** 2026-04-30  
 **Approved by:** Pyae Sone Shin Thant  
-**Spec:** absorbed into [SPEC-0005](../tech-specs/0005-feed-filtering-tags.md) — basic feed mechanism implemented as foundation for tag-filtering spec
+**Spec:** absorbed into [SPEC-0007](../tech-specs/0007-feed-filtering-tags.md) — basic feed mechanism implemented as foundation for tag-filtering spec
 
 ---
 

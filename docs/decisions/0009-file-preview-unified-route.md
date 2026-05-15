@@ -1,9 +1,9 @@
 ---
-title: "0007: Unified /preview GoRoute with FilePreviewArgs extra"
+title: "0009: Unified /preview GoRoute with FilePreviewArgs extra"
 description: "A single GoRouter route replaces three scattered MaterialPageRoute builders and a SnackBar stub for file attachment previewing."
 ---
 
-# 0007 — Unified /preview GoRoute with FilePreviewArgs extra
+# 0009 — Unified /preview GoRoute with FilePreviewArgs extra
 
 **Status:** ACCEPTED  
 **Author:** Architect  

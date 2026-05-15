@@ -1,9 +1,9 @@
 ---
-title: '0008: Request Post'
+title: '0010: Request Post'
 description: 'Allow authenticated students to post content requests tied to a specific course, and allow uploaders to fulfill a request by linking one of their existing posts to it.'
 ---
 
-# PROP-0008: Request Post
+# PROP-0010: Request Post
 
 **Status:** APPROVED
 **Author:**  

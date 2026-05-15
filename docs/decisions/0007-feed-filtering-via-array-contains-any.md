@@ -1,9 +1,9 @@
 ---
-title: "0001: Use Firestore array-contains-any for feed tag filtering"
+title: "0007: Use Firestore array-contains-any for feed tag filtering"
 description: "Server-side tag filtering on the post feed uses a Firestore array-contains-any query on the existing tags field, with a composite index, rather than fan-out writes or client-side filtering."
 ---
 
-# 0001 — Use Firestore array-contains-any for feed tag filtering
+# 0007 — Use Firestore array-contains-any for feed tag filtering
 
 **Status:** PROPOSED  
 **Author:** Sudakarn  
@@ -35,6 +35,6 @@ The `tags: string[]` field already exists on every post written since PROP-0004,
 
 - A composite Firestore index `(tags array-contains, createdAt desc)` must be declared in `firestore.indexes.json` and deployed before the filtered feed is released.
 - The domain repository interface gains a `List<String> tagFilter` parameter; the data layer applies it conditionally — empty list → unfiltered query, non-empty list → `array-contains-any` query.
-- Selecting more than 30 tags requires query batching in the data layer; the team must decide whether to cap the UI at a lower limit or handle batching transparently (tracked as an open question in PROP-0005).
+- Selecting more than 30 tags requires query batching in the data layer; the team must decide whether to cap the UI at a lower limit or handle batching transparently (tracked as an open question in PROP-0007).
 - Posts predating PROP-0004 (with no `tags` field) are correctly excluded from filtered results. This is acceptable but must be communicated to users.
 - A second independent tag-dimension filter (e.g., department AND subject type simultaneously via two `array-contains-any` clauses) is not possible in a single Firestore query; if that requirement emerges, this decision will need to be revisited.

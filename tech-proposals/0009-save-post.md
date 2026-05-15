@@ -1,9 +1,9 @@
 ---
-title: '0007: Save Post'
+title: '0009: Save Post'
 description: 'Persistent bookmarking of feed posts for later reference, with Hive-backed local storage for guest users and Firestore sync for authenticated users, merged on login.'
 ---
 
-# PROP-0007: Save Post
+# PROP-0009: Save Post
 
 **Status:** APPROVED  
 **Author:** architect  

@@ -1,9 +1,9 @@
 ---
-title: "0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login"
+title: "0008: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login"
 description: "The save-post feature stores saves in a local Hive box for guest users and in users/{uid}/savedPosts/{postId} for authenticated users, with an automatic merge when a guest signs in."
 ---
 
-# 0007 — Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
+# 0008 — Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
 
 **Status:** PROPOSED  
 **Author:** architect  

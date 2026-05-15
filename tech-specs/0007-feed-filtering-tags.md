@@ -1,14 +1,14 @@
 ---
-title: "0005: Feed Filtering by Tags"
+title: "0007: Feed Filtering by Tags"
 description: "Full implementation spec for server-side tag filtering on the post feed using Firestore array-contains-any, curated tag enumeration, cross-device preference persistence, and Hive offline cache."
 ---
 
-# SPEC-0005: Feed Filtering by Tags
+# SPEC-0007: Feed Filtering by Tags
 
 **Status:** APPROVED  
 **Author:** Sudakarn  
 **Date:** 2026-05-05  
-**Proposal:** [PROP-0005](../tech-proposals/0005-feed-filtering-tags.md)  
+**Proposal:** [PROP-0007](../tech-proposals/0007-feed-filtering-tags.md)  
 **Approved by:** Sudakarn
 
 ---
@@ -214,7 +214,7 @@ abstract interface class PostRepository {
     void Function(double progress)? onProgress,
   });
 
-  // --- new for SPEC-0005 ---
+  // --- new for SPEC-0007 ---
 
   /// Returns the first [pageSize] posts ordered by createdAt descending.
   ///
@@ -518,7 +518,7 @@ firebase deploy --only firestore:indexes
 
 The unfiltered first page of the feed is already cached to a Hive box named `feed_cache`. The cache key used today is a fixed string (e.g., `"feed_page_0"` or equivalent) because there is only one feed variant.
 
-### Changes for SPEC-0005
+### Changes for SPEC-0007
 
 The cache key must incorporate the active tag filter to prevent the unfiltered cache from being served when a filter is active, and to prevent different filter selections from colliding in the same cache slot.
 

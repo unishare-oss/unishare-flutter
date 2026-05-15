@@ -1,9 +1,9 @@
 ---
-title: "0007: File Preview Screen"
+title: "0008: File Preview Screen"
 description: "Replace scattered inline preview logic with a unified FilePreviewScreen that delivers pinch-to-zoom images, full PDF scrolling, and video playback with controls."
 ---
 
-# PROP-0007: File Preview Screen
+# PROP-0008: File Preview Screen
 
 **Status:** ACCEPTED  
 **Author:** Architect  

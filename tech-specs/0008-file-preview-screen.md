@@ -1,14 +1,14 @@
 ---
-title: "0007: File Preview Screen"
+title: "0008: File Preview Screen"
 description: "Unified FilePreviewScreen that replaces scattered inline preview logic with pinch-to-zoom image viewing, full PDF scrolling, video playback with Chewie controls, and a graceful fallback for unsupported types."
 ---
 
-# SPEC-0007: File Preview Screen
+# SPEC-0008: File Preview Screen
 
 **Status:** APPROVED  
 **Author:** Architect  
 **Date:** 2026-05-07  
-**Proposal:** [PROP-0007](../tech-proposals/0007-file-preview-screen.md)  
+**Proposal:** [PROP-0008](../tech-proposals/0008-file-preview-screen.md)  
 **Approved by:** Pyae Sone Shin Thant (2026-05-07)
 
 ---
@@ -218,7 +218,7 @@ const knownPrefixes = {'/feed', '/posts', '/notifications', '/more', '/preview'}
 
 ## New dependencies
 
-All three were approved by Pyae Sone Shin Thant on 2026-05-07 (recorded in PROP-0007 open questions and ADR-0007).
+All three were approved by Pyae Sone Shin Thant on 2026-05-07 (recorded in PROP-0008 open questions and ADR-0009).
 
 | Package | Reason | Min version |
 |---|---|---|
@@ -262,7 +262,7 @@ All three were approved by Pyae Sone Shin Thant on 2026-05-07 (recorded in PROP-
 
 ## Open questions
 
-All four open questions from PROP-0007 have been resolved prior to this spec being written:
+All four open questions from PROP-0008 have been resolved prior to this spec being written:
 
 1. **Video offline support** — resolved. Pre-download via `dio` to `getTemporaryDirectory()/unishare_video/`. See `_VideoViewer` behaviour specification above.
 2. **Multi-image swipe navigation** — resolved as deferred. Out of scope for this release.
