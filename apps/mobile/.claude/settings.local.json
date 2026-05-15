@@ -6,7 +6,9 @@
       "Bash(findstr /v \"bin\\\\bash\")",
       "Bash(dart run *)",
       "Bash(flutter analyze *)",
-      "Bash(flutter test *)"
+      "Bash(flutter test *)",
+      "Bash(Get-ChildItem -Path \"D:/Desktop/KMUTT/SYSS/CSC234/unishare-flutter/apps/mobile/lib\" -Recurse -Directory)",
+      "Bash(Select-Object FullName)"
     ]
   }
 }

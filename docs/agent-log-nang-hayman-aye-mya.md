@@ -61,3 +61,15 @@ Decisions: myPostsProvider directly overrides the stream using Stream.empty() wh
 Handoff: Needs QA and architect review before merge. If Firestore surfaces a missing-index error after real data loads, add a composite index on posts(authorId ASC, createdAt DESC) to firestore.indexes.json.
 Review: PENDING
 
+---
+Date: 2026-05-14 00:00
+Member: Nang Hayman Aye Mya
+Agent: architect
+Task: Write Tech Proposal PROP-0001 for the Notification System feature
+Prompt: Write a Tech Proposal file at tech-proposals/0001-notification.md for a push and in-app notification system. Students do not know when someone replies to their post, upvotes their content, or responds to their requests. Required: true push notifications when app is closed, in-app notification center. Evaluate all options freely — nothing ruled out.
+
+Outcome: Wrote tech-proposals/0001-notification.md (PROP-0001, DRAFT). Proposal covers four options (Option A: FCM + Cloud Functions server-side fan-out; Option B: client-side FCM dispatch; Option C: in-app-only Firestore stream + flutter_local_notifications; Option D: hybrid Firestore history + FCM via Cloud Functions). Recommends Option D (hybrid). Six open questions captured. Ten acceptance criteria defined. Also wrote docs/decisions/0001-notification-delivery-mechanism.md (ADR-0001, PROPOSED) recording the hybrid FCM + Cloud Functions architecture decision with options table, 3-sentence justification, reversal cost (Medium-to-High), and consequences.
+Decisions: Recommended Option D (hybrid) because it is the only approach satisfying both hard constraints (push when closed, persistent in-app history) without client-to-client Firestore writes. Option B rejected on security grounds (FCM server key exposure). Option C rejected because flutter_local_notifications cannot wake a terminated process. Option A is a valid subset of Option D; unified as the recommendation to make the data model clear.
+Handoff: Proposal is DRAFT — team must resolve Open Questions 1 (notification types at launch), 2 (FCM token storage strategy), 3 (read/unread write ownership), 4 (web push timeline), 5 (retention/TTL policy), and 6 (guest UX) before a tech spec can be written. Blaze plan upgrade must be confirmed by the team before spec authoring begins.
+Review: PENDING
+
