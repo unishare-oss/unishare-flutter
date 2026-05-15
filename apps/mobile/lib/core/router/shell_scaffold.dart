@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/core/router/router.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
-import 'package:unishare_mobile/core/router/router.dart';
 
 class ShellScaffold extends StatelessWidget {
   const ShellScaffold({super.key, required this.navigationShell});
@@ -17,20 +17,20 @@ class ShellScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final activeIndex = navigationShell.currentIndex;
+
     return PopScope(
-      // Allow pop when GoRouter has a route to pop (e.g. /more/profile → /more)
-      // or when already on FEED root (system pop exits the app on Android).
-      canPop:
-          navigationShell.currentIndex == NavTab.feed.index || context.canPop(),
+      canPop: activeIndex == NavTab.feed.index || context.canPop(),
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && navigationShell.currentIndex != NavTab.feed.index) {
+        if (!didPop && activeIndex != NavTab.feed.index) {
           navigationShell.goBranch(NavTab.feed.index, initialLocation: true);
         }
       },
       child: Scaffold(
+        extendBody: true,
         body: navigationShell,
         bottomNavigationBar: MainNavBar(
-          activeIndex: navigationShell.currentIndex,
+          activeIndex: activeIndex,
           onTap: _handleTabTap,
         ),
       ),
