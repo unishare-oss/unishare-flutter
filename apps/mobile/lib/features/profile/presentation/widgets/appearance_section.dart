@@ -94,51 +94,57 @@ class AppearanceSection extends ConsumerWidget {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(9),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          CustomPaint(painter: _ThemePreviewPainter(t)),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 4,
-                              ),
-                              color: t.card.withValues(alpha: 0.92),
-                              child: Text(
-                                t.name,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: t.foreground,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.1,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                          if (isSelected)
+                      // RepaintBoundary isolates the painter onto its own
+                      // compositor layer so unrelated rebuilds (form fields,
+                      // text changes, etc.) don't force the 6 theme previews
+                      // to recomposite.
+                      child: RepaintBoundary(
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            CustomPaint(painter: _ThemePreviewPainter(t)),
                             Positioned(
-                              top: 5,
-                              right: 5,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
                               child: Container(
-                                width: 16,
-                                height: 16,
-                                decoration: BoxDecoration(
-                                  color: ac.amber,
-                                  shape: BoxShape.circle,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 4,
                                 ),
-                                child: const Icon(
-                                  Icons.check,
-                                  size: 10,
-                                  color: Colors.white,
+                                color: t.card.withValues(alpha: 0.92),
+                                child: Text(
+                                  t.name,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: t.foreground,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.1,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
-                        ],
+                            if (isSelected)
+                              Positioned(
+                                top: 5,
+                                right: 5,
+                                child: Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                    color: ac.amber,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.check,
+                                    size: 10,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

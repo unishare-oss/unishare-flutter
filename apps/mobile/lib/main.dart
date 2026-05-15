@@ -39,6 +39,10 @@ class App extends ConsumerWidget {
       child: MaterialApp.router(
         title: 'Unishare',
         theme: theme,
+        // Cross-fade ThemeData over 240ms so a theme switch reads as a
+        // smooth transition instead of a single-frame layout snap.
+        themeAnimationDuration: const Duration(milliseconds: 240),
+        themeAnimationCurve: Curves.easeOutCubic,
         routerConfig: router,
       ),
     );

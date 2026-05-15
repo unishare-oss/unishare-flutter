@@ -5,8 +5,17 @@ import 'package:unishare_mobile/shared/theme/app_typography.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
 class AppTheme {
-  static ThemeData fromId(String id) =>
-      build(AppThemes.all[id] ?? AppThemes.unishare);
+  /// Cache built [ThemeData] by id. `ColorScheme.fromSeed` plus the
+  /// extensions+typography copy is the heaviest hit during a theme switch —
+  /// each entry is built once and reused for every subsequent switch.
+  static final Map<String, ThemeData> _cache = {};
+
+  static ThemeData fromId(String id) {
+    return _cache.putIfAbsent(
+      id,
+      () => build(AppThemes.all[id] ?? AppThemes.unishare),
+    );
+  }
 
   static ThemeData build(AppThemeData d) {
     final scheme =
