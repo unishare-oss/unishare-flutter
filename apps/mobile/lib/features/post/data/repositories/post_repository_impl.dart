@@ -53,6 +53,10 @@ class PostRepositoryImpl implements PostRepository {
       firestoreDatasource.watchPostsByAuthor(authorId, limit: limit);
 
   @override
+  Future<int> countPostsByAuthor(String authorId) =>
+      firestoreDatasource.countPostsByAuthor(authorId);
+
+  @override
   Future<void> saveDraft(PostDraft draft) async {
     await draftBox.put(draft.id, PostDraftModel.fromEntity(draft));
   }

@@ -64,6 +64,16 @@ class PostFirestoreDatasource {
         .map((snapshot) => snapshot.docs.map(_docToPost).toList());
   }
 
+  /// Server-side count aggregation — one round-trip, no documents transferred.
+  Future<int> countPostsByAuthor(String authorId) async {
+    final snap = await _firestore
+        .collection('posts')
+        .where('authorId', isEqualTo: authorId)
+        .count()
+        .get();
+    return snap.count ?? 0;
+  }
+
   Stream<Post> watchPost(String postId) {
     return _firestore.collection('posts').doc(postId).snapshots().map((doc) {
       if (!doc.exists) throw StateError('post_not_found');

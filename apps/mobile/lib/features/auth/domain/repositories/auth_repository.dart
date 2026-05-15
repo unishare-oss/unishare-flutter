@@ -36,4 +36,9 @@ abstract interface class AuthRepository {
     required String departmentId,
     int? enrollmentYear,
   });
+
+  /// Emits the current count of comments authored by [uid] (unbounded).
+  /// Used by the profile stats card. Errors propagate so callers can show
+  /// a fallback state.
+  Stream<int> watchCommentCountByAuthor(String uid);
 }

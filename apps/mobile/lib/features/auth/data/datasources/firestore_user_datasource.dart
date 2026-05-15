@@ -76,8 +76,7 @@ class FirestoreUserDatasource {
         .collectionGroup('comments')
         .where('authorId', isEqualTo: uid)
         .snapshots()
-        .map((snap) => snap.docs.length)
-        .handleError((_) {});
+        .map((snap) => snap.docs.length);
   }
 
   Stream<List<({String id, String name})>> getUniversities() {
@@ -101,6 +100,26 @@ class FirestoreUserDatasource {
             )
             .toList(),
       ),
+    );
+  }
+
+  /// Returns only departments belonging to the given university.
+  /// Server-side filter (avoids streaming the full department list).
+  Stream<List<({String id, String name})>> getDepartmentsForUniversity(
+    String universityId,
+  ) {
+    return Stream.fromFuture(
+      _departments
+          .where('universityId', isEqualTo: universityId)
+          .get()
+          .then(
+            (snap) => snap.docs
+                .map(
+                  (doc) =>
+                      (id: doc.id, name: doc.data()['name'] as String? ?? ''),
+                )
+                .toList(),
+          ),
     );
   }
 }

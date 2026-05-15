@@ -42,7 +42,19 @@ class ProfileFormCard extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
     final unis = ref.watch(universitiesProvider).asData?.value ?? [];
-    final depts = ref.watch(departmentsProvider).asData?.value ?? [];
+    // Scope departments to the selected university so changing university
+    // can't leave a stale dept selected from a different university.
+    final depts =
+        ref
+            .watch(departmentsForUniversityProvider(selectedUniversityId))
+            .asData
+            ?.value ??
+        const [];
+    // Drop a stale selection that no longer matches the current uni list.
+    final deptIds = depts.map((d) => d.id).toSet();
+    final effectiveDept = deptIds.contains(selectedDepartmentId)
+        ? selectedDepartmentId
+        : null;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -102,7 +114,10 @@ class ProfileFormCard extends ConsumerWidget {
           const ProfileFieldLabel('DEPARTMENT'),
           const SizedBox(height: 6),
           DropdownButtonFormField<String>(
-            initialValue: selectedDepartmentId,
+            // ValueKey forces the dropdown to rebuild when the scoped list
+            // changes, so the cleared value is reflected in the UI.
+            key: ValueKey('dept-$selectedUniversityId'),
+            initialValue: effectiveDept,
             isExpanded: true,
             decoration: const InputDecoration(),
             items: depts

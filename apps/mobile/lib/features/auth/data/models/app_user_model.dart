@@ -42,7 +42,7 @@ abstract class AppUserModel with _$AppUserModel {
     );
   }
 
-  AppUser toEntity() => AppUser(
+  AppUser toEntity({List<String> providerIds = const <String>[]}) => AppUser(
     id: id,
     name: name,
     email: email,
@@ -52,5 +52,6 @@ abstract class AppUserModel with _$AppUserModel {
     enrollmentYear: enrollmentYear,
     bio: bio,
     role: role,
+    providerIds: providerIds,
   );
 }

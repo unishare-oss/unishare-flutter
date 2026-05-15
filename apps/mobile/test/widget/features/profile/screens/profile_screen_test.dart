@@ -9,9 +9,7 @@ import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
 void main() {
-  testWidgets('ProfileScreen renders Profile title in app bar', (
-    tester,
-  ) async {
+  testWidgets('ProfileScreen renders Profile title in app bar', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [

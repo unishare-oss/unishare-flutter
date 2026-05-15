@@ -5,14 +5,18 @@ import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
+import 'package:unishare_mobile/features/profile/presentation/providers/profile_form_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/appearance_section.dart';
-import 'package:unishare_mobile/features/profile/presentation/widgets/change_password_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/connected_accounts_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/danger_zone_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_form_card.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
+/// ProfileScreen still holds [TextEditingController]s (they have their own
+/// lifecycle and don't fit a Riverpod store cleanly), but all other mutable
+/// form state lives in [profileFormProvider]. The screen is essentially a
+/// view that wires controllers + provider together.
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
@@ -23,11 +27,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _nameCtrl = TextEditingController();
   final _bioCtrl = TextEditingController();
-  String? _selectedUniversityId;
-  String? _selectedDepartmentId;
-  int? _enrollmentYear;
-  bool _saving = false;
-  bool _formInitialized = false;
+  bool _controllersSeeded = false;
 
   @override
   void dispose() {
@@ -36,19 +36,39 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     super.dispose();
   }
 
-  void _initForm(AppUser user) {
-    if (_formInitialized) return;
-    _formInitialized = true;
+  void _seedControllers(AppUser user) {
+    if (_controllersSeeded) return;
+    _controllersSeeded = true;
     _nameCtrl.text = user.name;
     _bioCtrl.text = user.bio ?? '';
-    _selectedUniversityId = user.universityId;
-    _selectedDepartmentId = user.departmentId;
-    _enrollmentYear = user.enrollmentYear;
+  }
+
+  /// Returns an error message if invalid, null if OK.
+  String? _validate(ProfileFormState form) {
+    if (_nameCtrl.text.trim().isEmpty) {
+      return 'Display name is required';
+    }
+    final year = form.enrollmentYear;
+    if (year != null) {
+      final nextYear = DateTime.now().year + 1;
+      if (year < 1900 || year > nextYear) {
+        return 'Enrollment year must be between 1900 and $nextYear';
+      }
+    }
+    return null;
   }
 
   Future<void> _save(AppUser user) async {
-    if (_saving) return;
-    setState(() => _saving = true);
+    final form = ref.read(profileFormProvider);
+    if (form.saving) return;
+    final validationError = _validate(form);
+    if (validationError != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(validationError)));
+      return;
+    }
+    ref.read(profileFormProvider.notifier).setSaving(true);
     try {
       await ref
           .read(authRepositoryProvider)
@@ -56,9 +76,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             uid: user.id,
             name: _nameCtrl.text.trim(),
             bio: _bioCtrl.text.trim().isEmpty ? null : _bioCtrl.text.trim(),
-            universityId: _selectedUniversityId,
-            departmentId: _selectedDepartmentId,
-            enrollmentYear: _enrollmentYear,
+            universityId: form.universityId,
+            departmentId: form.departmentId,
+            enrollmentYear: form.enrollmentYear,
           );
       ref.invalidate(currentUserProvider);
       if (mounted) {
@@ -66,14 +86,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           context,
         ).showSnackBar(const SnackBar(content: Text('Profile saved')));
       }
-    } catch (_) {
+    } catch (e, st) {
+      debugPrint('ProfileScreen save error: $e\n$st');
       if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Failed to save profile')));
       }
     } finally {
-      if (mounted) setState(() => _saving = false);
+      if (mounted) {
+        ref.read(profileFormProvider.notifier).setSaving(false);
+      }
     }
   }
 
@@ -87,6 +110,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final ac = Theme.of(context).extension<AppColors>()!;
     final theme = Theme.of(context);
     final userAsync = ref.watch(currentUserProvider);
+    final form = ref.watch(profileFormProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -118,7 +142,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         },
         data: (user) {
           if (user == null) return const SizedBox.shrink();
-          _initForm(user);
+          _seedControllers(user);
+          // Initialize form state after the build pass so we don't mutate
+          // providers during a widget build.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            ref.read(profileFormProvider.notifier).initFromUser(user);
+          });
+
+          final notifier = ref.read(profileFormProvider.notifier);
           final sections = <Widget>[
             ProfileCard(user: user),
             const SizedBox(height: 16),
@@ -126,19 +158,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               user: user,
               nameCtrl: _nameCtrl,
               bioCtrl: _bioCtrl,
-              selectedUniversityId: _selectedUniversityId,
-              selectedDepartmentId: _selectedDepartmentId,
-              enrollmentYear: _enrollmentYear,
-              saving: _saving,
-              onUniversityChanged: (id) =>
-                  setState(() => _selectedUniversityId = id),
-              onDepartmentChanged: (id) =>
-                  setState(() => _selectedDepartmentId = id),
-              onYearChanged: (y) => setState(() => _enrollmentYear = y),
+              selectedUniversityId: form.universityId,
+              selectedDepartmentId: form.departmentId,
+              enrollmentYear: form.enrollmentYear,
+              saving: form.saving,
+              onUniversityChanged: notifier.setUniversity,
+              onDepartmentChanged: notifier.setDepartment,
+              onYearChanged: notifier.setEnrollmentYear,
               onSave: () => _save(user),
             ),
-            const SizedBox(height: 16),
-            const ChangePasswordCard(),
             const SizedBox(height: 16),
             const ConnectedAccountsCard(),
             const SizedBox(height: 16),

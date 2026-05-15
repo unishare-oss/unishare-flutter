@@ -9,6 +9,7 @@ class AppUser {
     this.enrollmentYear,
     this.bio,
     this.role = 'student',
+    this.providerIds = const <String>[],
   });
 
   final String id;
@@ -20,4 +21,8 @@ class AppUser {
   final String? departmentId;
   final int? enrollmentYear;
   final String? bio;
+
+  /// Firebase Auth provider IDs linked to this account.
+  /// e.g. `google.com`, `password`, `apple.com`. Empty when unknown.
+  final List<String> providerIds;
 }

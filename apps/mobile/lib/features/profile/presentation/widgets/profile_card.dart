@@ -3,34 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
-import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/universities_provider.dart';
-import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
+import 'package:unishare_mobile/features/profile/presentation/providers/profile_stats_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_posts_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
-
-// ---------------------------------------------------------------------------
-// Providers — kept in the same file as the only consumer (_ProfileCard).
-// ---------------------------------------------------------------------------
-
-final userPostsCountProvider = StreamProvider.family<int, String>((ref, uid) {
-  final repo = ref.watch(postRepositoryProvider);
-  return repo.watchPostsByAuthor(uid).map((posts) => posts.length);
-});
-
-final userCommentsCountProvider = StreamProvider.family<int, String>((
-  ref,
-  uid,
-) {
-  final ds = ref.watch(firestoreUserDatasourceProvider);
-  return ds.streamCommentCountByAuthor(uid);
-});
-
-// ---------------------------------------------------------------------------
-// Profile card
-// ---------------------------------------------------------------------------
 
 class ProfileCard extends ConsumerWidget {
   const ProfileCard({super.key, required this.user});

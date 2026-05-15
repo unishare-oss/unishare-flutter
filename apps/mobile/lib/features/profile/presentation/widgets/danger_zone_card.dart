@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class DangerZoneCard extends StatelessWidget {
@@ -69,16 +68,22 @@ class DangerRow extends StatelessWidget {
     required this.subtitle,
     required this.actionLabel,
     required this.destructive,
+    this.onPressed,
   });
   final String title;
   final String subtitle;
   final String actionLabel;
   final bool destructive;
 
+  /// `null` keeps the row visible but clearly disabled (greyed-out).
+  /// Wire a callback once the underlying flow is implemented.
+  final VoidCallback? onPressed;
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
+    final enabled = onPressed != null;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,23 +96,36 @@ class DangerRow extends StatelessWidget {
               Text(
                 subtitle,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).extension<AppColors>()!.textMuted,
+                  color: cs.onSurfaceVariant,
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(width: 12),
-        FilledButton(
-          onPressed: null,
-          style: FilledButton.styleFrom(
-            backgroundColor: destructive ? cs.error : null,
-            foregroundColor: destructive ? cs.onError : null,
-            disabledBackgroundColor: destructive ? cs.error : null,
-            disabledForegroundColor: destructive ? cs.onError : null,
-          ),
-          child: Text(actionLabel),
-        ),
+        // Disabled destructive rows should NOT look like enabled destructive
+        // buttons. Use a neutral outlined style when no action is wired.
+        enabled
+            ? FilledButton(
+                onPressed: onPressed,
+                style: destructive
+                    ? FilledButton.styleFrom(
+                        backgroundColor: cs.error,
+                        foregroundColor: cs.onError,
+                      )
+                    : null,
+                child: Text(actionLabel),
+              )
+            : OutlinedButton(
+                onPressed: null,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: cs.onSurfaceVariant,
+                  side: BorderSide(
+                    color: theme.dividerColor.withValues(alpha: 0.6),
+                  ),
+                ),
+                child: Text(actionLabel),
+              ),
       ],
     );
   }
