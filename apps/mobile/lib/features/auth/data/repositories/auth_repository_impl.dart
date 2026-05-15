@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart' show User;
+
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:unishare_mobile/features/auth/data/datasources/firebase_auth_datasource.dart';
@@ -17,19 +19,24 @@ class AuthRepositoryImpl implements AuthRepository {
   Stream<AppUser?> get authStateChanges {
     return _auth.authStateChanges.asyncMap((firebaseUser) async {
       if (firebaseUser == null) return null;
+      final providerIds = _providerIds(firebaseUser);
       final model = await _firestore.getUser(firebaseUser.uid);
       // Fall back to Firebase Auth data if the Firestore document doesn't
       // exist yet (new-user race condition) or was never created.
       // departmentId=null triggers the academic profile prompt on first launch.
-      return model?.toEntity() ??
+      return model?.toEntity(providerIds: providerIds) ??
           AppUser(
             id: firebaseUser.uid,
             name: firebaseUser.displayName ?? '',
             email: firebaseUser.email ?? '',
             photoUrl: firebaseUser.photoURL,
+            providerIds: providerIds,
           );
     });
   }
+
+  List<String> _providerIds(User user) =>
+      user.providerData.map((p) => p.providerId).toList(growable: false);
 
   @override
   Future<AppUser> signInWithGoogle() async {
@@ -42,6 +49,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
     final firebaseUser = credential.user!;
     final isNew = credential.additionalUserInfo?.isNewUser ?? false;
+    final providerIds = _providerIds(firebaseUser);
 
     if (isNew) {
       await _firestore.createUser(
@@ -55,11 +63,12 @@ class AuthRepositoryImpl implements AuthRepository {
         name: firebaseUser.displayName ?? '',
         email: firebaseUser.email ?? '',
         photoUrl: firebaseUser.photoURL,
+        providerIds: providerIds,
       );
     }
 
     final model = await _firestore.getUser(firebaseUser.uid);
-    return model!.toEntity();
+    return model!.toEntity(providerIds: providerIds);
   }
 
   @override
@@ -71,8 +80,9 @@ class AuthRepositoryImpl implements AuthRepository {
       email: email,
       password: password,
     );
-    final model = await _firestore.getUser(credential.user!.uid);
-    return model!.toEntity();
+    final firebaseUser = credential.user!;
+    final model = await _firestore.getUser(firebaseUser.uid);
+    return model!.toEntity(providerIds: _providerIds(firebaseUser));
   }
 
   @override
@@ -105,6 +115,7 @@ class AuthRepositoryImpl implements AuthRepository {
       name: name,
       email: email,
       universityId: universityId,
+      providerIds: _providerIds(credential.user!),
     );
   }
 
@@ -115,9 +126,27 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<AppUser?> getCurrentUser() async {
     final firebaseUser = _auth.currentUser;
     if (firebaseUser == null) return null;
+    final providerIds = _providerIds(firebaseUser);
     final model = await _firestore.getUser(firebaseUser.uid);
-    return model?.toEntity();
+    return model?.toEntity(providerIds: providerIds);
   }
+
+  @override
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    String? bio,
+    String? universityId,
+    String? departmentId,
+    int? enrollmentYear,
+  }) => _firestore.updateProfile(
+    uid: uid,
+    name: name,
+    bio: bio,
+    universityId: universityId,
+    departmentId: departmentId,
+    enrollmentYear: enrollmentYear,
+  );
 
   @override
   Future<void> updateAcademicProfile({

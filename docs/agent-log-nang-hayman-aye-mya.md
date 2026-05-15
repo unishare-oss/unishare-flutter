@@ -10,6 +10,7 @@ Decisions: Chose flat top-level requests/ collection over course sub-collection 
 Handoff: Proposal is DRAFT and must be reviewed and accepted by the team before a tech spec (SPEC-0008) can be written. Open Questions 1 (single vs. multiple fulfillments) and 2 (who can mark fulfilled) must be resolved first as they directly affect the Firestore schema and security rules. Open Question 5 (one-request-per-course limit) affects whether a Cloud Function is needed.
 
 ---
+
 Date: 2026-05-09 10:00
 Member: Nang Hayman Aye Mya
 Agent: flutter-engineer
@@ -17,11 +18,12 @@ Task: Implement SPEC-0008 Requests feature — full Clean Architecture implement
 Prompt: Implement the Requests feature for the Unishare Flutter app. Full Clean Architecture feature covering domain entities, repository interface, use cases, Freezed DTOs, Firestore datasource, repository impl, Riverpod providers, screens, and widgets. Modify router.dart, firestore.rules, and firestore.indexes.json.
 
 Outcome: Full Requests feature implemented — domain entities, repository interface, 5 use cases, Freezed DTOs (RequestDto/SuggestionDto), Firestore datasource with atomic upvote transactions and first-suggestion fulfillment logic, repository impl, 7 Riverpod providers, RequestsScreen (filter bar + list + new request button), RequestDetailScreen (request card + suggestions + suggest button), 6 presentation widgets, router updated, firestore.rules extended, firestore.indexes.json extended. 49 tests added (21 unit + 28 widget). flutter analyze: 0 issues. Full suite: 259 tests, all pass.
-Decisions: Used AggregateQuery count() for first-suggestion check instead of a transaction collection query (Firestore transactions cannot query subcollections). requestsProvider uses a custom RequestsFilter class as the family parameter to avoid codegen issues with record types. _timeAgo helper implemented inline since timeago package is not in pubspec. requestDetailProvider placed in request_detail_screen.dart with its own .g.dart part file to co-locate the provider with the screen that owns it. Override type not exported from flutter_riverpod 3.x — tests use inline ProviderScope overrides instead of passing List<Override> as a parameter.
+Decisions: Used AggregateQuery count() for first-suggestion check instead of a transaction collection query (Firestore transactions cannot query subcollections). requestsProvider uses a custom RequestsFilter class as the family parameter to avoid codegen issues with record types. \_timeAgo helper implemented inline since timeago package is not in pubspec. requestDetailProvider placed in request_detail_screen.dart with its own .g.dart part file to co-locate the provider with the screen that owns it. Override type not exported from flutter_riverpod 3.x — tests use inline ProviderScope overrides instead of passing List<Override> as a parameter.
 Handoff: Needs QA and architect review before merge to main. The `suggestFulfillmentDialog` calls Firestore directly (not via Riverpod) to fetch current user's posts — this works but a dedicated provider would be cleaner in a future refactor. The first-suggestion→fulfilled logic has a small race window (two concurrent first suggestions) which is acceptable for v1 per spec.
 Review: PENDING
 
 ---
+
 Date: 2026-05-10 00:00
 Member: Nang Hayman Aye Mya
 Agent: qa-engineer
@@ -29,27 +31,29 @@ Task: QA sweep of SPEC-0008 Requests feature — test coverage audit and gap fil
 Prompt: Run a full QA sweep on the newly implemented Requests feature (SPEC-0008). Run all existing tests, audit coverage against spec test plan, identify missing tests and write them, fix failing tests, run flutter analyze and dart format.
 
 Outcome: All 14 spec-required test files existed and all 259 pre-existing tests passed. Identified 12 coverage gaps against the spec's stated behavioral requirements and wrote regression tests to fill them: expanded suggest_fulfillment_test.dart (params verification, no duplicate side-effects), toggle_upvote_request_test.dart (add/remove toggle transitions via fake), upvote_button_test.dart (active amber color / inactive mutedForeground color visual states), new_request_dialog_test.dart (submit on valid input flow, disabled without dept+year), request_filter_bar_test.dart (fulfilled status selection, department propagation, year propagation). Also extended fake_request_repository.dart with param-capture fields (lastSuggestRequestId/PostId/PostTitle/PostType, lastToggleUpvoteRequestId). Full suite: 271 tests, all pass. flutter analyze: 0 issues. dart format: 0 diff.
-Decisions: _FakeCreateRequest implements CreateRequest interface directly (no mockito — project uses no mocking library) to override createRequestUseCaseProvider cleanly. Active/inactive visual state tests inspect Icon.color directly from the widget tree (no golden needed at this scope). SuggestFulfillment "first suggestion sets status" is a repository-layer invariant, not a use-case invariant — test validates the use case delegates without mutating status itself.
+Decisions: \_FakeCreateRequest implements CreateRequest interface directly (no mockito — project uses no mocking library) to override createRequestUseCaseProvider cleanly. Active/inactive visual state tests inspect Icon.color directly from the widget tree (no golden needed at this scope). SuggestFulfillment "first suggestion sets status" is a repository-layer invariant, not a use-case invariant — test validates the use case delegates without mutating status itself.
 Handoff: 271 tests all green, 0 analyze issues, 0 format diff. The SuggestFulfillmentDialog still calls Firestore directly (noted by flutter-engineer handoff) — no test covers the posts-loaded path since it would require Firebase emulator. Recommend a future refactor to a dedicated provider to enable proper widget-test coverage of that path.
 Review: PENDING
 
 ---
+
 Date: 2026-05-07 12:30
 Member: Nang Hayman Aye Mya
 Agent: flutter-engineer
 Task: Scaffold and implement SPEC-0007 Save Post feature
 Prompt: /new-feature save-post — scaffold the folder structure, stub files, and session scratchpad for the save-post feature per SPEC-0007 (APPROVED).
 Outcome: Full Save Post feature implemented — domain, data, core storage, presentation layers; PostCard save button wired; SavedScreen; PostDetailScreen save button; guest shell (FEED|SAVED|SIGN IN).
-Decisions: Used async* generator streams instead of rxdart for Hive; abstract class keyword on SavedPostDto for Freezed v3; .asData?.value instead of .valueOrNull (not in riverpod 3.3.1); Branch 4 added to StatefulShellRoute for /saved (guest top-level); Consumer in StatefulShellRoute.builder to conditionally render GuestShellScaffold vs ShellScaffold; redirect rule added — auth users at /saved → /more/saved.
+Decisions: Used async\* generator streams instead of rxdart for Hive; abstract class keyword on SavedPostDto for Freezed v3; .asData?.value instead of .valueOrNull (not in riverpod 3.3.1); Branch 4 added to StatefulShellRoute for /saved (guest top-level); Consumer in StatefulShellRoute.builder to conditionally render GuestShellScaffold vs ShellScaffold; redirect rule added — auth users at /saved → /more/saved.
 Handoff: flutter analyze passes with 0 issues. All 10 plan steps complete. Needs QA widget tests and architect review before merge.
 Review: PENDING
 Files:
-  ? apps/mobile/lib/features/requests/data/ (untracked)
-  ? apps/mobile/lib/features/requests/domain/ (untracked)
-  ? apps/mobile/lib/features/requests/presentation/providers/ (untracked)
-  ? apps/mobile/lib/features/requests/presentation/widgets/ (untracked)
+? apps/mobile/lib/features/requests/data/ (untracked)
+? apps/mobile/lib/features/requests/domain/ (untracked)
+? apps/mobile/lib/features/requests/presentation/providers/ (untracked)
+? apps/mobile/lib/features/requests/presentation/widgets/ (untracked)
 
 ---
+
 Date: 2026-05-10 10:00
 Member: Nang Hayman Aye Mya
 Agent: flutter-engineer
@@ -62,6 +66,7 @@ Handoff: Needs QA and architect review before merge. If Firestore surfaces a mis
 Review: PENDING
 
 ---
+
 Date: 2026-05-14 00:00
 Member: Nang Hayman Aye Mya
 Agent: architect
@@ -72,4 +77,3 @@ Outcome: Wrote tech-proposals/0001-notification.md (PROP-0001, DRAFT). Proposal 
 Decisions: Recommended Option D (hybrid) because it is the only approach satisfying both hard constraints (push when closed, persistent in-app history) without client-to-client Firestore writes. Option B rejected on security grounds (FCM server key exposure). Option C rejected because flutter_local_notifications cannot wake a terminated process. Option A is a valid subset of Option D; unified as the recommendation to make the data model clear.
 Handoff: Proposal is DRAFT — team must resolve Open Questions 1 (notification types at launch), 2 (FCM token storage strategy), 3 (read/unread write ownership), 4 (web push timeline), 5 (retention/TTL policy), and 6 (guest UX) before a tech spec can be written. Blaze plan upgrade must be confirmed by the team before spec authoring begins.
 Review: PENDING
-

@@ -325,7 +325,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           if (isSignUp) ...[
             // Full name
             AuthTextField(
-              hint: 'Full name',
+              label: 'Full name',
+              hint: 'Jane Smith',
               controller: _nameController,
               keyboardType: TextInputType.name,
               textInputAction: TextInputAction.next,
@@ -341,67 +342,83 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             const SizedBox(height: 12),
 
             // University dropdown
-            universitiesAsync.when(
-              data: (universities) => DropdownButtonFormField<String>(
-                initialValue: _selectedUniversityId,
-                isExpanded: true,
-                hint: Text(
-                  'No university',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(color: ac.textSecondary),
-                ),
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: ac.textSecondary,
-                  size: 20,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: cs.surface,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 9,
-                  ),
-                  isDense: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: dividerColor, width: 1),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: dividerColor, width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: ac.amber, width: 1.5),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'University',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
-                items: universities
-                    .map(
-                      (u) => DropdownMenuItem(
-                        value: u.id,
-                        child: Text(
-                          u.name,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                const SizedBox(height: 6),
+                universitiesAsync.when(
+                  data: (universities) => DropdownButtonFormField<String>(
+                    initialValue: _selectedUniversityId,
+                    isExpanded: true,
+                    hint: Text(
+                      'No university',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: ac.textSecondary),
+                    ),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: ac.textSecondary,
+                      size: 20,
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: cs.surface,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 9,
                       ),
-                    )
-                    .toList(),
-                onChanged: (val) => setState(() => _selectedUniversityId = val),
-              ),
-              loading: () => LinearProgressIndicator(color: ac.amber),
-              error: (e, st) => const SizedBox.shrink(),
+                      isDense: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(color: dividerColor, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(color: dividerColor, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(color: ac.amber, width: 1.5),
+                      ),
+                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
+                    items: universities
+                        .map(
+                          (u) => DropdownMenuItem(
+                            value: u.id,
+                            child: Text(
+                              u.name,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) =>
+                        setState(() => _selectedUniversityId = val),
+                  ),
+                  loading: () => LinearProgressIndicator(color: ac.amber),
+                  error: (e, st) => const SizedBox.shrink(),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
 
             // Email
             AuthTextField(
-              hint: 'Email',
+              label: 'Email',
+              hint: 'you@university.edu',
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
@@ -418,7 +435,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
             // Password (min 8 chars)
             AuthTextField(
-              hint: 'Password',
+              label: 'Password',
+              hint: 'Min. 8 characters',
               controller: _passwordController,
               obscureText: true,
               textInputAction: TextInputAction.next,
@@ -435,7 +453,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
             // Confirm password
             AuthTextField(
-              hint: 'Confirm password',
+              label: 'Confirm password',
+              hint: 'Repeat your password',
               controller: _confirmPasswordController,
               obscureText: true,
               textInputAction: TextInputAction.done,
@@ -495,7 +514,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           ] else ...[
             // Sign-in fields: Email + Password
             AuthTextField(
-              hint: 'Email',
+              label: 'Email',
+              hint: 'you@university.edu',
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
@@ -510,7 +530,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             ),
             const SizedBox(height: 12),
             AuthTextField(
-              hint: 'Password',
+              label: 'Password',
+              hint: 'Your password',
               controller: _passwordController,
               obscureText: true,
               textInputAction: TextInputAction.done,

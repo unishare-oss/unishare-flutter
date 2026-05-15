@@ -36,21 +36,21 @@ void main() {
 
     testWidgets('active tab at index 0 shows filled home icon', (tester) async {
       await tester.pumpWidget(_buildSubject(activeIndex: 0));
-      expect(find.byIcon(Icons.home), findsOneWidget);
+      expect(find.byIcon(Icons.home_rounded), findsOneWidget);
     });
 
     testWidgets('active tab at index 1 shows filled article icon', (
       tester,
     ) async {
       await tester.pumpWidget(_buildSubject(activeIndex: 1));
-      expect(find.byIcon(Icons.article), findsOneWidget);
+      expect(find.byIcon(Icons.article_rounded), findsOneWidget);
     });
 
     testWidgets('active tab at index 2 shows filled notifications icon', (
       tester,
     ) async {
       await tester.pumpWidget(_buildSubject(activeIndex: 2));
-      expect(find.byIcon(Icons.notifications), findsOneWidget);
+      expect(find.byIcon(Icons.notifications_rounded), findsOneWidget);
     });
 
     testWidgets('inactive tabs show outlined icons', (tester) async {
@@ -61,7 +61,7 @@ void main() {
 
     testWidgets('active tab icon uses amber color', (tester) async {
       await tester.pumpWidget(_buildSubject(activeIndex: 0));
-      final icon = tester.widget<Icon>(find.byIcon(Icons.home));
+      final icon = tester.widget<Icon>(find.byIcon(Icons.home_rounded));
       expect(icon.color, AppThemes.unishare.amber);
     });
 

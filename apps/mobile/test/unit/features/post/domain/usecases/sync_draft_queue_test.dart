@@ -29,6 +29,9 @@ class _FakeRepo implements PostRepository {
       throw UnimplementedError();
 
   @override
+  Future<int> countPostsByAuthor(String authorId) async => 0;
+
+  @override
   Future<void> saveDraft(PostDraft draft) async {}
 
   @override

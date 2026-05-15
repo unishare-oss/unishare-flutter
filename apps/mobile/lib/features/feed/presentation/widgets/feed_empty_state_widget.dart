@@ -29,7 +29,7 @@ class FeedEmptyStateWidget extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Try selecting different tags or clear the filter to see all posts.',
+              'Try adjusting your filters or clear them to see all posts.',
               textAlign: TextAlign.center,
               style: Theme.of(
                 context,

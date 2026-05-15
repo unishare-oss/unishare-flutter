@@ -14,6 +14,7 @@ class GuestShellScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isOnFeed = navigationShell.currentIndex == NavTab.feed.index;
+
     return PopScope(
       canPop: isOnFeed || context.canPop(),
       onPopInvokedWithResult: (didPop, _) {
@@ -22,17 +23,18 @@ class GuestShellScaffold extends StatelessWidget {
         }
       },
       child: Scaffold(
+        extendBody: true,
         body: navigationShell,
         bottomNavigationBar: GuestNavBar(
           activeIndex: navigationShell.currentIndex,
-          onFeedTap: () => _handleTap(NavTab.feed.index),
-          onSavedTap: () => _handleTap(kSavedBranchIndex),
+          onFeedTap: () => _handleBranchTap(NavTab.feed.index),
+          onSavedTap: () => _handleBranchTap(kSavedBranchIndex),
         ),
       ),
     );
   }
 
-  void _handleTap(int branchIndex) {
+  void _handleBranchTap(int branchIndex) {
     if (branchIndex == navigationShell.currentIndex) {
       final state = ShellScaffold.scrollTargetKeys[branchIndex].currentState;
       if (state is ScrollToTopTarget) {

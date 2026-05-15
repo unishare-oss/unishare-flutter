@@ -5,13 +5,17 @@ import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/comments_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_detail_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/user_like_status_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/ai_summary_panel.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/ask_ai_section.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_list.dart';
+import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/comment_tile.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/like_button.dart';
 import 'package:unishare_mobile/features/saved/domain/entities/saved_post_snapshot.dart';
@@ -41,14 +45,30 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     super.dispose();
   }
 
+  void _startReply(String commentId, String authorName) {
+    ref
+        .read(replyStateProvider(widget.postId).notifier)
+        .startReply(commentId, authorName);
+  }
+
+  void _cancelReply() {
+    ref.read(replyStateProvider(widget.postId).notifier).cancel();
+  }
+
   Future<void> _submitComment() async {
     final text = _commentController.text.trim();
     if (text.isEmpty || _isSubmitting) return;
 
+    final parentId = ref.read(replyStateProvider(widget.postId))?.id;
     setState(() => _isSubmitting = true);
     try {
-      await ref.read(addCommentUseCaseProvider).call(widget.postId, text);
+      await ref
+          .read(addCommentUseCaseProvider)
+          .call(widget.postId, text, parentId: parentId);
       _commentController.clear();
+      if (mounted) {
+        ref.read(replyStateProvider(widget.postId).notifier).cancel();
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -57,6 +77,38 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  Future<void> _deleteComment(String commentId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete comment?'),
+        content: const Text('This cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    try {
+      await ref
+          .read(deleteCommentUseCaseProvider)
+          .call(widget.postId, commentId);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to delete comment: $e')));
+      }
     }
   }
 
@@ -78,6 +130,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       postDetailProvider(widget.postId, seed: widget.seed),
     );
     final isGuest = ref.watch(guestModeProvider);
+    final currentUid = ref.watch(currentUserProvider).asData?.value?.id;
+    final replyTarget = ref.watch(replyStateProvider(widget.postId));
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -125,10 +179,15 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         data: (post) => _PostBody(
           post: post,
           isGuest: isGuest,
+          currentUid: currentUid,
           onToggleLike: _toggleLike,
           commentController: _commentController,
           isSubmitting: _isSubmitting,
           onSubmitComment: _submitComment,
+          replyingToName: replyTarget?.name,
+          onReply: _startReply,
+          onCancelReply: _cancelReply,
+          onDeleteComment: _deleteComment,
         ),
       ),
     );
@@ -214,18 +273,28 @@ class _PostBody extends ConsumerWidget {
   const _PostBody({
     required this.post,
     required this.isGuest,
+    this.currentUid,
     required this.onToggleLike,
     required this.commentController,
     required this.isSubmitting,
     required this.onSubmitComment,
+    this.replyingToName,
+    required this.onReply,
+    required this.onCancelReply,
+    required this.onDeleteComment,
   });
 
   final Post post;
   final bool isGuest;
+  final String? currentUid;
   final VoidCallback onToggleLike;
   final TextEditingController commentController;
   final bool isSubmitting;
   final VoidCallback onSubmitComment;
+  final String? replyingToName;
+  final void Function(String commentId, String authorName) onReply;
+  final VoidCallback onCancelReply;
+  final void Function(String commentId) onDeleteComment;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -233,10 +302,18 @@ class _PostBody extends ConsumerWidget {
     final likeStatusAsync = ref.watch(userLikeStatusProvider(post.id));
 
     final isLiked = likeStatusAsync.value ?? false;
-    final comments = commentsAsync.value ?? [];
-    final hasComments = comments.isNotEmpty;
-    // item 0 = post header; 1..N = comment tiles; when empty: +1 for empty state
-    final itemCount = 1 + comments.length + (hasComments ? 0 : 1);
+    final allComments = commentsAsync.value ?? [];
+
+    // Group into top-level comments and a parentId → replies map.
+    final topLevel = allComments.where((c) => c.parentId == null).toList();
+    final repliesMap = <String, List<Comment>>{};
+    for (final c in allComments) {
+      if (c.parentId != null) {
+        repliesMap.putIfAbsent(c.parentId!, () => []).add(c);
+      }
+    }
+
+    final itemCount = 1 + topLevel.length + (topLevel.isEmpty ? 1 : 0);
 
     return Column(
       children: [
@@ -250,11 +327,22 @@ class _PostBody extends ConsumerWidget {
                   isLiked: isLiked,
                   isGuest: isGuest,
                   onToggleLike: onToggleLike,
-                  commentCount: comments.length,
+                  commentCount: allComments
+                      .where((c) => c.parentId == null)
+                      .length,
                 );
               }
-              if (!hasComments) return const _EmptyComments();
-              return CommentTile(comment: comments[index - 1]);
+              if (topLevel.isEmpty) return const _EmptyComments();
+              final c = topLevel[index - 1];
+              final isOwner = !isGuest && currentUid == c.authorId;
+              return CommentTile(
+                comment: c,
+                replies: repliesMap[c.id] ?? [],
+                currentUid: isGuest ? null : currentUid,
+                onReply: isGuest ? null : () => onReply(c.id, c.authorName),
+                onDelete: isOwner ? () => onDeleteComment(c.id) : null,
+                onDeleteReply: isGuest ? null : (id) => onDeleteComment(id),
+              );
             },
           ),
         ),
@@ -263,6 +351,8 @@ class _PostBody extends ConsumerWidget {
           controller: commentController,
           isSubmitting: isSubmitting,
           onSubmit: onSubmitComment,
+          replyingToName: replyingToName,
+          onCancelReply: onCancelReply,
         ),
       ],
     );
@@ -407,8 +497,13 @@ class _PostHeader extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // ── AI Summary ────────────────────────────────────────────────────
-          const _AiSummaryCard(),
-          const SizedBox(height: 16),
+          AiSummaryPanel(status: post.summaryStatus, summary: post.summary),
+          const SizedBox(height: 8),
+          if (post.summaryStatus == SummaryStatus.done) ...[
+            AskAiSection(postId: post.id, summary: post.summary!),
+            const SizedBox(height: 8),
+          ],
+          const SizedBox(height: 8),
 
           // ── DESCRIPTION ───────────────────────────────────────────────────
           _SectionLabel(label: 'DESCRIPTION'),
@@ -612,121 +707,6 @@ class _AuthorChip extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// AI Summary card — collapsible, amber accent border
-// ---------------------------------------------------------------------------
-
-class _AiSummaryCard extends StatefulWidget {
-  const _AiSummaryCard();
-
-  @override
-  State<_AiSummaryCard> createState() => _AiSummaryCardState();
-}
-
-class _AiSummaryCardState extends State<_AiSummaryCard> {
-  bool _expanded = true;
-
-  @override
-  Widget build(BuildContext context) {
-    final appColors = Theme.of(context).extension<AppColors>()!;
-    final scheme = Theme.of(context).colorScheme;
-
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: appColors.amberSubtle,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: appColors.amber.withValues(alpha: 0.35)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header — tappable to expand/collapse
-          InkWell(
-            onTap: () => setState(() => _expanded = !_expanded),
-            borderRadius: BorderRadius.vertical(
-              top: const Radius.circular(8),
-              bottom: _expanded ? Radius.zero : const Radius.circular(8),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.auto_awesome_rounded,
-                    size: 13,
-                    color: appColors.amber,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    'AI SUMMARY',
-                    style: AppTypography.mono(
-                      base: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: appColors.amber,
-                        letterSpacing: 0.6,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  Icon(
-                    _expanded ? Icons.expand_less : Icons.expand_more,
-                    size: 16,
-                    color: appColors.amber,
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          if (_expanded) ...[
-            Divider(height: 1, color: appColors.amber.withValues(alpha: 0.25)),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 4),
-              child: Text(
-                // TODO: wire to real AI summary API
-                'AI-generated summary not yet available for this post.',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: scheme.onSurface,
-                  height: 1.5,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
-              child: TextButton.icon(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.auto_awesome_rounded,
-                  size: 13,
-                  color: appColors.amber,
-                ),
-                label: Text(
-                  'ASK AI',
-                  style: AppTypography.mono(
-                    base: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: appColors.amber,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Empty comments placeholder
 // ---------------------------------------------------------------------------
 
@@ -759,12 +739,16 @@ class _CommentInputBar extends StatelessWidget {
     required this.controller,
     required this.isSubmitting,
     required this.onSubmit,
+    this.replyingToName,
+    required this.onCancelReply,
   });
 
   final bool isGuest;
   final TextEditingController controller;
   final bool isSubmitting;
   final VoidCallback onSubmit;
+  final String? replyingToName;
+  final VoidCallback onCancelReply;
 
   @override
   Widget build(BuildContext context) {
@@ -799,62 +783,82 @@ class _CommentInputBar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(
-            controller: controller,
-            decoration: InputDecoration(
-              hintText: 'Write a comment…',
-              hintStyle: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: appColors.textMuted),
-              fillColor: Theme.of(context).scaffoldBackgroundColor,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 10,
-              ),
-            ),
-            textInputAction: TextInputAction.newline,
-            maxLines: null,
-            minLines: 1,
-            keyboardType: TextInputType.multiline,
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(
-                'Shift + Enter to submit',
-                style: Theme.of(
-                  context,
-                ).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
-              ),
-              const Spacer(),
-              FilledButton(
-                onPressed: isSubmitting ? null : onSubmit,
-                style: FilledButton.styleFrom(
-                  backgroundColor: appColors.amber,
-                  foregroundColor: scheme.onPrimary,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 8,
-                  ),
-                  minimumSize: Size.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  textStyle: Theme.of(
+          if (replyingToName != null) ...[
+            Row(
+              children: [
+                Icon(Icons.reply, size: 14, color: appColors.textMuted),
+                const SizedBox(width: 4),
+                Text(
+                  'Replying to $replyingToName',
+                  style: Theme.of(
                     context,
-                  ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+                  ).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
                 ),
-                child: isSubmitting
-                    ? SizedBox(
-                        width: 14,
-                        height: 14,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: scheme.onPrimary,
-                        ),
-                      )
-                    : const Text('Post'),
+                const Spacer(),
+                GestureDetector(
+                  onTap: onCancelReply,
+                  child: Icon(
+                    Icons.close,
+                    size: 14,
+                    color: appColors.textMuted,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+          ],
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  decoration: InputDecoration(
+                    hintText: 'Write a comment…',
+                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: appColors.textMuted,
+                    ),
+                    fillColor: Theme.of(context).scaffoldBackgroundColor,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                  ),
+                  textInputAction: TextInputAction.newline,
+                  // Grow up to 5 lines, then scroll internally — prevents
+                  // the bar from pushing comments off-screen on long input.
+                  maxLines: 5,
+                  minLines: 1,
+                  keyboardType: TextInputType.multiline,
+                ),
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                height: 44,
+                width: 44,
+                child: FilledButton(
+                  onPressed: isSubmitting ? null : onSubmit,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: appColors.amber,
+                    foregroundColor: scheme.onPrimary,
+                    padding: EdgeInsets.zero,
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                  ),
+                  child: isSubmitting
+                      ? SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: scheme.onPrimary,
+                          ),
+                        )
+                      : const Icon(Icons.send, size: 18),
+                ),
               ),
             ],
           ),

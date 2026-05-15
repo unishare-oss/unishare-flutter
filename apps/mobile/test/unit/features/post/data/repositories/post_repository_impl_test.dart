@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:unishare_mobile/features/post/data/datasources/ai_summarize_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_firestore_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_storage_datasource.dart';
@@ -12,19 +13,49 @@ import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 // ---------------------------------------------------------------------------
-// Fake datasource — overrides watchFeed; _firestore is never accessed
+// Fakes
 // ---------------------------------------------------------------------------
+
+class _FakeAiSummarizeDatasource extends AiSummarizeDatasource {
+  Map<String, dynamic>? result;
+  Object? error;
+  String? capturedFileUrl;
+
+  _FakeAiSummarizeDatasource({this.result, this.error});
+
+  @override
+  Future<Map<String, dynamic>> call({
+    required String fileUrl,
+    required String filename,
+  }) async {
+    capturedFileUrl = fileUrl;
+    if (error != null) throw error!;
+    return result ?? {'summaryStatus': 'done', 'summary': 'Test summary'};
+  }
+}
 
 class _FakeDatasource extends PostFirestoreDatasource {
   final StreamController<List<Post>> _ctrl =
       StreamController<List<Post>>.broadcast();
 
-  void emit(List<Post> posts) => _ctrl.add(posts);
+  String? lastSummaryStatus;
+  String? lastSummary;
 
+  void emit(List<Post> posts) => _ctrl.add(posts);
   void close() => _ctrl.close();
 
   @override
   Stream<List<Post>> watchFeed({int limit = 20}) => _ctrl.stream;
+
+  @override
+  Future<void> updatePostSummary(
+    String postId,
+    String? summary,
+    String summaryStatus,
+  ) async {
+    lastSummary = summary;
+    lastSummaryStatus = summaryStatus;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -78,12 +109,14 @@ void main() {
     required FeedCache feedCache,
     required _FakeDatasource datasource,
     Duration cacheTtl = const Duration(minutes: 5),
+    _FakeAiSummarizeDatasource? aiDatasource,
   }) => PostRepositoryImpl(
     firestoreDatasource: datasource,
     storageDatasource: PostStorageDatasource(),
     draftBox: draftBox,
     feedCache: feedCache,
     cacheTtl: cacheTtl,
+    aiSummarizeDatasource: aiDatasource,
   );
 
   group('watchFeed — cache miss', () {
@@ -168,6 +201,83 @@ void main() {
       datasource.close();
       await sub.cancel();
     });
+  });
+
+  group('triggerSummarize', () {
+    test(
+      'success path — updatePostSummary called with worker response',
+      () async {
+        final ai = _FakeAiSummarizeDatasource(
+          result: {'summaryStatus': 'done', 'summary': 'Great summary'},
+        );
+        final ds = _FakeDatasource();
+        final repo = makeRepo(
+          feedCache: FeedCache(),
+          datasource: ds,
+          aiDatasource: ai,
+        );
+
+        repo.triggerSummarize(
+          'post-1',
+          'https://cdn.example.com/posts/file.pdf',
+          'file.pdf',
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        expect(ds.lastSummaryStatus, 'done');
+        expect(ds.lastSummary, 'Great summary');
+      },
+    );
+
+    test(
+      'error path — updatePostSummary called with null and error status',
+      () async {
+        final ai = _FakeAiSummarizeDatasource(
+          error: Exception('network failure'),
+        );
+        final ds = _FakeDatasource();
+        final repo = makeRepo(
+          feedCache: FeedCache(),
+          datasource: ds,
+          aiDatasource: ai,
+        );
+
+        repo.triggerSummarize(
+          'post-1',
+          'https://cdn.example.com/posts/file.pdf',
+          'file.pdf',
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        expect(ds.lastSummaryStatus, 'error');
+        expect(ds.lastSummary, isNull);
+      },
+    );
+
+    test(
+      'flagged response — updatePostSummary called with flagged status',
+      () async {
+        final ai = _FakeAiSummarizeDatasource(
+          result: {'summaryStatus': 'flagged', 'summary': null},
+        );
+        final ds = _FakeDatasource();
+        final repo = makeRepo(
+          feedCache: FeedCache(),
+          datasource: ds,
+          aiDatasource: ai,
+        );
+
+        repo.triggerSummarize(
+          'post-1',
+          'https://cdn.example.com/posts/file.pdf',
+          'file.pdf',
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        expect(ds.lastSummaryStatus, 'flagged');
+        expect(ds.lastSummary, isNull);
+      },
+    );
   });
 
   group('cache invalidation', () {

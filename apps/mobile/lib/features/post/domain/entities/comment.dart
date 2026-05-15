@@ -8,6 +8,7 @@ class Comment {
     required this.authorAvatar,
     required this.body,
     required this.createdAt,
+    this.parentId,
   });
 
   final String id;
@@ -16,4 +17,7 @@ class Comment {
   final String authorAvatar;
   final String body;
   final DateTime createdAt;
+
+  /// Non-null for replies; null for top-level comments.
+  final String? parentId;
 }

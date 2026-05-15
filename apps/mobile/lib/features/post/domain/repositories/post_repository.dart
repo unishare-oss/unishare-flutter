@@ -10,6 +10,12 @@ abstract interface class PostRepository {
   Stream<List<Post>> watchFeed({int limit = 20});
   Stream<Post> watchPost(String postId);
   Stream<List<Post>> watchPostsByAuthor(String authorId, {int limit = 50});
+
+  /// Unbounded count of posts by [authorId] using a Firestore aggregation.
+  /// Cheap (no doc fetch) and reflects the true total — unlike
+  /// `watchPostsByAuthor(...).length` which is capped by the page limit.
+  Future<int> countPostsByAuthor(String authorId);
+
   Future<void> saveDraft(PostDraft draft);
   Future<void> removeDraft(String draftId);
   Future<List<PostDraft>> loadDraftQueue();

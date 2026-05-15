@@ -1,0 +1,115 @@
+name: Cut Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: "Which part of the semver version to bump"
+        required: true
+        type: choice
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+      dry_run:
+        description: "Compute the new tag but do not push"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cut-release
+  cancel-in-progress: false
+
+jobs:
+  cut:
+    name: Bump version & tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (full history)
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git identity
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Read latest release tag
+        id: current
+        run: |
+          set -euo pipefail
+          tag=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -1)
+          if [[ -z "$tag" ]]; then
+            tag='v0.0.0'
+            echo "No prior tags; starting from v0.0.0"
+          fi
+          version="${tag#v}"
+          echo "tag=$tag"         >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Current: $tag"
+
+      - name: Compute next version
+        id: next
+        run: |
+          set -euo pipefail
+          IFS='.' read -r MAJ MIN PAT <<< '${{ steps.current.outputs.version }}'
+          case '${{ inputs.bump_type }}' in
+            major) MAJ=$((MAJ + 1)); MIN=0; PAT=0 ;;
+            minor) MIN=$((MIN + 1)); PAT=0 ;;
+            patch) PAT=$((PAT + 1)) ;;
+            *)     echo "::error::Unknown bump_type"; exit 1 ;;
+          esac
+          NEW_VERSION="$MAJ.$MIN.$PAT"
+          TAG="v$NEW_VERSION"
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG"             >> "$GITHUB_OUTPUT"
+          echo "Next:    $TAG"
+
+      - name: Fail if tag already exists
+        run: |
+          set -euo pipefail
+          tag='${{ steps.next.outputs.tag }}'
+          if git rev-parse "$tag" >/dev/null 2>&1; then
+            echo "::error::Tag $tag already exists locally"
+            exit 1
+          fi
+          if git ls-remote --tags origin "refs/tags/$tag" | grep -q .; then
+            echo "::error::Tag $tag already exists on origin"
+            exit 1
+          fi
+
+      - name: Tag and push
+        if: ${{ !inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          tag='${{ steps.next.outputs.tag }}'
+          ver='${{ steps.next.outputs.version }}'
+          git tag -a "$tag" -m "Release $ver"
+          git push origin "$tag"
+
+      - name: Summary
+        run: |
+          {
+            echo "## Release cut"
+            echo ""
+            echo "| Field    | Value |"
+            echo "| -------- | ----- |"
+            echo "| Bump     | \`${{ inputs.bump_type }}\` |"
+            echo "| Previous | \`${{ steps.current.outputs.tag }}\` |"
+            echo "| New      | \`${{ steps.next.outputs.tag }}\` |"
+            echo "| Dry run  | \`${{ inputs.dry_run }}\` |"
+            echo ""
+            if [[ '${{ inputs.dry_run }}' == 'true' ]]; then
+              echo "Dry run only — no tag pushed."
+            else
+              echo "Tag pushed. The **Release** workflow will run for \`${{ steps.next.outputs.tag }}\` next."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -51,45 +51,47 @@ class _AttachmentRow extends StatelessWidget {
     final appColors = Theme.of(context).extension<AppColors>()!;
     final scheme = Theme.of(context).colorScheme;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Material(
         color: scheme.surfaceContainerHighest,
-        border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(6),
-      ),
-      child: Row(
-        children: [
-          _LeadingIcon(url: url, type: type, appColors: appColors),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              _filename(url),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: scheme.onSurface,
-                fontWeight: FontWeight.w500,
-              ),
+        child: InkWell(
+          onTap: () => _onView(context),
+          borderRadius: BorderRadius.circular(6),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).dividerColor),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Row(
+              children: [
+                _LeadingIcon(url: url, type: type, appColors: appColors),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    _filename(url),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: scheme.onSurface,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                _RowIconButton(
+                  icon: Icons.download_rounded,
+                  color: appColors.textMuted,
+                  onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Download coming soon')),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 4),
-          // View action
-          _RowIconButton(
-            icon: Icons.visibility_outlined,
-            color: appColors.textMuted,
-            onTap: () => _onView(context),
-          ),
-          // Download action
-          _RowIconButton(
-            icon: Icons.download_rounded,
-            color: appColors.textMuted,
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Download coming soon')),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

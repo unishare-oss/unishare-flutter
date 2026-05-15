@@ -1009,3 +1009,121 @@ Summary: 1 file changed, 1 insertion(+), 1 deletion(-)
   [10:16] Write: apps/mobile/lib/features/requests/presentation/widgets/suggestion_card.dart
   [10:33] Edit: apps/mobile/lib/features/post/presentation/providers/my_posts_provider.dart
   [10:57] Edit: apps/mobile/lib/features/post/presentation/providers/my_posts_provider.dart
+  [12:14] Write: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+
+2026-05-13
+  [12:48] Write: apps/mobile/test/unit/features/feed/providers/feed_filter_provider_test.dart
+  [12:48] Write: apps/mobile/lib/features/feed/presentation/providers/feed_filter_provider.dart
+  [12:53] Write: apps/mobile/test/widget/features/departments/screens/departments_screen_test.dart
+  [13:03] Edit: apps/mobile/lib/core/router/router.dart
+  [13:03] Edit: apps/mobile/lib/core/router/router.dart
+  [13:03] Write: apps/mobile/test/widget/features/departments/screens/courses_screen_test.dart
+  [13:03] Write: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+  [13:05] Write: apps/mobile/test/widget/features/feed/feed_filter_drawer_test.dart
+  [13:05] Write: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_empty_state_widget.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [13:15] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [14:25] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+  [14:29] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+  [14:30] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+
+2026-05-14
+  [13:25] Edit: apps/mobile/lib/features/post/data/datasources/comment_firestore_datasource.dart
+  [13:25] Edit: apps/mobile/lib/features/post/data/datasources/comment_firestore_datasource.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/providers/comments_provider.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:25] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:26] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:26] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [13:26] Edit: apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
+  [13:26] Edit: apps/mobile/lib/features/post/presentation/widgets/comment_tile.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+  [14:39] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_summary_panel.dart
+  [14:39] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [14:40] Edit: apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  [14:40] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:40] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:41] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [14:41] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:13] Edit: apps/mobile/lib/features/post/presentation/providers/ask_ai_repository_provider.dart
+  [15:13] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+  [15:14] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:14] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:14] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:14] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [15:14] Write: apps/mobile/test/widget/features/post/widgets/ai_message_bubble_test.dart
+  [15:14] Write: apps/mobile/test/widget/features/post/widgets/ai_summary_panel_test.dart
+  [15:14] Write: apps/mobile/test/widget/features/post/widgets/ask_ai_section_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [15:15] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [20:30] Edit: apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+Files:
+  ~ apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+Summary:  1 file changed, 7 insertions(+), 3 deletions(-)
+
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+  [20:36] Edit: apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+Files:
+  ~ apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+  ~ apps/mobile/lib/features/post/presentation/widgets/ai_message_bubble.dart
+Summary:  2 files changed, 10 insertions(+), 6 deletions(-)
+
+
+2026-05-15
+  [12:28] Write: apps/mobile/lib/features/post/data/datasources/ask_ai_datasource.dart
+  [12:28] Edit: apps/mobile/lib/features/post/domain/repositories/ask_ai_repository.dart
+  [12:28] Edit: apps/mobile/lib/features/post/domain/usecases/ask_ai.dart
+  [12:28] Write: apps/mobile/lib/features/post/data/repositories/ask_ai_repository_impl.dart
+  [12:28] Edit: apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+  [12:58] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [12:58] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [12:58] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [12:58] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  [12:58] Edit: apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+Summary:  1 file changed, 6 insertions(+), 6 deletions(-)
+
+  [13:13] Edit: apps/mobile/lib/features/post/data/repositories/ask_ai_repository_impl.dart
+  [13:13] Edit: apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
+  [13:23] Edit: apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  ~ apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+Summary:  2 files changed, 9 insertions(+), 10 deletions(-)
+
+  [14:07] Edit: apps/mobile/lib/features/auth/data/datasources/firestore_user_datasource.dart
+  [14:07] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:07] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:07] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:08] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:33] Write: apps/mobile/lib/features/profile/presentation/widgets/profile_field_label.dart
+  [14:33] Write: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:34] Write: apps/mobile/lib/features/profile/presentation/widgets/profile_form_card.dart
+  [14:34] Write: apps/mobile/lib/features/profile/presentation/widgets/change_password_card.dart
+  [14:34] Write: apps/mobile/lib/features/profile/presentation/widgets/connected_accounts_card.dart
+  [14:34] Write: apps/mobile/lib/features/profile/presentation/widgets/appearance_section.dart
+  [14:35] Write: apps/mobile/lib/features/profile/presentation/widgets/danger_zone_card.dart
+  [14:35] Write: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [14:36] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:42] Write: apps/mobile/lib/features/profile/presentation/widgets/appearance_section.dart
+  [18:11] Edit: apps/mobile/pubspec.yaml
+  [18:11] Edit: apps/mobile/lib/main.dart
+  [18:11] Edit: apps/mobile/lib/main.dart

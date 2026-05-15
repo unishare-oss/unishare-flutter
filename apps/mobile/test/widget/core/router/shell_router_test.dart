@@ -101,7 +101,8 @@ void main() {
       _router(tester).go('/nonexistent-xyz');
       await tester.pumpAndSettle();
       expect(find.byType(MainNavBar), findsOneWidget);
-      expect(find.text('Feed'), findsOneWidget);
+      // 'Feed' appears as both screen title and nav tab label.
+      expect(find.text('Feed'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('back press on POSTS branch navigates to FEED', (tester) async {
@@ -115,7 +116,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      expect(find.text('Feed'), findsOneWidget);
+      // 'My Posts' is gone (back press worked) and 'Feed' page is showing.
+      expect(find.text('My Posts'), findsNothing);
+      expect(find.text('Feed'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('tapping active FEED tab does not throw', (tester) async {
