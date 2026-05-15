@@ -21,6 +21,7 @@ class AskAi extends _$AskAi {
     final userMsg = AiMessage(content: question, isUser: true);
     const pending = AiMessage(content: '', isUser: false, isPending: true);
 
+    final assistantIndex = history.length + 1;
     state = AsyncData([...history, userMsg, pending]);
 
     try {
@@ -30,15 +31,17 @@ class AskAi extends _$AskAi {
         history: [...history, userMsg],
         question: question,
       );
-      final reply = await _useCase.call(params);
-      final updated = <AiMessage>[...(state.value ?? [])];
-      updated[updated.length - 1] = reply;
-      state = AsyncData(updated);
+      await for (final msg in _useCase.call(params)) {
+        final current = List<AiMessage>.from(state.value ?? []);
+        if (current.isNotEmpty) {
+          current[current.length - 1] = msg;
+          state = AsyncData(current);
+        }
+      }
     } on AskAiException catch (e, st) {
-      final withoutPending = (state.value ?? [])
-          .where((m) => !m.isPending)
-          .toList();
-      state = AsyncData(withoutPending);
+      final current = List<AiMessage>.from(state.value ?? []);
+      if (assistantIndex < current.length) current.removeAt(assistantIndex);
+      state = AsyncData(current);
       Error.throwWithStackTrace(e, st);
     }
   }

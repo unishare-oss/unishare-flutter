@@ -2,17 +2,19 @@ import 'package:unishare_mobile/features/post/data/datasources/ask_ai_datasource
 import 'package:unishare_mobile/features/post/domain/entities/ai_message.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/ask_ai_repository.dart';
 
+const _offTopicReply = "I can only answer questions about this document.";
+
 class AskAiRepositoryImpl implements AskAiRepository {
   const AskAiRepositoryImpl(this._datasource);
 
   final AskAiDatasource _datasource;
 
   @override
-  Future<AiMessage> ask({
+  Stream<AiMessage> ask({
     required String summary,
     required List<AiMessage> history,
     required String question,
-  }) async {
+  }) async* {
     final serialized = history
         .where((m) => !m.isPending)
         .map(
@@ -24,17 +26,33 @@ class AskAiRepositoryImpl implements AskAiRepository {
         .toList();
 
     try {
-      final data = await _datasource.call(
+      String accumulated = '';
+
+      await for (final event in _datasource.stream(
         summary: summary,
         question: question,
         history: serialized,
-      );
-      return AiMessage(
-        content: data['reply'] as String,
-        isUser: false,
-        isOffTopic: data['isOffTopic'] as bool? ?? false,
-      );
+      )) {
+        if (event.containsKey('error')) {
+          throw Exception(event['error']);
+        } else if (event.containsKey('t')) {
+          accumulated += event['t'] as String;
+          yield AiMessage(content: accumulated, isUser: false);
+        } else if (event['done'] == true) {
+          final isOffTopic = event['isOffTopic'] as bool? ?? false;
+          if (isOffTopic) {
+            yield AiMessage(
+              content: _offTopicReply,
+              isUser: false,
+              isOffTopic: true,
+            );
+          } else if (accumulated.isEmpty) {
+            yield const AiMessage(content: '…', isUser: false);
+          }
+        }
+      }
     } catch (e) {
+      if (e is AskAiException) rethrow;
       throw AskAiException(e.toString());
     }
   }

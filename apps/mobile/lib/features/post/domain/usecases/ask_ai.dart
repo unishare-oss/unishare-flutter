@@ -20,7 +20,7 @@ class AskAiUseCase {
 
   final AskAiRepository _repository;
 
-  Future<AiMessage> call(AskAiParams params) => _repository.ask(
+  Stream<AiMessage> call(AskAiParams params) => _repository.ask(
     summary: params.summary,
     history: params.history,
     question: params.question,

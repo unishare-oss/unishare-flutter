@@ -326,7 +326,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             // Full name
             AuthTextField(
               label: 'Full name',
-              hint: 'Full name',
+              hint: 'Jane Smith',
               controller: _nameController,
               keyboardType: TextInputType.name,
               textInputAction: TextInputAction.next,
@@ -418,7 +418,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             // Email
             AuthTextField(
               label: 'Email',
-              hint: 'Email',
+              hint: 'you@university.edu',
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
@@ -436,7 +436,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             // Password (min 8 chars)
             AuthTextField(
               label: 'Password',
-              hint: 'Password',
+              hint: 'Min. 8 characters',
               controller: _passwordController,
               obscureText: true,
               textInputAction: TextInputAction.next,
@@ -454,7 +454,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             // Confirm password
             AuthTextField(
               label: 'Confirm password',
-              hint: 'Confirm password',
+              hint: 'Repeat your password',
               controller: _confirmPasswordController,
               obscureText: true,
               textInputAction: TextInputAction.done,
@@ -515,7 +515,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             // Sign-in fields: Email + Password
             AuthTextField(
               label: 'Email',
-              hint: 'Email',
+              hint: 'you@university.edu',
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
@@ -531,7 +531,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             const SizedBox(height: 12),
             AuthTextField(
               label: 'Password',
-              hint: 'Password',
+              hint: 'Your password',
               controller: _passwordController,
               obscureText: true,
               textInputAction: TextInputAction.done,
