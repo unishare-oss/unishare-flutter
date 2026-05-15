@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-import 'package:unishare_mobile/core/router/router.dart';
+import 'package:unishare_mobile/core/router/router.dart'
+    show kSavedBranchIndex, kDepartmentsBranchIndex, NavTab;
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class GuestNavBar extends StatelessWidget {
@@ -10,11 +10,13 @@ class GuestNavBar extends StatelessWidget {
     required this.activeIndex,
     required this.onFeedTap,
     required this.onSavedTap,
+    required this.onDepartmentsTap,
   });
 
   final int activeIndex;
   final VoidCallback onFeedTap;
   final VoidCallback onSavedTap;
+  final VoidCallback onDepartmentsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +61,13 @@ class GuestNavBar extends StatelessWidget {
               ),
               Expanded(
                 child: _GuestNavItem(
-                  icon: Icons.person_outline,
-                  label: 'SIGN IN',
-                  semanticsLabel: 'Sign in',
-                  isActive: false,
-                  onTap: () => context.go('/welcome'),
+                  icon: activeIndex == kDepartmentsBranchIndex
+                      ? Icons.school
+                      : Icons.school_outlined,
+                  label: 'DEPARTMENT',
+                  semanticsLabel: 'Departments',
+                  isActive: activeIndex == kDepartmentsBranchIndex,
+                  onTap: onDepartmentsTap,
                   colors: colors,
                 ),
               ),

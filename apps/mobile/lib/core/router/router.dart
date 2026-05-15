@@ -33,6 +33,7 @@ part 'router.g.dart';
 /// Branch index of the guest /saved route in the StatefulShellRoute.
 /// Declared here to avoid a circular import between GuestNavBar and GuestShellScaffold.
 const kSavedBranchIndex = 4;
+const kDepartmentsBranchIndex = 5;
 
 // Simple in-memory flag — not a Riverpod provider to keep it out of codegen.
 bool academicProfileSessionDismissed = false;
@@ -100,8 +101,8 @@ class _RouterNotifier extends ChangeNotifier {
       return null;
     }
 
-    // 2. Authenticated on an auth route → go to /feed
-    if (isAuthenticated && authRoutes.contains(currentPath)) {
+    // 2. Authenticated or guest on an auth route → go to /feed
+    if ((isAuthenticated || isGuest) && authRoutes.contains(currentPath)) {
       return '/feed';
     }
 
@@ -124,6 +125,7 @@ class _RouterNotifier extends ChangeNotifier {
       '/notifications',
       '/more',
       '/saved',
+      '/departments',
       '/preview',
       '/upload-progress',
     };
@@ -281,6 +283,26 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: '/saved',
                 builder: (context, state) => const SavedScreen(),
+              ),
+            ],
+          ),
+          // Branch 5 — DEPARTMENTS (guest-accessible exploration)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/departments',
+                builder: (context, state) =>
+                    const DepartmentsScreen(routeBase: '/departments'),
+                routes: [
+                  GoRoute(
+                    path: ':deptId',
+                    builder: (context, state) => CoursesScreen(
+                      deptId: state.pathParameters['deptId']!,
+                      departmentName:
+                          state.uri.queryParameters['name'] ?? 'Courses',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

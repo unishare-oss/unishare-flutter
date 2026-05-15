@@ -310,6 +310,9 @@ class _PostHeader extends ConsumerWidget {
             commentsCount: 0,
           ),
         );
+        if (context.mounted && isGuest) {
+          _showGuestSaveBanner(context, ref);
+        }
       }
     } catch (_) {
       if (context.mounted) {
@@ -318,6 +321,50 @@ class _PostHeader extends ConsumerWidget {
         );
       }
     }
+  }
+
+  void _showGuestSaveBanner(BuildContext context, WidgetRef ref) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentMaterialBanner()
+      ..showMaterialBanner(
+        MaterialBanner(
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+          content: Text(
+            'Sign up to sync your saves across devices',
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+          ),
+          leading: Icon(Icons.bookmark, color: ac.amber, size: 18),
+          backgroundColor: Theme.of(context).cardColor,
+          dividerColor: Colors.transparent,
+          actions: [
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                ref.read(guestModeProvider.notifier).exit();
+                context.go('/welcome');
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: ac.amber,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+              ),
+              child: const Text('Sign up'),
+            ),
+            TextButton(
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+              style: TextButton.styleFrom(
+                foregroundColor: ac.mutedForeground,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+              ),
+              child: const Text('Dismiss'),
+            ),
+          ],
+        ),
+      );
   }
 
   @override

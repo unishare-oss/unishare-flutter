@@ -6,7 +6,9 @@ import 'package:unishare_mobile/features/auth/presentation/providers/departments
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class DepartmentsScreen extends ConsumerWidget {
-  const DepartmentsScreen({super.key});
+  const DepartmentsScreen({super.key, this.routeBase = '/more/departments'});
+
+  final String routeBase;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,7 +21,7 @@ class DepartmentsScreen extends ConsumerWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Departments'),
-        leading: const BackButton(),
+        automaticallyImplyLeading: false,
       ),
       body: departmentsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -48,7 +50,7 @@ class DepartmentsScreen extends ConsumerWidget {
               final dept = departments[index];
               return GestureDetector(
                 onTap: () => context.push(
-                  '/more/departments/${dept.id}'
+                  '$routeBase/${dept.id}'
                   '?name=${Uri.encodeComponent(dept.name)}',
                 ),
                 child: _DepartmentTile(name: dept.name),

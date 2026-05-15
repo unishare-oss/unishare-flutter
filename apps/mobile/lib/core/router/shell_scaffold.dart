@@ -11,7 +11,7 @@ class ShellScaffold extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
   static final List<GlobalKey<State>> scrollTargetKeys = List.generate(
-    NavTab.values.length + 1, // auth tabs + guest /saved branch
+    NavTab.values.length + 2, // auth tabs + guest /saved + guest /departments
     (_) => GlobalKey<State>(),
   );
 

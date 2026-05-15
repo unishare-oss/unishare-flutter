@@ -27,6 +27,7 @@ class GuestShellScaffold extends StatelessWidget {
           activeIndex: navigationShell.currentIndex,
           onFeedTap: () => _handleTap(NavTab.feed.index),
           onSavedTap: () => _handleTap(kSavedBranchIndex),
+          onDepartmentsTap: () => _handleTap(kDepartmentsBranchIndex),
         ),
       ),
     );
