@@ -14,7 +14,7 @@ class ProfileFormState {
     this.departmentId,
     this.enrollmentYear,
     this.saving = false,
-    this.initialized = false,
+    this.seededFromUid,
   });
 
   final String? universityId;
@@ -22,16 +22,18 @@ class ProfileFormState {
   final int? enrollmentYear;
   final bool saving;
 
-  /// True once the form has been seeded from the loaded [AppUser]. Prevents
-  /// re-initialization clobbering user edits when the screen rebuilds.
-  final bool initialized;
+  /// UID of the [AppUser] the form was last seeded from. Used so the form
+  /// re-initializes when the signed-in user changes — without this, a
+  /// sign-out/sign-in-as-different-user flow would leave stale form state.
+  /// Null means "never seeded".
+  final String? seededFromUid;
 
   ProfileFormState copyWith({
     Object? universityId = _sentinel,
     Object? departmentId = _sentinel,
     Object? enrollmentYear = _sentinel,
     bool? saving,
-    bool? initialized,
+    Object? seededFromUid = _sentinel,
   }) {
     return ProfileFormState(
       universityId: identical(universityId, _sentinel)
@@ -44,7 +46,9 @@ class ProfileFormState {
           ? this.enrollmentYear
           : enrollmentYear as int?,
       saving: saving ?? this.saving,
-      initialized: initialized ?? this.initialized,
+      seededFromUid: identical(seededFromUid, _sentinel)
+          ? this.seededFromUid
+          : seededFromUid as String?,
     );
   }
 
@@ -56,15 +60,17 @@ class ProfileForm extends _$ProfileForm {
   @override
   ProfileFormState build() => const ProfileFormState();
 
-  /// Seed once from the loaded user. Subsequent calls are no-ops so user
-  /// edits aren't overwritten when the auth stream re-emits.
+  /// Seed from the loaded user. Re-seeds when [user]'s uid differs from the
+  /// previously seeded uid (e.g., user signed out and signed in as someone
+  /// else). Subsequent calls with the same uid are no-ops so user edits
+  /// aren't overwritten when the auth stream re-emits.
   void initFromUser(AppUser user) {
-    if (state.initialized) return;
-    state = state.copyWith(
+    if (state.seededFromUid == user.id) return;
+    state = ProfileFormState(
       universityId: user.universityId,
       departmentId: user.departmentId,
       enrollmentYear: user.enrollmentYear,
-      initialized: true,
+      seededFromUid: user.id,
     );
   }
 

@@ -27,7 +27,11 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _nameCtrl = TextEditingController();
   final _bioCtrl = TextEditingController();
-  bool _controllersSeeded = false;
+
+  /// UID the text controllers were last seeded from. When the signed-in user
+  /// changes (sign-out → sign-in as someone else) we re-seed so stale text
+  /// doesn't survive the account switch.
+  String? _seededUid;
 
   @override
   void dispose() {
@@ -37,8 +41,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _seedControllers(AppUser user) {
-    if (_controllersSeeded) return;
-    _controllersSeeded = true;
+    if (_seededUid == user.id) return;
+    _seededUid = user.id;
     _nameCtrl.text = user.name;
     _bioCtrl.text = user.bio ?? '';
   }
