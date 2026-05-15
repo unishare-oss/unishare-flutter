@@ -14,18 +14,23 @@ class AppearanceSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
-    final selectedThemeId = ref.watch(themeProvider);
+    final selectedId = ref.watch(themeProvider);
     final fontSize = ref.watch(fontSizeProvider);
-
     final themes = AppThemes.all.values.toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Text(
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cs.surface,
+        border: Border.all(color: theme.dividerColor),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
             'APPEARANCE',
             style: AppTypography.mono(
               base: theme.textTheme.labelSmall?.copyWith(
@@ -35,209 +40,333 @@ class AppearanceSection extends ConsumerWidget {
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        Text('Theme', style: theme.textTheme.titleMedium),
-        const SizedBox(height: 12),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 1.4,
+          const SizedBox(height: 8),
+          Divider(color: theme.dividerColor),
+          const SizedBox(height: 14),
+          Text(
+            'THEME',
+            style: AppTypography.mono(
+              base: theme.textTheme.labelSmall?.copyWith(
+                color: ac.textMuted,
+                letterSpacing: 0.6,
+              ),
+            ),
           ),
-          itemCount: themes.length,
-          itemBuilder: (context, i) {
-            final t = themes[i];
-            final isSelected = t.id == selectedThemeId;
-            return GestureDetector(
-              onTap: () => ref.read(themeProvider.notifier).setTheme(t.id),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: isSelected ? ac.amber : theme.dividerColor,
-                    width: isSelected ? 2 : 1,
+          const SizedBox(height: 10),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 0.85,
+            ),
+            itemCount: themes.length,
+            itemBuilder: (_, i) {
+              final t = themes[i];
+              final isSelected = t.id == selectedId;
+              return GestureDetector(
+                onTap: () => ref.read(themeProvider.notifier).setTheme(t.id),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: isSelected ? ac.amber : theme.dividerColor,
+                      width: isSelected ? 2 : 1,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: ac.amber.withValues(alpha: 0.28),
+                              blurRadius: 10,
+                              spreadRadius: 1,
+                            ),
+                          ]
+                        : null,
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: ThemePreview(themeData: t)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 6,
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(9),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        CustomPaint(painter: _ThemePreviewPainter(t)),
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 4,
+                            ),
+                            color: t.card.withValues(alpha: 0.92),
                             child: Text(
                               t.name,
-                              style: theme.textTheme.labelMedium,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: t.foreground,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.1,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Icon(
-                            isSelected
-                                ? Icons.radio_button_checked
-                                : Icons.radio_button_unchecked,
-                            size: 16,
-                            color: isSelected ? ac.amber : ac.textMuted,
+                        ),
+                        if (isSelected)
+                          Positioned(
+                            top: 5,
+                            right: 5,
+                            child: Container(
+                              width: 16,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: ac.amber,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.check,
+                                size: 10,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-        const SizedBox(height: 24),
-        Text('Font Size', style: theme.textTheme.titleMedium),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: FontSizeButton(
-                label: 'a',
-                selected: fontSize == AppFontSize.normal,
-                onTap: () =>
-                    ref.read(fontSizeProvider.notifier).set(AppFontSize.normal),
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'TEXT SIZE',
+            style: AppTypography.mono(
+              base: theme.textTheme.labelSmall?.copyWith(
+                color: ac.textMuted,
+                letterSpacing: 0.6,
               ),
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: FontSizeButton(
-                label: 'A',
-                large: true,
-                selected: fontSize == AppFontSize.large,
-                onTap: () =>
-                    ref.read(fontSizeProvider.notifier).set(AppFontSize.large),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        Text(
-          fontSize == AppFontSize.normal ? 'Normal' : 'Normal-Large',
-          style: theme.textTheme.bodySmall?.copyWith(color: ac.textMuted),
-        ),
-      ],
+          ),
+          const SizedBox(height: 10),
+          _FontSizeStepper(
+            step: fontSize,
+            onIncrement: () => ref.read(fontSizeProvider.notifier).increment(),
+            onDecrement: () => ref.read(fontSizeProvider.notifier).decrement(),
+          ),
+        ],
+      ),
     );
   }
 }
 
 // ---------------------------------------------------------------------------
-// Theme preview
+// Theme preview painter
 // ---------------------------------------------------------------------------
 
-class ThemePreview extends StatelessWidget {
-  const ThemePreview({super.key, required this.themeData});
-  final AppThemeData themeData;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
-      child: CustomPaint(painter: ThemePreviewPainter(themeData)),
-    );
-  }
-}
-
-class ThemePreviewPainter extends CustomPainter {
-  ThemePreviewPainter(this.t);
+class _ThemePreviewPainter extends CustomPainter {
+  const _ThemePreviewPainter(this.t);
   final AppThemeData t;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final bg = Paint()..color = t.background;
-    canvas.drawRect(Offset.zero & size, bg);
+    final w = size.width;
+    final h = size.height;
 
-    final sidebarW = size.width * 0.28;
-    final sidebar = Paint()..color = t.muted;
-    canvas.drawRect(Rect.fromLTWH(0, 0, sidebarW, size.height), sidebar);
+    // Background
+    canvas.drawRect(Offset.zero & size, Paint()..color = t.background);
 
-    final accentP = Paint()..color = t.amber;
-    final r = Paint()
-      ..color = t.mutedForeground.withValues(alpha: 0.5)
-      ..style = PaintingStyle.fill;
-
-    final lx = sidebarW + 8;
-    final lw = size.width - lx - 8;
-    for (int i = 0; i < 3; i++) {
-      final y = 8.0 + i * 10;
-      final w = i == 0 ? lw : lw * (i == 1 ? 0.7 : 0.5);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(lx, y, w, 4),
-          const Radius.circular(2),
-        ),
-        r,
-      );
-    }
+    // Top nav bar
+    final navH = h * 0.17;
+    canvas.drawRect(Rect.fromLTWH(0, 0, w, navH), Paint()..color = t.card);
+    // Nav title pill
     canvas.drawRRect(
       RRect.fromRectAndRadius(
-        Rect.fromLTWH(lx, 38, lw * 0.4, 5),
+        Rect.fromLTWH(w * 0.25, navH * 0.3, w * 0.5, navH * 0.38),
         const Radius.circular(2),
       ),
-      accentP,
+      Paint()..color = t.foreground.withValues(alpha: 0.85),
     );
 
-    final dot = Paint()..color = t.amber;
+    // Content card
+    final cardTop = h * 0.25;
+    final cardH = h * 0.47;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(w * 0.08, cardTop, w * 0.84, cardH),
+        const Radius.circular(5),
+      ),
+      Paint()..color = t.card,
+    );
+
+    // Text lines
+    final lx = w * 0.15;
+    final lw = w * 0.7;
+    final lineColor = t.mutedForeground.withValues(alpha: 0.55);
+    final widths = [lw, lw * 0.72, lw * 0.5];
     for (int i = 0; i < 3; i++) {
-      canvas.drawCircle(Offset(sidebarW * 0.3, 12.0 + i * 14), 3, dot);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(
+            lx,
+            cardTop + h * 0.07 + i * h * 0.1,
+            widths[i],
+            h * 0.045,
+          ),
+          const Radius.circular(2),
+        ),
+        Paint()..color = lineColor,
+      );
+    }
+
+    // Accent button
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(lx, cardTop + cardH - h * 0.12, lw * 0.5, h * 0.065),
+        const Radius.circular(3),
+      ),
+      Paint()..color = t.amber,
+    );
+
+    // Bottom nav dots
+    final dotY = h * 0.915;
+    for (int i = 0; i < 3; i++) {
+      final dotX = w * (0.3 + i * 0.2);
+      final isActive = i == 1;
+      canvas.drawCircle(
+        Offset(dotX, dotY),
+        isActive ? 2.5 : 1.8,
+        Paint()
+          ..color = isActive
+              ? t.amber
+              : t.mutedForeground.withValues(alpha: 0.4),
+      );
     }
   }
 
   @override
-  bool shouldRepaint(ThemePreviewPainter old) => old.t != t;
+  bool shouldRepaint(_ThemePreviewPainter old) => old.t != t;
 }
 
 // ---------------------------------------------------------------------------
-// Font size button
+// Font size stepper
 // ---------------------------------------------------------------------------
 
-class FontSizeButton extends StatelessWidget {
-  const FontSizeButton({
-    super.key,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-    this.large = false,
+class _FontSizeStepper extends StatelessWidget {
+  const _FontSizeStepper({
+    required this.step,
+    required this.onIncrement,
+    required this.onDecrement,
   });
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-  final bool large;
+
+  final int step;
+  final VoidCallback onIncrement;
+  final VoidCallback onDecrement;
 
   @override
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
     final theme = Theme.of(context);
+    final atMin = step <= 0;
+    final atMax = step >= fontSizeScales.length - 1;
+    final previewSize = 14.0 + step * 3.0;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        border: Border.all(color: theme.dividerColor),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          _StepButton(
+            icon: Icons.remove,
+            onTap: atMin ? null : onDecrement,
+            ac: ac,
+            theme: theme,
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 150),
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                    fontSize: previewSize,
+                    fontWeight: FontWeight.w600,
+                    color: ac.amber,
+                  ),
+                  child: const Text('Aa'),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(fontSizeScales.length, (i) {
+                    final active = i == step;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      margin: const EdgeInsets.symmetric(horizontal: 2),
+                      width: active ? 14 : 5,
+                      height: 5,
+                      decoration: BoxDecoration(
+                        color: active ? ac.amber : theme.dividerColor,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    );
+                  }),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  fontSizeLabels[step],
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: ac.textMuted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          _StepButton(
+            icon: Icons.add,
+            onTap: atMax ? null : onIncrement,
+            ac: ac,
+            theme: theme,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StepButton extends StatelessWidget {
+  const _StepButton({
+    required this.icon,
+    required this.onTap,
+    required this.ac,
+    required this.theme,
+  });
+
+  final IconData icon;
+  final VoidCallback? onTap;
+  final AppColors ac;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onTap != null;
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 52,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        width: 36,
+        height: 36,
         decoration: BoxDecoration(
-          color: selected ? ac.amberSubtle : null,
-          border: Border.all(
-            color: selected ? ac.amber : theme.dividerColor,
-            width: selected ? 2 : 1,
-          ),
-          borderRadius: BorderRadius.circular(6),
+          color: enabled
+              ? ac.amberSubtle
+              : theme.dividerColor.withValues(alpha: 0.3),
+          shape: BoxShape.circle,
+          border: Border.all(color: enabled ? ac.amber : theme.dividerColor),
         ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontSize: large ? 22 : 14,
-            color: selected ? ac.amber : null,
-          ),
-        ),
+        child: Icon(icon, size: 16, color: enabled ? ac.amber : ac.textMuted),
       ),
     );
   }

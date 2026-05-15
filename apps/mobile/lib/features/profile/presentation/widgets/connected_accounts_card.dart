@@ -44,7 +44,11 @@ class ConnectedAccountsCard extends StatelessWidget {
 }
 
 class AccountRow extends StatelessWidget {
-  const AccountRow({super.key, required this.provider, required this.connected});
+  const AccountRow({
+    super.key,
+    required this.provider,
+    required this.connected,
+  });
   final String provider;
   final bool connected;
 

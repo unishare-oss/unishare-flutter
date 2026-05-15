@@ -32,8 +32,8 @@ class App extends ConsumerWidget {
     ref.watch(mergeGuestSavesOnLoginProvider);
     final router = ref.watch(routerProvider);
     final theme = ref.watch(activeThemeProvider);
-    final fontSize = ref.watch(fontSizeProvider);
-    final textScale = fontSize == AppFontSize.large ? 1.15 : 1.0;
+    final fontStep = ref.watch(fontSizeProvider);
+    final textScale = fontSizeScales[fontStep];
     return MediaQuery(
       data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
       child: MaterialApp.router(

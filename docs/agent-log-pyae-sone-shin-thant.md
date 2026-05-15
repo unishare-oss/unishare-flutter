@@ -1123,3 +1123,4 @@ Summary:  2 files changed, 9 insertions(+), 10 deletions(-)
   [14:35] Write: apps/mobile/lib/features/profile/presentation/widgets/danger_zone_card.dart
   [14:35] Write: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
   [14:36] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:42] Write: apps/mobile/lib/features/profile/presentation/widgets/appearance_section.dart
