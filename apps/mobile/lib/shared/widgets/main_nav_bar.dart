@@ -11,11 +11,17 @@ class MainNavBar extends StatefulWidget {
     required this.activeIndex,
     required this.onTap,
     this.notificationsBadgeCount,
+    this.currentSubDestination,
   });
 
   final int activeIndex;
   final ValueChanged<int> onTap;
   final int? notificationsBadgeCount;
+
+  /// When set, the 4th nav slot renders this destination's label and icon
+  /// instead of the default "More" / menu icon. Tap behaviour is unchanged
+  /// — the 4th slot always fires `onTap(NavTab.more.index)`.
+  final DrawerDestination? currentSubDestination;
 
   static const double _barHeight = 64;
   static const double _hMargin = 16;
@@ -24,6 +30,11 @@ class MainNavBar extends StatefulWidget {
   static const double _pillHPad = 8;
   static const double _barRadius = 32;
   static const double _pillRadius = 22;
+
+  /// Bottom inset that pages must reserve so their content isn't hidden
+  /// behind the floating nav bar. Excludes system safe area — that is
+  /// already in `MediaQuery.padding.bottom`.
+  static const double bottomInset = _barHeight + _bottomGap;
 
   @override
   State<MainNavBar> createState() => _MainNavBarState();
@@ -183,6 +194,9 @@ class _MainNavBarState extends State<MainNavBar> {
                             badgeCount: tab == NavTab.notifs
                                 ? widget.notificationsBadgeCount
                                 : null,
+                            subDestination: tab == NavTab.more
+                                ? widget.currentSubDestination
+                                : null,
                             ac: ac,
                           ),
                         );
@@ -330,6 +344,7 @@ class _NavTabItem extends StatelessWidget {
     required this.onTap,
     required this.ac,
     this.badgeCount,
+    this.subDestination,
   });
 
   final NavTab tab;
@@ -339,6 +354,10 @@ class _NavTabItem extends StatelessWidget {
   final VoidCallback? onTap;
   final AppColors ac;
   final int? badgeCount;
+
+  /// Only meaningful on the More tab. When non-null, the slot renders this
+  /// destination's label + icon instead of the default "More" / menu icon.
+  final DrawerDestination? subDestination;
 
   IconData get _icon {
     switch (tab) {
@@ -351,7 +370,7 @@ class _NavTabItem extends StatelessWidget {
             ? Icons.notifications_rounded
             : Icons.notifications_outlined;
       case NavTab.more:
-        return Icons.menu_rounded;
+        return subDestination?.icon ?? Icons.menu_rounded;
     }
   }
 
@@ -364,10 +383,14 @@ class _NavTabItem extends StatelessWidget {
       case NavTab.notifs:
         return 'Notifs';
       case NavTab.more:
-        return 'More';
+        return subDestination?.label ?? 'More';
     }
   }
 
+  /// Label describing the BUTTON's action. For the More slot this stays
+  /// 'More' regardless of [subDestination] so screen readers always know
+  /// the tap opens the More menu — the current sub-destination is conveyed
+  /// via [_semanticsValue] (state), not the label (action).
   String get _semanticsLabel {
     switch (tab) {
       case NavTab.feed:
@@ -379,6 +402,14 @@ class _NavTabItem extends StatelessWidget {
       case NavTab.more:
         return 'More';
     }
+  }
+
+  /// Additional value describing current state. Used on the More tab to
+  /// announce the active sub-destination (e.g. 'Saved') alongside the
+  /// 'More' button label.
+  String? get _semanticsValue {
+    if (tab != NavTab.more) return null;
+    return subDestination?.label;
   }
 
   @override
@@ -393,6 +424,7 @@ class _NavTabItem extends StatelessWidget {
 
     return Semantics(
       label: _semanticsLabel,
+      value: _semanticsValue,
       button: true,
       selected: isActive,
       excludeSemantics: true,

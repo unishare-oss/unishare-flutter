@@ -57,6 +57,16 @@ class AppTheme {
       scaffoldBackgroundColor: d.background,
       cardColor: d.card,
       dividerColor: d.border,
+      // Seamless AppBar: same bg as scaffold across every theme. Kill M3's
+      // auto surfaceTint + scroll-under elevation so the bar doesn't drift
+      // into an amber wash when content scrolls beneath it.
+      appBarTheme: AppBarTheme(
+        backgroundColor: d.background,
+        foregroundColor: d.foreground,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: d.card,

@@ -6,6 +6,7 @@ import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_posts_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/saved_post_card.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 class SavedScreen extends ConsumerWidget {
   const SavedScreen({super.key});
@@ -16,7 +17,7 @@ class SavedScreen extends ConsumerWidget {
     final isGuest = ref.watch(guestModeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Saved'), centerTitle: false),
+      appBar: AppBar(title: const Text('Saved')),
       body: Column(
         children: [
           if (isGuest) const _GuestBanner(),
@@ -29,6 +30,9 @@ class SavedScreen extends ConsumerWidget {
               data: (posts) {
                 if (posts.isEmpty) return const _EmptyState();
                 return ListView.builder(
+                  padding: const EdgeInsets.only(
+                    bottom: MainNavBar.bottomInset,
+                  ),
                   itemCount: posts.length,
                   itemBuilder: (context, i) => SavedPostCard(
                     savedPost: posts[i],
@@ -120,6 +124,7 @@ class _SkeletonList extends StatelessWidget {
   Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
     return ListView.builder(
+      padding: const EdgeInsets.only(bottom: MainNavBar.bottomInset),
       itemCount: 5,
       itemBuilder: (_, i) => Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),

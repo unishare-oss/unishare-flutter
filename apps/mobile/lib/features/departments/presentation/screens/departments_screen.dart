@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 class DepartmentsScreen extends ConsumerWidget {
   const DepartmentsScreen({super.key});
@@ -16,11 +17,7 @@ class DepartmentsScreen extends ConsumerWidget {
     final departmentsAsync = ref.watch(departmentsProvider);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Departments'),
-        leading: const BackButton(),
-      ),
+      appBar: AppBar(title: const Text('Departments')),
       body: departmentsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(
@@ -41,14 +38,19 @@ class DepartmentsScreen extends ConsumerWidget {
             );
           }
           return ListView.separated(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              16 + MainNavBar.bottomInset,
+            ),
             itemCount: departments.length,
             separatorBuilder: (_, _) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
               final dept = departments[index];
               return GestureDetector(
                 onTap: () => context.push(
-                  '/more/departments/${dept.id}'
+                  '/departments/${dept.id}'
                   '?name=${Uri.encodeComponent(dept.name)}',
                 ),
                 child: _DepartmentTile(name: dept.name),

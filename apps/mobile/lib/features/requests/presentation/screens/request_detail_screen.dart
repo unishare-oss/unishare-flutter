@@ -11,6 +11,7 @@ import 'package:unishare_mobile/features/requests/presentation/widgets/suggestio
 import 'package:unishare_mobile/features/requests/presentation/widgets/suggest_fulfillment_dialog.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 part 'request_detail_screen.g.dart';
 
@@ -266,6 +267,11 @@ class RequestDetailScreen extends ConsumerWidget {
                     ),
                   ];
                 },
+              ),
+              // Bottom spacer so the last suggestion can scroll above the
+              // floating nav bar.
+              const SliverToBoxAdapter(
+                child: SizedBox(height: MainNavBar.bottomInset),
               ),
             ],
           );

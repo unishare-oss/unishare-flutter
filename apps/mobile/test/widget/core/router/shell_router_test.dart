@@ -71,13 +71,17 @@ void main() {
       expect(find.byType(MainNavBar), findsOneWidget);
     });
 
-    testWidgets('MainNavBar present on /more', (tester) async {
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-      _router(tester).go('/more');
-      await tester.pumpAndSettle();
-      expect(find.byType(MainNavBar), findsOneWidget);
-    });
+    testWidgets(
+      'navigating to /more redirects to /feed (no longer a valid path)',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+        _router(tester).go('/more');
+        await tester.pumpAndSettle();
+        expect(find.byType(MainNavBar), findsOneWidget);
+        expect(find.text('Feed'), findsAtLeastNWidgets(1));
+      },
+    );
 
     testWidgets('MainNavBar absent on /welcome (unauthenticated)', (
       tester,
@@ -134,6 +138,57 @@ void main() {
       await tester.tap(feedTab);
       await tester.pump();
       expect(find.byType(MainNavBar), findsOneWidget);
+    });
+
+    testWidgets(
+      'tapping More tab opens the More drawer (does not switch branch)',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+
+        final moreTab = find.byWidgetPredicate(
+          (w) =>
+              w is Semantics &&
+              w.properties.button == true &&
+              w.properties.label == 'More',
+        );
+        expect(moreTab, findsOneWidget);
+
+        await tester.tap(moreTab);
+        await tester.pumpAndSettle();
+
+        // The drawer surfaces these uppercase labels.
+        expect(find.text('SAVED'), findsOneWidget);
+        expect(find.text('DEPARTMENTS'), findsOneWidget);
+        expect(find.text('REQUESTS'), findsOneWidget);
+        expect(find.text('PROFILE'), findsOneWidget);
+        // We're still rooted on /feed under the drawer.
+        expect(find.byType(MainNavBar), findsOneWidget);
+      },
+    );
+
+    testWidgets('on /saved the 4th nav slot reports Saved as Semantics value', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+      _router(tester).go('/saved');
+      await tester.pumpAndSettle();
+
+      // Nav bar still present on the drawer destination.
+      expect(find.byType(MainNavBar), findsOneWidget);
+
+      // The 4th slot's semantics: label stays 'More' (the action), and
+      // the current sub-destination is exposed as `value` so the tap
+      // action remains accurate while the page state is announced.
+      final moreTab = find.byWidgetPredicate(
+        (w) =>
+            w is Semantics &&
+            w.properties.button == true &&
+            w.properties.label == 'More' &&
+            w.properties.value == 'Saved',
+      );
+      expect(moreTab, findsOneWidget);
     });
   });
 }
