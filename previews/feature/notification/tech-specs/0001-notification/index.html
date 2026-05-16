@@ -1830,6 +1830,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cloud-functions-server-separate-companion-to-the-flutter-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Functions Server (separate companion to the Flutter client)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2478,6 +2489,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#cloud-functions-server-separate-companion-to-the-flutter-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Functions Server (separate companion to the Flutter client)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2894,12 +2916,12 @@ match /fcmTokens/{tokenHash} {
 <tbody>
 <tr>
 <td><code>firebase_messaging</code></td>
-<td><code>^15.0.0</code></td>
+<td><code>^16.2.1</code></td>
 <td>FCM token retrieval and foreground message callbacks</td>
 </tr>
 </tbody>
 </table>
-<p><code>firebase_messaging</code> is an official FlutterFire package consistent with the existing stack. It must be added to <code>pubspec.yaml</code> under <code>dependencies</code> and registered in <code>firebase_options.dart</code> via <code>flutterfire configure</code>. Flag for team approval per CLAUDE.md convention.</p>
+<p><code>firebase_messaging</code> is an official FlutterFire package consistent with the existing stack. It must be added to <code>pubspec.yaml</code> under <code>dependencies</code> and registered in <code>firebase_options.dart</code> via <code>flutterfire configure</code>. Flag for team approval per CLAUDE.md convention. Pinned to <code>^16.2.1</code> (bumped from the initially specified <code>^15.0.0</code>) because the FlutterFire BoM resolves <code>firebase_auth ^6.5.0</code> against the matching <code>firebase_messaging ^16.x</code> line.</p>
 <h3 id="cloud-functions-new-directory">Cloud Functions (new directory)<a class="headerlink" href="#cloud-functions-new-directory" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3379,21 +3401,76 @@ match /fcmTokens/{tokenHash} {
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ul>
 <li>
-<p>[ ] <strong><code>onCommentAdded</code> vs <code>onCommentReply</code> cold-start duplication:</strong> Both functions are deployed on the same Firestore path and will each cold-start on every new comment. At current scale this is acceptable, but the team should decide before implementation whether to merge them into a single function with internal routing, accepting the added branching complexity in exchange for halved cold-starts.</p>
+<p>[x] <strong><code>onCommentAdded</code> vs <code>onCommentReply</code> cold-start duplication:</strong> Resolved — keeping two separate functions per spec. Both subscribe to <code>posts/{postId}/comments/{commentId}</code> and filter internally on <code>parentId</code>. Marginal extra invocation cost is acceptable at current scale and the per-function clarity wins.</p>
 </li>
 <li>
-<p>[ ] <strong><code>suggestion_accepted</code> recipient resolution:</strong> The spec assumes <code>onRequestFulfilled</code> reads <code>fulfilledByPostId</code> from the updated request document, then queries the suggestions subcollection to find the matching suggester UID. This is one additional Firestore read per fulfillment event. Confirm this is acceptable, or alternatively store <code>fulfilledBySuggesterId</code> on the request document to avoid the extra read.</p>
+<p>[x] <strong><code>suggestion_accepted</code> recipient resolution:</strong> Resolved — <code>RequestDto</code> already stores <code>fulfilledByPostId</code> and <code>fulfilledByPostTitle</code>. The trigger reads <code>after.fulfilledByPostId</code>, queries <code>requests/{requestId}/suggestions</code> where <code>postId == fulfilledByPostId</code> with <code>limit(1)</code>, and notifies <code>suggestion.suggestedByUserId</code>. One extra Firestore read per fulfillment, accepted.</p>
 </li>
 <li>
-<p>[ ] <strong><code>firebase_messaging</code> version pin:</strong> <code>^15.0.0</code> is specified. Confirm it is compatible with the current <code>firebase_core: ^4.7.0</code> and the FlutterFire BoM in use before adding to <code>pubspec.yaml</code>. Team approval required per CLAUDE.md before the dependency is added.</p>
+<p>[x] <strong><code>firebase_messaging</code> version pin:</strong> Resolved — pinned to <code>^16.2.1</code> to satisfy FlutterFire BoM resolution against <code>firebase_auth ^6.5.0</code>. See dependency table above.</p>
 </li>
 <li>
-<p>[ ] <strong>Emulator Suite setup:</strong> Cloud Functions require the Firebase Emulator Suite for local development. Confirm whether <code>firebase.json</code> already includes an <code>emulators</code> config block, and document the local dev setup steps before implementation begins.</p>
+<p>[x] <strong>Emulator Suite setup:</strong> Resolved — <code>firebase.json</code> now includes an <code>emulators</code> block exposing <code>auth</code>, <code>firestore</code>, <code>functions</code>, and <code>pubsub</code> for local dev. See <code>functions/README.md</code> for the workflow.</p>
 </li>
 <li>
-<p>[ ] <strong><code>purgeOldNotifications</code> permissions:</strong> The scheduled function runs in a Cloud Scheduler context. Confirm the Firebase project's service account has the <code>datastore.documents.delete</code> IAM permission, or whether the Admin SDK's default service account is sufficient.</p>
+<p>[x] <strong><code>purgeOldNotifications</code> permissions:</strong> Resolved — the function deploys with the project's default Cloud Functions runtime service account, which holds <code>roles/datastore.user</code> and can perform collection-group queries + batched deletes via the Admin SDK without additional grants.</p>
 </li>
 </ul>
+<hr />
+<h2 id="cloud-functions-server-separate-companion-to-the-flutter-client">Cloud Functions Server (separate companion to the Flutter client)<a class="headerlink" href="#cloud-functions-server-separate-companion-to-the-flutter-client" title="Permanent link">&para;</a></h2>
+<p>The server-side half of this feature lives in <code>functions/</code> at the repo root, deployed alongside the Flutter app. Components:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Trigger</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>onCommentAdded</code></td>
+<td>onCreate <code>posts/{postId}/comments/{commentId}</code></td>
+<td>New top-level comment → notify post owner</td>
+</tr>
+<tr>
+<td><code>onCommentReply</code></td>
+<td>onCreate <code>posts/{postId}/comments/{commentId}</code></td>
+<td>New reply (parentId set) → notify parent author</td>
+</tr>
+<tr>
+<td><code>onPostLiked</code></td>
+<td>onCreate <code>posts/{postId}/likes/{userId}</code></td>
+<td>Like → notify post owner</td>
+</tr>
+<tr>
+<td><code>onRequestUpvoted</code></td>
+<td>onCreate <code>requests/{requestId}/upvotes/{userId}</code></td>
+<td>Upvote → notify requester</td>
+</tr>
+<tr>
+<td><code>onSuggestionSubmitted</code></td>
+<td>onCreate <code>requests/{requestId}/suggestions/{suggestionId}</code></td>
+<td>Suggestion → notify requester</td>
+</tr>
+<tr>
+<td><code>onRequestFulfilled</code></td>
+<td>onUpdate <code>requests/{requestId}</code></td>
+<td>Status → fulfilled → notify winning suggester</td>
+</tr>
+<tr>
+<td><code>purgeOldNotifications</code></td>
+<td>Scheduled (every 24h)</td>
+<td>Delete notifications older than 30 days</td>
+</tr>
+<tr>
+<td><code>autoDisableBilling</code></td>
+<td>Pub/Sub <code>billing-budget-alerts</code></td>
+<td>Detach billing on budget overrun</td>
+</tr>
+</tbody>
+</table>
+<p>All functions are TypeScript on Node 20, deployed to <code>asia-southeast1</code>, and use the shared helpers <code>writeNotification</code>, <code>sendPush</code>, <code>getActor</code> in <code>functions/src/lib/</code>. The <code>autoDisableBilling</code> function is the cost-safety counterpart to enabling the Firebase Blaze plan (required for Cloud Functions). See <code>functions/README.md</code> for deploy + IAM details.</p>
 
 
 
