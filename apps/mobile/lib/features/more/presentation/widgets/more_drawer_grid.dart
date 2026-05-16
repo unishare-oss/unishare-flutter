@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_tile.dart';
-import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class MoreDrawerGrid extends StatelessWidget {
   const MoreDrawerGrid({
@@ -19,13 +18,7 @@ class MoreDrawerGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final ac = theme.extension<AppColors>()!;
-    final isDark = theme.brightness == Brightness.dark;
-
-    return Container(
-      width: double.infinity,
-      color: isDark ? ac.cardDark : ac.muted,
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Row(
         children: [
