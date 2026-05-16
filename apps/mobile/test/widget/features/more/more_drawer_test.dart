@@ -196,7 +196,35 @@ void main() {
     expect(find.text('Profile page'), findsOneWidget);
   });
 
-  testWidgets('tapping Sign out calls signOut and exits guest mode', (
+  testWidgets(
+    'tapping Sign out then confirming calls signOut and exits guest mode',
+    (tester) async {
+      final repo = _FakeAuthRepository(user: _user);
+      await tester.pumpWidget(_buildApp(repo));
+      await tester.pumpAndSettle();
+      await _openSheet(tester);
+
+      // First tap opens the confirmation dialog — signOut should NOT have
+      // fired yet.
+      await tester.tap(find.text('Sign out'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(repo.signOutCalls, 0);
+
+      // Confirm via the dialog's Sign out button.
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.widgetWithText(TextButton, 'Sign out'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(repo.signOutCalls, 1);
+    },
+  );
+
+  testWidgets('cancelling the sign-out dialog leaves the session intact', (
     tester,
   ) async {
     final repo = _FakeAuthRepository(user: _user);
@@ -206,7 +234,17 @@ void main() {
 
     await tester.tap(find.text('Sign out'));
     await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsOneWidget);
 
-    expect(repo.signOutCalls, 1);
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.widgetWithText(TextButton, 'Cancel'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsNothing);
+    expect(repo.signOutCalls, 0);
   });
 }
