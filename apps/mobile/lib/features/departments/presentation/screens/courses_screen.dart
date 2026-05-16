@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unishare_mobile/features/feed/presentation/providers/feed_filter_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/course_reference_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 class CoursesScreen extends ConsumerWidget {
   const CoursesScreen({
@@ -87,7 +88,12 @@ class _YearTab extends ConsumerWidget {
           );
         }
         return ListView.separated(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(
+            16,
+            16,
+            16,
+            16 + MainNavBar.bottomInset,
+          ),
           itemCount: courses.length,
           separatorBuilder: (_, _) => const SizedBox(height: 8),
           itemBuilder: (context, index) {

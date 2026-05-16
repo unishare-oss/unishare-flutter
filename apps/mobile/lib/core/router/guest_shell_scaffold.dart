@@ -23,8 +23,11 @@ class GuestShellScaffold extends StatelessWidget {
           context.go('/feed');
         }
       },
-      // Body ends at the top of the nav bar slot — no overlap with content.
+      // `extendBody: true` lets content scroll behind the glass nav bar.
+      // Each screen is responsible for adding `GuestNavBar.bottomInset` to
+      // its scrollable's bottom padding.
       child: Scaffold(
+        extendBody: true,
         body: navigationShell,
         bottomNavigationBar: GuestNavBar(
           isOnFeed: isOnFeed,

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 class DepartmentsScreen extends ConsumerWidget {
   const DepartmentsScreen({super.key});
@@ -41,7 +42,12 @@ class DepartmentsScreen extends ConsumerWidget {
             );
           }
           return ListView.separated(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              16 + MainNavBar.bottomInset,
+            ),
             itemCount: departments.length,
             separatorBuilder: (_, _) => const SizedBox(height: 8),
             itemBuilder: (context, index) {
