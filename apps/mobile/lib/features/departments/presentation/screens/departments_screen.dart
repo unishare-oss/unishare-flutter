@@ -18,10 +18,7 @@ class DepartmentsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: const Text('Departments'),
-        leading: const BackButton(),
-      ),
+      appBar: AppBar(title: const Text('Departments')),
       body: departmentsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(
