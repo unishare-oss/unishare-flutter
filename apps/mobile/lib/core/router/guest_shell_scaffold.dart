@@ -13,35 +13,38 @@ class GuestShellScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isOnFeed = navigationShell.currentIndex == NavTab.feed.index;
+    final path = GoRouterState.of(context).uri.path;
+    final isOnFeed = path == '/feed' || path.startsWith('/feed/');
+    final isOnSaved = path == '/saved';
 
     return PopScope(
       canPop: isOnFeed || context.canPop(),
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop && !isOnFeed) {
-          navigationShell.goBranch(NavTab.feed.index, initialLocation: true);
+          context.go('/feed');
         }
       },
       child: Scaffold(
         extendBody: true,
         body: navigationShell,
         bottomNavigationBar: GuestNavBar(
-          activeIndex: navigationShell.currentIndex,
-          onFeedTap: () => _handleBranchTap(NavTab.feed.index),
-          onSavedTap: () => _handleBranchTap(kSavedBranchIndex),
+          isOnFeed: isOnFeed,
+          isOnSaved: isOnSaved,
+          onFeedTap: () {
+            if (isOnFeed) {
+              final state = ShellScaffold
+                  .scrollTargetKeys[NavTab.feed.index]
+                  .currentState;
+              if (state is ScrollToTopTarget) {
+                (state as ScrollToTopTarget).scrollToTop();
+              }
+              return;
+            }
+            context.go('/feed');
+          },
+          onSavedTap: () => context.go('/saved'),
         ),
       ),
     );
-  }
-
-  void _handleBranchTap(int branchIndex) {
-    if (branchIndex == navigationShell.currentIndex) {
-      final state = ShellScaffold.scrollTargetKeys[branchIndex].currentState;
-      if (state is ScrollToTopTarget) {
-        (state as ScrollToTopTarget).scrollToTop();
-      }
-      return;
-    }
-    navigationShell.goBranch(branchIndex);
   }
 }

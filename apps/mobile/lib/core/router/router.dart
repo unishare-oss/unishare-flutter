@@ -30,10 +30,6 @@ part 'router.g.dart';
 // NavTab — branch index order must match StatefulShellRoute.branches order
 // ---------------------------------------------------------------------------
 
-/// Branch index of the guest /saved route in the StatefulShellRoute.
-/// Declared here to avoid a circular import between GuestNavBar and GuestShellScaffold.
-const kSavedBranchIndex = 4;
-
 // Simple in-memory flag — not a Riverpod provider to keep it out of codegen.
 bool academicProfileSessionDismissed = false;
 
@@ -110,12 +106,7 @@ class _RouterNotifier extends ChangeNotifier {
       return '/feed';
     }
 
-    // 4. Authenticated user on guest-only /saved → redirect to /more/saved
-    if (isAuthenticated && currentPath == '/saved') {
-      return '/more/saved';
-    }
-
-    // 5. Unknown path → /feed
+    // 4. Unknown path → /feed
     // authRoutes covers /welcome as exact-match only (no child routes exist).
     // knownPrefixes covers shell branches and their nested children.
     const knownPrefixes = {
@@ -185,6 +176,7 @@ GoRouter router(Ref ref) {
           );
         },
       ),
+      GoRoute(path: '/saved', builder: (context, state) => const SavedScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => Consumer(
           builder: (context, ref, _) {
@@ -272,15 +264,6 @@ GoRouter router(Ref ref) {
                     },
                   ),
                 ],
-              ),
-            ],
-          ),
-          // Branch 4 — SAVED (top-level; used by the guest shell nav bar)
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/saved',
-                builder: (context, state) => const SavedScreen(),
               ),
             ],
           ),

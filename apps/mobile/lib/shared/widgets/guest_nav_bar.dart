@@ -3,20 +3,23 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
-import 'package:unishare_mobile/core/router/router.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class GuestNavBar extends StatefulWidget {
   const GuestNavBar({
     super.key,
-    required this.activeIndex,
+    required this.isOnFeed,
+    required this.isOnSaved,
     required this.onFeedTap,
     required this.onSavedTap,
   });
 
-  /// `activeIndex` matches the parent shell's branch index (NavTab.feed.index
-  /// or [kSavedBranchIndex]). Anything else renders no active pill.
-  final int activeIndex;
+  /// True when the current route is `/feed` (or its descendants).
+  final bool isOnFeed;
+
+  /// True when the current route is `/saved`.
+  final bool isOnSaved;
+
   final VoidCallback onFeedTap;
   final VoidCallback onSavedTap;
 
@@ -41,8 +44,8 @@ class _GuestNavBarState extends State<GuestNavBar> {
   int? _hoveredTab; // 0 = Feed, 1 = Saved (only draggable targets)
 
   int get _selectedTab {
-    if (widget.activeIndex == NavTab.feed.index) return 0;
-    if (widget.activeIndex == kSavedBranchIndex) return 1;
+    if (widget.isOnFeed) return 0;
+    if (widget.isOnSaved) return 1;
     return -1;
   }
 
