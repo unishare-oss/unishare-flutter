@@ -1184,3 +1184,35 @@ Review: PENDING
   [18:34] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
   [18:34] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
   [18:34] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [20:21] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [20:21] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [20:22] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [20:22] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [20:25] Edit: apps/mobile/lib/features/requests/presentation/screens/request_detail_screen.dart
+  [20:25] Edit: apps/mobile/lib/features/requests/presentation/screens/request_detail_screen.dart
+  [20:28] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [20:34] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [20:34] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:35] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [20:45] Edit: apps/mobile/lib/shared/theme/app_theme.dart
+  [20:45] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [20:45] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:45] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [20:46] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [20:46] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+  [20:46] Edit: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [20:46] Edit: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  [20:53] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart

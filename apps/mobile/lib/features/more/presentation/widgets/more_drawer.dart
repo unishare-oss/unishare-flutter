@@ -143,11 +143,32 @@ class MoreDrawerSheet extends ConsumerWidget {
   }
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Sign out?'),
+        content: const Text(
+          "You'll need to sign in again to access your account.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Sign out'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
     // Capture providers before popping — the modal's ConsumerWidget is torn
     // down by the pop, after which `ref` reads can warn.
     final signOut = ref.read(signOutUseCaseProvider);
     final guestMode = ref.read(guestModeProvider.notifier);
-    Navigator.of(context).pop();
+    if (context.mounted) Navigator.of(context).pop();
     await signOut.call();
     guestMode.exit();
   }
