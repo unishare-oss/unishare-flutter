@@ -213,11 +213,13 @@ jobs:
 
       - name: Build iOS app (unsigned)
         working-directory: apps/mobile
-        run: |
-          flutter build ios --release --no-codesign \
-            --build-name=${{ needs.resolve-version.outputs.build_name }} \
-            --build-number=${{ needs.resolve-version.outputs.build_number }} \
-            --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
+        # --build-name / --build-number are intentionally omitted here.
+        # Passing them on Xcode 26 with Automatic signing forces a team
+        # check even with --no-codesign and the build fails. The IPA is
+        # unsigned and not installable; the filename carries the real
+        # version (unishare-vX.Y.Z.ipa). Internal Info.plist version
+        # falls back to pubspec.yaml — fine for this artifact.
+        run: flutter build ios --release --no-codesign --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
 
       - name: Package unsigned IPA
         run: |
