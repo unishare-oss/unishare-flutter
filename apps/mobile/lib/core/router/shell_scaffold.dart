@@ -11,15 +11,20 @@ class ShellScaffold extends StatelessWidget {
 
   final StatefulNavigationShell navigationShell;
 
+  /// One scroll target per branch: Feed (0), Posts (1), Notifs (2), and the
+  /// drawer-destinations branch (3). Branch 3's slot is unused — the 4th tab
+  /// opens the drawer instead of scrolling — but keeping it in the list lets
+  /// `scrollTargetKeys[index]` stay safe for every NavTab index.
   static final List<GlobalKey<State>> scrollTargetKeys = List.generate(
-    NavTab.values.length +
-        1, // auth tabs + guest /saved branch (legacy slot, shrunk in Task 8)
+    NavTab.values.length,
     (_) => GlobalKey<State>(),
   );
 
   @override
   Widget build(BuildContext context) {
     final activeIndex = navigationShell.currentIndex;
+    final currentPath = GoRouterState.of(context).uri.path;
+    final currentSub = DrawerDestination.fromPath(currentPath);
 
     return PopScope(
       canPop: activeIndex == NavTab.feed.index || context.canPop(),
@@ -34,6 +39,7 @@ class ShellScaffold extends StatelessWidget {
         bottomNavigationBar: MainNavBar(
           activeIndex: activeIndex,
           onTap: (index) => _handleTabTap(context, index),
+          currentSubDestination: currentSub,
         ),
       ),
     );

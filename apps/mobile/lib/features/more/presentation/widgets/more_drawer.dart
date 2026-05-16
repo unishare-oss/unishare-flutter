@@ -90,9 +90,7 @@ class MoreDrawerSheet extends ConsumerWidget {
                 right: 0,
                 bottom: -_glassOverflowBelow,
                 child: const LiquidGlass(
-                  shape: LiquidRoundedSuperellipse(
-                    borderRadius: _sheetRadius,
-                  ),
+                  shape: LiquidRoundedSuperellipse(borderRadius: _sheetRadius),
                   child: SizedBox.expand(),
                 ),
               ),

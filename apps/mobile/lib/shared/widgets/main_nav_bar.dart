@@ -11,11 +11,17 @@ class MainNavBar extends StatefulWidget {
     required this.activeIndex,
     required this.onTap,
     this.notificationsBadgeCount,
+    this.currentSubDestination,
   });
 
   final int activeIndex;
   final ValueChanged<int> onTap;
   final int? notificationsBadgeCount;
+
+  /// When set, the 4th nav slot renders this destination's label and icon
+  /// instead of the default "More" / menu icon. Tap behaviour is unchanged
+  /// — the 4th slot always fires `onTap(NavTab.more.index)`.
+  final DrawerDestination? currentSubDestination;
 
   static const double _barHeight = 64;
   static const double _hMargin = 16;
@@ -183,6 +189,9 @@ class _MainNavBarState extends State<MainNavBar> {
                             badgeCount: tab == NavTab.notifs
                                 ? widget.notificationsBadgeCount
                                 : null,
+                            subDestination: tab == NavTab.more
+                                ? widget.currentSubDestination
+                                : null,
                             ac: ac,
                           ),
                         );
@@ -330,6 +339,7 @@ class _NavTabItem extends StatelessWidget {
     required this.onTap,
     required this.ac,
     this.badgeCount,
+    this.subDestination,
   });
 
   final NavTab tab;
@@ -339,6 +349,10 @@ class _NavTabItem extends StatelessWidget {
   final VoidCallback? onTap;
   final AppColors ac;
   final int? badgeCount;
+
+  /// Only meaningful on the More tab. When non-null, the slot renders this
+  /// destination's label + icon instead of the default "More" / menu icon.
+  final DrawerDestination? subDestination;
 
   IconData get _icon {
     switch (tab) {
@@ -351,7 +365,7 @@ class _NavTabItem extends StatelessWidget {
             ? Icons.notifications_rounded
             : Icons.notifications_outlined;
       case NavTab.more:
-        return Icons.menu_rounded;
+        return subDestination?.icon ?? Icons.menu_rounded;
     }
   }
 
@@ -364,7 +378,7 @@ class _NavTabItem extends StatelessWidget {
       case NavTab.notifs:
         return 'Notifs';
       case NavTab.more:
-        return 'More';
+        return subDestination?.label ?? 'More';
     }
   }
 
@@ -377,7 +391,7 @@ class _NavTabItem extends StatelessWidget {
       case NavTab.notifs:
         return 'Notifications';
       case NavTab.more:
-        return 'More';
+        return subDestination?.label ?? 'More';
     }
   }
 

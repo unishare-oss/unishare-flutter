@@ -52,6 +52,33 @@ enum NavTab {
   }
 }
 
+/// Destinations reachable from the More drawer. When the user is on one of
+/// these routes, the 4th bottom-nav slot renders this destination's label
+/// and icon instead of the default "More" / menu icon.
+enum DrawerDestination {
+  profile('Profile', Icons.person_rounded),
+  saved('Saved', Icons.bookmark_rounded),
+  departments('Depts', Icons.apartment_rounded),
+  requests('Requests', Icons.inbox_rounded);
+
+  const DrawerDestination(this.label, this.icon);
+
+  final String label;
+  final IconData icon;
+
+  /// Returns the destination that owns [path], or `null` if [path] is not
+  /// inside the drawer-destinations branch.
+  static DrawerDestination? fromPath(String path) {
+    if (path == '/profile') return profile;
+    if (path == '/saved') return saved;
+    if (path == '/departments' || path.startsWith('/departments/')) {
+      return departments;
+    }
+    if (path == '/requests' || path.startsWith('/requests/')) return requests;
+    return null;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Notifier — watches auth + guest state, calls notifyListeners on change
 // ---------------------------------------------------------------------------
@@ -177,35 +204,6 @@ GoRouter router(Ref ref) {
           );
         },
       ),
-      GoRoute(path: '/saved', builder: (context, state) => const SavedScreen()),
-      GoRoute(
-        path: '/profile',
-        builder: (context, state) => const ProfileScreen(),
-      ),
-      GoRoute(
-        path: '/departments',
-        builder: (context, state) => const DepartmentsScreen(),
-        routes: [
-          GoRoute(
-            path: ':deptId',
-            builder: (context, state) => CoursesScreen(
-              deptId: state.pathParameters['deptId']!,
-              departmentName: state.uri.queryParameters['name'] ?? 'Courses',
-            ),
-          ),
-        ],
-      ),
-      GoRoute(
-        path: '/requests',
-        builder: (context, state) => const RequestsScreen(),
-      ),
-      GoRoute(
-        path: '/requests/:requestId',
-        builder: (context, state) {
-          final requestId = state.pathParameters['requestId']!;
-          return RequestDetailScreen(requestId: requestId);
-        },
-      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => Consumer(
           builder: (context, ref, _) {
@@ -247,6 +245,47 @@ GoRouter router(Ref ref) {
                   scrollKey:
                       ShellScaffold.scrollTargetKeys[NavTab.notifs.index],
                 ),
+              ),
+            ],
+          ),
+          // Branch 3 — drawer destinations (Profile / Saved / Departments /
+          // Requests). The 4th nav slot doesn't navigate here directly — it
+          // opens the More drawer. The drawer's tile callbacks call
+          // context.go() with one of these paths, activating this branch.
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (context, state) => const ProfileScreen(),
+              ),
+              GoRoute(
+                path: '/saved',
+                builder: (context, state) => const SavedScreen(),
+              ),
+              GoRoute(
+                path: '/departments',
+                builder: (context, state) => const DepartmentsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':deptId',
+                    builder: (context, state) => CoursesScreen(
+                      deptId: state.pathParameters['deptId']!,
+                      departmentName:
+                          state.uri.queryParameters['name'] ?? 'Courses',
+                    ),
+                  ),
+                ],
+              ),
+              GoRoute(
+                path: '/requests',
+                builder: (context, state) => const RequestsScreen(),
+              ),
+              GoRoute(
+                path: '/requests/:requestId',
+                builder: (context, state) {
+                  final requestId = state.pathParameters['requestId']!;
+                  return RequestDetailScreen(requestId: requestId);
+                },
               ),
             ],
           ),

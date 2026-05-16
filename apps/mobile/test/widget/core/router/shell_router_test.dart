@@ -166,5 +166,36 @@ void main() {
         expect(find.byType(MainNavBar), findsOneWidget);
       },
     );
+
+    testWidgets(
+      'on /saved the 4th nav slot shows the Saved label, not "More"',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+        _router(tester).go('/saved');
+        await tester.pumpAndSettle();
+
+        // Nav bar still present on the drawer destination.
+        expect(find.byType(MainNavBar), findsOneWidget);
+
+        // The 4th slot's Semantics label is now "Saved" (not "More").
+        final savedTab = find.byWidgetPredicate(
+          (w) =>
+              w is Semantics &&
+              w.properties.button == true &&
+              w.properties.label == 'Saved',
+        );
+        expect(savedTab, findsOneWidget);
+
+        // And "More" semantics label is gone from the bar.
+        final moreTab = find.byWidgetPredicate(
+          (w) =>
+              w is Semantics &&
+              w.properties.button == true &&
+              w.properties.label == 'More',
+        );
+        expect(moreTab, findsNothing);
+      },
+    );
   });
 }
