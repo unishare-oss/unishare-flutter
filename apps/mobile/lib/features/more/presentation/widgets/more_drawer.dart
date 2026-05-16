@@ -45,13 +45,17 @@ class MoreDrawerSheet extends ConsumerWidget {
       ),
       child: LiquidGlassLayer(
         settings: LiquidGlassSettings(
-          thickness: isDark ? 16 : 14,
-          blur: 6,
+          thickness: isDark ? 16 : 18,
+          blur: isDark ? 6 : 10,
           refractiveIndex: 1.18,
+          // Light mode sits on a bright/varied backdrop with only a 0.35
+          // barrier — a much denser tint is needed for the sheet to read as
+          // a surface. Dark mode keeps the subtle nav-bar treatment since
+          // the dark scaffold gives plenty of contrast.
           glassColor: isDark
               ? const Color(0x1FFFFFFF)
-              : const Color(0x26FFFFFF),
-          lightIntensity: isDark ? 0.6 : 0.5,
+              : const Color(0xB3FFFFFF),
+          lightIntensity: isDark ? 0.6 : 0.55,
           chromaticAberration: 0.04,
         ),
         child: SizedBox(
