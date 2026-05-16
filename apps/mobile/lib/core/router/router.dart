@@ -9,7 +9,6 @@ import 'package:unishare_mobile/features/auth/presentation/screens/welcome_scree
 import 'package:unishare_mobile/features/departments/presentation/screens/courses_screen.dart';
 import 'package:unishare_mobile/features/departments/presentation/screens/departments_screen.dart';
 import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
-import 'package:unishare_mobile/features/more/presentation/screens/more_screen.dart';
 import 'package:unishare_mobile/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
@@ -113,7 +112,6 @@ class _RouterNotifier extends ChangeNotifier {
       '/feed',
       '/posts',
       '/notifications',
-      '/more',
       '/saved',
       '/profile',
       '/departments',
@@ -249,52 +247,6 @@ GoRouter router(Ref ref) {
                   scrollKey:
                       ShellScaffold.scrollTargetKeys[NavTab.notifs.index],
                 ),
-              ),
-            ],
-          ),
-          // Branch 3 — MORE
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/more',
-                builder: (context, state) => MoreScreen(
-                  scrollKey: ShellScaffold.scrollTargetKeys[NavTab.more.index],
-                ),
-                routes: [
-                  GoRoute(
-                    path: 'profile',
-                    builder: (context, state) => const ProfileScreen(),
-                  ),
-                  GoRoute(
-                    path: 'saved',
-                    builder: (context, state) => const SavedScreen(),
-                  ),
-                  GoRoute(
-                    path: 'departments',
-                    builder: (context, state) => const DepartmentsScreen(),
-                    routes: [
-                      GoRoute(
-                        path: ':deptId',
-                        builder: (context, state) => CoursesScreen(
-                          deptId: state.pathParameters['deptId']!,
-                          departmentName:
-                              state.uri.queryParameters['name'] ?? 'Courses',
-                        ),
-                      ),
-                    ],
-                  ),
-                  GoRoute(
-                    path: 'requests',
-                    builder: (context, state) => const RequestsScreen(),
-                  ),
-                  GoRoute(
-                    path: 'requests/:requestId',
-                    builder: (context, state) {
-                      final requestId = state.pathParameters['requestId']!;
-                      return RequestDetailScreen(requestId: requestId);
-                    },
-                  ),
-                ],
               ),
             ],
           ),

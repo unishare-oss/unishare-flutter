@@ -71,13 +71,17 @@ void main() {
       expect(find.byType(MainNavBar), findsOneWidget);
     });
 
-    testWidgets('MainNavBar present on /more', (tester) async {
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-      _router(tester).go('/more');
-      await tester.pumpAndSettle();
-      expect(find.byType(MainNavBar), findsOneWidget);
-    });
+    testWidgets(
+      'navigating to /more redirects to /feed (no longer a valid path)',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+        _router(tester).go('/more');
+        await tester.pumpAndSettle();
+        expect(find.byType(MainNavBar), findsOneWidget);
+        expect(find.text('Feed'), findsAtLeastNWidgets(1));
+      },
+    );
 
     testWidgets('MainNavBar absent on /welcome (unauthenticated)', (
       tester,
