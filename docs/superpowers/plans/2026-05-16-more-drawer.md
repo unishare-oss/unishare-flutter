@@ -2,11 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the `/more` screen with a modal bottom sheet ("More drawer") that opens when the More tab is tapped. Move the four destinations (Profile, Saved, Departments, Requests) to top-level GoRoutes. Use the project's theme tokens exclusively. Apply liquid-glass only on the backdrop and top edge.
+**Goal:** Replace the `/more` screen with a modal bottom sheet ("More drawer") that opens when the More tab is tapped. Host the four destinations (Profile, Saved, Departments, Requests) inside a dedicated 4th `StatefulShellBranch` so the bottom nav stays visible and the 4th nav slot dynamically reflects the active sub-destination. Use the project's theme tokens exclusively. Apply liquid-glass on the sheet surface using the same `LiquidGlassLayer + LiquidGlass` pattern as `MainNavBar`.
 
-**Architecture:** Build the drawer leaf-up (Tile → Grid → UserRow → Sheet) as four widget files, each with its own widget test. Then refactor the router: promote `/saved` out of the StatefulShellRoute first (touches guest shell), then add `/profile`, `/departments`, `/requests` top-level routes, wire the More tab to open the sheet, and finally delete `MoreScreen` + branch 3 + the old test. Each task ends with passing tests and a commit.
+**Architecture:** Build the drawer leaf-up (Tile → Grid → UserRow → Sheet) as four widget files, each with its own widget test. Then refactor the router: promote `/saved` to live as a sibling inside the new Branch 3 (touches guest shell), add `/profile`, `/departments`, `/requests` as siblings in the same branch, wire the More tab to open the sheet, and finally delete `MoreScreen` + the old `/more` branch + the old test. Each task ends with passing tests and a commit.
 
-**Tech Stack:** Flutter, Riverpod 2.x (`@riverpod` codegen), GoRouter, Material `showModalBottomSheet`, `liquid_glass_renderer` (already in pubspec), existing `AppColors`/`AppTypography` theme tokens.
+> **Note:** Earlier drafts of this plan moved the drawer destinations to top-level GoRoutes outside the shell. That approach hid the bottom nav on Profile/Saved/Departments/Requests and was reverted at the user's request before merge. The final implementation uses a 4th `StatefulShellBranch` with a `DrawerDestination` enum driving a dynamic 4th nav slot — see the updated spec for the canonical routing model.
+
+**Tech Stack:** Flutter, Riverpod 3.x (`flutter_riverpod: ^3.3.1`, `riverpod_annotation: ^4.0.2`, `@riverpod` codegen), GoRouter, Material `showModalBottomSheet`, `liquid_glass_renderer` (already in pubspec), existing `AppColors` / `AppTypography` theme tokens.
 
 **Spec:** `docs/superpowers/specs/2026-05-16-more-drawer-design.md` (commit `5889f11`).
 

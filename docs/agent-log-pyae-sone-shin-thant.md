@@ -1217,3 +1217,6 @@ Review: PENDING
   [20:46] Edit: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
   [20:53] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
   [21:21] Edit: apps/mobile/test/widget/features/more/more_drawer_test.dart
+  [23:51] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [23:51] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [23:52] Edit: apps/mobile/test/widget/core/router/shell_router_test.dart

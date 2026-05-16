@@ -38,28 +38,33 @@ When the drawer is open, whichever tab the user came from (Feed / Posts / Notifs
 
 ### Routing model
 
-Branch 3 (`/more`) is deleted from the `StatefulShellRoute`. The four destinations move to **top-level GoRoutes** (outside any shell). When viewed, they fully replace the shell — no bottom nav, each has its own `Scaffold` with a back-arrow `AppBar`.
+> **Note:** This section was revised after implementation. The earlier draft moved drawer destinations to top-level GoRoutes outside the shell. That approach hid the bottom nav on Profile/Saved/Departments/Requests and was reverted at the user's request — the destinations now live in a dedicated 4th `StatefulShellBranch` so the bottom nav stays visible and the 4th nav slot dynamically reflects the active sub-destination.
+
+Branch 3's old contents (`/more` + nested `MoreScreen`) are deleted. A **new 4th `StatefulShellBranch`** hosts the drawer destinations as siblings:
 
 | Path | Today | After |
 |---|---|---|
-| `/more` | Branch 3 root (MoreScreen) | **Removed.** Not a valid path. |
-| `/more/profile` | Branch 3 child | → `/profile` (top-level) |
-| `/more/saved` | Branch 3 child | → `/saved` (top-level — promoted from guest branch) |
-| `/more/departments` | Branch 3 child | → `/departments` (top-level) |
-| `/more/departments/:deptId` | Branch 3 child | → `/departments/:deptId` (top-level) |
-| `/more/requests` | Branch 3 child | → `/requests` (top-level) |
-| `/more/requests/:requestId` | Branch 3 child | → `/requests/:requestId` (top-level) |
+| `/more` | Branch 3 root (MoreScreen) | **Removed.** Not a valid path; falls through to `/feed` via the unknown-path redirect. |
+| `/more/profile` | Branch 3 child | → `/profile` (Branch 3 sibling) |
+| `/more/saved` | Branch 3 child | → `/saved` (Branch 3 sibling, also reachable by guests) |
+| `/more/departments` | Branch 3 child | → `/departments` (Branch 3 sibling) |
+| `/more/departments/:deptId` | Branch 3 child | → `/departments/:deptId` (Branch 3 nested) |
+| `/more/requests` | Branch 3 child | → `/requests` (Branch 3 sibling) |
+| `/more/requests/:requestId` | Branch 3 child | → `/requests/:requestId` (Branch 3 sibling) |
 
-### `/saved` consolidation (Option B)
+Activating any of these paths via `context.go(path)` makes Branch 3 the current shell branch. The bottom nav stays visible. The 4th nav slot — driven by a new `DrawerDestination` enum in `router.dart` and consumed by `MainNavBar.currentSubDestination` — renders the active destination's label + icon (e.g. "Saved" + bookmark) and shows the active-pill state. Tapping the 4th slot still opens the More drawer (it's an action tab) — the dynamic label/icon is purely a status indicator.
 
-Currently `/saved` exists as branch 4 of the StatefulShellRoute (guest tab destination), and auth users are redirected to `/more/saved` via a rule in `_RouterNotifier.redirect`. After this change:
+### `/saved` consolidation
 
-- `/saved` becomes a **top-level GoRoute** (outside the shell). One canonical route for both guests and auth users.
-- Guest branch 4 is **deleted** from the StatefulShellRoute.
+Previously `/saved` lived as branch 4 of the StatefulShellRoute (guest tab destination) and auth users were redirected to `/more/saved`. After this change:
+
+- `/saved` is one canonical path — a sibling route inside the new Branch 3.
+- The legacy guest branch 4 (`/saved`) is deleted, along with the `kSavedBranchIndex` constant.
 - `GuestNavBar.onSavedTap` switches from `navigationShell.goBranch(4)` to `context.go('/saved')`.
-- The guest "Saved" tab's selected state is derived from the current URL (`GoRouterState.of(context).uri.path == '/saved'`) instead of `navigationShell.currentIndex`. The guest shell's `GuestShellScaffold` reads the path and passes `isOnSaved` down.
-- `kSavedBranchIndex` constant in `router.dart` is removed.
+- The guest "Saved" tab's selected state derives from the current URL (`GoRouterState.of(context).uri.path == '/saved'`) instead of branch index.
 - The `/saved` → `/more/saved` redirect rule in `_RouterNotifier.redirect` is removed.
+
+Both auth and guest users resolve `/saved` to the same `SavedScreen`. The wrapping scaffold differs by auth state (auth gets `ShellScaffold` with `MainNavBar`; guest gets `GuestShellScaffold` with `GuestNavBar`).
 
 Guest visual behavior is unchanged.
 
