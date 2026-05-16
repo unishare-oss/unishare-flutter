@@ -65,5 +65,23 @@ void main() {
 
       expect(repo.lastAddedBody, 'Great post!');
     });
+
+    test('passes parentId to repository when provided', () async {
+      final repo = FakeCommentRepository();
+      final useCase = AddComment(repo);
+
+      await useCase.call('post-1', 'A reply', parentId: 'comment-99');
+
+      expect(repo.lastAddedParentId, 'comment-99');
+    });
+
+    test('passes null parentId when not provided', () async {
+      final repo = FakeCommentRepository();
+      final useCase = AddComment(repo);
+
+      await useCase.call('post-1', 'Top-level comment');
+
+      expect(repo.lastAddedParentId, isNull);
+    });
   });
 }

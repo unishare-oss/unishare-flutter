@@ -15,6 +15,7 @@ import 'package:unishare_mobile/features/post/domain/repositories/comment_reposi
 import 'package:unishare_mobile/features/post/domain/repositories/like_repository.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/add_comment.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/delete_comment.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/create_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
@@ -99,6 +100,11 @@ WatchComments watchCommentsUseCase(Ref ref) {
 @Riverpod(keepAlive: true)
 AddComment addCommentUseCase(Ref ref) {
   return AddComment(ref.watch(commentRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+DeleteComment deleteCommentUseCase(Ref ref) {
+  return DeleteComment(ref.watch(commentRepositoryProvider));
 }
 
 @Riverpod(keepAlive: true)

@@ -35,6 +35,8 @@ class PostFirestoreDatasource {
       'externalUrl': draft.externalUrl,
       'mediaUrls': mediaUrls,
       'mediaTypes': mediaTypes,
+      if (mediaTypes.contains('pdf') || mediaTypes.contains('docx'))
+        'summaryStatus': 'pending',
       'codeSnippetUrl': codeSnippetUrl,
       'tags': draft.tags,
       'likesCount': 0,
@@ -60,6 +62,16 @@ class PostFirestoreDatasource {
         .limit(limit)
         .snapshots()
         .map((snapshot) => snapshot.docs.map(_docToPost).toList());
+  }
+
+  /// Server-side count aggregation — one round-trip, no documents transferred.
+  Future<int> countPostsByAuthor(String authorId) async {
+    final snap = await _firestore
+        .collection('posts')
+        .where('authorId', isEqualTo: authorId)
+        .count()
+        .get();
+    return snap.count ?? 0;
   }
 
   Stream<Post> watchPost(String postId) {
@@ -96,6 +108,25 @@ class PostFirestoreDatasource {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       externalUrl: data['externalUrl'] as String?,
       codeSnippetUrl: data['codeSnippetUrl'] as String?,
+      summary: data['summary'] as String?,
+      summaryStatus: SummaryStatus.fromFirestore(
+        data['summaryStatus'] as String?,
+      ),
+      summarizedAt: (data['summarizedAt'] as Timestamp?)?.toDate(),
     );
+  }
+
+  Future<void> updatePostSummary(
+    String postId,
+    String? summary,
+    String summaryStatus,
+  ) async {
+    await _firestore.collection('posts').doc(postId).update({
+      'summaryStatus': summaryStatus,
+      'summary': summary ?? FieldValue.delete(),
+      'summarizedAt': summaryStatus == 'done'
+          ? FieldValue.serverTimestamp()
+          : FieldValue.delete(),
+    });
   }
 }

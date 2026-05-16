@@ -61,3 +61,11 @@ Decisions: myPostsProvider directly overrides the stream using Stream.empty() wh
 Handoff: Needs QA and architect review before merge. If Firestore surfaces a missing-index error after real data loads, add a composite index on posts(authorId ASC, createdAt DESC) to firestore.indexes.json.
 Review: PENDING
 
+Files:
+  ~ apps/mobile/lib/features/saved/presentation/widgets/saved_post_card.dart
+Summary:  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Files:
+  ~ apps/mobile/lib/features/saved/presentation/widgets/saved_post_card.dart
+Summary:  1 file changed, 14 insertions(+), 10 deletions(-)
+

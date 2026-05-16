@@ -7,11 +7,11 @@ class AddComment {
   final CommentRepository _repository;
 
   /// Throws [ArgumentError] if body is blank after trimming.
-  Future<void> call(String postId, String body) {
+  Future<void> call(String postId, String body, {String? parentId}) {
     final trimmed = body.trim();
     if (trimmed.isEmpty) {
       throw ArgumentError.value(body, 'body', 'Comment body must not be blank');
     }
-    return _repository.addComment(postId, trimmed);
+    return _repository.addComment(postId, trimmed, parentId: parentId);
   }
 }

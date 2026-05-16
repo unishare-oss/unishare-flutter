@@ -121,20 +121,20 @@ apps/mobile/integration_test/
 
 ## Stack
 
-| Concern | Package |
-|---|---|
-| State | `flutter_riverpod` + `riverpod_generator` |
-| Navigation | `go_router` |
-| Auth | `firebase_auth`, `google_sign_in`, `local_auth` |
-| Database | `cloud_firestore` |
-| Storage | `firebase_storage` |
-| Offline | `hive_flutter` |
-| Logging | `firebase_crashlytics` |
-| Feature flags | `firebase_remote_config` |
-| Images | `cached_network_image` |
-| Secrets | `flutter_secure_storage` |
-| Models | `freezed` + `json_serializable` |
-| Typography | `google_fonts` (Space Grotesk + Fira Code) |
+| Concern       | Package                                         |
+| ------------- | ----------------------------------------------- |
+| State         | `flutter_riverpod` + `riverpod_generator`       |
+| Navigation    | `go_router`                                     |
+| Auth          | `firebase_auth`, `google_sign_in`, `local_auth` |
+| Database      | `cloud_firestore`                               |
+| Storage       | `firebase_storage`                              |
+| Offline       | `hive_flutter`                                  |
+| Logging       | `firebase_crashlytics`                          |
+| Feature flags | `firebase_remote_config`                        |
+| Images        | `cached_network_image`                          |
+| Secrets       | `flutter_secure_storage`                        |
+| Models        | `freezed` + `json_serializable`                 |
+| Typography    | `google_fonts` (Space Grotesk + Fira Code)      |
 
 ## Agents
 
@@ -152,17 +152,21 @@ The agent that writes code must NOT be the agent that approves it.
 Every non-trivial feature follows this pipeline before any code is written:
 
 ### 1. Tech Proposal (`tech-proposals/NNNN-slug.md`)
+
 The **architect** writes a proposal using the stencil at `docs/stencils/tech-proposal.md` (rendered at <https://unishare-oss.github.io/unishare-flutter/stencils/tech-proposal/>). Covers: problem, proposed solution, alternatives considered, and open questions. The team approves before moving on.
 
 > Skip for changes touching ≤ 2 files with no architectural impact.
 
 ### 2. Tech Spec (`tech-specs/NNNN-slug.md`)
+
 The **architect** expands the approved proposal into a full spec using `docs/stencils/tech-spec.md`. Covers: Clean Architecture layer breakdown, Firestore schema, Riverpod providers, acceptance criteria, and test plan.
 
 ### 3. Implementation
+
 The **flutter-engineer** implements strictly following the approved spec. No scope creep beyond what the spec describes.
 
 ### 4. Review
+
 Submit for review to **architect** or **qa-engineer** — never the same agent that wrote the code. Reviewer checks implementation against the spec.
 
 ---
@@ -205,40 +209,52 @@ To regenerate: `dart run build_runner build`
 
 #### Theme token reference
 
-| Token | Source | Use for |
-|---|---|---|
-| `ac.amber` | `AppColors` | Primary accent — buttons, active icons, highlights |
-| `ac.amberHover` | `AppColors` | Pressed/hover state of amber elements |
-| `ac.amberSubtle` | `AppColors` | Amber tinted backgrounds, badge fills |
-| `ac.muted` | `AppColors` | Subtle background fills, tag chips |
-| `ac.mutedForeground` | `AppColors` | Text on muted backgrounds |
-| `ac.textSecondary` | `AppColors` | Secondary body text |
-| `ac.textMuted` | `AppColors` | Placeholder, meta, timestamp text |
-| `ac.success` | `AppColors` | Success states |
-| `ac.info` | `AppColors` | Info badges, NOTE type label |
-| `ac.surfaceDark` | `AppColors` | Dark overlay surfaces |
-| `ac.cardDark` | `AppColors` | Dark card variant |
-| `cs.surface` | `ColorScheme` | Card/sheet backgrounds |
-| `cs.onSurface` | `ColorScheme` | Primary text, icons on surface |
-| `cs.primary` | `ColorScheme` | Brand primary (same hue as `ac.amber`) |
-| `theme.scaffoldBackgroundColor` | `ThemeData` | Page background |
-| `theme.cardColor` | `ThemeData` | Card background |
-| `theme.dividerColor` | `ThemeData` | Borders, dividers |
-| `AppTypography.mono(base: style)` | `AppTypography` | Fira Code monospace spans |
-| `theme.textTheme.*` | `TextTheme` | All body/headline/label styles (Space Grotesk) |
+| Token                             | Source          | Use for                                            |
+| --------------------------------- | --------------- | -------------------------------------------------- |
+| `ac.amber`                        | `AppColors`     | Primary accent — buttons, active icons, highlights |
+| `ac.amberHover`                   | `AppColors`     | Pressed/hover state of amber elements              |
+| `ac.amberSubtle`                  | `AppColors`     | Amber tinted backgrounds, badge fills              |
+| `ac.muted`                        | `AppColors`     | Subtle background fills, tag chips                 |
+| `ac.mutedForeground`              | `AppColors`     | Text on muted backgrounds                          |
+| `ac.textSecondary`                | `AppColors`     | Secondary body text                                |
+| `ac.textMuted`                    | `AppColors`     | Placeholder, meta, timestamp text                  |
+| `ac.success`                      | `AppColors`     | Success states                                     |
+| `ac.info`                         | `AppColors`     | Info badges, NOTE type label                       |
+| `ac.surfaceDark`                  | `AppColors`     | Dark overlay surfaces                              |
+| `ac.cardDark`                     | `AppColors`     | Dark card variant                                  |
+| `cs.surface`                      | `ColorScheme`   | Card/sheet backgrounds                             |
+| `cs.onSurface`                    | `ColorScheme`   | Primary text, icons on surface                     |
+| `cs.primary`                      | `ColorScheme`   | Brand primary (same hue as `ac.amber`)             |
+| `theme.scaffoldBackgroundColor`   | `ThemeData`     | Page background                                    |
+| `theme.cardColor`                 | `ThemeData`     | Card background                                    |
+| `theme.dividerColor`              | `ThemeData`     | Borders, dividers                                  |
+| `AppTypography.mono(base: style)` | `AppTypography` | Fira Code monospace spans                          |
+| `theme.textTheme.*`               | `TextTheme`     | All body/headline/label styles (Space Grotesk)     |
+
+## Figma
+
+The UI reference lives in Figma. Always consult it before implementing any screen or component.
+
+- **File key:** `gIUtcwNTmPi17dOuuv5oDB`
+- **URL:** <https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare>
+- **Full node table:** see `.claude/agents/flutter-engineer.md` → UI Reference section
+
+Use `mcp__plugin_figma_figma__get_design_context` with the file key and node ID. Never call `get_metadata` on the root file — it is 2.5M characters.
+
+---
 
 ## Docs Folder Conventions
 
 Each folder serves a distinct purpose:
 
-| Folder | Written by | Format | Purpose |
-|--------|-----------|--------|---------|
-| `tech-proposals/` | Architect | `NNNN-slug.md` | Tech Proposals — problem + solution + alternatives, approved before spec |
-| `tech-specs/` | Architect | `NNNN-slug.md` | Tech Specs — full layer design, schema, acceptance criteria |
-| `docs/sessions/` | Any agent | `YYYY-MM-DD-task-slug.md` | Session scratchpad for context passing between agents |
-| `docs/agent-runs/` | Reviewer agents | `YYYY-MM-DD-<role>-<task>.md` | Structured audit reports (security, QA, architect reviews) |
-| `docs/decisions/` | Architect | `NNNN-slug.md` | Architecture Decision Records (ADRs) |
-| `docs/agent-log-<member>.md` | Stop hook | append-only | Per-member chronological session log |
+| Folder                       | Written by      | Format                        | Purpose                                                                  |
+| ---------------------------- | --------------- | ----------------------------- | ------------------------------------------------------------------------ |
+| `tech-proposals/`            | Architect       | `NNNN-slug.md`                | Tech Proposals — problem + solution + alternatives, approved before spec |
+| `tech-specs/`                | Architect       | `NNNN-slug.md`                | Tech Specs — full layer design, schema, acceptance criteria              |
+| `docs/sessions/`             | Any agent       | `YYYY-MM-DD-task-slug.md`     | Session scratchpad for context passing between agents                    |
+| `docs/agent-runs/`           | Reviewer agents | `YYYY-MM-DD-<role>-<task>.md` | Structured audit reports (security, QA, architect reviews)               |
+| `docs/decisions/`            | Architect       | `NNNN-slug.md`                | Architecture Decision Records (ADRs)                                     |
+| `docs/agent-log-<member>.md` | Stop hook       | append-only                   | Per-member chronological session log                                     |
 
 **Proposals** (`tech-proposals/`) — use the stencil at `docs/stencils/tech-proposal.md`. Must be approved before a spec is written. Auto-rendered on the docs site when pushed to `main`.
 

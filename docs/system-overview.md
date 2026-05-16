@@ -199,6 +199,73 @@ universities/{id} / departments/{id} / courses/{id}
 
 ---
 
+## AI Features (Summarize + Ask AI)
+
+Powered by a Cloudflare Worker that calls the Groq LLM API. The worker is auth-gated — every request must carry a valid Firebase ID token.
+
+### Post Summary
+
+Triggered automatically after a PDF or DOCX file is published. Runs fire-and-forget — the UI reacts via the existing Firestore real-time stream.
+
+```
+PostRepository.publishDraft()
+    ↓ (after Firestore write succeeds, for PDF/DOCX only)
+triggerSummarize(postId, fileUrl, filename)  [fire-and-forget]
+    ↓
+AiSummarizeDatasource  →  POST /ai/summarize
+    Authorization: Bearer <Firebase ID token>
+    { fileUrl, filename }
+        ↓
+    Worker: verifies token
+        → fetch file from R2 (max 20 MB, 10 s timeout)
+        → extract text via unpdf (PDF) or mammoth (DOCX) — up to 6 000 chars
+        → Groq: llama-3.3-70b-versatile
+              system prompt: "summarise into intro + bullet points"
+        → returns { summaryStatus: 'done'|'error'|'flagged'|'unsupported_type', summary? }
+    ↓
+PostFirestoreDatasource.updatePostSummary()
+    → Firestore: posts/{postId}.update({ summaryStatus, summary, summarizedAt })
+
+Firestore stream (watchPost) fires  →  postDetailProvider rebuilds
+    → AiSummaryPanel shows shimmer while pending, then renders summary
+```
+
+### Ask AI (streaming)
+
+Scoped to the document summary — the LLM never sees the raw file. Conversation history is managed client-side.
+
+```
+User sends question  →  AskAiNotifier.sendMessage()
+    state: append user message + pending bubble (spinner)
+    ↓
+AskAiUseCase  →  AskAiRepositoryImpl  →  AskAiDatasource
+    client.send()  →  POST /ai/chat
+        Authorization: Bearer <Firebase ID token>
+        { summary, question, history[] }
+            ↓
+        Worker: verifies token
+            → Groq stream: true
+                  system prompt: answer only from the document summary;
+                                 reply OFF_TOPIC if unrelated
+            → pipes tokens as SSE:
+                  data: {"t":"<token>"}\n\n   (one per chunk)
+                  data: {"done":true,"isOffTopic":false}\n\n  (final)
+    ↓
+Flutter reads SSE line by line  →  yield AiMessage(content: accumulated)
+    → notifier replaces pending bubble with growing text on each token
+    → on done: if isOffTopic, replace content with friendly refusal
+```
+
+### Firestore schema additions (posts/{postId})
+
+```
+summaryStatus   'pending' | 'done' | 'error' | 'flagged' | 'unsupported_type'
+summary         string (present only when status = done)
+summarizedAt    Timestamp (present only when status = done)
+```
+
+---
+
 ## CI / Deployment
 
 ```

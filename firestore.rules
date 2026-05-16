@@ -31,6 +31,18 @@ service cloud.firestore {
       }
     }
 
+    // Collection-group rule for collectionGroup('comments') queries.
+    // Nested per-post rules don't apply to CG queries, so we need this here.
+    //
+    // Only allow CG reads to authenticated callers requesting documents
+    // they authored — this powers the profile-stats "your comment count"
+    // query and nothing else. Direct (non-CG) reads of a specific post's
+    // comments still go through the open `posts/{postId}/comments` rule.
+    match /{path=**}/comments/{commentId} {
+      allow read: if request.auth != null
+                  && resource.data.authorId == request.auth.uid;
+    }
+
     match /posts/{postId} {
       allow read: if true;
       allow create: if request.auth != null
@@ -39,8 +51,15 @@ service cloud.firestore {
                     && request.resource.data.title.size() > 0
                     && request.resource.data.likesCount == 0;
       allow update: if request.auth != null
-                    && request.resource.data.diff(resource.data).affectedKeys()
-                       .hasOnly(['likesCount']);
+                    && (
+                      request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['likesCount'])
+                      || (
+                        request.resource.data.diff(resource.data).affectedKeys()
+                          .hasOnly(['summaryStatus', 'summary', 'summarizedAt'])
+                        && resource.data.authorId == request.auth.uid
+                      )
+                    );
       allow delete: if false;
 
       match /comments/{commentId} {

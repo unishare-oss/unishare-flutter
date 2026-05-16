@@ -7,10 +7,10 @@ import 'package:unishare_mobile/core/router/router.dart'
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/academic_profile_dialog.dart';
-import 'package:unishare_mobile/features/feed/presentation/providers/active_tag_filters_provider.dart';
+import 'package:unishare_mobile/features/feed/presentation/providers/feed_filter_provider.dart';
 import 'package:unishare_mobile/features/feed/presentation/providers/feed_provider.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/feed_empty_state_widget.dart';
-import 'package:unishare_mobile/features/feed/presentation/widgets/filter_picker_widget.dart';
+import 'package:unishare_mobile/features/feed/presentation/widgets/feed_filter_drawer.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
@@ -93,28 +93,34 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     return ref.watch(guestModeProvider);
   }
 
-  List<Post> _filterPosts(List<Post> all, List<String> activeTagFilters) {
-    final byTab = switch (_tabController.index) {
+  List<Post> _filterPosts(List<Post> all, FeedFilterState filter) {
+    var posts = switch (_tabController.index) {
       1 => all.where((p) => p.postType == PostType.lectureNote).toList(),
       2 => all.where((p) => p.postType == PostType.exercise).toList(),
       _ => all,
     };
-    final byTag = activeTagFilters.isEmpty
-        ? byTab
-        : byTab
-              .where((p) => p.tags.any((t) => activeTagFilters.contains(t)))
-              .toList();
-    if (_searchQuery.isEmpty) return byTag;
+    if (filter.year != null) {
+      posts = posts.where((p) => p.year == filter.year).toList();
+    }
+    if (filter.courseId != null) {
+      posts = posts.where((p) => p.courseId == filter.courseId).toList();
+    }
+    if (filter.moduleNumber != null) {
+      posts = posts
+          .where((p) => p.moduleNumber == filter.moduleNumber)
+          .toList();
+    }
+    if (_searchQuery.isEmpty) return posts;
     if (_searchQuery.startsWith('#')) {
       final q = _searchQuery.substring(1).toLowerCase();
       return q.isEmpty
-          ? byTag
-          : byTag
+          ? posts
+          : posts
                 .where((p) => p.tags.any((t) => t.toLowerCase().contains(q)))
                 .toList();
     }
     final q = _searchQuery.toLowerCase();
-    return byTag.where((p) {
+    return posts.where((p) {
       return p.title.toLowerCase().contains(q) ||
           p.description.toLowerCase().contains(q);
     }).toList();
@@ -159,16 +165,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     _searchFocusNode.requestFocus();
   }
 
-  void _openFilterPicker(List<Post> allPosts, List<String> activeTagFilters) {
-    final availableTags = allPosts.expand((p) => p.tags).toSet().toList()
-      ..sort();
-    FilterPickerWidget.show(
-      context,
-      availableTags: availableTags,
-      selectedTags: activeTagFilters,
-      onConfirm: (selected) =>
-          ref.read(activeTagFiltersProvider.notifier).set(selected),
-    );
+  void _openFilterDrawer(List<Post> allPosts) {
+    FeedFilterDrawer.show(context, allPosts);
   }
 
   @override
@@ -190,7 +188,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
       }
     });
 
-    final activeTagFilters = ref.watch(activeTagFiltersProvider);
+    final filter = ref.watch(feedFilterProvider);
     final feedAsync = ref.watch(feedProvider);
     final suggestions = _buildSuggestions(feedAsync.value ?? const []);
     return Scaffold(
@@ -203,10 +201,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
             pinned: true,
             delegate: _TabRowDelegate(
               tabController: _tabController,
-              activeFilterCount: activeTagFilters.length,
+              activeFilterCount: filter.activeCount,
               onTabChanged: () => setState(() {}),
-              onFiltersPressed: () =>
-                  _openFilterPicker(feedAsync.value ?? [], activeTagFilters),
+              onFiltersPressed: () => _openFilterDrawer(feedAsync.value ?? []),
             ),
           ),
         ],
@@ -221,11 +218,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
             ),
           ),
           data: (allPosts) {
-            final posts = _filterPosts(allPosts, activeTagFilters);
+            final posts = _filterPosts(allPosts, filter);
             if (posts.isEmpty) {
               return FeedEmptyStateWidget(
-                onClear: () =>
-                    ref.read(activeTagFiltersProvider.notifier).clear(),
+                onClear: () => ref.read(feedFilterProvider.notifier).clear(),
               );
             }
             return AnimatedBuilder(

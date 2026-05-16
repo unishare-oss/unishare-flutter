@@ -5,6 +5,7 @@ class AuthTextField extends StatefulWidget {
   const AuthTextField({
     super.key,
     required this.hint,
+    this.label,
     this.controller,
     this.validator,
     this.obscureText = false,
@@ -17,6 +18,7 @@ class AuthTextField extends StatefulWidget {
   });
 
   final String hint;
+  final String? label;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool obscureText;
@@ -48,7 +50,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
       color: theme.colorScheme.onSurface,
     );
 
-    return TextFormField(
+    final field = TextFormField(
       controller: widget.controller,
       validator: widget.validator,
       obscureText: _obscured,
@@ -84,6 +86,24 @@ class _AuthTextFieldState extends State<AuthTextField> {
                   )
                 : const SizedBox.shrink()),
       ),
+    );
+
+    if (widget.label == null) return field;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          widget.label!,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 6),
+        field,
+      ],
     );
   }
 }

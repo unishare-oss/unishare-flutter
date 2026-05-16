@@ -22,6 +22,15 @@ abstract interface class AuthRepository {
 
   Future<AppUser?> getCurrentUser();
 
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    String? bio,
+    String? universityId,
+    String? departmentId,
+    int? enrollmentYear,
+  });
+
   Future<void> updateAcademicProfile({
     required String uid,
     required String departmentId,

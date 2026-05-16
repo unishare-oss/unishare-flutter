@@ -6,6 +6,7 @@ import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
+import 'package:unishare_mobile/features/feed/presentation/providers/feed_filter_provider.dart';
 import 'package:unishare_mobile/features/feed/presentation/providers/feed_provider.dart';
 import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/feed_empty_state_widget.dart';
@@ -23,6 +24,13 @@ import 'package:unishare_mobile/shared/theme/themes.dart';
 class _GuestModeOn extends GuestMode {
   @override
   bool build() => true;
+}
+
+class _PresetFeedFilter extends FeedFilter {
+  _PresetFeedFilter(this._initial);
+  final FeedFilterState _initial;
+  @override
+  FeedFilterState build() => _initial;
 }
 
 class _FakeAuthRepository implements AuthRepository {
@@ -51,6 +59,16 @@ class _FakeAuthRepository implements AuthRepository {
 
   @override
   Future<AppUser?> getCurrentUser() async => null;
+
+  @override
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    String? bio,
+    String? universityId,
+    String? departmentId,
+    int? enrollmentYear,
+  }) => throw UnimplementedError();
 
   @override
   Future<void> updateAcademicProfile({
@@ -143,12 +161,16 @@ final _mockFeed = [
 // Helpers
 // ---------------------------------------------------------------------------
 
-Widget _buildSubject({bool guestMode = false}) {
+Widget _buildSubject({
+  bool guestMode = false,
+  FeedFilterState feedFilter = const FeedFilterState(),
+}) {
   return ProviderScope(
     overrides: [
       authRepositoryProvider.overrideWithValue(_FakeAuthRepository()),
       if (guestMode) guestModeProvider.overrideWith(() => _GuestModeOn()),
       feedProvider.overrideWith((_) => Stream.value(_mockFeed)),
+      feedFilterProvider.overrideWith(() => _PresetFeedFilter(feedFilter)),
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
@@ -254,65 +276,55 @@ void main() {
       expect(find.text('Test User'), findsWidgets);
     });
 
-    testWidgets('tapping Filters button opens filter picker sheet', (
-      tester,
-    ) async {
+    testWidgets('tapping Filters button opens filter drawer', (tester) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
       await tester.tap(find.text('Filters'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Filter by tags'), findsOneWidget);
+      expect(find.text('Filter posts'), findsOneWidget);
     });
 
-    testWidgets('filter picker shows Confirm and Clear buttons', (
-      tester,
-    ) async {
+    testWidgets('filter drawer shows Clear and Apply buttons', (tester) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
       await tester.tap(find.text('Filters'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Confirm'), findsOneWidget);
       expect(find.text('Clear'), findsOneWidget);
+      expect(find.text('Apply'), findsOneWidget);
     });
 
-    testWidgets('active tag filter shows only matching posts', (tester) async {
-      await tester.pumpWidget(_buildSubject());
+    testWidgets('courseId filter shows only matching posts', (tester) async {
+      // CSC233 has 2 posts: 'LR Parsing' (note) + 'Assignment 9' (exercise)
+      await tester.pumpWidget(
+        _buildSubject(
+          feedFilter: const FeedFilterState(
+            courseId: 'CSC233',
+            courseName: 'CS',
+          ),
+        ),
+      );
       await tester.pump();
 
-      await tester.tap(find.text('Filters'));
-      await tester.pumpAndSettle();
-
-      // InkWell rows are unique to the sheet — PostCard tags use Container
-      await tester.tap(find.widgetWithText(InkWell, 'concurrency'));
-      await tester.pump();
-
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
-
-      // only 1 mock post has 'concurrency' tag (Chapter 7)
-      expect(find.byType(PostCard), findsNWidgets(1));
-      expect(find.text('Chapter 7'), findsOneWidget);
+      expect(find.byType(PostCard), findsNWidgets(2));
+      expect(find.text('LR Parsing'), findsOneWidget);
     });
 
-    testWidgets('no-match filter shows empty state widget', (tester) async {
-      await tester.pumpWidget(_buildSubject());
+    testWidgets('no-match courseId filter shows empty state widget', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _buildSubject(
+          feedFilter: const FeedFilterState(
+            courseId: 'NO_MATCH',
+            courseName: 'x',
+          ),
+        ),
+      );
       await tester.pump();
-
-      // EXERCISES tab — no exercise posts have the 'concurrency' tag
-      await tester.tap(find.text('EXERCISES'));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Filters'));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.widgetWithText(InkWell, 'concurrency'));
-      await tester.pump();
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
 
       expect(find.byType(FeedEmptyStateWidget), findsOneWidget);
     });
