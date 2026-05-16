@@ -1165,3 +1165,9 @@ Outcome: Wired ShellScaffold so the More tab calls showMoreDrawer(context) inste
 Decisions: Used Approach A from the plan — kept `scrollTargetKeys.length = NavTab.values.length + 1` so legacy branch 3 (/more) still has a valid GlobalKey slot. Task 8 will delete /more and shrink the list.
 Handoff: Task 8 (next) deletes the /more StatefulShellBranch and MoreScreen route, then can shrink scrollTargetKeys to `NavTab.values.length - 1`. The existing `'MainNavBar present on /more'` test should be removed when /more is deleted.
 Review: PENDING
+  [15:50] Edit: apps/mobile/lib/core/router/router.dart
+  [15:50] Edit: apps/mobile/lib/core/router/router.dart
+  [15:50] Edit: apps/mobile/lib/core/router/router.dart
+  [15:50] Edit: apps/mobile/test/widget/core/router/shell_router_test.dart
+  [15:57] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [15:57] Edit: apps/mobile/lib/features/requests/presentation/widgets/request_card.dart

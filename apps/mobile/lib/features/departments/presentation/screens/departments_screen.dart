@@ -48,7 +48,7 @@ class DepartmentsScreen extends ConsumerWidget {
               final dept = departments[index];
               return GestureDetector(
                 onTap: () => context.push(
-                  '/more/departments/${dept.id}'
+                  '/departments/${dept.id}'
                   '?name=${Uri.encodeComponent(dept.name)}',
                 ),
                 child: _DepartmentTile(name: dept.name),
