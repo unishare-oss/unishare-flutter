@@ -138,8 +138,11 @@ class MoreDrawerSheet extends ConsumerWidget {
   }
 
   void _go(BuildContext context, String path) {
+    // Capture the router before popping — the modal's context can become
+    // deactivated as the sheet tears down, breaking InheritedWidget lookups.
+    final router = GoRouter.of(context);
     Navigator.of(context).pop();
-    context.go(path);
+    router.go(path);
   }
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {

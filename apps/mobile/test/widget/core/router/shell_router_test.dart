@@ -167,35 +167,28 @@ void main() {
       },
     );
 
-    testWidgets(
-      'on /saved the 4th nav slot shows the Saved label, not "More"',
-      (tester) async {
-        await tester.pumpWidget(_buildApp());
-        await tester.pumpAndSettle();
-        _router(tester).go('/saved');
-        await tester.pumpAndSettle();
+    testWidgets('on /saved the 4th nav slot reports Saved as Semantics value', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+      _router(tester).go('/saved');
+      await tester.pumpAndSettle();
 
-        // Nav bar still present on the drawer destination.
-        expect(find.byType(MainNavBar), findsOneWidget);
+      // Nav bar still present on the drawer destination.
+      expect(find.byType(MainNavBar), findsOneWidget);
 
-        // The 4th slot's Semantics label is now "Saved" (not "More").
-        final savedTab = find.byWidgetPredicate(
-          (w) =>
-              w is Semantics &&
-              w.properties.button == true &&
-              w.properties.label == 'Saved',
-        );
-        expect(savedTab, findsOneWidget);
-
-        // And "More" semantics label is gone from the bar.
-        final moreTab = find.byWidgetPredicate(
-          (w) =>
-              w is Semantics &&
-              w.properties.button == true &&
-              w.properties.label == 'More',
-        );
-        expect(moreTab, findsNothing);
-      },
-    );
+      // The 4th slot's semantics: label stays 'More' (the action), and
+      // the current sub-destination is exposed as `value` so the tap
+      // action remains accurate while the page state is announced.
+      final moreTab = find.byWidgetPredicate(
+        (w) =>
+            w is Semantics &&
+            w.properties.button == true &&
+            w.properties.label == 'More' &&
+            w.properties.value == 'Saved',
+      );
+      expect(moreTab, findsOneWidget);
+    });
   });
 }

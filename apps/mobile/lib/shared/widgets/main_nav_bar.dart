@@ -387,6 +387,10 @@ class _NavTabItem extends StatelessWidget {
     }
   }
 
+  /// Label describing the BUTTON's action. For the More slot this stays
+  /// 'More' regardless of [subDestination] so screen readers always know
+  /// the tap opens the More menu — the current sub-destination is conveyed
+  /// via [_semanticsValue] (state), not the label (action).
   String get _semanticsLabel {
     switch (tab) {
       case NavTab.feed:
@@ -396,8 +400,16 @@ class _NavTabItem extends StatelessWidget {
       case NavTab.notifs:
         return 'Notifications';
       case NavTab.more:
-        return subDestination?.label ?? 'More';
+        return 'More';
     }
+  }
+
+  /// Additional value describing current state. Used on the More tab to
+  /// announce the active sub-destination (e.g. 'Saved') alongside the
+  /// 'More' button label.
+  String? get _semanticsValue {
+    if (tab != NavTab.more) return null;
+    return subDestination?.label;
   }
 
   @override
@@ -412,6 +424,7 @@ class _NavTabItem extends StatelessWidget {
 
     return Semantics(
       label: _semanticsLabel,
+      value: _semanticsValue,
       button: true,
       selected: isActive,
       excludeSemantics: true,
