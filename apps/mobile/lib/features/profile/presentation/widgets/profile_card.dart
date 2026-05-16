@@ -197,10 +197,11 @@ class ProfileBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        border: Border.all(color: theme.dividerColor),
+        color: cs.onSurface,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
@@ -209,6 +210,7 @@ class ProfileBadge extends StatelessWidget {
           base: theme.textTheme.labelSmall?.copyWith(
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
+            color: cs.surface,
           ),
         ),
       ),

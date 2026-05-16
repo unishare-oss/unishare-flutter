@@ -1171,3 +1171,12 @@ Review: PENDING
   [15:50] Edit: apps/mobile/test/widget/core/router/shell_router_test.dart
   [15:57] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
   [15:57] Edit: apps/mobile/lib/features/requests/presentation/widgets/request_card.dart
+  [18:14] Edit: apps/mobile/lib/core/router/router.dart
+  [18:14] Edit: apps/mobile/lib/core/router/router.dart
+  [18:15] Edit: apps/mobile/lib/core/router/router.dart
+  [18:15] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [18:15] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [18:15] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [18:16] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [18:23] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [18:30] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
