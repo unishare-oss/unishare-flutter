@@ -25,7 +25,6 @@ class CoursesScreen extends ConsumerWidget {
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           title: Text(departmentName),
           leading: const BackButton(),

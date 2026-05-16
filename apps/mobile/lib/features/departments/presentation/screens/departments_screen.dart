@@ -17,7 +17,6 @@ class DepartmentsScreen extends ConsumerWidget {
     final departmentsAsync = ref.watch(departmentsProvider);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(title: const Text('Departments')),
       body: departmentsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),

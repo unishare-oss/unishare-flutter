@@ -59,7 +59,6 @@ class RequestsScreen extends ConsumerWidget {
     final requestsAsync = ref.watch(requestsProvider(filter));
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Requests'),
         actions: [

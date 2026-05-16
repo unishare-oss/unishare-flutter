@@ -136,7 +136,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final form = ref.watch(profileFormProvider);
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Profile'),
         actions: [
