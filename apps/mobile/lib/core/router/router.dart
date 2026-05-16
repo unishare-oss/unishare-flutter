@@ -115,6 +115,9 @@ class _RouterNotifier extends ChangeNotifier {
       '/notifications',
       '/more',
       '/saved',
+      '/profile',
+      '/departments',
+      '/requests',
       '/preview',
       '/upload-progress',
     };
@@ -177,6 +180,34 @@ GoRouter router(Ref ref) {
         },
       ),
       GoRoute(path: '/saved', builder: (context, state) => const SavedScreen()),
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: '/departments',
+        builder: (context, state) => const DepartmentsScreen(),
+        routes: [
+          GoRoute(
+            path: ':deptId',
+            builder: (context, state) => CoursesScreen(
+              deptId: state.pathParameters['deptId']!,
+              departmentName: state.uri.queryParameters['name'] ?? 'Courses',
+            ),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/requests',
+        builder: (context, state) => const RequestsScreen(),
+      ),
+      GoRoute(
+        path: '/requests/:requestId',
+        builder: (context, state) {
+          final requestId = state.pathParameters['requestId']!;
+          return RequestDetailScreen(requestId: requestId);
+        },
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => Consumer(
           builder: (context, ref, _) {
