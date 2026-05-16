@@ -185,7 +185,7 @@ class RequestCard extends ConsumerWidget {
       label: 'View request: ${request.title}',
       button: true,
       child: InkWell(
-        onTap: () => context.push('/more/requests/${request.id}'),
+        onTap: () => context.push('/requests/${request.id}'),
         child: card,
       ),
     );

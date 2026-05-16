@@ -7,6 +7,7 @@ import 'package:unishare_mobile/features/requests/presentation/widgets/new_reque
 import 'package:unishare_mobile/features/requests/presentation/widgets/request_card.dart';
 import 'package:unishare_mobile/features/requests/presentation/widgets/request_filter_bar.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 Future<void> _deleteRequest(
   BuildContext context,
@@ -58,7 +59,6 @@ class RequestsScreen extends ConsumerWidget {
     final requestsAsync = ref.watch(requestsProvider(filter));
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: const Text('Requests'),
         actions: [
@@ -115,6 +115,9 @@ class RequestsScreen extends ConsumerWidget {
               data: (requests) {
                 if (requests.isEmpty) return const _EmptyState();
                 return ListView.separated(
+                  padding: const EdgeInsets.only(
+                    bottom: MainNavBar.bottomInset,
+                  ),
                   itemCount: requests.length,
                   separatorBuilder: (_, _) =>
                       Divider(height: 1, color: theme.dividerColor),

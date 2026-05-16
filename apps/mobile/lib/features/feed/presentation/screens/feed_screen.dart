@@ -16,6 +16,7 @@ import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
 // ---------------------------------------------------------------------------
@@ -227,7 +228,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
             return AnimatedBuilder(
               animation: _tabController,
               builder: (context, _) => ListView.separated(
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.only(bottom: MainNavBar.bottomInset),
                 itemCount: posts.length,
                 separatorBuilder: (_, _) => Divider(
                   height: 1,

@@ -9,7 +9,6 @@ import 'package:unishare_mobile/features/auth/presentation/screens/welcome_scree
 import 'package:unishare_mobile/features/departments/presentation/screens/courses_screen.dart';
 import 'package:unishare_mobile/features/departments/presentation/screens/departments_screen.dart';
 import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
-import 'package:unishare_mobile/features/more/presentation/screens/more_screen.dart';
 import 'package:unishare_mobile/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
@@ -29,10 +28,6 @@ part 'router.g.dart';
 // ---------------------------------------------------------------------------
 // NavTab — branch index order must match StatefulShellRoute.branches order
 // ---------------------------------------------------------------------------
-
-/// Branch index of the guest /saved route in the StatefulShellRoute.
-/// Declared here to avoid a circular import between GuestNavBar and GuestShellScaffold.
-const kSavedBranchIndex = 4;
 
 // Simple in-memory flag — not a Riverpod provider to keep it out of codegen.
 bool academicProfileSessionDismissed = false;
@@ -54,6 +49,33 @@ enum NavTab {
       case NavTab.more:
         return '/more';
     }
+  }
+}
+
+/// Destinations reachable from the More drawer. When the user is on one of
+/// these routes, the 4th bottom-nav slot renders this destination's label
+/// and icon instead of the default "More" / menu icon.
+enum DrawerDestination {
+  profile('Profile', Icons.person_rounded),
+  saved('Saved', Icons.bookmark_rounded),
+  departments('Depts', Icons.apartment_rounded),
+  requests('Requests', Icons.inbox_rounded);
+
+  const DrawerDestination(this.label, this.icon);
+
+  final String label;
+  final IconData icon;
+
+  /// Returns the destination that owns [path], or `null` if [path] is not
+  /// inside the drawer-destinations branch.
+  static DrawerDestination? fromPath(String path) {
+    if (path == '/profile') return profile;
+    if (path == '/saved') return saved;
+    if (path == '/departments' || path.startsWith('/departments/')) {
+      return departments;
+    }
+    if (path == '/requests' || path.startsWith('/requests/')) return requests;
+    return null;
   }
 }
 
@@ -110,20 +132,17 @@ class _RouterNotifier extends ChangeNotifier {
       return '/feed';
     }
 
-    // 4. Authenticated user on guest-only /saved → redirect to /more/saved
-    if (isAuthenticated && currentPath == '/saved') {
-      return '/more/saved';
-    }
-
-    // 5. Unknown path → /feed
+    // 4. Unknown path → /feed
     // authRoutes covers /welcome as exact-match only (no child routes exist).
     // knownPrefixes covers shell branches and their nested children.
     const knownPrefixes = {
       '/feed',
       '/posts',
       '/notifications',
-      '/more',
       '/saved',
+      '/profile',
+      '/departments',
+      '/requests',
       '/preview',
       '/upload-progress',
     };
@@ -229,58 +248,44 @@ GoRouter router(Ref ref) {
               ),
             ],
           ),
-          // Branch 3 — MORE
+          // Branch 3 — drawer destinations (Profile / Saved / Departments /
+          // Requests). The 4th nav slot doesn't navigate here directly — it
+          // opens the More drawer. The drawer's tile callbacks call
+          // context.go() with one of these paths, activating this branch.
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/more',
-                builder: (context, state) => MoreScreen(
-                  scrollKey: ShellScaffold.scrollTargetKeys[NavTab.more.index],
-                ),
-                routes: [
-                  GoRoute(
-                    path: 'profile',
-                    builder: (context, state) => const ProfileScreen(),
-                  ),
-                  GoRoute(
-                    path: 'saved',
-                    builder: (context, state) => const SavedScreen(),
-                  ),
-                  GoRoute(
-                    path: 'departments',
-                    builder: (context, state) => const DepartmentsScreen(),
-                    routes: [
-                      GoRoute(
-                        path: ':deptId',
-                        builder: (context, state) => CoursesScreen(
-                          deptId: state.pathParameters['deptId']!,
-                          departmentName:
-                              state.uri.queryParameters['name'] ?? 'Courses',
-                        ),
-                      ),
-                    ],
-                  ),
-                  GoRoute(
-                    path: 'requests',
-                    builder: (context, state) => const RequestsScreen(),
-                  ),
-                  GoRoute(
-                    path: 'requests/:requestId',
-                    builder: (context, state) {
-                      final requestId = state.pathParameters['requestId']!;
-                      return RequestDetailScreen(requestId: requestId);
-                    },
-                  ),
-                ],
+                path: '/profile',
+                builder: (context, state) => const ProfileScreen(),
               ),
-            ],
-          ),
-          // Branch 4 — SAVED (top-level; used by the guest shell nav bar)
-          StatefulShellBranch(
-            routes: [
               GoRoute(
                 path: '/saved',
                 builder: (context, state) => const SavedScreen(),
+              ),
+              GoRoute(
+                path: '/departments',
+                builder: (context, state) => const DepartmentsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':deptId',
+                    builder: (context, state) => CoursesScreen(
+                      deptId: state.pathParameters['deptId']!,
+                      departmentName:
+                          state.uri.queryParameters['name'] ?? 'Courses',
+                    ),
+                  ),
+                ],
+              ),
+              GoRoute(
+                path: '/requests',
+                builder: (context, state) => const RequestsScreen(),
+              ),
+              GoRoute(
+                path: '/requests/:requestId',
+                builder: (context, state) {
+                  final requestId = state.pathParameters['requestId']!;
+                  return RequestDetailScreen(requestId: requestId);
+                },
               ),
             ],
           ),

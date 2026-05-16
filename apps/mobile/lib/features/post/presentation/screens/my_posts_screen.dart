@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/my_posts_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
 class MyPostsScreen extends ConsumerStatefulWidget {
@@ -35,11 +36,7 @@ class _MyPostsScreenState extends ConsumerState<MyPostsScreen>
     final postsAsync = ref.watch(myPostsProvider);
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        scrolledUnderElevation: 0,
         title: Text(
           'My Posts',
           style: Theme.of(
@@ -127,7 +124,7 @@ class _MyPostsScreenState extends ConsumerState<MyPostsScreen>
 
           return ListView.separated(
             controller: _scrollController,
-            padding: EdgeInsets.zero,
+            padding: const EdgeInsets.only(bottom: MainNavBar.bottomInset),
             itemCount: posts.length,
             separatorBuilder: (_, _) => Divider(
               height: 1,

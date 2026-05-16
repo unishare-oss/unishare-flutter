@@ -14,6 +14,7 @@ import 'package:unishare_mobile/features/profile/presentation/widgets/danger_zon
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_form_card.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 /// ProfileScreen still holds [TextEditingController]s (they have their own
 /// lifecycle and don't fit a Riverpod store cleanly), but all other mutable
@@ -206,7 +207,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 32),
           ];
           return ListView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              16 + MainNavBar.bottomInset,
+            ),
             itemCount: sections.length,
             itemBuilder: (_, i) => sections[i],
           );

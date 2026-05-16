@@ -1127,3 +1127,96 @@ Summary:  2 files changed, 9 insertions(+), 10 deletions(-)
   [18:11] Edit: apps/mobile/pubspec.yaml
   [18:11] Edit: apps/mobile/lib/main.dart
   [18:11] Edit: apps/mobile/lib/main.dart
+
+2026-05-16
+  [12:43] Write: apps/mobile/test/widget/features/more/more_drawer_tile_test.dart
+  [12:43] Write: apps/mobile/lib/features/more/presentation/widgets/more_drawer_tile.dart
+  [12:48] Write: apps/mobile/test/widget/features/more/more_drawer_grid_test.dart
+  [12:48] Write: apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart
+  [12:52] Write: apps/mobile/test/widget/features/more/more_drawer_user_row_test.dart
+  [12:52] Write: apps/mobile/lib/features/more/presentation/widgets/more_drawer_user_row.dart
+  [13:49] Write: apps/mobile/test/widget/features/more/more_drawer_test.dart
+  [13:49] Write: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [13:50] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [13:50] Edit: apps/mobile/test/widget/features/more/more_drawer_test.dart
+  [13:50] Edit: apps/mobile/test/widget/features/more/more_drawer_test.dart
+  [15:27] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [15:27] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [15:27] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [15:28] Write: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [15:28] Edit: apps/mobile/lib/core/router/router.dart
+  [15:28] Edit: apps/mobile/lib/core/router/router.dart
+  [15:28] Edit: apps/mobile/lib/core/router/router.dart
+  [15:28] Edit: apps/mobile/lib/core/router/router.dart
+  [15:29] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [15:36] Edit: apps/mobile/lib/core/router/router.dart
+  [15:36] Edit: apps/mobile/lib/core/router/router.dart
+
+---
+Date: 2026-05-16 (session)
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 7 of More Drawer plan — wire ShellScaffold so More tab opens drawer instead of switching branch
+Prompt: Implement Task 7 per plan: add failing widget test, wire `_handleTabTap` to call `showMoreDrawer(context)` when index == NavTab.more.index; keep `scrollTargetKeys.length` at NavTab.values.length + 1 (Approach A). Run analyze + format + tests, single conventional commit, no Co-Authored-By.
+  [15:42] Edit: apps/mobile/test/widget/core/router/shell_router_test.dart
+  [15:43] Write: apps/mobile/lib/core/router/shell_scaffold.dart
+
+Outcome: Wired ShellScaffold so the More tab calls showMoreDrawer(context) instead of navigating to /more. Added widget test that taps the More tab and asserts drawer labels (SAVED, DEPARTMENTS, REQUESTS, PROFILE) are visible while MainNavBar remains mounted. All 354 tests pass; `flutter analyze` clean.
+Decisions: Used Approach A from the plan — kept `scrollTargetKeys.length = NavTab.values.length + 1` so legacy branch 3 (/more) still has a valid GlobalKey slot. Task 8 will delete /more and shrink the list.
+Handoff: Task 8 (next) deletes the /more StatefulShellBranch and MoreScreen route, then can shrink scrollTargetKeys to `NavTab.values.length - 1`. The existing `'MainNavBar present on /more'` test should be removed when /more is deleted.
+Review: PENDING
+  [15:50] Edit: apps/mobile/lib/core/router/router.dart
+  [15:50] Edit: apps/mobile/lib/core/router/router.dart
+  [15:50] Edit: apps/mobile/lib/core/router/router.dart
+  [15:50] Edit: apps/mobile/test/widget/core/router/shell_router_test.dart
+  [15:57] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [15:57] Edit: apps/mobile/lib/features/requests/presentation/widgets/request_card.dart
+  [18:14] Edit: apps/mobile/lib/core/router/router.dart
+  [18:14] Edit: apps/mobile/lib/core/router/router.dart
+  [18:15] Edit: apps/mobile/lib/core/router/router.dart
+  [18:15] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [18:15] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [18:15] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [18:16] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [18:23] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [18:30] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [18:34] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [18:34] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [18:34] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [18:34] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [20:21] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [20:21] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [20:22] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [20:22] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [20:23] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [20:24] Edit: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [20:25] Edit: apps/mobile/lib/features/requests/presentation/screens/request_detail_screen.dart
+  [20:25] Edit: apps/mobile/lib/features/requests/presentation/screens/request_detail_screen.dart
+  [20:28] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [20:34] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [20:34] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:35] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [20:45] Edit: apps/mobile/lib/shared/theme/app_theme.dart
+  [20:45] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [20:45] Edit: apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  [20:45] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [20:46] Edit: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [20:46] Edit: apps/mobile/lib/features/departments/presentation/screens/courses_screen.dart
+  [20:46] Edit: apps/mobile/lib/features/requests/presentation/screens/requests_screen.dart
+  [20:46] Edit: apps/mobile/lib/features/post/presentation/screens/my_posts_screen.dart
+  [20:53] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [21:21] Edit: apps/mobile/test/widget/features/more/more_drawer_test.dart
+  [23:51] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [23:51] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [23:52] Edit: apps/mobile/test/widget/core/router/shell_router_test.dart
