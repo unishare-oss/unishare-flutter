@@ -135,5 +135,32 @@ void main() {
       await tester.pump();
       expect(find.byType(MainNavBar), findsOneWidget);
     });
+
+    testWidgets(
+      'tapping More tab opens the More drawer (does not switch branch)',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+
+        final moreTab = find.byWidgetPredicate(
+          (w) =>
+              w is Semantics &&
+              w.properties.button == true &&
+              w.properties.label == 'More',
+        );
+        expect(moreTab, findsOneWidget);
+
+        await tester.tap(moreTab);
+        await tester.pumpAndSettle();
+
+        // The drawer surfaces these uppercase labels.
+        expect(find.text('SAVED'), findsOneWidget);
+        expect(find.text('DEPARTMENTS'), findsOneWidget);
+        expect(find.text('REQUESTS'), findsOneWidget);
+        expect(find.text('PROFILE'), findsOneWidget);
+        // We're still rooted on /feed under the drawer.
+        expect(find.byType(MainNavBar), findsOneWidget);
+      },
+    );
   });
 }

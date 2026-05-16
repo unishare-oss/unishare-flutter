@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/core/router/router.dart';
+import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
@@ -11,7 +12,8 @@ class ShellScaffold extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
   static final List<GlobalKey<State>> scrollTargetKeys = List.generate(
-    NavTab.values.length + 1, // auth tabs + guest /saved branch
+    NavTab.values.length +
+        1, // auth tabs + guest /saved branch (legacy slot, shrunk in Task 8)
     (_) => GlobalKey<State>(),
   );
 
@@ -31,13 +33,18 @@ class ShellScaffold extends StatelessWidget {
         body: navigationShell,
         bottomNavigationBar: MainNavBar(
           activeIndex: activeIndex,
-          onTap: _handleTabTap,
+          onTap: (index) => _handleTabTap(context, index),
         ),
       ),
     );
   }
 
-  void _handleTabTap(int index) {
+  void _handleTabTap(BuildContext context, int index) {
+    // More is an action tab — it opens the drawer instead of switching branch.
+    if (index == NavTab.more.index) {
+      showMoreDrawer(context);
+      return;
+    }
     if (index == navigationShell.currentIndex) {
       final state = scrollTargetKeys[index].currentState;
       if (state is ScrollToTopTarget) {
