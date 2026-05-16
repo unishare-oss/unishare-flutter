@@ -13,11 +13,13 @@ class SavedScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final savedAsync = ref.watch(savedPostsProvider);
     final isGuest = ref.watch(guestModeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Saved'), centerTitle: false),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(title: const Text('Saved')),
       body: Column(
         children: [
           if (isGuest) const _GuestBanner(),
