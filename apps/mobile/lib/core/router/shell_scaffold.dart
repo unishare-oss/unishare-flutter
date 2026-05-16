@@ -33,8 +33,10 @@ class ShellScaffold extends StatelessWidget {
           navigationShell.goBranch(NavTab.feed.index, initialLocation: true);
         }
       },
+      // Body ends at the top of the nav bar slot — no overlap with content.
+      // The bar still floats visually thanks to its own internal margin
+      // (`_bottomGap` + system safe area) and remains a glass surface.
       child: Scaffold(
-        extendBody: true,
         body: navigationShell,
         bottomNavigationBar: MainNavBar(
           activeIndex: activeIndex,

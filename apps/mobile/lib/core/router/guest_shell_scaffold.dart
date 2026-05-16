@@ -16,7 +16,6 @@ class GuestShellScaffold extends StatelessWidget {
     final path = GoRouterState.of(context).uri.path;
     final isOnFeed = path == '/feed' || path.startsWith('/feed/');
     final isOnSaved = path == '/saved';
-
     return PopScope(
       canPop: isOnFeed || context.canPop(),
       onPopInvokedWithResult: (didPop, _) {
@@ -24,8 +23,8 @@ class GuestShellScaffold extends StatelessWidget {
           context.go('/feed');
         }
       },
+      // Body ends at the top of the nav bar slot — no overlap with content.
       child: Scaffold(
-        extendBody: true,
         body: navigationShell,
         bottomNavigationBar: GuestNavBar(
           isOnFeed: isOnFeed,

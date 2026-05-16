@@ -31,6 +31,10 @@ class GuestNavBar extends StatefulWidget {
   static const double _barRadius = 32;
   static const double _pillRadius = 22;
 
+  /// Bottom inset that pages must reserve so their content isn't hidden
+  /// behind the floating nav bar. Excludes system safe area.
+  static const double bottomInset = _barHeight + _bottomGap;
+
   /// Drag-snap is limited to "real" branches — Feed (0) and Saved (1).
   /// Sign In (index 2) is a one-shot action, not a destination.
   static const int _draggableTabCount = 2;

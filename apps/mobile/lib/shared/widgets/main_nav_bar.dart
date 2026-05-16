@@ -31,6 +31,11 @@ class MainNavBar extends StatefulWidget {
   static const double _barRadius = 32;
   static const double _pillRadius = 22;
 
+  /// Bottom inset that pages must reserve so their content isn't hidden
+  /// behind the floating nav bar. Excludes system safe area — that is
+  /// already in `MediaQuery.padding.bottom`.
+  static const double bottomInset = _barHeight + _bottomGap;
+
   @override
   State<MainNavBar> createState() => _MainNavBarState();
 }
