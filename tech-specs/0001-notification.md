@@ -238,9 +238,9 @@ match /fcmTokens/{tokenHash} {
 
 | Package              | Version constraint | Reason                                               |
 | -------------------- | ------------------ | ---------------------------------------------------- |
-| `firebase_messaging` | `^15.0.0`          | FCM token retrieval and foreground message callbacks |
+| `firebase_messaging` | `^16.2.1`          | FCM token retrieval and foreground message callbacks |
 
-`firebase_messaging` is an official FlutterFire package consistent with the existing stack. It must be added to `pubspec.yaml` under `dependencies` and registered in `firebase_options.dart` via `flutterfire configure`. Flag for team approval per CLAUDE.md convention.
+`firebase_messaging` is an official FlutterFire package consistent with the existing stack. It must be added to `pubspec.yaml` under `dependencies` and registered in `firebase_options.dart` via `flutterfire configure`. Flag for team approval per CLAUDE.md convention. Pinned to `^16.2.1` (bumped from the initially specified `^15.0.0`) because the FlutterFire BoM resolves `firebase_auth ^6.5.0` against the matching `firebase_messaging ^16.x` line.
 
 ### Cloud Functions (new directory)
 
@@ -630,12 +630,31 @@ The following items are explicitly excluded from this spec. They may be addresse
 
 ## Open Questions
 
-- [ ] **`onCommentAdded` vs `onCommentReply` cold-start duplication:** Both functions are deployed on the same Firestore path and will each cold-start on every new comment. At current scale this is acceptable, but the team should decide before implementation whether to merge them into a single function with internal routing, accepting the added branching complexity in exchange for halved cold-starts.
+- [x] **`onCommentAdded` vs `onCommentReply` cold-start duplication:** Resolved — keeping two separate functions per spec. Both subscribe to `posts/{postId}/comments/{commentId}` and filter internally on `parentId`. Marginal extra invocation cost is acceptable at current scale and the per-function clarity wins.
 
-- [ ] **`suggestion_accepted` recipient resolution:** The spec assumes `onRequestFulfilled` reads `fulfilledByPostId` from the updated request document, then queries the suggestions subcollection to find the matching suggester UID. This is one additional Firestore read per fulfillment event. Confirm this is acceptable, or alternatively store `fulfilledBySuggesterId` on the request document to avoid the extra read.
+- [x] **`suggestion_accepted` recipient resolution:** Resolved — `RequestDto` already stores `fulfilledByPostId` and `fulfilledByPostTitle`. The trigger reads `after.fulfilledByPostId`, queries `requests/{requestId}/suggestions` where `postId == fulfilledByPostId` with `limit(1)`, and notifies `suggestion.suggestedByUserId`. One extra Firestore read per fulfillment, accepted.
 
-- [ ] **`firebase_messaging` version pin:** `^15.0.0` is specified. Confirm it is compatible with the current `firebase_core: ^4.7.0` and the FlutterFire BoM in use before adding to `pubspec.yaml`. Team approval required per CLAUDE.md before the dependency is added.
+- [x] **`firebase_messaging` version pin:** Resolved — pinned to `^16.2.1` to satisfy FlutterFire BoM resolution against `firebase_auth ^6.5.0`. See dependency table above.
 
-- [ ] **Emulator Suite setup:** Cloud Functions require the Firebase Emulator Suite for local development. Confirm whether `firebase.json` already includes an `emulators` config block, and document the local dev setup steps before implementation begins.
+- [x] **Emulator Suite setup:** Resolved — `firebase.json` now includes an `emulators` block exposing `auth`, `firestore`, `functions`, and `pubsub` for local dev. See `functions/README.md` for the workflow.
 
-- [ ] **`purgeOldNotifications` permissions:** The scheduled function runs in a Cloud Scheduler context. Confirm the Firebase project's service account has the `datastore.documents.delete` IAM permission, or whether the Admin SDK's default service account is sufficient.
+- [x] **`purgeOldNotifications` permissions:** Resolved — the function deploys with the project's default Cloud Functions runtime service account, which holds `roles/datastore.user` and can perform collection-group queries + batched deletes via the Admin SDK without additional grants.
+
+---
+
+## Cloud Functions Server (separate companion to the Flutter client)
+
+The server-side half of this feature lives in `functions/` at the repo root, deployed alongside the Flutter app. Components:
+
+| Function | Trigger | Purpose |
+|---|---|---|
+| `onCommentAdded` | onCreate `posts/{postId}/comments/{commentId}` | New top-level comment → notify post owner |
+| `onCommentReply` | onCreate `posts/{postId}/comments/{commentId}` | New reply (parentId set) → notify parent author |
+| `onPostLiked` | onCreate `posts/{postId}/likes/{userId}` | Like → notify post owner |
+| `onRequestUpvoted` | onCreate `requests/{requestId}/upvotes/{userId}` | Upvote → notify requester |
+| `onSuggestionSubmitted` | onCreate `requests/{requestId}/suggestions/{suggestionId}` | Suggestion → notify requester |
+| `onRequestFulfilled` | onUpdate `requests/{requestId}` | Status → fulfilled → notify winning suggester |
+| `purgeOldNotifications` | Scheduled (every 24h) | Delete notifications older than 30 days |
+| `autoDisableBilling` | Pub/Sub `billing-budget-alerts` | Detach billing on budget overrun |
+
+All functions are TypeScript on Node 20, deployed to `asia-southeast1`, and use the shared helpers `writeNotification`, `sendPush`, `getActor` in `functions/src/lib/`. The `autoDisableBilling` function is the cost-safety counterpart to enabling the Firebase Blaze plan (required for Cloud Functions). See `functions/README.md` for deploy + IAM details.
