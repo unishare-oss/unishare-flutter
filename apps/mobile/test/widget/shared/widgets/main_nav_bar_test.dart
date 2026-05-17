@@ -87,21 +87,21 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(_buildSubject());
-      expect(find.byType(Badge), findsNothing);
+      expect(find.byKey(const Key('notification_dot')), findsNothing);
     });
 
     testWidgets('badge absent when notificationsBadgeCount is 0', (
       tester,
     ) async {
       await tester.pumpWidget(_buildSubject(notificationsBadgeCount: 0));
-      expect(find.byType(Badge), findsNothing);
+      expect(find.byKey(const Key('notification_dot')), findsNothing);
     });
 
     testWidgets('badge present when notificationsBadgeCount > 0', (
       tester,
     ) async {
       await tester.pumpWidget(_buildSubject(notificationsBadgeCount: 3));
-      expect(find.byType(Badge), findsOneWidget);
+      expect(find.byKey(const Key('notification_dot')), findsOneWidget);
     });
 
     testWidgets('each tab item has sentence-case Semantics label', (

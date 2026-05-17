@@ -427,6 +427,7 @@ class _NavTabItem extends StatelessWidget {
             top: -2,
             right: -2,
             child: Container(
+              key: const Key('notification_dot'),
               width: 8,
               height: 8,
               decoration: BoxDecoration(
