@@ -257,30 +257,33 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('Semantics label includes actor, action, target, and read state', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        _host(
-          NotificationItemTile(
-            notification: _notif(
-              actorName: 'Alice',
-              type: NotificationType.postCommentAdded,
-              targetTitle: 'My Post',
-              isRead: false,
-              body: 'Alice commented: hi',
+    testWidgets(
+      'Semantics label includes actor, action, target, and read state',
+      (tester) async {
+        await tester.pumpWidget(
+          _host(
+            NotificationItemTile(
+              notification: _notif(
+                actorName: 'Alice',
+                type: NotificationType.postCommentAdded,
+                targetTitle: 'My Post',
+                isRead: false,
+                body: 'Alice commented: hi',
+              ),
+              onTap: () {},
             ),
-            onTap: () {},
           ),
-        ),
-      );
+        );
 
-      final semantics = tester.getSemantics(find.byType(NotificationItemTile));
-      expect(semantics.label, contains('Alice'));
-      expect(semantics.label, contains('commented on your post'));
-      expect(semantics.label, contains('My Post'));
-      expect(semantics.label, contains('Unread'));
-    });
+        final semantics = tester.getSemantics(
+          find.byType(NotificationItemTile),
+        );
+        expect(semantics.label, contains('Alice'));
+        expect(semantics.label, contains('commented on your post'));
+        expect(semantics.label, contains('My Post'));
+        expect(semantics.label, contains('Unread'));
+      },
+    );
 
     testWidgets('Semantics label uses "Read" when notification is read', (
       tester,
