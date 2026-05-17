@@ -24,12 +24,18 @@ class _RecorderRepo implements NotificationRepository {
   final List<String> markAllCalls = [];
   final List<(String, String)> markOneCalls = [];
 
+  /// When non-null, markAsRead will delay by this duration before completing.
+  Duration? markAsReadDelay;
+
   @override
   Stream<List<AppNotification>> watchNotifications(String userId) =>
       const Stream.empty();
 
   @override
   Future<void> markAsRead(String userId, String notificationId) async {
+    if (markAsReadDelay != null) {
+      await Future<void>.delayed(markAsReadDelay!);
+    }
     markOneCalls.add((userId, notificationId));
   }
 
@@ -359,6 +365,38 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(repo.markOneCalls, isEmpty);
+      },
+    );
+
+    testWidgets(
+      'navigation happens even when markAsRead is in-flight (fire-and-forget)',
+      (tester) async {
+        final repo = _RecorderRepo()
+          ..markAsReadDelay = const Duration(seconds: 5);
+
+        await tester.pumpWidget(
+          _buildSubject(
+            repo: repo,
+            notifsState: AsyncValue.data([
+              _notif(id: 'n1', targetType: 'post', targetId: 'p99'),
+            ]),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        // Tap the tile — markAsRead is delayed 5 s but navigation must be
+        // immediate since it is fire-and-forget.
+        await tester.tap(find.byType(NotificationItemTile));
+        // GoRouter navigation completes within one or two frame pumps.
+        // We pump repeatedly but cap at 500 ms — far less than the 5 s delay.
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 500));
+
+        // Destination route must already be visible.
+        expect(find.text('post-route-p99'), findsOneWidget);
+
+        // Advance timers to let the delayed future complete without leaking.
+        await tester.pump(const Duration(seconds: 6));
       },
     );
   });

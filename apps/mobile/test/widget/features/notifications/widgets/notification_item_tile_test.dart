@@ -14,6 +14,7 @@ AppNotification _notif({
   String targetTitle = 'My Post',
   String targetId = 'post-1',
   String targetType = 'post',
+  String body = 'Body',
   DateTime? createdAt,
 }) {
   return AppNotification(
@@ -22,7 +23,7 @@ AppNotification _notif({
     isRead: isRead,
     createdAt: createdAt ?? DateTime.now().subtract(const Duration(minutes: 5)),
     title: 'Title',
-    body: 'Body',
+    body: body,
     actorId: 'a1',
     actorName: actorName,
     actorPhotoUrl: null,
@@ -61,9 +62,7 @@ void main() {
       );
 
       // The indicator bar is a 3-wide Container with a BoxDecoration.
-      // Find the IntrinsicHeight wrapping the tile body and verify the first
-      // child of its Row has width 3 (the unread bar). Read tile uses
-      // SizedBox(width: 3) so the type differs.
+      // Read tile uses SizedBox(width: 3) so the type differs.
       final container = tester
           .widgetList<Container>(find.byType(Container))
           .where(
@@ -140,6 +139,42 @@ void main() {
       expect(find.text('Lecture Notes'), findsOneWidget);
     });
 
+    testWidgets('renders body excerpt below actor/action line when non-empty', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(
+          NotificationItemTile(
+            notification: _notif(body: 'Alice commented: Great resource!'),
+            onTap: () {},
+          ),
+        ),
+      );
+
+      expect(find.text('Alice commented: Great resource!'), findsOneWidget);
+    });
+
+    testWidgets('does not render a body Text when body is empty', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(
+          NotificationItemTile(
+            notification: _notif(body: ''),
+            onTap: () {},
+          ),
+        ),
+      );
+
+      // targetTitle 'My Post' is shown; an additional body Text widget must not
+      // appear. Verify no Text widget contains the empty string (there are none).
+      final textWidgets = tester.widgetList<Text>(find.byType(Text)).toList();
+      // None of the Text children should be empty.
+      for (final t in textWidgets) {
+        expect(t.data, isNotEmpty);
+      }
+    });
+
     testWidgets('relative timestamp shows "just now" for fresh notifs', (
       tester,
     ) async {
@@ -193,7 +228,7 @@ void main() {
       );
       expect(_richTextDump(tester), contains('upvoted your request'));
 
-      // suggestionAccepted
+      // suggestionAccepted — grammar fix: reads "Alice accepted your suggestion"
       await tester.pumpWidget(
         _host(
           NotificationItemTile(
@@ -202,7 +237,7 @@ void main() {
           ),
         ),
       );
-      expect(_richTextDump(tester), contains('your suggestion was accepted'));
+      expect(_richTextDump(tester), contains('accepted your suggestion'));
     });
 
     testWidgets('tap fires the onTap callback', (tester) async {
@@ -222,19 +257,28 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('Semantics label includes title + read state', (tester) async {
+    testWidgets('Semantics label includes actor, action, target, and read state', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _host(
           NotificationItemTile(
-            notification: _notif(isRead: false),
+            notification: _notif(
+              actorName: 'Alice',
+              type: NotificationType.postCommentAdded,
+              targetTitle: 'My Post',
+              isRead: false,
+              body: 'Alice commented: hi',
+            ),
             onTap: () {},
           ),
         ),
       );
 
-      // The Semantics node wrapping the tile exposes "Title. Unread" as label.
       final semantics = tester.getSemantics(find.byType(NotificationItemTile));
-      expect(semantics.label, contains('Title'));
+      expect(semantics.label, contains('Alice'));
+      expect(semantics.label, contains('commented on your post'));
+      expect(semantics.label, contains('My Post'));
       expect(semantics.label, contains('Unread'));
     });
 
@@ -254,5 +298,24 @@ void main() {
       expect(semantics.label, contains('Read'));
       expect(semantics.label, isNot(contains('Unread')));
     });
+
+    testWidgets(
+      'Semantics label includes body excerpt when body is non-empty',
+      (tester) async {
+        await tester.pumpWidget(
+          _host(
+            NotificationItemTile(
+              notification: _notif(body: 'Great resource!'),
+              onTap: () {},
+            ),
+          ),
+        );
+
+        final semantics = tester.getSemantics(
+          find.byType(NotificationItemTile),
+        );
+        expect(semantics.label, contains('Great resource!'));
+      },
+    );
   });
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -87,15 +89,17 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
               final notif = notifications[index];
               return NotificationItemTile(
                 notification: notif,
-                onTap: () async {
-                  // Mark as read first.
+                onTap: () {
+                  // Mark as read fire-and-forget — navigation must not block
+                  // on a Firestore write that could fail (network, rules).
                   if (!notif.isRead) {
-                    await ref
-                        .read(markNotificationReadUseCaseProvider)
-                        .call(user.id, notif.id);
+                    unawaited(
+                      ref
+                          .read(markNotificationReadUseCaseProvider)
+                          .call(user.id, notif.id),
+                    );
                   }
                   // Navigate based on targetType.
-                  if (!context.mounted) return;
                   final destination = notif.targetType == 'request'
                       ? '/more/requests/${notif.targetId}'
                       : '/posts/${notif.targetId}';
