@@ -1,4 +1,7 @@
+import 'dart:convert' show utf8;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto/crypto.dart' show sha256;
 
 import 'package:unishare_mobile/features/notifications/data/models/notification_model.dart';
 import 'package:unishare_mobile/features/notifications/domain/entities/notification_item.dart';
@@ -73,31 +76,60 @@ class NotificationFirestoreDatasource {
   // FCM token management
   // ---------------------------------------------------------------------------
 
+  /// Returns the SHA-256 hex digest of [token].
+  ///
+  /// Per SPEC-0001 § Firestore Schema, `{tokenHash}` is the SHA-256 hex
+  /// digest of the raw FCM token string.  Using SHA-256 (via the `crypto`
+  /// package) gives a stable, collision-resistant, process-independent ID —
+  /// unlike `token.hashCode` which is process-local and can collide.
+  String _tokenHash(String token) {
+    final bytes = utf8.encode(token);
+    final digest = sha256.convert(bytes);
+    return digest.toString();
+  }
+
   /// Registers or refreshes the FCM token for [userId].
   ///
-  /// Uses [token.hashCode.toRadixString(16)] as the document ID (avoids adding
-  /// the `crypto` dependency). The document is written with set-merge so that
-  /// `createdAt` is preserved on refresh and only `updatedAt` changes.
+  /// Per SPEC-0001 § Firestore Schema:
+  /// - `createdAt` records the FIRST registration and must not be overwritten
+  ///   on subsequent calls.
+  /// - `updatedAt` is refreshed on every app start / token rotation.
+  ///
+  /// A transaction is used so that the read-then-conditional-write is atomic.
   Future<void> registerFcmToken(
     String userId,
     String token,
     String platform,
   ) async {
-    final tokenHash = token.hashCode.toRadixString(16);
+    final tokenHash = _tokenHash(token);
     final ref = _fcmTokensRef(userId).doc(tokenHash);
-    final now = Timestamp.now();
 
-    await ref.set({
-      'token': token,
-      'platform': platform,
-      'updatedAt': now,
-      'createdAt': now,
-    }, SetOptions(merge: true));
+    await _firestore.runTransaction((tx) async {
+      final snap = await tx.get(ref);
+      final now = FieldValue.serverTimestamp();
+
+      if (!snap.exists) {
+        // First registration: write both timestamps.
+        tx.set(ref, {
+          'token': token,
+          'platform': platform,
+          'createdAt': now,
+          'updatedAt': now,
+        });
+      } else {
+        // Subsequent refresh: only bump updatedAt; leave createdAt alone.
+        tx.update(ref, {
+          'token': token,
+          'platform': platform,
+          'updatedAt': now,
+        });
+      }
+    });
   }
 
   /// Removes the FCM token document for [token] (called on sign-out).
   Future<void> removeFcmToken(String userId, String token) async {
-    final tokenHash = token.hashCode.toRadixString(16);
+    final tokenHash = _tokenHash(token);
     await _fcmTokensRef(userId).doc(tokenHash).delete();
   }
 }
