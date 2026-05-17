@@ -3394,7 +3394,7 @@ match /fcmTokens/{tokenHash} {
 <li><strong>Analytics / impression tracking:</strong> No notification-open event is logged to Firebase Analytics in v1.</li>
 <li><strong>Admin / moderation notifications:</strong> No notifications for content flagging or moderation actions.</li>
 <li><strong>Email or SMS fallback:</strong> Firebase-only delivery; no third-party email/SMS channel.</li>
-<li><strong>Read receipt sync across multiple devices:</strong> <code>isRead</code> is per-document; marking read on one device does not propagate to other devices in v1.</li>
+<li><em>(Cross-device read-receipt sync is supported by default in this design — <code>isRead</code> lives on the shared <code>users/{uid}/notifications/{notifId}</code> document, and the client subscribes via a Firestore stream, so marking read on device A propagates to device B in real time. No additional work needed.)</em></li>
 <li><strong>Full rules file rewrite:</strong> Only the delta blocks described in the rules section need to be added; the rest of <code>firestore.rules</code> is unchanged.</li>
 </ul>
 <hr />

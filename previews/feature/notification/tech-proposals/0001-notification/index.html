@@ -2053,7 +2053,7 @@
 <p><strong>Status:</strong> APPROVED<br />
 <strong>Author:</strong> Nang Hayman Aye Mya<br />
 <strong>Date:</strong> 2026-05-14<br />
-<strong>Spec:</strong> (pending approval)<br />
+<strong>Spec:</strong> <a href="../../tech-specs/0001-notification/">SPEC-0001</a><br />
 <strong>Approved by:</strong> Nadi</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
@@ -2146,7 +2146,7 @@
 <hr />
 <h3 id="option-d-hybrid-firestore-subcollection-for-in-app-history-fcm-via-cloud-functions-for-push-recommended">Option D — Hybrid: Firestore subcollection for in-app history + FCM via Cloud Functions for push (Recommended)<a class="headerlink" href="#option-d-hybrid-firestore-subcollection-for-in-app-history-fcm-via-cloud-functions-for-push-recommended" title="Permanent link">&para;</a></h3>
 <p><strong>Description:</strong> This combines the reliable delivery of Option A with a clean data model for the in-app center. A Cloud Function (Firestore trigger) handles all push dispatch and writes the canonical notification document to <code>users/{uid}/notifications/{notifId}</code>. The Flutter app subscribes to that subcollection via a Riverpod <code>StreamProvider</code> to power the notification center and badge count. FCM tokens are stored in <code>users/{uid}/fcmTokens</code> and refreshed by the client on each login or token rotation. On app open, the app registers its FCM token; on notification tap, <code>go_router</code> deep-links to the relevant content.</p>
-<p>The Firestore document written by the Cloud Function serves a dual purpose: it is the push trigger (function reads it and dispatches FCM) and the persistent record for the in-app center. This avoids two separate writes and gives the in-app center an authoritative source of truth that was never touched by another client.</p>
+<p>The Cloud Function is triggered by the <em>source</em> activity event itself (a new comment, like, upvote, suggestion, or status-fulfilled transition) — not by the notification document. On firing, the function (a) writes the canonical <code>users/{recipientUid}/notifications/{notifId}</code> document and (b) fans out FCM push to the recipient's registered devices. This single function handles both fan-outs, so the in-app center reads an authoritative record that was never touched by a peer client.</p>
 <p><strong>Pros:</strong></p>
 <ul>
 <li>True push when the app is closed — satisfies the hard requirement.</li>
