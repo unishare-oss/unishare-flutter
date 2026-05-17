@@ -56,16 +56,27 @@ Prerequisites — done once per environment:
 
 1. **Firebase Blaze plan** must be active on the project. Cloud Functions cannot deploy on Spark.
 2. **Cloud Billing budget** at $1/month with a Pub/Sub topic named `billing-budget-alerts`. Create from Cloud Console → Billing → Budgets & alerts. The `autoDisableBilling` function subscribes to this topic.
-3. **IAM grant for `autoDisableBilling`.** Its runtime service account needs `roles/billing.projectManager` on the **billing account** (not the project). Grant once:
+3. **IAM grant for `autoDisableBilling`.** The Gen 2 runtime service account needs `roles/billing.projectManager` (a.k.a. "Project Billing Manager") on the **billing account** (not the project). Grant once.
 
+   The default Gen 2 runtime SA is the **compute** service account:
+   `PROJECT_NUMBER-compute@developer.gserviceaccount.com`
+
+   Find your project number in Firebase Console → Project Settings → General (or grep `firebase apps:list` output for the numeric segment in app IDs like `1:NUMBER:android:...`).
+
+   **Console (no gcloud needed):**
+   - <https://console.cloud.google.com/billing> → click your billing account
+   - Account management → **+ Add Principal**
+   - Principal: `PROJECT_NUMBER-compute@developer.gserviceaccount.com`
+   - Role: search "Project Billing Manager"
+
+   **CLI (if gcloud installed):**
    ```bash
-   # Replace BILLING_ACCOUNT_ID and PROJECT_ID first.
    gcloud beta billing accounts add-iam-policy-binding BILLING_ACCOUNT_ID \
-     --member=serviceAccount:PROJECT_ID@appspot.gserviceaccount.com \
+     --member=serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com \
      --role=roles/billing.projectManager
    ```
 
-   Without this binding the function will fail with a `PERMISSION_DENIED` when attempting to detach billing.
+   Without this binding the function will fail with `PERMISSION_DENIED` when attempting to detach billing.
 
 Then deploy:
 
