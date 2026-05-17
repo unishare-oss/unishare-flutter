@@ -210,6 +210,10 @@ jobs:
       - name: Install FlutterFire CLI
         run: dart pub global activate flutterfire_cli
 
+      - uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
       - name: Remove WASM modules (not needed for iOS)
         working-directory: apps/mobile
         run: dart run pdfrx:remove_wasm_modules
