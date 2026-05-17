@@ -419,7 +419,28 @@ class _NavTabItem extends StatelessWidget {
 
     Widget iconWidget = Icon(_icon, color: color, size: 22);
     if (tab == NavTab.notifs && badgeCount != null && badgeCount! > 0) {
-      iconWidget = Badge(label: Text('$badgeCount'), child: iconWidget);
+      iconWidget = Stack(
+        clipBehavior: Clip.none,
+        children: [
+          iconWidget,
+          Positioned(
+            top: -2,
+            right: -2,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: ac.amber,
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  width: 1.5,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
     }
 
     return Semantics(

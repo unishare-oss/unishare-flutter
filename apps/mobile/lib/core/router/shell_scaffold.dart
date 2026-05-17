@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/core/router/router.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer.dart';
+import 'package:unishare_mobile/features/notifications/presentation/providers/unread_count_provider.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
-class ShellScaffold extends StatelessWidget {
+class ShellScaffold extends ConsumerWidget {
   const ShellScaffold({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
@@ -21,10 +23,11 @@ class ShellScaffold extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final activeIndex = navigationShell.currentIndex;
     final currentPath = GoRouterState.of(context).uri.path;
     final currentSub = DrawerDestination.fromPath(currentPath);
+    final unreadCount = ref.watch(unreadNotificationCountProvider);
 
     return PopScope(
       canPop: activeIndex == NavTab.feed.index || context.canPop(),
@@ -45,6 +48,7 @@ class ShellScaffold extends StatelessWidget {
           activeIndex: activeIndex,
           onTap: (index) => _handleTabTap(context, index),
           currentSubDestination: currentSub,
+          notificationsBadgeCount: unreadCount,
         ),
       ),
     );

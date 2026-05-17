@@ -44,12 +44,18 @@ class _CommentTileState extends State<CommentTile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _CommentRow(
-            comment: widget.comment,
-            isReply: false,
-            onReply: widget.onReply,
-            onEdit: widget.onEdit,
-            onDelete: widget.onDelete,
+          GestureDetector(
+            onTap: hasReplies
+                ? () => setState(() => _repliesExpanded = !_repliesExpanded)
+                : null,
+            behavior: HitTestBehavior.opaque,
+            child: _CommentRow(
+              comment: widget.comment,
+              isReply: false,
+              onReply: widget.onReply,
+              onEdit: widget.onEdit,
+              onDelete: widget.onDelete,
+            ),
           ),
           if (hasReplies) ...[
             const SizedBox(height: 8),

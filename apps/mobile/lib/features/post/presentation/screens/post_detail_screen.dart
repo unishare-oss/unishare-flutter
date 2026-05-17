@@ -38,6 +38,7 @@ class PostDetailScreen extends ConsumerStatefulWidget {
 class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   final _commentController = TextEditingController();
   bool _isSubmitting = false;
+  bool _commentsVisible = true;
 
   @override
   void dispose() {
@@ -53,6 +54,12 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
 
   void _cancelReply() {
     ref.read(replyStateProvider(widget.postId).notifier).cancel();
+  }
+
+  void _toggleComments() => setState(() => _commentsVisible = !_commentsVisible);
+
+  void _showComments() {
+    if (!_commentsVisible) setState(() => _commentsVisible = true);
   }
 
   Future<void> _submitComment() async {
@@ -188,6 +195,9 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
           onReply: _startReply,
           onCancelReply: _cancelReply,
           onDeleteComment: _deleteComment,
+          commentsVisible: _commentsVisible,
+          onToggleComments: _toggleComments,
+          onShowComments: _showComments,
         ),
       ),
     );
@@ -282,6 +292,9 @@ class _PostBody extends ConsumerWidget {
     required this.onReply,
     required this.onCancelReply,
     required this.onDeleteComment,
+    required this.commentsVisible,
+    required this.onToggleComments,
+    required this.onShowComments,
   });
 
   final Post post;
@@ -295,6 +308,9 @@ class _PostBody extends ConsumerWidget {
   final void Function(String commentId, String authorName) onReply;
   final VoidCallback onCancelReply;
   final void Function(String commentId) onDeleteComment;
+  final bool commentsVisible;
+  final VoidCallback onToggleComments;
+  final VoidCallback onShowComments;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -313,13 +329,15 @@ class _PostBody extends ConsumerWidget {
       }
     }
 
-    final itemCount = 1 + topLevel.length + (topLevel.isEmpty ? 1 : 0);
+    final visibleCount = commentsVisible
+        ? 1 + topLevel.length + (topLevel.isEmpty ? 1 : 0)
+        : 1;
 
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
-            itemCount: itemCount,
+            itemCount: visibleCount,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return _PostHeader(
@@ -330,6 +348,8 @@ class _PostBody extends ConsumerWidget {
                   commentCount: allComments
                       .where((c) => c.parentId == null)
                       .length,
+                  commentsVisible: commentsVisible,
+                  onToggleComments: onToggleComments,
                 );
               }
               if (topLevel.isEmpty) return const _EmptyComments();
@@ -353,6 +373,7 @@ class _PostBody extends ConsumerWidget {
           onSubmit: onSubmitComment,
           replyingToName: replyingToName,
           onCancelReply: onCancelReply,
+          onExpandComments: onShowComments,
         ),
       ],
     );
@@ -370,6 +391,8 @@ class _PostHeader extends ConsumerWidget {
     required this.isGuest,
     required this.onToggleLike,
     required this.commentCount,
+    required this.commentsVisible,
+    required this.onToggleComments,
   });
 
   final Post post;
@@ -377,6 +400,8 @@ class _PostHeader extends ConsumerWidget {
   final bool isGuest;
   final VoidCallback onToggleLike;
   final int commentCount;
+  final bool commentsVisible;
+  final VoidCallback onToggleComments;
 
   Future<void> _toggleSave(
     BuildContext context,
@@ -531,18 +556,35 @@ class _PostHeader extends ConsumerWidget {
           Divider(color: Theme.of(context).dividerColor, height: 1),
           const SizedBox(height: 12),
 
-          // ── Comments heading ──────────────────────────────────────────────
-          Text(
-            '$commentCount ${commentCount == 1 ? 'COMMENT' : 'COMMENTS'}',
-            style: AppTypography.mono(
-              base: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: appColors.textMuted,
-                letterSpacing: 0.8,
+          // ── Comments heading (tap to collapse/expand) ─────────────────────
+          GestureDetector(
+            onTap: onToggleComments,
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$commentCount ${commentCount == 1 ? 'COMMENT' : 'COMMENTS'}',
+                    style: AppTypography.mono(
+                      base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: appColors.textMuted,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    commentsVisible ? Icons.expand_less : Icons.expand_more,
+                    size: 14,
+                    color: appColors.textMuted,
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(height: 4),
         ],
       ),
     );
@@ -741,6 +783,7 @@ class _CommentInputBar extends StatelessWidget {
     required this.onSubmit,
     this.replyingToName,
     required this.onCancelReply,
+    this.onExpandComments,
   });
 
   final bool isGuest;
@@ -749,6 +792,7 @@ class _CommentInputBar extends StatelessWidget {
   final VoidCallback onSubmit;
   final String? replyingToName;
   final VoidCallback onCancelReply;
+  final VoidCallback? onExpandComments;
 
   @override
   Widget build(BuildContext context) {
@@ -825,6 +869,7 @@ class _CommentInputBar extends StatelessWidget {
                     ),
                   ),
                   textInputAction: TextInputAction.newline,
+                  onTap: onExpandComments,
                   // Grow up to 5 lines, then scroll internally — prevents
                   // the bar from pushing comments off-screen on long input.
                   maxLines: 5,
