@@ -8,7 +8,7 @@ description: 'Push and in-app notifications so students are alerted when their p
 **Status:** APPROVED  
 **Author:** Nang Hayman Aye Mya  
 **Date:** 2026-05-14  
-**Spec:** (pending approval)  
+**Spec:** [SPEC-0001](../tech-specs/0001-notification.md)  
 **Approved by:** Nadi
 
 ---
@@ -124,7 +124,7 @@ The app currently has a `NotificationsScreen` scaffold at `lib/features/notifica
 
 **Description:** This combines the reliable delivery of Option A with a clean data model for the in-app center. A Cloud Function (Firestore trigger) handles all push dispatch and writes the canonical notification document to `users/{uid}/notifications/{notifId}`. The Flutter app subscribes to that subcollection via a Riverpod `StreamProvider` to power the notification center and badge count. FCM tokens are stored in `users/{uid}/fcmTokens` and refreshed by the client on each login or token rotation. On app open, the app registers its FCM token; on notification tap, `go_router` deep-links to the relevant content.
 
-The Firestore document written by the Cloud Function serves a dual purpose: it is the push trigger (function reads it and dispatches FCM) and the persistent record for the in-app center. This avoids two separate writes and gives the in-app center an authoritative source of truth that was never touched by another client.
+The Cloud Function is triggered by the *source* activity event itself (a new comment, like, upvote, suggestion, or status-fulfilled transition) — not by the notification document. On firing, the function (a) writes the canonical `users/{recipientUid}/notifications/{notifId}` document and (b) fans out FCM push to the recipient's registered devices. This single function handles both fan-outs, so the in-app center reads an authoritative record that was never touched by a peer client.
 
 **Pros:**
 

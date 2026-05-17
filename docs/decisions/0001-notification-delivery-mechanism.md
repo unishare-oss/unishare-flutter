@@ -5,7 +5,7 @@ description: "Hybrid push architecture: Cloud Functions fan out FCM pushes and w
 
 # 0001 — Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
 
-**Status:** PROPOSED  
+**Status:** ACCEPTED  
 **Author:** Nang Hayman Aye Mya  
 **Date:** 2026-05-14
 

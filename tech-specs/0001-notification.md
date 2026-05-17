@@ -623,7 +623,7 @@ The following items are explicitly excluded from this spec. They may be addresse
 - **Analytics / impression tracking:** No notification-open event is logged to Firebase Analytics in v1.
 - **Admin / moderation notifications:** No notifications for content flagging or moderation actions.
 - **Email or SMS fallback:** Firebase-only delivery; no third-party email/SMS channel.
-- **Read receipt sync across multiple devices:** `isRead` is per-document; marking read on one device does not propagate to other devices in v1.
+- *(Cross-device read-receipt sync is supported by default in this design — `isRead` lives on the shared `users/{uid}/notifications/{notifId}` document, and the client subscribes via a Firestore stream, so marking read on device A propagates to device B in real time. No additional work needed.)*
 - **Full rules file rewrite:** Only the delta blocks described in the rules section need to be added; the rest of `firestore.rules` is unchanged.
 
 ---
