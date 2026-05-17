@@ -30,12 +30,15 @@ body:
       label: Feature area
       options:
         - Auth
-        - Content sharing
-        - Search & discovery
+        - Posts / Feed
+        - Requests / Suggestions
         - Profile
-        - Design system / UI
-        - Offline support
         - Notifications
+        - Design system / UI
+        - Cloud Functions / backend
+        - Firestore / data model
+        - CI/CD / Release
+        - Offline / caching
         - Other
     validations:
       required: true
