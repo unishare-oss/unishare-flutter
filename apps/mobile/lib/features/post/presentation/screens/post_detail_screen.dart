@@ -56,7 +56,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     ref.read(replyStateProvider(widget.postId).notifier).cancel();
   }
 
-  void _toggleComments() => setState(() => _commentsVisible = !_commentsVisible);
+  void _toggleComments() =>
+      setState(() => _commentsVisible = !_commentsVisible);
 
   void _showComments() {
     if (!_commentsVisible) setState(() => _commentsVisible = true);
