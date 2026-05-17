@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Hybrid push architecture: Cloud Functions fan out FCM pushes and write canonical notification documents; the Flutter client reads those documents for the in-app center.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0001-single-slot-theming/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0001-notification-delivery-mechanism/">
       
       
-        <link rel="prev" href="../0001-notification-delivery-mechanism/">
+        <link rel="prev" href="../0001-feed-filtering-via-array-contains-any/">
       
       
-        <link rel="next" href="../0002-border-in-colorscheme-not-appcolors/">
+        <link rel="next" href="../0001-single-slot-theming/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0001: Single-slot theming for 12-theme design system - Unishare Engineering Docs</title>
+        <title>0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0001-single-slot-theming-for-12-theme-design-system" class="md-skip">
+        <a href="#0001-use-fcm-cloud-functions-for-notification-delivery-with-firestore-subcollection-for-in-app-history" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0001: Single-slot theming for 12-theme design system
+              0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
             
           </span>
         </div>
@@ -509,34 +509,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../0001-notification-delivery-mechanism/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -556,19 +528,12 @@
   <span class="md-ellipsis">
     
   
-    0001: Single-slot theming for 12-theme design system
+    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
   
 
     
   </span>
   
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
   
 
           <span class="md-nav__icon md-icon"></span>
@@ -581,19 +546,12 @@
   <span class="md-ellipsis">
     
   
-    0001: Single-slot theming for 12-theme design system
+    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
   
 
     
   </span>
   
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
   
 
       </a>
@@ -672,6 +630,41 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Single-slot theming for 12-theme design system
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
     </li>
   
 
@@ -1904,7 +1897,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0001-single-slot-theming.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0001-notification-delivery-mechanism.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1912,12 +1905,12 @@
   
 
 
-<h1 id="0001-single-slot-theming-for-12-theme-design-system">0001 — Single-slot theming for 12-theme design system<a class="headerlink" href="#0001-single-slot-theming-for-12-theme-design-system" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-30
-<strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect</p>
+<h1 id="0001-use-fcm-cloud-functions-for-notification-delivery-with-firestore-subcollection-for-in-app-history">0001 — Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history<a class="headerlink" href="#0001-use-fcm-cloud-functions-for-notification-delivery-with-firestore-subcollection-for-in-app-history" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> Nang Hayman Aye Mya<br />
+<strong>Date:</strong> 2026-05-14</p>
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p><code>MaterialApp</code> supports two theme slots (<code>theme</code> and <code>darkTheme</code>) selected by <code>ThemeMode</code>. With 12 hand-authored themes spanning both light and dark palettes, routing them through the standard two-slot model would require splitting each theme into a light/dark pair and managing <code>ThemeMode</code> state alongside theme selection — doubling complexity for no user benefit.</p>
+<p>Unishare students need to know when activity happens on their posts and requests (comments, upvotes, suggestions) without manually polling the app. Two requirements are in tension: true push delivery when the app is closed, and a persistent in-app notification history. A pure client-side or local-notification approach cannot satisfy both simultaneously within the existing Firebase stack.</p>
 <h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1931,31 +1924,43 @@
 <tbody>
 <tr>
 <td>1</td>
-<td>Single-slot (<code>theme:</code> only, no <code>darkTheme</code>)</td>
-<td>Simple — one provider, one slot, no split logic</td>
-<td>OS dark/light auto-switching not supported</td>
+<td>In-app only — Firestore stream + <code>flutter_local_notifications</code></td>
+<td>No Blaze required; easiest to build</td>
+<td>Cannot wake a terminated app; no true push; client-to-client Firestore writes create security rule complexity</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Two-slot (split each theme into light + dark pair)</td>
-<td>Supports OS auto-switching</td>
-<td>24 theme definitions instead of 12; split logic in provider</td>
+<td>Client-side FCM dispatch (writing client sends push)</td>
+<td>No dedicated Cloud Function</td>
+<td>Exposes FCM server key on client (security violation); unreliable if writer goes offline; does not scale</td>
 </tr>
 <tr>
 <td>3</td>
-<td><code>themeMode</code> driven (light/dark toggle, no multi-theme)</td>
-<td>Standard Flutter pattern</td>
-<td>Doesn't support 12 distinct themes</td>
+<td>FCM via Cloud Functions + Firestore <code>notifications</code> subcollection (hybrid)</td>
+<td>True push when app is closed; server-written notification history is tamper-free; security rules are simple</td>
+<td>Requires Blaze plan; adds Cloud Function operational surface</td>
 </tr>
 </tbody>
 </table>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen:</strong> Option 1 — Single-slot</p>
-<p>All 12 themes pass through <code>theme:</code> only. <code>darkTheme:</code> is unused. <code>themeMode</code> is omitted (defaults to <code>ThemeMode.system</code>, but with no <code>darkTheme</code> set, <code>theme</code> is always used). Material 3 widgets read <code>colorScheme.brightness</code> directly for rendering decisions, so dark-palette themes render correctly regardless of <code>ThemeMode</code>.</p>
+<p><strong>Chosen:</strong> Option 3 — FCM via Cloud Functions + Firestore <code>users/{uid}/notifications</code> subcollection</p>
+<p>Firestore trigger Cloud Functions are the only mechanism in the Firebase stack that can reliably dispatch FCM pushes from a trusted server context without exposing credentials to clients; this satisfies the terminated-app push requirement. The same Cloud Function write that triggers FCM also creates the canonical notification document, so the in-app center reads an authoritative, client-tamper-free history without needing a separate write path. The assumption this relies on is that the team will upgrade to Blaze plan — expected costs are within the free invocation tier for a university-cohort audience.</p>
 <h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
-<p>Medium — would require splitting all 12 <code>AppThemeData</code> definitions into light/dark pairs, adding a <code>ThemeMode</code> provider, and updating <code>MaterialApp</code>. Feasible but non-trivial.</p>
+<p><strong>Medium-to-High.</strong> Decommissioning Cloud Functions would require relocating fan-out logic to a different backend or accepting degraded client-side delivery. The <code>users/{uid}/notifications</code> Firestore schema and the <code>firebase_messaging</code> Flutter integration are reusable regardless of what writes notification documents, so those artifacts survive a function replacement. However, rewriting the trigger logic and re-testing delivery reliability represents meaningful rework.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p>Simpler state management and fewer theme definitions. OS-level dark/light auto-switching is not supported — if that requirement arises, this decision needs revisiting.</p>
+<p><strong>Easier:</strong>
+- Security rules for notifications are simple read-only rules per UID — no client ever writes to another user's notification path.
+- FCM token rotation and stale-token cleanup can be handled centrally in the function, not across multiple clients.
+- Adding new notification types (e.g., suggestion accepted, request fulfilled) requires only a new function trigger and a new <code>type</code> enum value — the Flutter data layer does not change.</p>
+<p><strong>Harder:</strong>
+- Local development requires the Firebase Emulator Suite to test end-to-end notification flow.
+- The team must budget for Blaze plan billing (even if actual cost is near zero at current scale).
+- Function cold-start latency may add a few hundred milliseconds to first notification delivery after a period of inactivity.</p>
+<p><strong>Follow-up decisions required:</strong>
+- FCM token storage schema (<code>users/{uid}/fcmTokens</code> subcollection vs. array field on user document).
+- Read/unread state write ownership (client direct write vs. callable function).
+- Notification document TTL / retention policy (to prevent unbounded Firestore growth).
+- Web push VAPID configuration (deferred — not in scope for v1).</p>
 
 
 

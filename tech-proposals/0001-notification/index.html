@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Push and in-app notifications so students are alerted when their posts receive replies, upvotes, or suggestion responses — without polling the app manually.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0001-single-slot-theming/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0001-notification/">
       
       
-        <link rel="prev" href="../0001-notification-delivery-mechanism/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../0002-border-in-colorscheme-not-appcolors/">
+        <link rel="next" href="../0003-post-feed/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0001: Single-slot theming for 12-theme design system - Unishare Engineering Docs</title>
+        <title>0001: Notification System - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0001-single-slot-theming-for-12-theme-design-system" class="md-skip">
+        <a href="#prop-0001-notification-system" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0001: Single-slot theming for 12-theme design system
+              0001: Notification System
             
           </span>
         </div>
@@ -242,13 +242,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../decisions/" class="md-tabs__link">
           
   
   
@@ -284,11 +282,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../tech-proposals/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -396,31 +396,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   
@@ -438,7 +433,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -456,7 +451,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../decisions/" class="md-nav__link">
         
   
   
@@ -484,7 +479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -512,7 +507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-notification-delivery-mechanism/" class="md-nav__link">
+      <a href="../../decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
         
   
   
@@ -537,44 +532,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0001: Single-slot theming for 12-theme design system
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -597,81 +558,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options Considered
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reversal-cost" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reversal Cost
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -684,7 +570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -719,7 +605,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-post-integration-packages/" class="md-nav__link">
+      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -754,7 +640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -789,7 +675,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -817,7 +703,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-post-detail-data-loading-strategy/" class="md-nav__link">
+      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
         
   
   
@@ -845,7 +731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-file-preview-unified-route/" class="md-nav__link">
+      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
         
   
   
@@ -873,7 +759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-save-post-storage-strategy/" class="md-nav__link">
+      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
         
   
   
@@ -1048,26 +934,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -1085,7 +976,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1103,7 +994,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -1128,10 +1019,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0001-notification/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Notification System
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1147,6 +1065,153 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-fcm-triggered-by-cloud-functions-server-side-fan-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — FCM triggered by Cloud Functions (server-side fan-out)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-fcm-triggered-client-side-polling-a-firestore-sentinel-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — FCM triggered client-side (polling a Firestore sentinel document)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-in-app-only-via-firestore-stream-and-flutter_local_notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C — In-app only via Firestore stream and flutter_local_notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-d-hybrid-firestore-subcollection-for-in-app-history-fcm-via-cloud-functions-for-push-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option D — Hybrid: Firestore subcollection for in-app history + FCM via Cloud Functions for push (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1159,7 +1224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
+      <a href="../0003-post-feed/" class="md-nav__link">
         
   
   
@@ -1187,7 +1252,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
+      <a href="../0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1215,7 +1280,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0005-feed-filtering-tags/" class="md-nav__link">
+      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
         
   
   
@@ -1243,7 +1308,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0005-main-navbar/" class="md-nav__link">
+      <a href="../0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1271,7 +1336,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0006-post-detail-page/" class="md-nav__link">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1299,7 +1364,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0007-file-preview-screen/" class="md-nav__link">
+      <a href="../0007-file-preview-screen/" class="md-nav__link">
         
   
   
@@ -1327,7 +1392,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0007-save-post/" class="md-nav__link">
+      <a href="../0007-save-post/" class="md-nav__link">
         
   
   
@@ -1355,7 +1420,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0008-request-post/" class="md-nav__link">
+      <a href="../0008-request-post/" class="md-nav__link">
         
   
   
@@ -1383,7 +1448,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/0009-ai-post-summary/" class="md-nav__link">
+      <a href="../0009-ai-post-summary/" class="md-nav__link">
         
   
   
@@ -1844,10 +1909,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#options-considered" class="md-nav__link">
+  <a href="#goals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options Considered
+        Goals
       
     </span>
   </a>
@@ -1855,10 +1920,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
+  <a href="#non-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision
+        Non-goals
       
     </span>
   </a>
@@ -1866,10 +1931,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reversal-cost" class="md-nav__link">
+  <a href="#options" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reversal Cost
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-fcm-triggered-by-cloud-functions-server-side-fan-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — FCM triggered by Cloud Functions (server-side fan-out)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-fcm-triggered-client-side-polling-a-firestore-sentinel-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — FCM triggered client-side (polling a Firestore sentinel document)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-in-app-only-via-firestore-stream-and-flutter_local_notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C — In-app only via Firestore stream and flutter_local_notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-d-hybrid-firestore-subcollection-for-in-app-history-fcm-via-cloud-functions-for-push-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option D — Hybrid: Firestore subcollection for in-app history + FCM via Cloud Functions for push (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation
       
     </span>
   </a>
@@ -1877,10 +2003,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
+  <a href="#open-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Consequences
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
       
     </span>
   </a>
@@ -1904,7 +2041,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0001-single-slot-theming.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0001-notification.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1912,50 +2049,163 @@
   
 
 
-<h1 id="0001-single-slot-theming-for-12-theme-design-system">0001 — Single-slot theming for 12-theme design system<a class="headerlink" href="#0001-single-slot-theming-for-12-theme-design-system" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-30
-<strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect</p>
+<h1 id="prop-0001-notification-system">PROP-0001: Notification System<a class="headerlink" href="#prop-0001-notification-system" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> APPROVED<br />
+<strong>Author:</strong> Nang Hayman Aye Mya<br />
+<strong>Date:</strong> 2026-05-14<br />
+<strong>Spec:</strong> <a href="../../tech-specs/0001-notification/">SPEC-0001</a><br />
+<strong>Approved by:</strong> Nadi</p>
+<hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p><code>MaterialApp</code> supports two theme slots (<code>theme</code> and <code>darkTheme</code>) selected by <code>ThemeMode</code>. With 12 hand-authored themes spanning both light and dark palettes, routing them through the standard two-slot model would require splitting each theme into a light/dark pair and managing <code>ThemeMode</code> state alongside theme selection — doubling complexity for no user benefit.</p>
-<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Option</th>
-<th>Upside</th>
-<th>Downside</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>Single-slot (<code>theme:</code> only, no <code>darkTheme</code>)</td>
-<td>Simple — one provider, one slot, no split logic</td>
-<td>OS dark/light auto-switching not supported</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Two-slot (split each theme into light + dark pair)</td>
-<td>Supports OS auto-switching</td>
-<td>24 theme definitions instead of 12; split logic in provider</td>
-</tr>
-<tr>
-<td>3</td>
-<td><code>themeMode</code> driven (light/dark toggle, no multi-theme)</td>
-<td>Standard Flutter pattern</td>
-<td>Doesn't support 12 distinct themes</td>
-</tr>
-</tbody>
-</table>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen:</strong> Option 1 — Single-slot</p>
-<p>All 12 themes pass through <code>theme:</code> only. <code>darkTheme:</code> is unused. <code>themeMode</code> is omitted (defaults to <code>ThemeMode.system</code>, but with no <code>darkTheme</code> set, <code>theme</code> is always used). Material 3 widgets read <code>colorScheme.brightness</code> directly for rendering decisions, so dark-palette themes render correctly regardless of <code>ThemeMode</code>.</p>
-<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
-<p>Medium — would require splitting all 12 <code>AppThemeData</code> definitions into light/dark pairs, adding a <code>ThemeMode</code> provider, and updating <code>MaterialApp</code>. Feasible but non-trivial.</p>
-<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p>Simpler state management and fewer theme definitions. OS-level dark/light auto-switching is not supported — if that requirement arises, this decision needs revisiting.</p>
+<p>Students who post academic content or create content requests have no way to know when activity happens on their content unless they open the app and navigate to the relevant screen. Specifically:</p>
+<ul>
+<li>A student publishes a post; someone replies in comments — the author never knows.</li>
+<li>A student creates a content request; another user upvotes it or suggests a fulfillment — the requester is not alerted.</li>
+<li>A student's suggestion is accepted by the request author — the suggester has no feedback.</li>
+</ul>
+<p>The result is that engagement loops break down: authors do not return to follow up on replies, and requesters do not see when their needs are met. The missing capability is a notification system that reaches users both when the app is open (in-app) and when it is closed (push).</p>
+<p>The app currently has a <code>NotificationsScreen</code> scaffold at <code>lib/features/notifications/presentation/screens/notifications_screen.dart</code> that renders "Coming soon" — the shell exists but nothing backs it.</p>
+<hr />
+<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Users receive a push notification on their device within 30 seconds of any of these events: post comment added, post upvote, request upvote, suggestion submitted on their request, suggestion accepted.</li>
+<li>Push notifications arrive even when the app is fully closed (terminated state) on iOS and Android.</li>
+<li>An in-app notification center (the existing bell-icon screen) shows the full history of notifications for the signed-in user, persisted across sessions.</li>
+<li>Each notification item carries enough context to deep-link directly to the relevant post or request detail screen via <code>go_router</code>.</li>
+<li>Unread notifications are visually distinguished from read ones; marking all as read is supported.</li>
+<li>The system works on iOS and Android at launch; web push is explicitly deferred (see Non-goals).</li>
+<li>All notification state is scoped to the authenticated user — guests see no notifications.</li>
+</ol>
+<hr />
+<h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Email or SMS notifications of any kind.</li>
+<li>Broadcast / admin-to-all-users notifications.</li>
+<li>Notification analytics (delivery rate, click-through rate, funnel metrics).</li>
+<li>Web push notifications (Chrome/Safari background push on web). Web in-app display may be done as a follow-up.</li>
+<li>Notification preferences / per-type opt-out settings (may follow in a later iteration).</li>
+<li>Rich media (image thumbnails) inside push notification payloads.</li>
+</ul>
+<hr />
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
+<h3 id="option-a-fcm-triggered-by-cloud-functions-server-side-fan-out">Option A — FCM triggered by Cloud Functions (server-side fan-out)<a class="headerlink" href="#option-a-fcm-triggered-by-cloud-functions-server-side-fan-out" title="Permanent link">&para;</a></h3>
+<p><strong>Description:</strong> Firestore trigger Cloud Functions listen to writes on <code>posts/{postId}/comments</code>, <code>requests/{requestId}/upvotes</code>, and <code>requests/{requestId}/suggestions</code>. When triggered, the function looks up the target user's FCM token(s) from a <code>users/{uid}/fcmTokens</code> subcollection, calls the FCM Admin SDK to dispatch the push, and also writes a document to <code>users/{uid}/notifications</code> for the in-app center.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>True server-side push — no client needs to be running to fan out a notification.</li>
+<li>Atomic and reliable: the function runs even if the triggering client goes offline immediately after writing.</li>
+<li>Scales naturally to fan-out scenarios (e.g., notifying every upvoter when a request is fulfilled).</li>
+<li>Keeps security rules simple: clients never write to <code>users/{otherUid}/notifications</code> directly.</li>
+<li>Standard industry pattern for Firebase-native apps.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Requires Cloud Functions, which requires upgrading from Spark to Blaze (pay-as-you-go) plan.</li>
+<li>Adds operational surface: function cold starts, deployment pipeline, log monitoring.</li>
+<li>Development loop is slower — functions must be deployed or run in the Firebase Emulator Suite.</li>
+<li>Estimated cost at Unishare scale (small university cohort) is likely within the always-free Cloud Functions invocation allowance (2 M invocations/month free on Blaze), but billing must be enabled.</li>
+</ul>
+<p><strong>Effort:</strong> L (Cloud Function authoring, Blaze upgrade, emulator setup, FCM token management, token refresh handling)<br />
+<strong>Requires Blaze:</strong> Yes</p>
+<hr />
+<h3 id="option-b-fcm-triggered-client-side-polling-a-firestore-sentinel-document">Option B — FCM triggered client-side (polling a Firestore sentinel document)<a class="headerlink" href="#option-b-fcm-triggered-client-side-polling-a-firestore-sentinel-document" title="Permanent link">&para;</a></h3>
+<p><strong>Description:</strong> Instead of Cloud Functions, the writing client itself sends the FCM push after completing its Firestore write. For example, after <code>toggleUpvote</code> writes to <code>requests/{requestId}/upvotes/{uid}</code>, the client also reads the request owner's FCM token from Firestore and calls the FCM HTTP v1 API directly with a service-account token fetched via a Firebase App Check–protected Cloud Function — or alternatively the client writes a <code>pendingNotifications</code> document that another client (the recipient's app) polls via a Firestore stream and converts to a <code>flutter_local_notifications</code> local notification.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>No dedicated Cloud Function for fan-out; avoids Blaze requirement for compute.</li>
+<li>Relatively straightforward to prototype.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>FCM push cannot be sent directly from a Flutter client without exposing a server key or service-account credentials — this is a security violation. The "polling" variant degrades to a client-side local notification, which only fires while the recipient's app is open or backgrounded (not terminated).</li>
+<li>The writing client may be offline or crash before completing the secondary write, causing silent notification loss.</li>
+<li>Sharing FCM tokens in a readable Firestore path creates a privilege-escalation risk: any authenticated user could read another user's device token.</li>
+<li>The polling variant is functionally equivalent to Option C — it does not deliver true push when the app is closed.</li>
+<li>Requires non-trivial security rule gymnastics to prevent clients from faking notifications to arbitrary users.</li>
+</ul>
+<p><strong>Effort:</strong> M (token storage, security-rule hardening, local notification plugin) but the result is architecturally unsound.<br />
+<strong>Requires Blaze:</strong> No (polling variant) / Partial (FCM variant still needs a backend proxy)</p>
+<hr />
+<h3 id="option-c-in-app-only-via-firestore-stream-and-flutter_local_notifications">Option C — In-app only via Firestore stream and <code>flutter_local_notifications</code><a class="headerlink" href="#option-c-in-app-only-via-firestore-stream-and-flutter_local_notifications" title="Permanent link">&para;</a></h3>
+<p><strong>Description:</strong> A <code>users/{uid}/notifications</code> subcollection is written by the triggering client at write time (e.g., the upvoter writes a notification document to the post owner's path). The recipient's app subscribes to this subcollection via a Firestore <code>StreamProvider</code>. When the stream emits a new document, <code>flutter_local_notifications</code> fires a local notification that appears in the system tray — but only while the app is running in the foreground or background (not terminated). In-app history is backed by the same Firestore stream.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>No Blaze upgrade required.</li>
+<li>Simplest implementation path: one new Firestore subcollection, one <code>StreamProvider</code>, one <code>flutter_local_notifications</code> integration.</li>
+<li>In-app notification center is fully functional regardless of push delivery.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Does NOT satisfy the hard requirement: notifications do not arrive when the app is terminated. <code>flutter_local_notifications</code> is a local API — it cannot wake a terminated process.</li>
+<li>Writing a notification document to another user's <code>users/{otherUid}/notifications</code> path from the client requires permissive security rules that are difficult to constrain correctly (any authenticated user can write to any other user's notifications path given naive rules).</li>
+<li>Notification delivery reliability is tied to whether the triggering client's Firestore write succeeds before it goes offline.</li>
+<li>Does not scale: if a post has 100 upvoters, the upvoting client writes 1 notification; but if a popular post receives 100 comments, the post author gets 100 documents written by 100 different clients — no fan-out control.</li>
+</ul>
+<p><strong>Effort:</strong> S (no new platform dependencies beyond <code>flutter_local_notifications</code>)<br />
+<strong>Requires Blaze:</strong> No</p>
+<hr />
+<h3 id="option-d-hybrid-firestore-subcollection-for-in-app-history-fcm-via-cloud-functions-for-push-recommended">Option D — Hybrid: Firestore subcollection for in-app history + FCM via Cloud Functions for push (Recommended)<a class="headerlink" href="#option-d-hybrid-firestore-subcollection-for-in-app-history-fcm-via-cloud-functions-for-push-recommended" title="Permanent link">&para;</a></h3>
+<p><strong>Description:</strong> This combines the reliable delivery of Option A with a clean data model for the in-app center. A Cloud Function (Firestore trigger) handles all push dispatch and writes the canonical notification document to <code>users/{uid}/notifications/{notifId}</code>. The Flutter app subscribes to that subcollection via a Riverpod <code>StreamProvider</code> to power the notification center and badge count. FCM tokens are stored in <code>users/{uid}/fcmTokens</code> and refreshed by the client on each login or token rotation. On app open, the app registers its FCM token; on notification tap, <code>go_router</code> deep-links to the relevant content.</p>
+<p>The Cloud Function is triggered by the <em>source</em> activity event itself (a new comment, like, upvote, suggestion, or status-fulfilled transition) — not by the notification document. On firing, the function (a) writes the canonical <code>users/{recipientUid}/notifications/{notifId}</code> document and (b) fans out FCM push to the recipient's registered devices. This single function handles both fan-outs, so the in-app center reads an authoritative record that was never touched by a peer client.</p>
+<p><strong>Pros:</strong></p>
+<ul>
+<li>True push when the app is closed — satisfies the hard requirement.</li>
+<li>Notification history is authoritative (server-written) and consistent: the client only reads.</li>
+<li>Security rules are simple: clients read only their own <code>users/{uid}/notifications</code>; only Cloud Functions write to them.</li>
+<li>FCM token exposure is limited: tokens live under <code>users/{uid}/fcmTokens</code> and are only readable server-side.</li>
+<li>Decoupled from the writing client — the upvoter's client does not need to know the target's FCM token or notification logic.</li>
+<li>Scales well: one function invocation per triggering event, regardless of how many clients are online.</li>
+</ul>
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Requires Blaze plan and Cloud Functions deployment.</li>
+<li>Adds operational complexity (emulator setup, function CI/CD, monitoring).</li>
+<li>Cold-start latency may add a few hundred milliseconds to the first notification after function inactivity — acceptable for a notification system (not a synchronous user action).</li>
+<li>Web push requires additional VAPID key configuration; deferred to Non-goals.</li>
+</ul>
+<p><strong>Effort:</strong> L (Cloud Function authoring, Blaze upgrade, FCM token management, <code>firebase_messaging</code> plugin, <code>flutter_local_notifications</code> for foreground display)<br />
+<strong>Requires Blaze:</strong> Yes</p>
+<hr />
+<h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
+<p><strong>Option D — Hybrid Firestore + FCM + Cloud Functions</strong> is the recommended approach.</p>
+<p>It is the only option that satisfies both stated constraints simultaneously: push delivery when the app is closed, and a persistent in-app notification history. The dual-purpose notification document (written once by the Cloud Function, read by the Flutter client) gives the in-app center an authoritative, tamper-free source of truth without requiring any client-to-client Firestore writes, which keeps security rules straightforward. The Blaze upgrade cost is justified because Unishare is already Firebase-native and Cloud Functions are the standard mechanism for trusted server-side logic in that ecosystem — the free invocation tier will cover the expected notification volume for a university cohort.</p>
+<p><strong>Reversal cost if the team changes its mind:</strong> Medium-to-High. Cloud Functions would need to be decommissioned and the notification fan-out logic would need to move somewhere else (another backend or a degraded client-side model). The <code>users/{uid}/notifications</code> Firestore schema and the <code>firebase_messaging</code> integration in the Flutter app are reusable regardless of what triggers the writes, so those artifacts are not wasted.</p>
+<hr />
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Notification types at launch:</strong> Which event types are in scope for v1? The proposal assumes: post comment added, post liked, request upvoted, suggestion submitted on your request, your suggestion accepted. Are there others (e.g., your request fulfilled/closed, a post you saved is updated)? The answer determines the number of Cloud Function triggers needed.</p>
+</li>
+<li>
+<p><strong>FCM token storage and multi-device:</strong> Should a user's FCM tokens be stored as a subcollection (<code>users/{uid}/fcmTokens/{tokenHash}</code>) or as an array field on the user document? The subcollection approach handles multi-device and stale token cleanup more cleanly but requires an extra read in the function. How many concurrent devices per user should the system support, and is the team prepared to handle token invalidation / <code>registration-token-not-registered</code> FCM errors?</p>
+</li>
+<li>
+<p><strong>Read/unread state ownership:</strong> Who marks a notification as read — the client writing <code>isRead: true</code> directly to <code>users/{uid}/notifications/{notifId}</code>, or a dedicated Cloud Function? Client-side writes are simpler to implement but require a permissive security rule (<code>allow update: if request.auth.uid == userId &amp;&amp; onlyIsReadChanged()</code>). A function call is safer but adds latency. Which is acceptable?</p>
+</li>
+<li>
+<p><strong>Web push timeline:</strong> The Non-goals defer web push, but the <code>NotificationsScreen</code> is shared across platforms. Should the web build show a "notifications not supported on web" message, hide the bell icon, or silently degrade to in-app-only (Firestore stream without local push)? This must be decided before the spec is written to avoid conditional build complexity.</p>
+</li>
+<li>
+<p><strong>Notification retention and pagination:</strong> How long should notification documents be retained in Firestore? Indefinite retention with no pagination cap will grow unbounded. A TTL policy (e.g., delete documents older than 30 days via a scheduled Cloud Function) or a max-count eviction strategy should be agreed on before the data layer is designed.</p>
+</li>
+<li>
+<p><strong>Anonymous / guest users:</strong> The app supports a guest mode (see <code>GuestModeProvider</code>). Guests have no <code>uid</code> and cannot receive notifications. Should the bell icon be hidden in guest mode, or should it be visible but prompt sign-in when tapped?</p>
+</li>
+</ol>
+<hr />
+<h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
+<ol>
+<li>A user who has the app closed (process terminated) receives an iOS/Android system push notification within 30 seconds of another user commenting on one of their posts.</li>
+<li>A user who has the app closed receives a push notification within 30 seconds of their request being upvoted or a suggestion being submitted on their request.</li>
+<li>Opening the app from a push notification deep-links the user directly to the relevant post or request detail screen via <code>go_router</code> — not just to the home feed.</li>
+<li>The in-app notification center (bell icon screen) displays all notifications for the signed-in user in reverse-chronological order, with unread items visually distinct from read items.</li>
+<li>Notifications persist across app restarts — the notification history is not lost when the app is closed and reopened.</li>
+<li>Tapping "mark all as read" transitions all unread notification items to the read state within one Firestore batch write.</li>
+<li>A user never receives a notification triggered by their own action (e.g., upvoting your own post does not send a push to yourself).</li>
+<li>FCM tokens are never readable by any client other than the token owner — they are only accessible server-side (Cloud Function).</li>
+<li>The notification feature has zero impact on the Domain layer's purity constraint: <code>features/notifications/domain/</code> contains only pure Dart entities, repository interfaces, and use cases with no Flutter or Firebase imports.</li>
+<li>The feature degrades gracefully when FCM token registration fails (e.g., user denies notification permission on iOS): the app continues to function normally, and in-app notification history still loads from Firestore.</li>
+</ol>
 
 
 
