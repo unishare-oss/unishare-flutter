@@ -21,7 +21,12 @@ class UpvoteButton extends ConsumerWidget {
     final hasUpvotedAsync = ref.watch(hasUpvotedProvider(requestId));
     final toggleState = ref.watch(toggleUpvoteProvider(requestId));
 
-    final isActive = hasUpvotedAsync.asData?.value ?? false;
+    final isActive = hasUpvotedAsync.when(
+      skipLoadingOnRefresh: true,
+      data: (v) => v,
+      loading: () => false,
+      error: (_, _) => false,
+    );
     final isLoading = toggleState.isLoading;
 
     return Semantics(

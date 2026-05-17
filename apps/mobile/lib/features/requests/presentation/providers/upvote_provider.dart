@@ -5,9 +5,9 @@ import 'package:unishare_mobile/features/requests/presentation/providers/request
 part 'upvote_provider.g.dart';
 
 @riverpod
-Future<bool> hasUpvoted(Ref ref, String requestId) {
+Stream<bool> hasUpvoted(Ref ref, String requestId) {
   final repo = ref.watch(requestRepositoryProvider);
-  return repo.hasUpvoted(requestId);
+  return repo.watchHasUpvoted(requestId);
 }
 
 @riverpod
@@ -17,10 +17,11 @@ class ToggleUpvote extends _$ToggleUpvote {
 
   Future<void> toggle() async {
     state = const AsyncLoading();
+    // The stream from hasUpvotedProvider auto-updates when Firestore changes,
+    // so no invalidation is needed here.
     state = await AsyncValue.guard(() async {
       final useCase = ref.read(toggleUpvoteRequestUseCaseProvider);
       await useCase(requestId);
-      ref.invalidate(hasUpvotedProvider(requestId));
     });
   }
 }

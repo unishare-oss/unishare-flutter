@@ -1220,3 +1220,65 @@ Review: PENDING
   [23:51] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
   [23:51] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
   [23:52] Edit: apps/mobile/test/widget/core/router/shell_router_test.dart
+
+---
+Date: 2026-05-17 00:43
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Implement Cloud Functions backend (notification triggers + scheduled purge + billing auto-disable) for PR #49's notification system on the feature/notification branch
+Prompt: Discussed cost of Firestore-triggered Cloud Functions, weighed Cloud Functions on Blaze vs Cloudflare Workers for the notification dispatch server, decided to enable Blaze with a $1 budget + Pub/Sub auto-disable safety net. User then asked to bundle the auto-disable function with the notification trigger functions in one PR onto feature/notification. Plan approved at /Users/psst/.claude/plans/virtual-nibbling-boot.md — 8 functions in TypeScript on Node 20, deployed to asia-southeast1, plus firebase.json updates and SPEC-0001 field-name corrections. Merged origin/main into feature/notification first (27 commits, clean merge via ort strategy) before scaffolding.
+
+Outcome: Implemented the Cloud Functions backend for SPEC-0001. New `functions/` directory at repo root contains 8 functions in TypeScript on Node 20 (Firebase Functions Gen 2, region asia-southeast1): 6 notification triggers (onCommentAdded, onCommentReply, onPostLiked, onRequestUpvoted, onSuggestionSubmitted, onRequestFulfilled), 1 scheduled retention purge (purgeOldNotifications, daily, 30-day window), and 1 Pub/Sub-triggered billing safety net (autoDisableBilling on topic billing-budget-alerts). Shared lib helpers writeNotification/sendPush/getActor handle Firestore writes, FCM multicast with stale-token pruning, and actor denormalisation. Updated firebase.json with functions deploy config + emulators block (auth/firestore/functions/pubsub). Updated SPEC-0001: firebase_messaging pinned to ^16.2.1 (rationale added), all 5 open questions resolved, added a Cloud Functions Server section summarising the new components. Wrote functions/README.md documenting local dev, emulator workflow, Blaze prerequisites, and the post-deploy IAM grant for autoDisableBilling. Tests: 32 unit tests across 10 files via Vitest with mocked admin SDK, all green. Build (tsc strict) clean. Lint (ESLint 9 flat config) clean.
+Decisions: (1) Two separate functions for onCommentAdded vs onCommentReply per spec, filtering by parentId — cleaner per-function logic at marginal extra invocation cost. (2) onRequestFulfilled resolves the winning suggester by querying suggestions where postId == request.fulfilledByPostId — uses fields that already exist on RequestDto, no schema change. (3) Refactored each trigger to expose its async handler as a named export (e.g. onCommentAddedHandler) alongside the registered CloudFunction — enables direct unit testing without firebase-functions-test wrap-and-run quirks on Gen 2. (4) Used vi.hoisted() throughout the test suite so vi.mock factories can reference mock fns without TDZ errors. (5) Merged origin/main (27 commits) into feature/notification before scaffolding so the work lands on top of the latest More Drawer changes — clean 'ort'-strategy merge with no conflicts. (6) Resolved an agent-log merge conflict by keeping main's content plus the new session-start entry. (7) firebase_messaging version bump from ^15.0.0 to ^16.2.1 spec'd with FlutterFire BoM justification.
+Handoff: Branch feature/notification has 3 modified files + the new functions/ directory ready to commit. PR #49 description currently says functions follow in a separate PR — needs an update once committed. Post-merge IAM step required: grant roles/billing.projectManager on the billing account (not the project) to PROJECT_ID@appspot.gserviceaccount.com, see functions/README.md § Deploy. Cloud Billing budget at $1 with Pub/Sub topic billing-budget-alerts must be created in Cloud Console before autoDisableBilling has anything to subscribe to. ADR for the Blaze decision is still owed per CLAUDE.md — architect should write that separately.
+Review: PENDING
+
+2026-05-17
+  [10:13] Write: apps/mobile/test/widget/features/notifications/widgets/notification_item_tile_test.dart
+  [10:14] Write: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  [11:08] Write: apps/mobile/lib/core/firebase/fcm_service.dart
+  [11:08] Write: apps/mobile/lib/features/notifications/presentation/widgets/notification_item_tile.dart
+  [11:08] Write: apps/mobile/lib/core/firebase/platform_stub.dart
+  [11:08] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [11:08] Write: apps/mobile/lib/core/firebase/platform_native.dart
+  [11:08] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [11:09] Write: apps/mobile/lib/main.dart
+  [11:09] Write: apps/mobile/test/widget/features/notifications/widgets/notification_item_tile_test.dart
+  [11:09] Write: apps/mobile/lib/features/notifications/data/datasources/notification_firestore_datasource.dart
+  [11:09] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  [11:09] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  [11:10] Edit: apps/mobile/pubspec.yaml
+  [11:10] Edit: apps/mobile/lib/core/firebase/fcm_service.dart
+  [11:10] Edit: apps/mobile/lib/core/firebase/fcm_service.dart
+  [11:10] Edit: apps/mobile/lib/main.dart
+  [11:11] Edit: apps/mobile/lib/features/requests/data/datasources/request_firestore_datasource.dart
+Files:
+  ~ apps/mobile/lib/core/firebase/fcm_service.dart
+  ~ apps/mobile/lib/features/notifications/data/datasources/notification_firestore_datasource.dart
+  ~ apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  ~ apps/mobile/lib/features/notifications/presentation/widgets/notification_item_tile.dart
+  ~ apps/mobile/lib/features/requests/data/datasources/request_firestore_datasource.dart
+  ~ apps/mobile/lib/main.dart
+  ~ apps/mobile/pubspec.yaml
+  ~ apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  ~ apps/mobile/test/widget/features/notifications/widgets/notification_item_tile_test.dart
+  ? apps/mobile/lib/core/firebase/platform_native.dart (untracked)
+  ? apps/mobile/lib/core/firebase/platform_stub.dart (untracked)
+Summary:  9 files changed, 524 insertions(+), 163 deletions(-)
+
+  [11:12] Write: apps/mobile/lib/features/notifications/presentation/widgets/notification_item_tile.dart
+Files:
+  ~ apps/mobile/lib/core/firebase/fcm_service.dart
+  ~ apps/mobile/lib/features/notifications/data/datasources/notification_firestore_datasource.dart
+  ~ apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  ~ apps/mobile/lib/features/notifications/presentation/widgets/notification_item_tile.dart
+  ~ apps/mobile/lib/features/requests/data/datasources/request_firestore_datasource.dart
+  ~ apps/mobile/lib/main.dart
+  ~ apps/mobile/pubspec.yaml
+  ~ apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  ~ apps/mobile/test/widget/features/notifications/widgets/notification_item_tile_test.dart
+  ? apps/mobile/lib/core/firebase/platform_native.dart (untracked)
+  ? apps/mobile/lib/core/firebase/platform_stub.dart (untracked)
+Summary:  9 files changed, 563 insertions(+), 187 deletions(-)
+
+  [11:22] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart

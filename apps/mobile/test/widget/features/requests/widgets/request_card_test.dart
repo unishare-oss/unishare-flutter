@@ -37,7 +37,7 @@ ContentRequest _fakeRequest({
 Widget _wrap(Widget child) {
   return ProviderScope(
     overrides: [
-      hasUpvotedProvider.overrideWith((ref, requestId) async => false),
+      hasUpvotedProvider.overrideWith((ref, requestId) => Stream.value(false)),
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),

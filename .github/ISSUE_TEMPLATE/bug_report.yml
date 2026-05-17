@@ -11,7 +11,7 @@ body:
     id: description
     attributes:
       label: What happened?
-      description: A clear description of the bug.
+      description: A clear description of the bug. Include what you saw vs. what you expected and any error messages.
     validations:
       required: true
 
@@ -34,9 +34,30 @@ body:
       required: true
 
   - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the app or system is affected?
+      options:
+        - Auth
+        - Posts / Feed
+        - Requests / Suggestions
+        - Profile
+        - Notifications
+        - Design system / UI
+        - Cloud Functions / backend
+        - Firestore / data model
+        - CI/CD / Release
+        - Offline / caching
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
     id: platform
     attributes:
-      label: Platform
+      label: Platforms affected
+      description: Select every platform where you've reproduced the bug. Use the description field if you haven't tested others.
       multiple: true
       options:
         - Android
@@ -45,13 +66,35 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: regression
+    attributes:
+      label: Did this work before?
+      description: Helps us triage regressions vs. new features.
+      options:
+        - Always broken / first time encountering
+        - Worked before — this is a regression
+        - Unsure
+    validations:
+      required: false
+
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      description: Visible in Profile → About, or the tag/build number from CI. Skip if it's a backend / CI bug.
+      placeholder: "e.g. 1.2.0+45"
+    validations:
+      required: false
+
   - type: input
     id: flutter-version
     attributes:
       label: Flutter version
-      placeholder: "e.g. 3.24.0"
+      description: From `flutter --version`. Skip for backend, CI, or infra bugs where the Flutter SDK isn't involved.
+      placeholder: "e.g. 3.41.8"
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: logs

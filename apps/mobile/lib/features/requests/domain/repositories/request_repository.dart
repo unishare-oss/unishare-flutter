@@ -39,6 +39,7 @@ abstract interface class RequestRepository {
 
   Future<void> toggleUpvote(String requestId);
   Future<bool> hasUpvoted(String requestId);
+  Stream<bool> watchHasUpvoted(String requestId);
 
   /// Deletes a request. Only the request owner may call this.
   Future<void> deleteRequest(String requestId);

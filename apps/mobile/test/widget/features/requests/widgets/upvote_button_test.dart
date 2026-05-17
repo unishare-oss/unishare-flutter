@@ -10,7 +10,9 @@ import 'package:unishare_mobile/shared/theme/themes.dart';
 Widget _wrap(Widget child, {bool hasUpvoted = false}) {
   return ProviderScope(
     overrides: [
-      hasUpvotedProvider.overrideWith((ref, requestId) async => hasUpvoted),
+      hasUpvotedProvider.overrideWith(
+        (ref, requestId) => Stream.value(hasUpvoted),
+      ),
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
@@ -45,7 +47,9 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            hasUpvotedProvider.overrideWith((ref, requestId) async => false),
+            hasUpvotedProvider.overrideWith(
+              (ref, requestId) => Stream.value(false),
+            ),
             toggleUpvoteProvider.overrideWith2(
               (requestId) => _FakeToggleUpvote(onToggle: () => toggled = true),
             ),

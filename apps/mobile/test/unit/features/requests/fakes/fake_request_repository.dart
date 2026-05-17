@@ -81,6 +81,10 @@ class FakeRequestRepository implements RequestRepository {
   Future<bool> hasUpvoted(String requestId) async => hasUpvotedResult;
 
   @override
+  Stream<bool> watchHasUpvoted(String requestId) =>
+      Stream.value(hasUpvotedResult);
+
+  @override
   Future<void> deleteRequest(String requestId) async {}
 
   @override

@@ -137,26 +137,43 @@ class RequestFirestoreDatasource {
     final suggestionsRef = requestRef.collection('suggestions');
     final now = Timestamp.now();
 
-    // Write the new suggestion document first.
-    final newSuggestionRef = suggestionsRef.doc();
-    await newSuggestionRef.set({
-      'id': newSuggestionRef.id,
-      'postId': postId,
-      'postTitle': postTitle,
-      'postType': postType,
-      'suggestedByUserId': uid,
-      'suggestedByName': suggestedByName,
-      'suggestedByAvatar': suggestedByAvatar,
-      'createdAt': now,
+    // Atomic duplicate guard: use `postId` as the suggestion document ID so
+    // uniqueness is enforced at the path level. The transaction reads the
+    // candidate doc and only writes if it doesn't exist — concurrent
+    // suggestions of the same post by different users are serialized via
+    // Firestore's optimistic concurrency; the second one finds the doc
+    // exists on retry and throws.
+    final newSuggestionRef = suggestionsRef.doc(postId);
+
+    await _firestore.runTransaction((txn) async {
+      final existing = await txn.get(newSuggestionRef);
+      if (existing.exists) {
+        throw Exception(
+          'This post has already been suggested for this request.',
+        );
+      }
+      txn.set(newSuggestionRef, {
+        'id': newSuggestionRef.id,
+        'postId': postId,
+        'postTitle': postTitle,
+        'postType': postType,
+        'suggestedByUserId': uid,
+        'suggestedByName': suggestedByName,
+        'suggestedByAvatar': suggestedByAvatar,
+        'createdAt': now,
+      });
     });
 
     // Check if this was the first suggestion. If yes, mark request fulfilled.
+    // Note: the count read is outside the dedup transaction; a small window
+    // exists where a concurrent suggestion may also see count == 1, but the
+    // inner fulfillment transaction guards `status == 'open'` so only one
+    // transition lands.
     final countSnap = await suggestionsRef.count().get();
     if ((countSnap.count ?? 0) == 1) {
       await _firestore.runTransaction((txn) async {
         final requestSnap = await txn.get(requestRef);
         if (!requestSnap.exists) return;
-        // Only transition if still open (guard against concurrent writes).
         if ((requestSnap.data()?['status'] as String?) == 'open') {
           txn.update(requestRef, {
             'status': 'fulfilled',
@@ -204,6 +221,17 @@ class RequestFirestoreDatasource {
         .doc(uid)
         .get();
     return snap.exists;
+  }
+
+  Stream<bool> watchHasUpvoted(String requestId) {
+    final uid = _auth.currentUser?.uid;
+    if (uid == null) return Stream.value(false);
+    return _requests
+        .doc(requestId)
+        .collection('upvotes')
+        .doc(uid)
+        .snapshots()
+        .map((snap) => snap.exists);
   }
 
   // ---------------------------------------------------------------------------

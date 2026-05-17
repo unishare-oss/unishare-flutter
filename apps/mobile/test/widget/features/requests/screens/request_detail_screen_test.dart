@@ -52,7 +52,7 @@ Widget _wrap(
       suggestionsProvider.overrideWith(
         (ref, requestId) => Stream.value(suggestions),
       ),
-      hasUpvotedProvider.overrideWith((ref, requestId) async => false),
+      hasUpvotedProvider.overrideWith((ref, requestId) => Stream.value(false)),
       currentUserIdProvider.overrideWithValue(null),
     ],
     child: MaterialApp(theme: AppTheme.build(AppThemes.unishare), home: child),
