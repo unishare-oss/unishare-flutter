@@ -207,6 +207,9 @@ jobs:
         working-directory: apps/mobile
         run: dart run build_runner build --delete-conflicting-outputs
 
+      - name: Install FlutterFire CLI
+        run: dart pub global activate flutterfire_cli
+
       - name: Remove WASM modules (not needed for iOS)
         working-directory: apps/mobile
         run: dart run pdfrx:remove_wasm_modules
