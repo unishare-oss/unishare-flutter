@@ -1236,3 +1236,49 @@ Review: PENDING
 2026-05-17
   [10:13] Write: apps/mobile/test/widget/features/notifications/widgets/notification_item_tile_test.dart
   [10:14] Write: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  [11:08] Write: apps/mobile/lib/core/firebase/fcm_service.dart
+  [11:08] Write: apps/mobile/lib/features/notifications/presentation/widgets/notification_item_tile.dart
+  [11:08] Write: apps/mobile/lib/core/firebase/platform_stub.dart
+  [11:08] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [11:08] Write: apps/mobile/lib/core/firebase/platform_native.dart
+  [11:08] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [11:09] Write: apps/mobile/lib/main.dart
+  [11:09] Write: apps/mobile/test/widget/features/notifications/widgets/notification_item_tile_test.dart
+  [11:09] Write: apps/mobile/lib/features/notifications/data/datasources/notification_firestore_datasource.dart
+  [11:09] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  [11:09] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  [11:10] Edit: apps/mobile/pubspec.yaml
+  [11:10] Edit: apps/mobile/lib/core/firebase/fcm_service.dart
+  [11:10] Edit: apps/mobile/lib/core/firebase/fcm_service.dart
+  [11:10] Edit: apps/mobile/lib/main.dart
+  [11:11] Edit: apps/mobile/lib/features/requests/data/datasources/request_firestore_datasource.dart
+Files:
+  ~ apps/mobile/lib/core/firebase/fcm_service.dart
+  ~ apps/mobile/lib/features/notifications/data/datasources/notification_firestore_datasource.dart
+  ~ apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  ~ apps/mobile/lib/features/notifications/presentation/widgets/notification_item_tile.dart
+  ~ apps/mobile/lib/features/requests/data/datasources/request_firestore_datasource.dart
+  ~ apps/mobile/lib/main.dart
+  ~ apps/mobile/pubspec.yaml
+  ~ apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  ~ apps/mobile/test/widget/features/notifications/widgets/notification_item_tile_test.dart
+  ? apps/mobile/lib/core/firebase/platform_native.dart (untracked)
+  ? apps/mobile/lib/core/firebase/platform_stub.dart (untracked)
+Summary:  9 files changed, 524 insertions(+), 163 deletions(-)
+
+  [11:12] Write: apps/mobile/lib/features/notifications/presentation/widgets/notification_item_tile.dart
+Files:
+  ~ apps/mobile/lib/core/firebase/fcm_service.dart
+  ~ apps/mobile/lib/features/notifications/data/datasources/notification_firestore_datasource.dart
+  ~ apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  ~ apps/mobile/lib/features/notifications/presentation/widgets/notification_item_tile.dart
+  ~ apps/mobile/lib/features/requests/data/datasources/request_firestore_datasource.dart
+  ~ apps/mobile/lib/main.dart
+  ~ apps/mobile/pubspec.yaml
+  ~ apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  ~ apps/mobile/test/widget/features/notifications/widgets/notification_item_tile_test.dart
+  ? apps/mobile/lib/core/firebase/platform_native.dart (untracked)
+  ? apps/mobile/lib/core/firebase/platform_stub.dart (untracked)
+Summary:  9 files changed, 563 insertions(+), 187 deletions(-)
+
+  [11:22] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart

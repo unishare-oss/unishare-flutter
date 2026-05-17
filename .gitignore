@@ -20,7 +20,8 @@
 
 # Claude Code agent session files
 .claude/worktrees/
-.claude/settings.local.json
+**/.claude/settings.local.json
+**/.claude/worktrees/
 
 # Agent log 
 apps/mobile/docs/
