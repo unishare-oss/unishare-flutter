@@ -211,20 +211,33 @@ jobs:
         working-directory: apps/mobile
         run: dart run pdfrx:remove_wasm_modules
 
-      - name: Build iOS app (unsigned)
+      - name: Prepare iOS build (Flutter config + Pods, no Xcode)
         working-directory: apps/mobile
-        # --build-name / --build-number are intentionally omitted here.
-        # Passing them on Xcode 26 with Automatic signing forces a team
-        # check even with --no-codesign and the build fails. The IPA is
-        # unsigned and not installable; the filename carries the real
-        # version (unishare-vX.Y.Z.ipa). Internal Info.plist version
-        # falls back to pubspec.yaml — fine for this artifact.
-        run: flutter build ios --release --no-codesign --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
+        run: |
+          flutter build ios --release --no-codesign --config-only \
+            --dart-define=WORKER_URL=${{ secrets.WORKER_URL }}
+
+      - name: Build iOS .app (unsigned, via xcodebuild)
+        working-directory: apps/mobile/ios
+        run: |
+          xcodebuild \
+            -workspace Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGN_ENTITLEMENTS="" \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM="" \
+            build
 
       - name: Package unsigned IPA
         run: |
           mkdir -p Payload
-          cp -r apps/mobile/build/ios/iphoneos/Runner.app Payload/
+          cp -r apps/mobile/ios/build/Build/Products/Release-iphoneos/Runner.app Payload/
           zip -r unishare-${{ github.ref_name }}.ipa Payload/
           rm -rf Payload
 
