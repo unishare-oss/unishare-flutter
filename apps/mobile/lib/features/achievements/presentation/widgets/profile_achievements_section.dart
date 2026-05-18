@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
-import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/level_progress_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/user_gamification_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_frame.dart';
