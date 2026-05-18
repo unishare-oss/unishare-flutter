@@ -8,6 +8,7 @@ import 'package:unishare_mobile/features/achievements/domain/entities/user_stats
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/user_gamification_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_icon.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
@@ -32,7 +33,14 @@ class AchievementsHero extends ConsumerWidget {
     final earned =
         ref.watch(earnedBadgesProvider(uid)).asData?.value ??
         const <EarnedBadge>[];
-    final stats = ref.watch(userStatsProvider(uid)).asData?.value;
+    // `userStatsProvider` reads `users/{uid}` directly, which Firestore
+    // rules restrict to the owner. Other users' stats aren't available
+    // here — the up-next nudge degrades gracefully when stats is null.
+    final me = ref.watch(authStateProvider).asData?.value?.id;
+    final isOwnProfile = me == uid;
+    final stats = isOwnProfile
+        ? ref.watch(userStatsProvider(uid)).asData?.value
+        : null;
 
     if (catalog.isEmpty) {
       // Catalog still loading; render nothing rather than a flickering
