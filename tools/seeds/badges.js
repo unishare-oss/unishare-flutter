@@ -1,4 +1,16 @@
-// tools/seeds/badges.js
+// Badge catalog for the achievements v1 system.
+// Seeded into Firestore collection: `badges` (one doc per id, idempotent via merge).
+//
+// `order` values intentionally leave gaps so future badges can be inserted without
+// renumbering existing entries:
+//   onboarding:  1–9   (1–6 used)
+//   progression: 10–19 (10–18 used)
+//   prestige:    20–29 (20–24 used)
+//
+// The `legacy` badge name contains a literal `{year}` placeholder; substitution is
+// performed by the v1.1 semester-end granting job, not by the v1 evaluator. The
+// `semesterCohort` condition type is intentionally not handled by Phase 1 triggers.
+
 module.exports = [
   { id: 'profile_complete', name: 'Set the Stage', description: 'Complete your profile so others know who you are.', glyph: 'user-circle', points: 10, tier: 'onboarding', category: 'profile', condition: { type: 'profileCompleted', threshold: 1 }, order: 1, active: true },
   { id: 'first_post', name: 'First Steps', description: 'Share your first post with the community.', glyph: 'paper-plane-tilt', points: 15, tier: 'onboarding', category: 'content', condition: { type: 'postsCreated', threshold: 1 }, order: 2, active: true },
