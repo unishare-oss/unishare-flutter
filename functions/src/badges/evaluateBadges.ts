@@ -2,6 +2,7 @@ import { logger } from 'firebase-functions/v2';
 
 import { FieldValue, db } from '../admin';
 import { findNewlyEarnedBadges } from './findNewlyEarnedBadges';
+import { grantBadgeNotification } from './grantNotification';
 import { levelForPoints } from './levelForPoints';
 import { EMPTY_STATS, statValue, type BadgeDoc, type LevelConfig, type StatKey, type UserStats } from './types';
 
@@ -82,6 +83,8 @@ export async function evaluateBadges(
       'gamification.earnedBadgesCache': FieldValue.arrayUnion(...newlyEarned.map(b => b.id)),
     });
   });
+
+  await Promise.all(newlyEarned.map(b => grantBadgeNotification(uid, b)));
 
   logger.info('badges granted', { uid, ids: newlyEarned.map(b => b.id), pointsAdded, newLevel });
 
