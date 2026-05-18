@@ -15,6 +15,7 @@ import 'package:unishare_mobile/features/profile/presentation/widgets/danger_zon
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_form_card.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/confirm_sign_out_dialog.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 /// ProfileScreen still holds [TextEditingController]s (they have their own
@@ -125,26 +126,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _signOut() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Sign out?'),
-        content: const Text(
-          "You'll need to sign in again to access your account.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Sign out'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true) return;
+    if (!await confirmSignOut(context)) return;
 
     try {
       await ref.read(signOutUseCaseProvider).call();
