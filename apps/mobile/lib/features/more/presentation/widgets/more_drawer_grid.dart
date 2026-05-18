@@ -8,22 +8,23 @@ class MoreDrawerGrid extends StatelessWidget {
     required this.onSavedTap,
     required this.onDepartmentsTap,
     required this.onRequestsTap,
-    required this.onProfileTap,
     required this.onAchievementsTap,
   });
 
   final VoidCallback onSavedTap;
   final VoidCallback onDepartmentsTap;
   final VoidCallback onRequestsTap;
-  final VoidCallback onProfileTap;
   final VoidCallback onAchievementsTap;
+
+  // Tiles per row. Profile no longer lives in this grid — the user-row
+  // at the top of the drawer is now tappable and serves as the profile
+  // entry point. The second row is left-aligned so future destinations
+  // (admin, sponsor recognition, etc.) slot in next to ACHIEVEMENTS
+  // without needing recentring.
+  static const _columnsPerRow = 4;
 
   @override
   Widget build(BuildContext context) {
-    // Five tiles split across two rows: the original four destinations
-    // up top, the new Achievements destination centred below. Keeps
-    // each tile at the same width/height as before so the visual
-    // weight of the existing destinations doesn't shrink.
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       child: Column(
@@ -51,19 +52,12 @@ class MoreDrawerGrid extends StatelessWidget {
                   onTap: onRequestsTap,
                 ),
               ),
-              Expanded(
-                child: MoreDrawerTile(
-                  label: 'PROFILE',
-                  icon: Icons.settings_outlined,
-                  onTap: onProfileTap,
-                ),
-              ),
+              const Expanded(child: SizedBox.shrink()),
             ],
           ),
           const SizedBox(height: 8),
           Row(
             children: [
-              const Spacer(),
               Expanded(
                 child: MoreDrawerTile(
                   label: 'ACHIEVEMENTS',
@@ -71,7 +65,8 @@ class MoreDrawerGrid extends StatelessWidget {
                   onTap: onAchievementsTap,
                 ),
               ),
-              const Spacer(),
+              for (var i = 1; i < _columnsPerRow; i++)
+                const Expanded(child: SizedBox.shrink()),
             ],
           ),
         ],
