@@ -12,8 +12,10 @@ class MainNavBar extends StatefulWidget {
     required this.onTap,
     this.notificationsBadgeCount,
     this.currentSubDestination,
+    this.displayedIndex,
   });
 
+  /// Branch index used for tap routing — fires when a tab is pressed.
   final int activeIndex;
   final ValueChanged<int> onTap;
   final int? notificationsBadgeCount;
@@ -22,6 +24,15 @@ class MainNavBar extends StatefulWidget {
   /// instead of the default "More" / menu icon. Tap behaviour is unchanged
   /// — the 4th slot always fires `onTap(NavTab.more.index)`.
   final DrawerDestination? currentSubDestination;
+
+  /// Optional visual override for the active pill + label highlight.
+  /// Defaults to [activeIndex] when null. Use this when the user pushed
+  /// a route that lives on a different branch than the current shell
+  /// branch (e.g., cross-user `/profile/:uid` pushed from feed) — the
+  /// pill should reflect the *destination*, not the underlying branch.
+  final int? displayedIndex;
+
+  int get _highlightedIndex => displayedIndex ?? activeIndex;
 
   static const double _barHeight = 64;
   static const double _hMargin = 16;
@@ -70,9 +81,9 @@ class _MainNavBarState extends State<MainNavBar> {
           final pillWidth = tabWidth - MainNavBar._pillHPad * 2;
           final pillHeight = MainNavBar._barHeight - MainNavBar._pillVPad * 2;
 
-          final effectiveIndex = _hoveredIndex ?? widget.activeIndex;
+          final effectiveIndex = _hoveredIndex ?? widget._highlightedIndex;
           final restingLeft =
-              tabWidth * widget.activeIndex + MainNavBar._pillHPad;
+              tabWidth * widget._highlightedIndex + MainNavBar._pillHPad;
           final pillLeft = _dragLeft ?? restingLeft;
           final isDragging = _dragLeft != null;
 

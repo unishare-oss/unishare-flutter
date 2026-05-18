@@ -35,9 +35,19 @@ class ShellScaffold extends ConsumerWidget {
     final crossUserMatch = RegExp(
       r'^/(profile|achievements)/([^/]+)$',
     ).firstMatch(currentPath);
-    if (crossUserMatch != null && crossUserMatch.group(2) != me) {
+    final isCrossUser =
+        crossUserMatch != null && crossUserMatch.group(2) != me;
+    if (isCrossUser) {
       currentSub = DrawerDestination.publicProfile;
     }
+    // When the user pushed a route that *lives in* the drawer-destinations
+    // branch (Branch 3) but pushed it on top of another branch (typically
+    // Feed), `navigationShell.currentIndex` stays at the original branch.
+    // Override the visual pill to point at the 4th slot so users see "I'm
+    // on a sub-destination" without breaking back-stack semantics.
+    final displayedIndex = (currentSub != null && activeIndex != NavTab.more.index)
+        ? NavTab.more.index
+        : null;
     final unreadCount = ref.watch(unreadNotificationCountProvider);
 
     return PopScope(
@@ -57,6 +67,7 @@ class ShellScaffold extends ConsumerWidget {
         body: navigationShell,
         bottomNavigationBar: MainNavBar(
           activeIndex: activeIndex,
+          displayedIndex: displayedIndex,
           onTap: (index) => _handleTabTap(context, index),
           currentSubDestination: currentSub,
           notificationsBadgeCount: unreadCount,
