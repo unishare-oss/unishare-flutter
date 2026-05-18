@@ -9,6 +9,7 @@ import 'package:unishare_mobile/features/auth/presentation/providers/current_use
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/providers/profile_form_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/appearance_section.dart';
+import 'package:unishare_mobile/features/profile/presentation/widgets/bio_visibility_notice.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/connected_accounts_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/danger_zone_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_card.dart';
@@ -183,6 +184,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
           final notifier = ref.read(profileFormProvider.notifier);
           final sections = <Widget>[
+            BioVisibilityNotice(user: user),
             ProfileCard(user: user),
             const SizedBox(height: 16),
             ProfileFormCard(

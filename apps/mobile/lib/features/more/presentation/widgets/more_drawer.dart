@@ -117,7 +117,11 @@ class MoreDrawerSheet extends ConsumerWidget {
                     onSavedTap: () => _go(context, '/saved'),
                     onDepartmentsTap: () => _go(context, '/departments'),
                     onRequestsTap: () => _go(context, '/requests'),
-                    onProfileTap: () => _go(context, '/profile'),
+                    onAchievementsTap: () {
+                      final uid = userAsync.asData?.value?.id;
+                      if (uid == null) return;
+                      _go(context, '/achievements/$uid');
+                    },
                   ),
                   _SignOutRow(
                     onTap: () => _signOut(context, ref),

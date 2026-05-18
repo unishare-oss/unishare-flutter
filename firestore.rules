@@ -6,6 +6,28 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Achievements badge catalog — public read, seed-only writes.
+    match /badges/{badgeId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Public-safe mirror of users/{uid} — name, photoUrl, bio, and the
+    // gamification fields safe to expose cross-user (level, selectedTitle,
+    // displayedBadges). Maintained by the onUserChangedPublicSync Cloud
+    // Function; never client-written.
+    match /users_public/{uid} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Tunable level threshold table and other app-wide config — public read,
+    // seed-only writes.
+    match /app_config/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
     match /departments/{departmentId} {
       allow read: if true;
       allow write: if false;
@@ -17,10 +39,64 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
+      // Owner-only reads keep `email` and other private fields private.
+      // Cross-user gamification display (badges visible on someone else's
+      // profile) is intentionally deferred to v1.1 — that will introduce a
+      // dedicated `users_public/{uid}` collection that only mirrors safe
+      // fields (name, photoUrl, level, displayedBadges, selectedTitle).
       allow read: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null && request.auth.uid == userId;
-      allow update: if request.auth != null && request.auth.uid == userId;
+
+      // Owner-only updates, with server-managed gamification/stats fields
+      // off-limits. Validators only fire when the cosmetic fields are part
+      // of the change so unrelated profile edits aren't blocked by stale
+      // `gamification` data.
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && !writesProtectedAchievementsFields()
+                    && (!touchesDisplayedBadges() || validDisplayedBadges())
+                    && (!touchesSelectedTitle() || validSelectedTitle());
       allow delete: if false;
+
+      // Compare the protected values directly. `diff(...).affectedKeys()`
+      // only reports top-level keys, so dotted-path checks would silently
+      // miss nested writes under `gamification`. Comparing the actual
+      // values is the only reliable way to detect the change.
+      function writesProtectedAchievementsFields() {
+        let beforeG = resource.data.get('gamification', {});
+        let afterG = request.resource.data.get('gamification', {});
+        return request.resource.data.get('stats', {}) != resource.data.get('stats', {})
+            || beforeG.get('totalPoints', 0) != afterG.get('totalPoints', 0)
+            || beforeG.get('level', 0) != afterG.get('level', 0)
+            || beforeG.get('earnedBadgesCache', []) != afterG.get('earnedBadgesCache', []);
+      }
+
+      function earnedCache() {
+        return resource.data.get(['gamification', 'earnedBadgesCache'], []);
+      }
+
+      function touchesDisplayedBadges() {
+        return request.resource.data.get(['gamification', 'displayedBadges'], [])
+            != resource.data.get(['gamification', 'displayedBadges'], []);
+      }
+
+      function touchesSelectedTitle() {
+        return request.resource.data.get(['gamification', 'selectedTitle'], null)
+            != resource.data.get(['gamification', 'selectedTitle'], null);
+      }
+
+      function validDisplayedBadges() {
+        let proposed = request.resource.data.get(['gamification', 'displayedBadges'], []);
+        return proposed is list
+               && proposed.size() <= 3
+               && proposed.toSet().size() == proposed.size()
+               && proposed.toSet().difference(earnedCache().toSet()).size() == 0;
+      }
+
+      function validSelectedTitle() {
+        let t = request.resource.data.get(['gamification', 'selectedTitle'], null);
+        return t == null || t in earnedCache();
+      }
 
       match /preferences {
         allow read, write: if request.auth != null && request.auth.uid == userId;
@@ -28,6 +104,19 @@ service cloud.firestore {
 
       match /savedPosts/{postId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // Earned badges — server-only writes (achievements evaluator).
+      // Reads are open to any authenticated user so badges are visible on
+      // other users' profiles and on the leaderboard.
+      match /earnedBadges/{badgeId} {
+        allow read: if request.auth != null;
+        allow write: if false;
+      }
+
+      // Unique-savers presence set — server-only.
+      match /uniqueSavers/{saverUid} {
+        allow read, write: if false;
       }
 
       // Notification inbox — server (Admin SDK) writes; client reads and marks read only.

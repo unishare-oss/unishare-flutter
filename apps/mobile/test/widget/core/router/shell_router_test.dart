@@ -157,11 +157,13 @@ void main() {
         await tester.tap(moreTab);
         await tester.pumpAndSettle();
 
-        // The drawer surfaces these uppercase labels.
+        // The drawer surfaces these uppercase labels. Profile moved to
+        // the tappable user-row at the top of the drawer (SPEC-0011), so
+        // it's no longer a tile here.
         expect(find.text('SAVED'), findsOneWidget);
         expect(find.text('DEPARTMENTS'), findsOneWidget);
         expect(find.text('REQUESTS'), findsOneWidget);
-        expect(find.text('PROFILE'), findsOneWidget);
+        expect(find.text('ACHIEVEMENTS'), findsOneWidget);
         // We're still rooted on /feed under the drawer.
         expect(find.byType(MainNavBar), findsOneWidget);
       },
