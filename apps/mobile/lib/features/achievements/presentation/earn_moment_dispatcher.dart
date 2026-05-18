@@ -67,9 +67,7 @@ class _EarnMomentDispatcherState extends ConsumerState<EarnMomentDispatcher> {
         if (badge != null) {
           await _showOne(badge, earned);
         }
-        await ref
-            .read(newBadgeAlertProvider(uid).notifier)
-            .markSeen(earned);
+        await ref.read(newBadgeAlertProvider(uid).notifier).markSeen(earned);
       }
     } finally {
       _draining = false;
@@ -77,16 +75,14 @@ class _EarnMomentDispatcherState extends ConsumerState<EarnMomentDispatcher> {
   }
 
   Future<void> _showOne(AchievementBadge badge, EarnedBadge earned) async {
-    final useModal = badge.tier == BadgeTier.onboarding ||
-        badge.tier == BadgeTier.prestige;
+    final useModal =
+        badge.tier == BadgeTier.onboarding || badge.tier == BadgeTier.prestige;
     if (useModal) {
       await showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
-        builder: (_) => EarnMomentModal(
-          badge: badge,
-          points: earned.pointsAwarded,
-        ),
+        builder: (_) =>
+            EarnMomentModal(badge: badge, points: earned.pointsAwarded),
       );
     } else {
       final messenger = ScaffoldMessenger.maybeOf(context);

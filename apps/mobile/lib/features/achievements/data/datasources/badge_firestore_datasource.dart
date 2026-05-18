@@ -9,17 +9,24 @@ class BadgeFirestoreDatasource {
   BadgeFirestoreDatasource(this._db);
 
   Stream<List<BadgeDto>> watchCatalog() {
+    // Catalog is ~20 docs — filter active client-side so we don't need
+    // a composite (active ASC, order ASC) index. The evaluator on the
+    // server still uses `where(active) + where(condition.type IN ...)` and
+    // has its own composite in firestore.indexes.json.
     return _db
         .collection('badges')
-        .where('active', isEqualTo: true)
         .orderBy('order')
         .snapshots()
-        .map((s) => s.docs.map(BadgeDto.fromSnapshot).toList());
+        .map(
+          (s) =>
+              s.docs.map(BadgeDto.fromSnapshot).where((b) => b.active).toList(),
+        );
   }
 
   Stream<UserGamificationDto> watchGamification(String uid) {
     return _db.doc('users/$uid').snapshots().map((s) {
-      final map = (s.data()?['gamification'] as Map<String, dynamic>?) ??
+      final map =
+          (s.data()?['gamification'] as Map<String, dynamic>?) ??
           const <String, dynamic>{};
       return UserGamificationDto.fromJson(map);
     });
@@ -27,7 +34,8 @@ class BadgeFirestoreDatasource {
 
   Stream<UserStatsDto> watchStats(String uid) {
     return _db.doc('users/$uid').snapshots().map((s) {
-      final map = (s.data()?['stats'] as Map<String, dynamic>?) ??
+      final map =
+          (s.data()?['stats'] as Map<String, dynamic>?) ??
           const <String, dynamic>{};
       return UserStatsDto.fromJson(map);
     });

@@ -19,7 +19,8 @@ class AchievementsScreen extends ConsumerWidget {
     final ac = Theme.of(context).extension<AppColors>()!;
     final theme = Theme.of(context);
     final catalog = ref.watch(badgeCatalogProvider).asData?.value ?? const [];
-    final earned = ref.watch(earnedBadgesProvider(uid)).asData?.value ?? const [];
+    final earned =
+        ref.watch(earnedBadgesProvider(uid)).asData?.value ?? const [];
     final earnedMap = <String, EarnedBadge>{
       for (final e in earned) e.badgeId: e,
     };
@@ -84,33 +85,30 @@ class _BadgeGrid extends StatelessWidget {
           crossAxisSpacing: 12,
           childAspectRatio: 0.75,
         ),
-        delegate: SliverChildBuilderDelegate(
-          (context, i) {
-            final b = badges[i];
-            final earned = earnedMap[b.id];
-            return InkWell(
-              onTap: () => showModalBottomSheet<void>(
-                context: context,
-                builder: (_) => BadgeDetailSheet(badge: b, earned: earned),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  BadgeIcon(badge: b, locked: earned == null, size: 72),
-                  const SizedBox(height: 6),
-                  Text(
-                    b.name,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.labelSmall,
-                  ),
-                ],
-              ),
-            );
-          },
-          childCount: badges.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, i) {
+          final b = badges[i];
+          final earned = earnedMap[b.id];
+          return InkWell(
+            onTap: () => showModalBottomSheet<void>(
+              context: context,
+              builder: (_) => BadgeDetailSheet(badge: b, earned: earned),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                BadgeIcon(badge: b, locked: earned == null, size: 72),
+                const SizedBox(height: 6),
+                Text(
+                  b.name,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ],
+            ),
+          );
+        }, childCount: badges.length),
       ),
     );
   }

@@ -10,7 +10,10 @@ ThemeData _theme() => AppTheme.fromId('unishare');
 
 Future<void> _pump(WidgetTester tester, Widget child) {
   return tester.pumpWidget(
-    MaterialApp(theme: _theme(), home: Scaffold(body: Center(child: child))),
+    MaterialApp(
+      theme: _theme(),
+      home: Scaffold(body: Center(child: child)),
+    ),
   );
 }
 

@@ -11,9 +11,9 @@ class BadgeRepositoryImpl implements BadgeRepository {
 
   @override
   Stream<List<AchievementBadge>> watchCatalog() {
-    return _catalog
-        .watchCatalog()
-        .map((dtos) => dtos.map((d) => d.toEntity()).toList(growable: false));
+    return _catalog.watchCatalog().map(
+      (dtos) => dtos.map((d) => d.toEntity()).toList(growable: false),
+    );
   }
 
   @override

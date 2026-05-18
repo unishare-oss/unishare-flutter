@@ -10,7 +10,9 @@ part 'user_gamification_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 GamificationRepository gamificationRepository(Ref ref) {
-  return GamificationRepositoryImpl(ref.watch(badgeFirestoreDatasourceProvider));
+  return GamificationRepositoryImpl(
+    ref.watch(badgeFirestoreDatasourceProvider),
+  );
 }
 
 @riverpod

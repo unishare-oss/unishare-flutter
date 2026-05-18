@@ -27,8 +27,8 @@ abstract class EarnedBadgeDto with _$EarnedBadgeDto {
   }
 
   EarnedBadge toEntity() => EarnedBadge(
-        badgeId: badgeId,
-        earnedAt: earnedAt.toDate(),
-        pointsAwarded: pointsAwarded,
-      );
+    badgeId: badgeId,
+    earnedAt: earnedAt.toDate(),
+    pointsAwarded: pointsAwarded,
+  );
 }

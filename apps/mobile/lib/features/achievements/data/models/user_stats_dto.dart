@@ -26,15 +26,15 @@ abstract class UserStatsDto with _$UserStatsDto {
       _$UserStatsDtoFromJson(json);
 
   UserStats toEntity() => UserStats(
-        postsCreated: postsCreated,
-        savesReceived: savesReceived,
-        postsWithAtLeastOneSave: postsWithAtLeastOneSave,
-        uniqueSaversCount: uniqueSaversCount,
-        requestsFulfilled: requestsFulfilled,
-        requestsCreated: requestsCreated,
-        commentsWritten: commentsWritten,
-        savesGiven: savesGiven,
-        uniqueDepartmentsContributed: uniqueDepartmentsContributed,
-        profileCompleted: profileCompleted,
-      );
+    postsCreated: postsCreated,
+    savesReceived: savesReceived,
+    postsWithAtLeastOneSave: postsWithAtLeastOneSave,
+    uniqueSaversCount: uniqueSaversCount,
+    requestsFulfilled: requestsFulfilled,
+    requestsCreated: requestsCreated,
+    commentsWritten: commentsWritten,
+    savesGiven: savesGiven,
+    uniqueDepartmentsContributed: uniqueDepartmentsContributed,
+    profileCompleted: profileCompleted,
+  );
 }

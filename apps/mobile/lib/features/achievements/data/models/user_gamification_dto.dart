@@ -20,9 +20,9 @@ abstract class UserGamificationDto with _$UserGamificationDto {
       _$UserGamificationDtoFromJson(json);
 
   UserGamification toEntity() => UserGamification(
-        totalPoints: totalPoints,
-        level: level,
-        selectedTitle: selectedTitle,
-        displayedBadges: displayedBadges,
-      );
+    totalPoints: totalPoints,
+    level: level,
+    selectedTitle: selectedTitle,
+    displayedBadges: displayedBadges,
+  );
 }

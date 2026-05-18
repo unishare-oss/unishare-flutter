@@ -37,30 +37,28 @@ abstract class BadgeDto with _$BadgeDto {
   factory BadgeDto.fromJson(Map<String, dynamic> json) =>
       _$BadgeDtoFromJson(json);
 
-  factory BadgeDto.fromSnapshot(
-    DocumentSnapshot<Map<String, dynamic>> snap,
-  ) =>
+  factory BadgeDto.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snap) =>
       BadgeDto.fromJson({...snap.data() ?? const {}, 'id': snap.id});
 
   AchievementBadge toEntity() => AchievementBadge(
-        id: id,
-        name: name,
-        description: description,
-        glyph: glyph,
-        points: points,
-        tier: BadgeTier.values.firstWhere(
-          (t) => t.name == tier,
-          orElse: () => BadgeTier.progression,
-        ),
-        category: BadgeCategory.values.firstWhere(
-          (c) => c.name == category,
-          orElse: () => BadgeCategory.content,
-        ),
-        condition: BadgeCondition(
-          statKey: condition.type,
-          threshold: condition.threshold,
-        ),
-        order: order,
-        active: active,
-      );
+    id: id,
+    name: name,
+    description: description,
+    glyph: glyph,
+    points: points,
+    tier: BadgeTier.values.firstWhere(
+      (t) => t.name == tier,
+      orElse: () => BadgeTier.progression,
+    ),
+    category: BadgeCategory.values.firstWhere(
+      (c) => c.name == category,
+      orElse: () => BadgeCategory.content,
+    ),
+    condition: BadgeCondition(
+      statKey: condition.type,
+      threshold: condition.threshold,
+    ),
+    order: order,
+    active: active,
+  );
 }

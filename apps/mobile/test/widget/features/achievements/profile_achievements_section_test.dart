@@ -15,25 +15,29 @@ import 'package:unishare_mobile/features/achievements/presentation/widgets/profi
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
 
 AchievementBadge _badge(String id, String name) => AchievementBadge(
-      id: id,
-      name: name,
-      description: '',
-      glyph: 'paper-plane-tilt',
-      points: 15,
-      tier: BadgeTier.onboarding,
-      category: BadgeCategory.content,
-      condition: const BadgeCondition(statKey: 'postsCreated', threshold: 1),
-      order: 1,
-      active: true,
-    );
+  id: id,
+  name: name,
+  description: '',
+  glyph: 'paper-plane-tilt',
+  points: 15,
+  tier: BadgeTier.onboarding,
+  category: BadgeCategory.content,
+  condition: const BadgeCondition(statKey: 'postsCreated', threshold: 1),
+  order: 1,
+  active: true,
+);
 
 GoRouter _router(Widget child) {
   return GoRouter(
     routes: [
-      GoRoute(path: '/', builder: (_, __) => Scaffold(body: child)),
+      GoRoute(
+        path: '/',
+        builder: (_, _) => Scaffold(body: child),
+      ),
       GoRoute(
         path: '/achievements/:uid',
-        builder: (_, state) => const Scaffold(body: Text('achievements screen')),
+        builder: (_, state) =>
+            const Scaffold(body: Text('achievements screen')),
       ),
     ],
   );
@@ -51,8 +55,9 @@ Future<void> _pump(
       overrides: [
         badgeCatalogProvider.overrideWith((ref) => Stream.value(catalog)),
         earnedBadgesProvider('u1').overrideWith((ref) => Stream.value(earned)),
-        userGamificationProvider('u1')
-            .overrideWith((ref) => Stream.value(gamification)),
+        userGamificationProvider(
+          'u1',
+        ).overrideWith((ref) => Stream.value(gamification)),
         levelProgressProvider('u1').overrideWith((ref) => progress),
       ],
       child: MaterialApp.router(
@@ -64,7 +69,9 @@ Future<void> _pump(
 }
 
 void main() {
-  testWidgets('shows muted placeholders when no badges displayed', (tester) async {
+  testWidgets('shows muted placeholders when no badges displayed', (
+    tester,
+  ) async {
     await _pump(
       tester,
       catalog: const [],

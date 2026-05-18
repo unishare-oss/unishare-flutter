@@ -33,10 +33,7 @@ class SetDisplayedBadges {
     required List<String> proposed,
     required Set<String> earnedIds,
   }) async {
-    validateDisplayedBadgesSelection(
-      proposed: proposed,
-      earnedIds: earnedIds,
-    );
+    validateDisplayedBadgesSelection(proposed: proposed, earnedIds: earnedIds);
     await repo.setDisplayedBadges(uid, proposed);
   }
 }

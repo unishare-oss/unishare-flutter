@@ -14,11 +14,10 @@ class TitlePickerSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final catalog = ref.watch(badgeCatalogProvider).asData?.value ?? const [];
-    final earned = ref.watch(earnedBadgesProvider(uid)).asData?.value ?? const [];
+    final earned =
+        ref.watch(earnedBadgesProvider(uid)).asData?.value ?? const [];
     final earnedIds = earned.map((e) => e.badgeId).toSet();
-    final available = catalog
-        .where((b) => earnedIds.contains(b.id))
-        .toList()
+    final available = catalog.where((b) => earnedIds.contains(b.id)).toList()
       ..sort((a, b) => a.order.compareTo(b.order));
 
     Future<void> select(String? id) async {
@@ -32,9 +31,9 @@ class TitlePickerSheet extends ConsumerWidget {
         if (context.mounted) Navigator.of(context).pop();
       } on DisplayedBadgesException catch (e) {
         if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
 
@@ -48,10 +47,7 @@ class TitlePickerSheet extends ConsumerWidget {
               child: Text('Pick a title to display under your name'),
             ),
           ),
-          ListTile(
-            title: const Text('No title'),
-            onTap: () => select(null),
-          ),
+          ListTile(title: const Text('No title'), onTap: () => select(null)),
           ...available.map(
             (b) => ListTile(title: Text(b.name), onTap: () => select(b.id)),
           ),

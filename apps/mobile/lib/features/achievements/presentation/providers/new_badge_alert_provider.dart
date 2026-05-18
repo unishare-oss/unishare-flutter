@@ -19,7 +19,8 @@ Future<void> openAchievementsAlertsBox() async {
 class NewBadgeAlertNotifier extends _$NewBadgeAlertNotifier {
   @override
   List<EarnedBadge> build(String uid) {
-    final earned = ref.watch(earnedBadgesProvider(uid)).asData?.value ?? const [];
+    final earned =
+        ref.watch(earnedBadgesProvider(uid)).asData?.value ?? const [];
     final lastSeen = _readLastSeen();
     final unread = earned
         .where((e) => e.earnedAt.isAfter(lastSeen))

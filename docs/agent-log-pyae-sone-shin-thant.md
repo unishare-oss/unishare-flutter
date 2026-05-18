@@ -1322,3 +1322,6 @@ Decisions:
 - Phase 7 goldens (Task 7.1) and emulator-backed integration test (Task 7.2) deferred — color-based widget tests already cover frame variants; integration test requires emulator + auth, slated for CI.
 Handoff: Branch feature/achievements is on commit 6a249d9. Tests pass locally on the achievements feature; full suite to be run in CI. Three open questions remain: Phosphor licence/asset size confirmation, 03:00 ICT sweep window clash check, and confirmation that adding `type: 'badge_unlock'` doesn't break the Flutter NotificationModel (it should fall through to a default since the model uses snake_case→camelCase mapping). v1.1 follow-ups: leaderboards, ajarn recognition, profile cosmetic accents, account-deletion cascade for earnedBadges + uniqueSavers.
 Review: PENDING
+  [12:23] Edit: apps/mobile/lib/features/achievements/data/datasources/badge_firestore_datasource.dart
+  [12:23] Edit: apps/mobile/lib/features/achievements/presentation/widgets/profile_achievements_section.dart
+  [12:23] Edit: apps/mobile/lib/features/achievements/presentation/widgets/profile_achievements_section.dart

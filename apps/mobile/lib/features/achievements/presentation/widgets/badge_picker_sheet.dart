@@ -41,19 +41,17 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
     final earned =
         ref.read(earnedBadgesProvider(widget.uid)).asData?.value ?? const [];
     final earnedIds = earned.map((e) => e.badgeId).toSet();
-    final usecase = SetDisplayedBadges(ref.read(gamificationRepositoryProvider));
+    final usecase = SetDisplayedBadges(
+      ref.read(gamificationRepositoryProvider),
+    );
     try {
-      await usecase(
-        uid: widget.uid,
-        proposed: _selected,
-        earnedIds: earnedIds,
-      );
+      await usecase(uid: widget.uid, proposed: _selected, earnedIds: earnedIds);
       if (mounted) Navigator.of(context).pop();
     } on DisplayedBadgesException catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message)));
     }
   }
 
@@ -65,9 +63,7 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
     final earned =
         ref.watch(earnedBadgesProvider(widget.uid)).asData?.value ?? const [];
     final earnedIds = earned.map((e) => e.badgeId).toSet();
-    final available = catalog
-        .where((b) => earnedIds.contains(b.id))
-        .toList()
+    final available = catalog.where((b) => earnedIds.contains(b.id)).toList()
       ..sort((a, b) => a.order.compareTo(b.order));
 
     return SafeArea(
@@ -89,9 +85,7 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
             if (available.isEmpty)
               Text(
                 'Earn your first badge to display it here.',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: ac.textMuted,
-                ),
+                style: theme.textTheme.bodySmall?.copyWith(color: ac.textMuted),
               )
             else
               Wrap(
@@ -111,10 +105,7 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
-              child: FilledButton(
-                onPressed: _save,
-                child: const Text('Save'),
-              ),
+              child: FilledButton(onPressed: _save, child: const Text('Save')),
             ),
           ],
         ),

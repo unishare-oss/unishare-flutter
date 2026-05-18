@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/level_progress_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/user_gamification_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_frame.dart';
@@ -23,16 +24,32 @@ class ProfileAchievementsSection extends ConsumerWidget {
 
     final gamification = ref.watch(userGamificationProvider(uid)).asData?.value;
     final catalog = ref.watch(badgeCatalogProvider).asData?.value ?? const [];
+    final earned =
+        ref.watch(earnedBadgesProvider(uid)).asData?.value ?? const [];
     final progress = ref.watch(levelProgressProvider(uid));
 
-    final displayedIds = gamification?.displayedBadges ?? const <String>[];
     final catalogById = <String, AchievementBadge>{
       for (final b in catalog) b.id: b,
     };
-    final displayed = displayedIds
-        .map((id) => catalogById[id])
-        .whereType<AchievementBadge>()
-        .toList(growable: false);
+
+    // User-curated picks take precedence. Otherwise, fall back to the most
+    // recent up-to-3 earned badges so a user who has earned badges sees them
+    // immediately without having to open the picker first.
+    final displayedIds = gamification?.displayedBadges ?? const <String>[];
+    final List<AchievementBadge> displayed;
+    if (displayedIds.isNotEmpty) {
+      displayed = displayedIds
+          .map((id) => catalogById[id])
+          .whereType<AchievementBadge>()
+          .toList(growable: false);
+    } else {
+      // earnedBadges stream is already ordered by earnedAt desc.
+      displayed = earned
+          .take(3)
+          .map((e) => catalogById[e.badgeId])
+          .whereType<AchievementBadge>()
+          .toList(growable: false);
+    }
 
     return InkWell(
       onTap: () => context.push('/achievements/$uid'),
