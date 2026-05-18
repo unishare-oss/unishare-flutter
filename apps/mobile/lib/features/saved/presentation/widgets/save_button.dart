@@ -29,21 +29,25 @@ class SaveButton extends StatelessWidget {
         ),
       );
     }
+    final iconColor = isSaved ? appColors.amber : appColors.textMuted;
     return Tooltip(
       message: isSaved ? 'Unsave' : 'Save',
       child: Semantics(
         label: isSaved ? 'Unsave post' : 'Save post',
         button: true,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(4),
-          child: Padding(
+        child: IconButton(
+          onPressed: onTap,
+          icon: Icon(
+            isSaved ? Icons.bookmark : Icons.bookmark_border,
+            size: size,
+          ),
+          color: iconColor,
+          style: IconButton.styleFrom(
             padding: const EdgeInsets.all(4),
-            child: Icon(
-              isSaved ? Icons.bookmark : Icons.bookmark_border,
-              size: size,
-              color: isSaved ? appColors.amber : appColors.textMuted,
-            ),
+            minimumSize: Size(size + 8, size + 8),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            highlightColor: appColors.amber.withValues(alpha: 0.15),
+            foregroundColor: iconColor,
           ),
         ),
       ),
