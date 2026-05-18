@@ -37,6 +37,8 @@ class Post {
     required this.createdAt,
     required this.updatedAt,
     this.mediaTypes = const [],
+    this.viewsCount = 0,
+    this.departmentId,
     this.externalUrl,
     this.codeSnippetUrl,
     this.summary,
@@ -64,6 +66,8 @@ class Post {
 
   final List<String> tags;
   final int likesCount;
+  final int viewsCount;
+  final String? departmentId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? externalUrl;
@@ -95,6 +99,8 @@ class Post {
     List<String>? mediaTypes,
     List<String>? tags,
     int? likesCount,
+    int? viewsCount,
+    String? departmentId,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? externalUrl,
@@ -120,6 +126,8 @@ class Post {
       mediaTypes: mediaTypes ?? this.mediaTypes,
       tags: tags ?? this.tags,
       likesCount: likesCount ?? this.likesCount,
+      viewsCount: viewsCount ?? this.viewsCount,
+      departmentId: departmentId ?? this.departmentId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       externalUrl: externalUrl ?? this.externalUrl,

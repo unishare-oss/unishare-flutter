@@ -45,3 +45,15 @@ Files:
   ~ apps/mobile/test/unit/features/post/presentation/providers/post_detail_provider_test.dart
 Summary:  3 files changed, 53 insertions(+), 26 deletions(-)
 
+Files:
+  ~ apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  ~ apps/mobile/lib/features/post/domain/entities/post.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+Summary:  3 files changed, 407 insertions(+), 57 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart
+  ~ apps/mobile/lib/features/post/domain/entities/post.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+Summary:  3 files changed, 477 insertions(+), 57 deletions(-)
+

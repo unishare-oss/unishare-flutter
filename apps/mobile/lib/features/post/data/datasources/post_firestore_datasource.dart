@@ -104,6 +104,8 @@ class PostFirestoreDatasource {
       mediaTypes: List<String>.from(data['mediaTypes'] as List? ?? []),
       tags: List<String>.from(data['tags'] as List? ?? []),
       likesCount: (data['likesCount'] as num?)?.toInt() ?? 0,
+      viewsCount: (data['viewsCount'] as num?)?.toInt() ?? 0,
+      departmentId: data['departmentId'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       externalUrl: data['externalUrl'] as String?,
@@ -114,6 +116,26 @@ class PostFirestoreDatasource {
       ),
       summarizedAt: (data['summarizedAt'] as Timestamp?)?.toDate(),
     );
+  }
+
+  Stream<List<Post>> watchPostsByCourse(
+    String courseId, {
+    String? excludeId,
+    int limit = 5,
+  }) {
+    return _firestore
+        .collection('posts')
+        .where('courseId', isEqualTo: courseId)
+        .orderBy('createdAt', descending: true)
+        .limit(limit + 1)
+        .snapshots()
+        .map(
+          (s) => s.docs
+              .map(_docToPost)
+              .where((p) => p.id != excludeId)
+              .take(limit)
+              .toList(),
+        );
   }
 
   Future<void> updatePostSummary(
