@@ -83,6 +83,13 @@ class ShellScaffold extends ConsumerWidget {
       return;
     }
     if (index == navigationShell.currentIndex) {
+      // If the active branch has a pushed route on top (e.g., user pushed
+      // /profile/:uid from feed), tapping the tab should pop back to the
+      // branch root rather than scroll-to-top a screen that isn't visible.
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+        return;
+      }
       final state = scrollTargetKeys[index].currentState;
       if (state is ScrollToTopTarget) {
         (state as ScrollToTopTarget).scrollToTop();
