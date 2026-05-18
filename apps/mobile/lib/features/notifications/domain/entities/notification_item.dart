@@ -5,6 +5,7 @@ enum NotificationType {
   requestUpvoted,
   suggestionSubmitted,
   suggestionAccepted,
+  badgeUnlock,
 }
 
 class AppNotification {
