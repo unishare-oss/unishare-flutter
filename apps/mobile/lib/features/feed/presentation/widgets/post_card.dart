@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/features/achievements/presentation/providers/public_user_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/level_chip.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/saved/domain/entities/saved_post_snapshot.dart';
@@ -40,7 +42,7 @@ class PostCard extends ConsumerWidget {
               _buildTagsWrap(context, appColors),
             ],
             const SizedBox(height: 8),
-            _buildAuthorRow(context, appColors),
+            _buildAuthorRow(context, appColors, ref),
             const SizedBox(height: 6),
             _buildMetaRow(context, appColors),
           ],
@@ -151,7 +153,7 @@ class PostCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildAuthorRow(BuildContext context, AppColors appColors) {
+  Widget _buildAuthorRow(BuildContext context, AppColors appColors, WidgetRef ref) {
     final isAnonymous = post.postingIdentity == PostingIdentity.anonymous;
     final initials = isAnonymous
         ? '?'
@@ -182,6 +184,13 @@ class PostCard extends ConsumerWidget {
             context,
           ).textTheme.bodySmall?.copyWith(color: appColors.textSecondary),
         ),
+        // Cross-user level chip — reads from users_public/{authorId} via
+        // publicUserProvider. Hidden for anonymous posts, while the
+        // provider is loading, when the author doc isn't mirrored, and
+        // for level 1 (clutter-reduction — fresh accounts get nothing).
+        if (!isAnonymous) ...[
+          ..._authorLevelChip(ref),
+        ],
         Text(
           ' · Year ${post.year}',
           style: Theme.of(
@@ -190,6 +199,18 @@ class PostCard extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  /// Returns either `[SizedBox(6), LevelChip(...)]` when the author has
+  /// a renderable level, or an empty list. Keeps the chip width-stable
+  /// at the call site.
+  List<Widget> _authorLevelChip(WidgetRef ref) {
+    final pu = ref.watch(publicUserProvider(post.authorId)).asData?.value;
+    if (pu == null || pu.level < 2) return const [];
+    return [
+      const SizedBox(width: 6),
+      LevelChip(level: pu.level),
+    ];
   }
 
   Widget _buildMetaRow(BuildContext context, AppColors appColors) {
