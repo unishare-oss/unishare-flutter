@@ -1,4 +1,4 @@
-import { onDocumentUpdated, type FirestoreEvent, type Change, type QueryDocumentSnapshot } from 'firebase-functions/v2/firestore';
+import { onDocumentCreated, onDocumentUpdated, type FirestoreEvent, type Change, type QueryDocumentSnapshot } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 
 import { FieldValue, db } from '../admin';
@@ -59,6 +59,23 @@ export const onUserChangedPublicSync = onDocumentUpdated(
       event.params.uid,
       change.before.data() as Record<string, unknown> | undefined,
       change.after.data() as Record<string, unknown> | undefined,
+    );
+  },
+);
+
+/// Onboards fresh accounts to `users_public/{uid}` the moment their
+/// `users/{uid}` document is first written. Without this, new users would
+/// have no public mirror until their next profile edit, and other students
+/// trying to view their profile would see "Could not load."
+export const onUserCreatedPublicSync = onDocumentCreated(
+  'users/{uid}',
+  async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, { uid: string }>) => {
+    const snap = event.data;
+    if (!snap) return;
+    await onUserChangedPublicSyncHandler(
+      event.params.uid,
+      undefined,
+      snap.data() as Record<string, unknown> | undefined,
     );
   },
 );

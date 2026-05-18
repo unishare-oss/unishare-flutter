@@ -60,6 +60,11 @@ enum NavTab {
 /// and icon instead of the default "More" / menu icon.
 enum DrawerDestination {
   profile('Profile', Icons.person_rounded),
+  // Distinct label so users can tell whether they're on their own
+  // editable profile (`/profile`) vs viewing someone else's public view
+  // (`/profile/:uid`). Different icon (outlined) reinforces the read-only
+  // nature of the public view.
+  publicProfile('Viewing', Icons.person_outline_rounded),
   saved('Saved', Icons.bookmark_rounded),
   departments('Depts', Icons.apartment_rounded),
   requests('Requests', Icons.inbox_rounded),
@@ -73,7 +78,8 @@ enum DrawerDestination {
   /// Returns the destination that owns [path], or `null` if [path] is not
   /// inside the drawer-destinations branch.
   static DrawerDestination? fromPath(String path) {
-    if (path == '/profile' || path.startsWith('/profile/')) return profile;
+    if (path == '/profile') return profile;
+    if (path.startsWith('/profile/')) return publicProfile;
     if (path == '/saved') return saved;
     if (path == '/departments' || path.startsWith('/departments/')) {
       return departments;

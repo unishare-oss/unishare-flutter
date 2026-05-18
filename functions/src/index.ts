@@ -14,7 +14,7 @@ export { onRequestFulfilled } from './triggers/onRequestFulfilled';
 export { onPostSaved } from './triggers/onPostSaved';
 export { onPostUnsaved } from './triggers/onPostUnsaved';
 export { onProfileUpdated } from './triggers/onProfileUpdated';
-export { onUserChangedPublicSync } from './triggers/onUserChangedPublicSync';
+export { onUserChangedPublicSync, onUserCreatedPublicSync } from './triggers/onUserChangedPublicSync';
 export { purgeOldNotifications } from './scheduled/purgeOldNotifications';
 export { integritySweep } from './scheduled/integritySweep';
 export { autoDisableBilling } from './billing/autoDisableBilling';
