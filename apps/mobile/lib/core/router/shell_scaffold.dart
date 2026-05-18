@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/core/router/router.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer.dart';
 import 'package:unishare_mobile/features/notifications/presentation/providers/unread_count_provider.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
@@ -26,7 +27,17 @@ class ShellScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeIndex = navigationShell.currentIndex;
     final currentPath = GoRouterState.of(context).uri.path;
-    final currentSub = DrawerDestination.fromPath(currentPath);
+    final me = ref.watch(authStateProvider).asData?.value?.id;
+    // Re-route cross-user `/achievements/:uid` and `/profile/:uid` to the
+    // generic "Viewing" slot so the navbar doesn't claim "Achievements"
+    // or "Profile" — those should mean the user's own destinations.
+    var currentSub = DrawerDestination.fromPath(currentPath);
+    final crossUserMatch = RegExp(
+      r'^/(profile|achievements)/([^/]+)$',
+    ).firstMatch(currentPath);
+    if (crossUserMatch != null && crossUserMatch.group(2) != me) {
+      currentSub = DrawerDestination.publicProfile;
+    }
     final unreadCount = ref.watch(unreadNotificationCountProvider);
 
     return PopScope(

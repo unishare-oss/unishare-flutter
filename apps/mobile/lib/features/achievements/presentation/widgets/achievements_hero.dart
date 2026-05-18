@@ -71,6 +71,7 @@ class AchievementsHero extends ConsumerWidget {
       upcoming: upcoming,
       stats: stats,
       allEarned: allEarned,
+      isOwnProfile: isOwnProfile,
     );
   }
 
@@ -146,12 +147,14 @@ class _Hero extends StatelessWidget {
     required this.upcoming,
     required this.stats,
     required this.allEarned,
+    required this.isOwnProfile,
   });
   final AchievementBadge badge;
   final EarnedBadge earned;
   final _Upcoming? upcoming;
   final UserStats? stats;
   final bool allEarned;
+  final bool isOwnProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +173,11 @@ class _Hero extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            allEarned ? 'You\'ve earned them all' : 'Your latest unlock',
+            // Swap to third-person framing when viewing someone else's
+            // achievements so the page doesn't sound like the user's own.
+            isOwnProfile
+                ? (allEarned ? 'You\'ve earned them all' : 'Your latest unlock')
+                : (allEarned ? 'Every badge unlocked' : 'Latest unlock'),
             style: AppTypography.mono(
               base: theme.textTheme.labelSmall?.copyWith(
                 color: ac.textMuted,
@@ -190,11 +197,16 @@ class _Hero extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             allEarned
-                ? 'Every badge in the v1 catalog. Nice work.'
+                ? (isOwnProfile
+                    ? 'Every badge unlocked. Nice work.'
+                    : 'Every badge unlocked.')
                 : 'Earned ${DateFormat.yMMMd().format(earned.earnedAt)} · +${earned.pointsAwarded} pts',
             style: theme.textTheme.bodySmall?.copyWith(color: ac.textSecondary),
           ),
-          if (upcoming != null) ...[
+          // "Up next" is a personal nudge — only show it on the user's
+          // own profile. Other users' stats aren't readable anyway, so the
+          // progress line would always say "0 to go".
+          if (isOwnProfile && upcoming != null) ...[
             const SizedBox(height: 16),
             Divider(color: theme.dividerColor),
             const SizedBox(height: 12),
