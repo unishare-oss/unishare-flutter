@@ -69,13 +69,26 @@ class ProfileCard extends ConsumerWidget {
                             .watch(userGamificationProvider(user.id))
                             .asData
                             ?.value;
-                        final t = g?.selectedTitle;
-                        if (t == null || t.isEmpty) {
+                        final selectedId = g?.selectedTitle;
+                        if (selectedId == null || selectedId.isEmpty) {
                           return const SizedBox.shrink();
                         }
+                        // `selectedTitle` stores the badge id; resolve to
+                        // the human-readable badge name from the catalog.
+                        // Falls back to the id (so the chip never disappears
+                        // while the catalog is still loading).
+                        final catalog = ref
+                            .watch(badgeCatalogProvider)
+                            .asData
+                            ?.value ??
+                            const [];
+                        final match = catalog
+                            .where((b) => b.id == selectedId)
+                            .cast<AchievementBadge?>()
+                            .firstWhere((_) => true, orElse: () => null);
                         return Padding(
                           padding: const EdgeInsets.only(top: 2),
-                          child: TitleChip(title: t),
+                          child: TitleChip(title: match?.name ?? selectedId),
                         );
                       },
                     ),

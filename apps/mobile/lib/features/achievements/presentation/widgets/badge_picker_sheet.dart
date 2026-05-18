@@ -19,22 +19,23 @@ class BadgePickerSheet extends ConsumerStatefulWidget {
 }
 
 class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
-  late List<String> _selected;
-
-  @override
-  void initState() {
-    super.initState();
-    final g = ref.read(userGamificationProvider(widget.uid)).asData?.value;
-    _selected = List<String>.of(g?.displayedBadges ?? const []);
-  }
+  /// `null` until we receive the first gamification snapshot. Then it
+  /// reflects the user's currently-displayed badges so the picker always
+  /// opens with the live selection pre-checked, even if the gamification
+  /// stream was still loading at the moment `initState` ran.
+  List<String>? _selected;
+  bool _seededFromProvider = false;
 
   void _toggle(String id) {
+    final current = _selected ?? const <String>[];
     setState(() {
-      if (_selected.contains(id)) {
-        _selected.remove(id);
-      } else if (_selected.length < 3) {
-        _selected.add(id);
+      final next = List<String>.of(current);
+      if (next.contains(id)) {
+        next.remove(id);
+      } else if (next.length < 3) {
+        next.add(id);
       }
+      _selected = next;
     });
   }
 
@@ -46,7 +47,11 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
       ref.read(gamificationRepositoryProvider),
     );
     try {
-      await usecase(uid: widget.uid, proposed: _selected, earnedIds: earnedIds);
+      await usecase(
+        uid: widget.uid,
+        proposed: _selected ?? const <String>[],
+        earnedIds: earnedIds,
+      );
       if (mounted) Navigator.of(context).pop();
     } on DisplayedBadgesException catch (e) {
       if (!mounted) return;
@@ -67,6 +72,16 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
     final available = catalog.where((b) => earnedIds.contains(b.id)).toList()
       ..sort((a, b) => a.order.compareTo(b.order));
 
+    // Seed from the live gamification snapshot the first time it resolves
+    // — `initState` may have run while the stream was still loading.
+    final gamification =
+        ref.watch(userGamificationProvider(widget.uid)).asData?.value;
+    if (!_seededFromProvider && gamification != null) {
+      _seededFromProvider = true;
+      _selected = List<String>.of(gamification.displayedBadges);
+    }
+    final selected = _selected ?? const <String>[];
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -79,7 +94,7 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
             ),
             const SizedBox(height: 8),
             Text(
-              '${_selected.length} / 3 selected',
+              '${selected.length} / 3 selected',
               style: theme.textTheme.labelSmall?.copyWith(color: ac.textMuted),
             ),
             const SizedBox(height: 16),
@@ -93,7 +108,7 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
                 spacing: 12,
                 runSpacing: 12,
                 children: available.map((AchievementBadge b) {
-                  final isSelected = _selected.contains(b.id);
+                  final isSelected = selected.contains(b.id);
                   const pickerSize = 56.0;
                   return Material(
                     type: MaterialType.transparency,

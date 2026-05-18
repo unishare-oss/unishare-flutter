@@ -9,7 +9,7 @@ import type { StatKey } from '../badges/types';
 /**
  * Fires when a user saves a post — `users/{saverUid}/savedPosts/{postId}` onCreate.
  * Updates author counters (savesReceived, uniqueSaversCount when new, and
- * postsWithAtLeastOneSave when this is the post's first save) plus the
+ * postsWithAtLeastOneSave when this is the post's FIRST EVER save) plus the
  * saver's savesGiven. Self-saves throw — Firestore rules already reject
  * them at the doc-create boundary, this is defense in depth.
  */
@@ -34,14 +34,20 @@ export async function onPostSavedHandler(saverUid: string, postId: string): Prom
     return true;
   });
 
-  // First-save-on-this-post check — `saveCount` transitions 0 → 1. The
-  // field is server-maintained; clients neither read nor write it.
+  // Monotonic first-save marker. We can't rely on `saveCount` 0→1 because
+  // unsaves decrement it, so a post that returns to 0 saves and is saved
+  // again would falsely count as "first save" a second time. The
+  // `hasEverBeenSaved` flag is set exactly once and never cleared.
   const wasFirstSaveOnPost = await db.runTransaction(async tx => {
     const ref = db.doc(`posts/${postId}`);
     const snap = await tx.get(ref);
-    const cur: number = (snap.data()?.saveCount as number | undefined) ?? 0;
-    tx.update(ref, { saveCount: FieldValue.increment(1) });
-    return cur === 0;
+    const data = snap.data() ?? {};
+    const alreadyMarked = (data.hasEverBeenSaved as boolean | undefined) === true;
+    tx.update(ref, {
+      saveCount: FieldValue.increment(1),
+      ...(alreadyMarked ? {} : { hasEverBeenSaved: true }),
+    });
+    return !alreadyMarked;
   });
 
   const changedAuthor: StatKey[] = ['savesReceived'];

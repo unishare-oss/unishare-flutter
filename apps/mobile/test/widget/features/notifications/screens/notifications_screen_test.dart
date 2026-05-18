@@ -109,7 +109,7 @@ Widget _buildSubject({
         ),
       ),
       GoRoute(
-        path: '/more/requests/:id',
+        path: '/requests/:id',
         builder: (_, state) => Scaffold(
           body: Center(
             child: Text('request-route-${state.pathParameters['id']}'),
@@ -315,7 +315,7 @@ void main() {
     );
 
     testWidgets(
-      'tapping a request notification navigates to /more/requests/:id',
+      'tapping a request notification navigates to /requests/:id',
       (tester) async {
         final repo = _RecorderRepo();
 

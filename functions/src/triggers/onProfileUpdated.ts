@@ -27,12 +27,34 @@ export function isProfileComplete(user: UserProfileShape): boolean {
   );
 }
 
+/**
+ * Returns true if the relevant profile completion inputs (name, departmentId,
+ * enrollmentYear, bio) are identical between [before] and [after]. Used to
+ * short-circuit invocations triggered by our own server writes to
+ * `stats.profileCompleted` / `stats.updatedAt`, which would otherwise
+ * recompute completion only to hit the `beforeComplete === afterComplete`
+ * early return.
+ */
+function profileInputsUnchanged(
+  before: UserProfileShape | undefined,
+  after: UserProfileShape,
+): boolean {
+  if (!before) return false;
+  return before.name === after.name &&
+      before.departmentId === after.departmentId &&
+      before.enrollmentYear === after.enrollmentYear &&
+      (before.bio ?? '') === (after.bio ?? '');
+}
+
 export async function onProfileUpdatedHandler(
   uid: string,
   before: UserProfileShape | undefined,
   after: UserProfileShape | undefined,
 ): Promise<void> {
   if (!after) return;
+  // Skip when the change was to fields we don't care about (e.g. the
+  // evaluator updating gamification, or this trigger's own stats write).
+  if (profileInputsUnchanged(before, after)) return;
   const beforeComplete = before?.stats?.profileCompleted === true;
   const afterComplete = isProfileComplete(after);
   if (beforeComplete === afterComplete) return;

@@ -30,34 +30,50 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      // Profiles are publicly readable for any authenticated user (so other
-      // users can view names, badges, etc. on posts/comments).
-      allow read: if request.auth != null;
+      // Owner-only reads keep `email` and other private fields private.
+      // Cross-user gamification display (badges visible on someone else's
+      // profile) is intentionally deferred to v1.1 — that will introduce a
+      // dedicated `users_public/{uid}` collection that only mirrors safe
+      // fields (name, photoUrl, level, displayedBadges, selectedTitle).
+      allow read: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null && request.auth.uid == userId;
 
       // Owner-only updates, with server-managed gamification/stats fields
-      // explicitly off-limits. The evaluator (Cloud Function) writes
-      // gamification.totalPoints, gamification.level, gamification.earnedBadgesCache,
-      // and the entire `stats` map.
+      // off-limits. Validators only fire when the cosmetic fields are part
+      // of the change so unrelated profile edits aren't blocked by stale
+      // `gamification` data.
       allow update: if request.auth != null
                     && request.auth.uid == userId
                     && !writesProtectedAchievementsFields()
-                    && validDisplayedBadges()
-                    && validSelectedTitle();
+                    && (!touchesDisplayedBadges() || validDisplayedBadges())
+                    && (!touchesSelectedTitle() || validSelectedTitle());
       allow delete: if false;
 
+      // Compare the protected values directly. `diff(...).affectedKeys()`
+      // only reports top-level keys, so dotted-path checks would silently
+      // miss nested writes under `gamification`. Comparing the actual
+      // values is the only reliable way to detect the change.
       function writesProtectedAchievementsFields() {
-        let changed = request.resource.data.diff(resource.data).affectedKeys();
-        return changed.hasAny([
-          'stats',
-          'gamification.totalPoints',
-          'gamification.level',
-          'gamification.earnedBadgesCache',
-        ]);
+        let beforeG = resource.data.get('gamification', {});
+        let afterG = request.resource.data.get('gamification', {});
+        return request.resource.data.get('stats', {}) != resource.data.get('stats', {})
+            || beforeG.get('totalPoints', 0) != afterG.get('totalPoints', 0)
+            || beforeG.get('level', 0) != afterG.get('level', 0)
+            || beforeG.get('earnedBadgesCache', []) != afterG.get('earnedBadgesCache', []);
       }
 
       function earnedCache() {
         return resource.data.get(['gamification', 'earnedBadgesCache'], []);
+      }
+
+      function touchesDisplayedBadges() {
+        return request.resource.data.get(['gamification', 'displayedBadges'], [])
+            != resource.data.get(['gamification', 'displayedBadges'], []);
+      }
+
+      function touchesSelectedTitle() {
+        return request.resource.data.get(['gamification', 'selectedTitle'], null)
+            != resource.data.get(['gamification', 'selectedTitle'], null);
       }
 
       function validDisplayedBadges() {

@@ -22,6 +22,12 @@ const DEFAULT_LEVEL_CONFIG: LevelConfig = {
  * newly-earned badges atomically. Targeted: only checks badges whose
  * `condition.type` matches a key that just changed.
  *
+ * Concurrency: the user doc is read INSIDE the transaction so concurrent
+ * trigger invocations for the same user can't clobber each other's
+ * `totalPoints`/`level` updates. The candidate badge catalog and level
+ * config are read outside the transaction since they're read-mostly and
+ * cheap to refetch on retry.
+ *
  * Server-only — caller must be a Cloud Function trigger or the integrity
  * sweep. Firestore rules deny client writes to all paths touched here.
  */
@@ -38,59 +44,99 @@ export async function evaluateBadges(
     };
   }
 
-  const [userSnap, badgesSnap, earnedSnap, levelsSnap] = await Promise.all([
-    db.doc(`users/${uid}`).get(),
+  // Read-mostly references — fetched outside the transaction. The badge
+  // catalog rarely changes; level config is a single doc.
+  const [badgesSnap, levelsSnap] = await Promise.all([
     db.collection('badges')
       .where('active', '==', true)
       .where('condition.type', 'in', changedStatKeys)
       .get(),
-    db.collection(`users/${uid}/earnedBadges`).get(),
     db.doc('app_config/levels').get(),
   ]);
 
-  const stats: UserStats = { ...EMPTY_STATS, ...((userSnap.data()?.stats as Partial<UserStats>) ?? {}) };
-  const currentPoints: number = (userSnap.data()?.gamification?.totalPoints as number | undefined) ?? 0;
-  const earnedIds = new Set(earnedSnap.docs.map(d => d.id));
   const candidates: BadgeDoc[] = badgesSnap.docs.map(d => d.data() as BadgeDoc);
   const levelConfig: LevelConfig = (levelsSnap.data() as LevelConfig | undefined) ?? DEFAULT_LEVEL_CONFIG;
 
-  const newlyEarned = findNewlyEarnedBadges(stats, candidates, earnedIds);
-
-  if (newlyEarned.length === 0) {
+  if (candidates.length === 0) {
+    const u = await db.doc(`users/${uid}`).get();
     return {
       newlyEarnedIds: [],
       pointsAdded: 0,
-      newLevel: levelForPoints(currentPoints, levelConfig),
+      newLevel: levelForPoints(
+        (u.data()?.gamification?.totalPoints as number | undefined) ?? 0,
+        levelConfig,
+      ),
     };
   }
 
-  const pointsAdded = newlyEarned.reduce((s, b) => s + b.points, 0);
-  const newTotal = currentPoints + pointsAdded;
-  const newLevel = levelForPoints(newTotal, levelConfig);
+  const userRef = db.doc(`users/${uid}`);
+  const result = await db.runTransaction(async tx => {
+    const userSnap = await tx.get(userRef);
+    const userData = userSnap.data() ?? {};
+    const stats: UserStats = { ...EMPTY_STATS, ...((userData.stats as Partial<UserStats>) ?? {}) };
+    const currentPoints: number = (userData.gamification?.totalPoints as number | undefined) ?? 0;
+    // `earnedBadgesCache` is the mirror maintained by this evaluator on
+    // every grant. Using it avoids a full subcollection read every trigger.
+    const earnedIds = new Set<string>(
+      (userData.gamification?.earnedBadgesCache as string[] | undefined) ?? [],
+    );
 
-  await db.runTransaction(async tx => {
+    const newlyEarned = findNewlyEarnedBadges(stats, candidates, earnedIds);
+
+    if (newlyEarned.length === 0) {
+      return {
+        newlyEarnedIds: [] as string[],
+        pointsAdded: 0,
+        newLevel: levelForPoints(currentPoints, levelConfig),
+        newlyEarned: [] as BadgeDoc[],
+        stats,
+      };
+    }
+
+    const pointsAdded = newlyEarned.reduce((s, b) => s + b.points, 0);
+    const newTotal = currentPoints + pointsAdded;
+    const newLevel = levelForPoints(newTotal, levelConfig);
+
     for (const b of newlyEarned) {
-      tx.set(db.doc(`users/${uid}/earnedBadges/${b.id}`), {
+      tx.set(userRef.collection('earnedBadges').doc(b.id), {
         badgeId: b.id,
         earnedAt: FieldValue.serverTimestamp(),
         pointsAwarded: b.points,
         snapshot: { value: statValue(stats, b.condition.type), threshold: b.condition.threshold },
       });
     }
-    tx.update(db.doc(`users/${uid}`), {
+    tx.update(userRef, {
       'gamification.totalPoints': newTotal,
       'gamification.level': newLevel,
       'gamification.earnedBadgesCache': FieldValue.arrayUnion(...newlyEarned.map(b => b.id)),
     });
+
+    return {
+      newlyEarnedIds: newlyEarned.map(b => b.id),
+      pointsAdded,
+      newLevel,
+      newlyEarned,
+      stats,
+    };
   });
 
-  await Promise.all(newlyEarned.map(b => grantBadgeNotification(uid, b)));
-
-  logger.info('badges granted', { uid, ids: newlyEarned.map(b => b.id), pointsAdded, newLevel });
+  if (result.newlyEarned.length > 0) {
+    // Notifications are fire-and-forget after the grant transaction
+    // commits. If any send fails, the badge stays earned; v1.1 will move
+    // dispatch into an `onDocumentCreated(earnedBadges)` trigger for
+    // retry-safety.
+    await Promise.all(result.newlyEarned.map(b => grantBadgeNotification(uid, b)));
+    logger.info('badges granted', {
+      uid,
+      ids: result.newlyEarnedIds,
+      pointsAdded: result.pointsAdded,
+      newLevel: result.newLevel,
+    });
+  }
 
   return {
-    newlyEarnedIds: newlyEarned.map(b => b.id),
-    pointsAdded,
-    newLevel,
+    newlyEarnedIds: result.newlyEarnedIds,
+    pointsAdded: result.pointsAdded,
+    newLevel: result.newLevel,
   };
 }

@@ -103,7 +103,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                   final String destination;
                   switch (notif.targetType) {
                     case 'request':
-                      destination = '/more/requests/${notif.targetId}';
+                      destination = '/requests/${notif.targetId}';
                       break;
                     case 'badge':
                       destination = '/achievements/${user.id}';

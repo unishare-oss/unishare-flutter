@@ -1,7 +1,7 @@
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { logger } from 'firebase-functions/v2';
 
-import { db } from '../admin';
+import { FieldValue, db } from '../admin';
 import { evaluateBadges } from '../badges/evaluateBadges';
 import type { StatKey } from '../badges/types';
 
@@ -65,7 +65,12 @@ export const integritySweep = onSchedule(
       if (drifted.length === 0) continue;
       driftedUsers += 1;
       logger.warn('counter drift detected', { uid, drifted, fixes });
-      await db.doc(`users/${uid}`).update(fixes);
+      await db.doc(`users/${uid}`).update({
+        ...fixes,
+        // Touch updatedAt so this user stays inside the next sweep window
+        // and our trigger-side activity tracking stays consistent.
+        'stats.updatedAt': FieldValue.serverTimestamp(),
+      });
       await evaluateBadges(uid, drifted);
     }
 

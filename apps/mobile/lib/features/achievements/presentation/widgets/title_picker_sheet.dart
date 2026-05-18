@@ -37,21 +37,33 @@ class TitlePickerSheet extends ConsumerWidget {
       }
     }
 
+    // Item 0 is the "No title" entry, items 1..N are the earned badges.
+    final itemCount = available.length + 1;
     return SafeArea(
-      child: ListView(
+      child: ListView.builder(
         shrinkWrap: true,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(
-              child: Text('Pick a title to display under your name'),
-            ),
-          ),
-          ListTile(title: const Text('No title'), onTap: () => select(null)),
-          ...available.map(
-            (b) => ListTile(title: Text(b.name), onTap: () => select(b.id)),
-          ),
-        ],
+        // Padding header is part of the same builder list to keep the
+        // scrollable bounded by a single delegate (repo convention).
+        itemCount: itemCount + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(
+                child: Text('Pick a title to display under your name'),
+              ),
+            );
+          }
+          final i = index - 1;
+          if (i == 0) {
+            return ListTile(
+              title: const Text('No title'),
+              onTap: () => select(null),
+            );
+          }
+          final b = available[i - 1];
+          return ListTile(title: Text(b.name), onTap: () => select(b.id));
+        },
       ),
     );
   }

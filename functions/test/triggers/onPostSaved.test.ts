@@ -49,7 +49,7 @@ describe('onPostSavedHandler', () => {
     postGetMock.mockResolvedValue({ data: () => ({ authorId: 'author' }) });
     runTransactionMock
       .mockImplementationOnce(async (fn) => fn({ get: async () => ({ exists: false }), set: () => {} })) // uniqueSavers
-      .mockImplementationOnce(async (fn) => fn({ get: async () => ({ data: () => ({ saveCount: 0 }) }), update: () => {} })); // saveCount
+      .mockImplementationOnce(async (fn) => fn({ get: async () => ({ data: () => ({}) }), update: () => {} })); // hasEverBeenSaved unset
 
     await onPostSavedHandler('saver1', 'p1');
 
@@ -71,7 +71,7 @@ describe('onPostSavedHandler', () => {
     postGetMock.mockResolvedValue({ data: () => ({ authorId: 'author' }) });
     runTransactionMock
       .mockImplementationOnce(async (fn) => fn({ get: async () => ({ exists: true }), set: () => {} })) // already-known saver
-      .mockImplementationOnce(async (fn) => fn({ get: async () => ({ data: () => ({ saveCount: 3 }) }), update: () => {} }));
+      .mockImplementationOnce(async (fn) => fn({ get: async () => ({ data: () => ({ hasEverBeenSaved: true, saveCount: 3 }) }), update: () => {} }));
 
     await onPostSavedHandler('saver1', 'p1');
 
@@ -79,6 +79,20 @@ describe('onPostSavedHandler', () => {
     expect(incrementStatMock).not.toHaveBeenCalledWith('author', 'uniqueSaversCount', 1);
     expect(incrementStatMock).not.toHaveBeenCalledWith('author', 'postsWithAtLeastOneSave', 1);
     expect(evaluateBadgesMock).toHaveBeenCalledWith('author', ['savesReceived']);
+  });
+
+  it('post that was previously fully unsaved does NOT re-bump postsWithAtLeastOneSave', async () => {
+    // Regression: previously the 0→1 saveCount detection would double-count
+    // a post if every saver unsaved it and a new save came in.
+    postGetMock.mockResolvedValue({ data: () => ({ authorId: 'author' }) });
+    runTransactionMock
+      .mockImplementationOnce(async (fn) => fn({ get: async () => ({ exists: false }), set: () => {} })) // new unique saver
+      .mockImplementationOnce(async (fn) => fn({ get: async () => ({ data: () => ({ hasEverBeenSaved: true, saveCount: 0 }) }), update: () => {} }));
+
+    await onPostSavedHandler('saver1', 'p1');
+
+    expect(incrementStatMock).toHaveBeenCalledWith('author', 'savesReceived', 1);
+    expect(incrementStatMock).not.toHaveBeenCalledWith('author', 'postsWithAtLeastOneSave', 1);
   });
 
   it('skips when post has no authorId', async () => {

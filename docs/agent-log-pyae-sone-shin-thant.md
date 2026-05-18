@@ -1325,3 +1325,13 @@ Review: PENDING
   [12:23] Edit: apps/mobile/lib/features/achievements/data/datasources/badge_firestore_datasource.dart
   [12:23] Edit: apps/mobile/lib/features/achievements/presentation/widgets/profile_achievements_section.dart
   [12:23] Edit: apps/mobile/lib/features/achievements/presentation/widgets/profile_achievements_section.dart
+  [14:12] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [14:13] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  [14:13] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:13] Edit: apps/mobile/lib/features/achievements/presentation/providers/new_badge_alert_provider.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/providers/new_badge_alert_provider.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
+  [14:15] Edit: apps/mobile/lib/features/achievements/presentation/widgets/title_picker_sheet.dart
