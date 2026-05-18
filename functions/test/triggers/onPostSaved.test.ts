@@ -51,7 +51,7 @@ describe('onPostSavedHandler', () => {
       .mockImplementationOnce(async (fn) => fn({ get: async () => ({ exists: false }), set: () => {} })) // uniqueSavers
       .mockImplementationOnce(async (fn) => fn({ get: async () => ({ data: () => ({ saveCount: 0 }) }), update: () => {} })); // saveCount
 
-    await onPostSavedHandler('p1', 'saver1');
+    await onPostSavedHandler('saver1', 'p1');
 
     expect(incrementStatMock).toHaveBeenCalledWith('author', 'savesReceived', 1);
     expect(incrementStatMock).toHaveBeenCalledWith('author', 'uniqueSaversCount', 1);
@@ -63,7 +63,7 @@ describe('onPostSavedHandler', () => {
 
   it('rejects self-saves with an error', async () => {
     postGetMock.mockResolvedValue({ data: () => ({ authorId: 'author' }) });
-    await expect(onPostSavedHandler('p1', 'author')).rejects.toThrow(/self-save/);
+    await expect(onPostSavedHandler('author', 'p1')).rejects.toThrow(/self-save/);
     expect(incrementStatMock).not.toHaveBeenCalled();
   });
 
@@ -73,7 +73,7 @@ describe('onPostSavedHandler', () => {
       .mockImplementationOnce(async (fn) => fn({ get: async () => ({ exists: true }), set: () => {} })) // already-known saver
       .mockImplementationOnce(async (fn) => fn({ get: async () => ({ data: () => ({ saveCount: 3 }) }), update: () => {} }));
 
-    await onPostSavedHandler('p1', 'saver1');
+    await onPostSavedHandler('saver1', 'p1');
 
     expect(incrementStatMock).toHaveBeenCalledWith('author', 'savesReceived', 1);
     expect(incrementStatMock).not.toHaveBeenCalledWith('author', 'uniqueSaversCount', 1);
@@ -83,7 +83,7 @@ describe('onPostSavedHandler', () => {
 
   it('skips when post has no authorId', async () => {
     postGetMock.mockResolvedValue({ data: () => ({}) });
-    await onPostSavedHandler('p1', 'saver1');
+    await onPostSavedHandler('saver1', 'p1');
     expect(incrementStatMock).not.toHaveBeenCalled();
     expect(evaluateBadgesMock).not.toHaveBeenCalled();
   });

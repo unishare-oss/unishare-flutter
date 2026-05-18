@@ -7,11 +7,13 @@ import { evaluateBadges } from '../badges/evaluateBadges';
 import type { StatKey } from '../badges/types';
 
 /**
- * Pure orchestration: given a post id and a saver uid, updates all relevant
- * counters and runs the evaluator. Self-saves throw — Firestore rules
- * already reject them at the doc-create boundary, this is defense in depth.
+ * Fires when a user saves a post — `users/{saverUid}/savedPosts/{postId}` onCreate.
+ * Updates author counters (savesReceived, uniqueSaversCount when new, and
+ * postsWithAtLeastOneSave when this is the post's first save) plus the
+ * saver's savesGiven. Self-saves throw — Firestore rules already reject
+ * them at the doc-create boundary, this is defense in depth.
  */
-export async function onPostSavedHandler(postId: string, saverUid: string): Promise<void> {
+export async function onPostSavedHandler(saverUid: string, postId: string): Promise<void> {
   const postSnap = await db.doc(`posts/${postId}`).get();
   const authorUid: string | undefined = postSnap.data()?.authorId;
   if (!authorUid) {
@@ -32,7 +34,8 @@ export async function onPostSavedHandler(postId: string, saverUid: string): Prom
     return true;
   });
 
-  // First-save-on-this-post check — saveCount transitions 0 → 1.
+  // First-save-on-this-post check — `saveCount` transitions 0 → 1. The
+  // field is server-maintained; clients neither read nor write it.
   const wasFirstSaveOnPost = await db.runTransaction(async tx => {
     const ref = db.doc(`posts/${postId}`);
     const snap = await tx.get(ref);
@@ -58,8 +61,8 @@ export async function onPostSavedHandler(postId: string, saverUid: string): Prom
 }
 
 export const onPostSaved = onDocumentCreated(
-  'posts/{postId}/saves/{saverUid}',
-  async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, { postId: string; saverUid: string }>) => {
-    await onPostSavedHandler(event.params.postId, event.params.saverUid);
+  'users/{uid}/savedPosts/{postId}',
+  async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, { uid: string; postId: string }>) => {
+    await onPostSavedHandler(event.params.uid, event.params.postId);
   },
 );
