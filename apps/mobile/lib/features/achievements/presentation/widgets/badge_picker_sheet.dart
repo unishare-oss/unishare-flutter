@@ -74,8 +74,10 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
 
     // Seed from the live gamification snapshot the first time it resolves
     // — `initState` may have run while the stream was still loading.
-    final gamification =
-        ref.watch(userGamificationProvider(widget.uid)).asData?.value;
+    final gamification = ref
+        .watch(userGamificationProvider(widget.uid))
+        .asData
+        ?.value;
     if (!_seededFromProvider && gamification != null) {
       _seededFromProvider = true;
       _selected = List<String>.of(gamification.displayedBadges);

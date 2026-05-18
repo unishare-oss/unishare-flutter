@@ -77,10 +77,8 @@ class ProfileCard extends ConsumerWidget {
                         // the human-readable badge name from the catalog.
                         // Falls back to the id (so the chip never disappears
                         // while the catalog is still loading).
-                        final catalog = ref
-                            .watch(badgeCatalogProvider)
-                            .asData
-                            ?.value ??
+                        final catalog =
+                            ref.watch(badgeCatalogProvider).asData?.value ??
                             const [];
                         final match = catalog
                             .where((b) => b.id == selectedId)
