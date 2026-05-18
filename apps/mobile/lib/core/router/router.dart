@@ -19,6 +19,7 @@ import 'package:unishare_mobile/features/post/presentation/screens/my_posts_scre
 import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
+import 'package:unishare_mobile/features/profile/presentation/screens/public_profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/request_detail_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
 import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen.dart';
@@ -72,7 +73,7 @@ enum DrawerDestination {
   /// Returns the destination that owns [path], or `null` if [path] is not
   /// inside the drawer-destinations branch.
   static DrawerDestination? fromPath(String path) {
-    if (path == '/profile') return profile;
+    if (path == '/profile' || path.startsWith('/profile/')) return profile;
     if (path == '/saved') return saved;
     if (path == '/departments' || path.startsWith('/departments/')) {
       return departments;
@@ -301,6 +302,23 @@ GoRouter router(Ref ref) {
                 path: '/achievements/:uid',
                 builder: (context, state) =>
                     AchievementsScreen(uid: state.pathParameters['uid']!),
+              ),
+              // Read-only profile for any uid. If the uid matches the
+              // signed-in user, redirect to /profile so they land on the
+              // editable owner view instead of the public mirror.
+              GoRoute(
+                path: '/profile/:uid',
+                redirect: (context, state) {
+                  final viewedUid = state.pathParameters['uid'];
+                  final me = ref.read(authStateProvider).asData?.value?.id;
+                  if (viewedUid != null && viewedUid == me) {
+                    return '/profile';
+                  }
+                  return null;
+                },
+                builder: (context, state) => PublicProfileScreen(
+                  uid: state.pathParameters['uid']!,
+                ),
               ),
             ],
           ),

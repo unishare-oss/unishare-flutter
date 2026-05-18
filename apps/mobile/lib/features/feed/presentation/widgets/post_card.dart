@@ -182,16 +182,31 @@ class PostCard extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: 6),
-        Text(
-          displayName,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: appColors.textSecondary),
-        ),
-        // Cross-user level chip — reads from users_public/{authorId} via
-        // publicUserProvider. Hidden for anonymous posts, while the
-        // provider is loading, when the author doc isn't mirrored, and
-        // for level 1 (clutter-reduction — fresh accounts get nothing).
+        // Author name is tappable for non-anonymous posts — opens that
+        // user's public profile. Wrapped in a GestureDetector (not
+        // InkWell) because the whole card already absorbs taps via the
+        // top-level GestureDetector; we just intercept this region.
+        if (isAnonymous)
+          Text(
+            displayName,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: appColors.textSecondary),
+          )
+        else
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => context.push('/profile/${post.authorId}'),
+            child: Text(
+              displayName,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: appColors.textSecondary,
+                decoration: TextDecoration.underline,
+                decorationColor: appColors.textMuted,
+                decorationStyle: TextDecorationStyle.dotted,
+              ),
+            ),
+          ),
         if (!isAnonymous) ...[..._authorLevelChip(ref)],
         Text(
           ' · Year ${post.year}',
