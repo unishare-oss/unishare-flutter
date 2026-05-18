@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Proposal for a dedicated post-detail screen that renders full post content, attachments, and social interactions, and serves as the deep-link target for push notifications and shared URLs.">
+        <meta name="description" content="Pre-generate an AI summary and auto-tags for every uploaded post so students can judge relevance without opening the file, and enable an in-context "Ask AI" chat grounded on the document.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-proposals/0006-post-detail-page/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-proposals/0009-ai-post-summary/">
       
       
-        <link rel="prev" href="../0005-main-navbar/">
+        <link rel="prev" href="../0008-request-post/">
       
       
-        <link rel="next" href="../0007-file-preview-screen/">
+        <link rel="next" href="../../tech-specs/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0006: Post Detail Page - Unishare Engineering Docs</title>
+        <title>0009: AI Post Summary - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0006-post-detail-page" class="md-skip">
+        <a href="#prop-0009-ai-post-summary" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0006: Post Detail Page
+              0009: AI Post Summary
             
           </span>
         </div>
@@ -1159,37 +1159,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0006: Post Detail Page
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1205,192 +1178,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Proposed Solution
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Proposed Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GoRouter route
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture layers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data loading strategy (hybrid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments subcollection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Like interaction
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Figma compliance
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Pass Post via GoRouter extra, no Firestore fetch
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Always fetch post fresh from Firestore by ID
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1484,10 +1271,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0009-ai-post-summary/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1503,6 +1317,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-generatepostsummary-firestore-oncreate-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function: generatePostSummary (Firestore onCreate trigger)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-askaiaboutpost-https-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function: askAiAboutPost (HTTPS callable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-schema-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore schema additions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-client-side-text-extraction-and-direct-llm-call-from-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Client-side text extraction and direct LLM call from Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-gemini-google-ai-instead-of-groq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Gemini (Google AI) instead of Groq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-on-demand-summary-generated-on-first-view-not-at-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — On-demand summary (generated on first view, not at upload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1960,10 +1960,54 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GoRouter route
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-generatepostsummary-firestore-oncreate-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function: generatePostSummary (Firestore onCreate trigger)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-askaiaboutpost-https-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function: askAiAboutPost (HTTPS callable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-schema-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore schema additions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter changes
       
     </span>
   </a>
@@ -1975,50 +2019,6 @@
     <span class="md-ellipsis">
       
         Clean Architecture layers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data loading strategy (hybrid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments subcollection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Like interaction
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Figma compliance
       
     </span>
   </a>
@@ -2043,10 +2043,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+  <a href="#a-client-side-text-extraction-and-direct-llm-call-from-flutter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Pass Post via GoRouter extra, no Firestore fetch
+        A — Client-side text extraction and direct LLM call from Flutter
       
     </span>
   </a>
@@ -2054,10 +2054,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+  <a href="#b-gemini-google-ai-instead-of-groq" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Always fetch post fresh from Firestore by ID
+        B — Gemini (Google AI) instead of Groq
       
     </span>
   </a>
@@ -2065,10 +2065,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+  <a href="#c-on-demand-summary-generated-on-first-view-not-at-upload" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+        C — On-demand summary (generated on first view, not at upload)
       
     </span>
   </a>
@@ -2119,7 +2119,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0006-post-detail-page.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0009-ai-post-summary.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2127,219 +2127,172 @@
   
 
 
-<h1 id="prop-0006-post-detail-page">PROP-0006: Post Detail Page<a class="headerlink" href="#prop-0006-post-detail-page" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-06<br />
-<strong>Spec:</strong> (pending approval)<br />
-<strong>Approved by:</strong></p>
+<h1 id="prop-0009-ai-post-summary">PROP-0009: AI Post Summary<a class="headerlink" href="#prop-0009-ai-post-summary" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> PROPOSED
+<strong>Author:</strong> Slade
+<strong>Date:</strong> 2026-05-14
+<strong>Spec:</strong> (pending approval)
+<strong>Approved by:</strong> (fill in when accepted)</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The feed screen (PROP-0003) renders a scrollable list of <code>PostCard</code> widgets, but tapping a card has no destination. The <code>PostCard</code> tap handler is a no-op. Students have no way to read a post's full body, view all attached media, see comments, or like a post — the primary interaction surface of the app is unreachable.</p>
-<p>Beyond the tap-from-feed path, the detail screen must function as a <strong>standalone deep-link target</strong>. Push notifications and shared URLs reference a post by its Firestore document ID (e.g., <code>https://unishare.app/posts/abc123</code>), and the screen must render correctly when the app is cold-started directly into that route — meaning it cannot depend on feed state being populated in memory.</p>
-<p>Two structural concerns compound the data-loading problem:</p>
-<ol>
-<li>The feed's <code>postFeedProvider</code> loads posts in pages. A post the user taps may be on page 1 of the current session or may have been obtained by a completely different session (deep link). Feed data is therefore unreliable as a sole source.</li>
-<li><code>likesCount</code> on the post document is updated by a Cloud Function, not by the client. A snapshot from the feed may be stale by the time the user opens the detail screen, particularly for popular posts. The detail screen should reflect live counts.</li>
-</ol>
-<p>The UI must reproduce the Figma design exactly (https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare?node-id=0-1). The Figma introduces components — comments list, like button affordance, attachment carousel — that may not exist yet in the shared design system and must be audited before implementation begins.</p>
+<p>The Unishare feed is content-rich but opaque at the list level. A post entry shows a title, course tag, and uploader name — none of which reliably conveys whether the document inside answers the specific question a student has right now. The only way to find out is to open the post detail screen, download or preview the file, and read enough of it to make a judgement. For large lecture decks, past exams, or multi-week note compilations, that round-trip takes two to five minutes per file. When a student is preparing for an exam and scanning the feed for relevant material, that friction compounds quickly.</p>
+<p>The result is lower engagement with genuinely useful content and a higher abandonment rate on the post detail screen. Uploaders also lose signal: if students bounce before reading the file, the uploader receives no feedback that their material was valuable.</p>
+<p>A concise AI-generated summary — shown directly on the post detail screen before any download — gives students enough signal to decide in under ten seconds whether the file is worth their time. Auto-tagging is a secondary benefit: posts uploaded without tags receive machine-assigned tags, improving feed filtering for everyone downstream.</p>
+<p>The feature must be free to operate (no paid infra), must not run on every view (pre-generation at upload time only), and must stay entirely within the Firebase ecosystem (no external server).</p>
 <hr />
 <h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>Use <strong>Option C — Hybrid: optimistic display from feed data, then stream live updates from Firestore</strong>.</p>
-<h3 id="gorouter-route">GoRouter route<a class="headerlink" href="#gorouter-route" title="Permanent link">&para;</a></h3>
-<p>Declare <code>/posts/:postId</code> as a top-level route <strong>outside</strong> the <code>StatefulShellRoute</code> shell (following the same pattern established in PROP-0005 for New Post steps and Post Details). This means the navbar is automatically absent, and the route is reachable from both the feed tap and a cold-start deep link with no conditional logic.</p>
-<div class="highlight"><pre><span></span><code>/posts/:postId   →   PostDetailScreen(postId: postId)
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>A Firebase Cloud Function is triggered by the Firestore <code>onCreate</code> event on <code>posts/{postId}</code>. The function fetches the uploaded file from Firebase Storage, extracts up to 6,000 characters of plain text, calls the Groq API (<code>llama-3.3-70b-versatile</code>) to produce a summary, and writes the result back to the same Firestore document. The Flutter app reads the <code>summary</code> field as part of its existing <code>watchPost</code> stream and renders a collapsible summary panel on the post detail screen. A second HTTPS-callable Cloud Function backs the "Ask AI" chat feature.</p>
+<p>No Flutter client ever calls Groq directly. The API key lives only in Cloud Functions environment config (<code>functions.config()</code> or Secret Manager).</p>
+<h3 id="cloud-function-generatepostsummary-firestore-oncreate-trigger">Cloud Function: <code>generatePostSummary</code> (Firestore onCreate trigger)<a class="headerlink" href="#cloud-function-generatepostsummary-firestore-oncreate-trigger" title="Permanent link">&para;</a></h3>
+<p>Trigger: <code>firestore.document('posts/{postId}').onCreate</code></p>
+<p>Steps:</p>
+<ol>
+<li>Read <code>mediaUrls[0]</code> and <code>mediaType</code> from the new post document.</li>
+<li>Download the file bytes from Firebase Storage using the Admin SDK.</li>
+<li>Extract text:</li>
+<li>PDF: <code>pdf-parse</code> library, first 6,000 characters of extracted text.</li>
+<li>DOCX: <code>mammoth</code> library, plain-text output, first 6,000 characters.</li>
+<li>Other types: write <code>summary: null</code> and <code>summaryError: 'unsupported_type'</code>; exit early.</li>
+<li>Content screening pass (single Groq call): ask the model whether the text contains any harmful, plagiarised, or policy-violating content. If the screen returns <code>FLAGGED</code>, write <code>summary: null</code>, <code>summaryStatus: 'flagged'</code>, and exit — do not proceed to summarise.</li>
+<li>Summary call (single Groq call): system prompt instructs the model to produce exactly one introductory sentence followed by 3–7 bullet points prefixed with <code>•</code>. Max output tokens: 300.</li>
+<li>Auto-tag call (conditional, single Groq call): if the post document has an empty or absent <code>tags</code> array, ask the model to return up to 5 relevant academic tags as a JSON array. Merge these tags into the <code>tags</code> field.</li>
+<li>Write to Firestore:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>posts/{postId}
+  summary:        string   (the formatted summary text)
+  summaryStatus:  string   (&#39;done&#39; | &#39;flagged&#39; | &#39;unsupported_type&#39; | &#39;error&#39;)
+  summarizedAt:   Timestamp
+  tags:           string[] (merged with any user-supplied tags — auto-tag path only)
 </code></pre></div>
-<p>The <code>PostCard</code> tap handler calls <code>context.push('/posts/${post.id}', extra: post)</code>. GoRouter's <code>extra</code> carries the already-loaded <code>Post</code> entity for the warm-start case. For the cold-start case (deep link, push notification), <code>extra</code> is <code>null</code> — the screen falls back to fetching by ID.</p>
+<p>All writes are a single <code>update()</code> call to avoid overwriting the rest of the post document.</p>
+<p><strong>In-memory text cache:</strong> The extracted raw text is held in a module-level <code>Map&lt;string, string&gt;</code> keyed by <code>postId</code> for the lifetime of the Cloud Function instance (one hour maximum before cold restart). This satisfies the Redis-equivalent caching requirement without provisioning any additional infrastructure. The "Ask AI" function (below) benefits from this cache when the same instance handles both calls.</p>
+<p><strong>Groq rate-limit strategy:</strong> Cloud Functions for Firebase enforce a maximum of one concurrent instance per deployment by default on the free tier (Spark plan). Posts are therefore processed serially. If the Groq free tier rate limit (30 req/min on <code>llama-3.3-70b-versatile</code>) is approached, the function catches <code>429</code> responses and retries with exponential back-off up to three times before writing <code>summaryStatus: 'error'</code>. No queuing infrastructure is required at this scale.</p>
+<h3 id="cloud-function-askaiaboutpost-https-callable">Cloud Function: <code>askAiAboutPost</code> (HTTPS callable)<a class="headerlink" href="#cloud-function-askaiaboutpost-https-callable" title="Permanent link">&para;</a></h3>
+<p>Accepts: <code>{ postId: string, conversationHistory: Message[], question: string }</code></p>
+<p>The function loads the extracted text for <code>postId</code> from the in-memory cache if available, or re-downloads and re-extracts from Firebase Storage (same logic as above). It then calls Groq with the full conversation history prepended by a system prompt that grounds the model on the document text. If the question is classified as off-topic (no overlap with the document content), the model is instructed to reply with the literal string <code>OFF_TOPIC</code> so the client can show a friendly redirect message.</p>
+<p>The caller must be authenticated (Firebase Auth token verified via <code>context.auth</code>). Unauthenticated calls are rejected with <code>unauthenticated</code>.</p>
+<h3 id="firestore-schema-additions">Firestore schema additions<a class="headerlink" href="#firestore-schema-additions" title="Permanent link">&para;</a></h3>
+<p>The following fields are added to existing <code>posts/{postId}</code> documents (no new collection required):</p>
+<div class="highlight"><pre><span></span><code>summary:        string?    null until the function completes
+summaryStatus:  string?    &#39;pending&#39; (set by client at upload) | &#39;done&#39; | &#39;flagged&#39; | &#39;unsupported_type&#39; | &#39;error&#39;
+summarizedAt:   Timestamp? null until the function completes
+</code></pre></div>
+<p>No index changes are required — these fields are never used as query predicates.</p>
+<h3 id="flutter-changes">Flutter changes<a class="headerlink" href="#flutter-changes" title="Permanent link">&para;</a></h3>
+<p><strong>Domain layer (<code>features/posts/domain/</code>):</strong></p>
+<ul>
+<li>Add <code>summary</code>, <code>summaryStatus</code>, and <code>summarizedAt</code> fields to the <code>Post</code> entity (pure Dart, no new imports).</li>
+<li>Add <code>SummaryStatus</code> enum: <code>pending</code>, <code>done</code>, <code>flagged</code>, <code>unsupportedType</code>, <code>error</code>.</li>
+<li>Add <code>AskAiRepository</code> abstract interface with <code>askAi(postId, history, question)</code> method returning <code>Future&lt;String&gt;</code>.</li>
+<li>Add <code>AskAiUseCase</code> wrapping the repository.</li>
+</ul>
+<p><strong>Data layer (<code>features/posts/data/</code>):</strong></p>
+<ul>
+<li>Update <code>PostDto</code> / mapper to read the three new fields.</li>
+<li>Add <code>AskAiRemoteDatasource</code> that calls the <code>askAiAboutPost</code> HTTPS callable function via <code>cloud_functions</code>.</li>
+<li>Add <code>AskAiRepositoryImpl</code>.</li>
+</ul>
+<p><strong>Presentation layer (<code>features/posts/presentation/</code>):</strong></p>
+<ul>
+<li>Extend <code>PostDetailScreen</code> with a <code>AiSummaryPanel</code> widget: collapsible card, amber Sparkles icon, "AI SUMMARY" label in <code>AppTypography.mono</code>, intro sentence in <code>theme.textTheme.bodyMedium</code>, bullet points with amber dot prefix.</li>
+<li>When <code>summaryStatus == pending</code>, show a shimmer placeholder.</li>
+<li>When <code>summaryStatus == flagged</code>, show a muted "Content could not be summarised" message.</li>
+<li>Add <code>AskAiSection</code> widget below the summary panel: collapsible, chat input field, message list. The section is only rendered when <code>summaryStatus == done</code>.</li>
+<li>Add <code>askAiProvider</code> (<code>AsyncNotifier</code>) that calls <code>AskAiUseCase</code> and maintains local conversation history.</li>
+</ul>
 <h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Layer</th>
-<th>Addition</th>
+<th>Artifact</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>domain/entities/Comment</code></td>
-<td>Pure Dart entity: <code>id</code>, <code>authorId</code>, <code>authorName</code>, <code>authorAvatar</code>, <code>body</code>, <code>createdAt</code></td>
+<td><code>domain/entities/</code></td>
+<td><code>Post</code> entity (extended), <code>SummaryStatus</code> enum, <code>AiMessage</code> entity</td>
 </tr>
 <tr>
-<td><code>domain/repositories/PostRepository</code></td>
-<td>New method: <code>Stream&lt;Post&gt; watchPost(String postId)</code></td>
+<td><code>domain/repositories/</code></td>
+<td><code>AskAiRepository</code> abstract interface</td>
 </tr>
 <tr>
-<td><code>domain/repositories/CommentRepository</code></td>
-<td>New interface: <code>Stream&lt;List&lt;Comment&gt;&gt; watchComments(String postId)</code>, <code>Future&lt;void&gt; addComment(String postId, String body)</code></td>
+<td><code>domain/usecases/</code></td>
+<td><code>AskAiUseCase</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/WatchPost</code></td>
-<td>Wraps <code>PostRepository.watchPost</code></td>
+<td><code>data/datasources/</code></td>
+<td><code>AskAiRemoteDatasource</code> (HTTPS callable)</td>
 </tr>
 <tr>
-<td><code>domain/usecases/WatchComments</code></td>
-<td>Wraps <code>CommentRepository.watchComments</code></td>
+<td><code>data/repositories/</code></td>
+<td><code>AskAiRepositoryImpl</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/AddComment</code></td>
-<td>Validates body non-empty, delegates to <code>CommentRepository</code></td>
+<td><code>presentation/providers/</code></td>
+<td><code>askAiProvider</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/ToggleLike</code></td>
-<td>Writes/removes <code>posts/{postId}/likes/{userId}</code>, server-side <code>likesCount</code> is managed by Cloud Function</td>
-</tr>
-<tr>
-<td><code>data/datasources/PostFirestoreDataSource</code></td>
-<td>Add <code>watchPost(String postId)</code> — <code>snapshots()</code> stream on <code>posts/{postId}</code></td>
-</tr>
-<tr>
-<td><code>data/datasources/CommentFirestoreDataSource</code></td>
-<td>Stream on <code>posts/{postId}/comments</code> ordered by <code>createdAt</code> ascending</td>
-</tr>
-<tr>
-<td><code>data/models/CommentDto</code></td>
-<td>Freezed + <code>fromJson</code>/<code>toJson</code></td>
-</tr>
-<tr>
-<td><code>data/repositories/CommentRepositoryImpl</code></td>
-<td>Maps <code>CommentDto</code> → <code>Comment</code> entity</td>
-</tr>
-<tr>
-<td><code>presentation/providers/postDetailProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;Post&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/providers/commentsProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;List&lt;Comment&gt;&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/screens/PostDetailScreen</code></td>
-<td>Full-screen layout per Figma</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/CommentTile</code></td>
-<td>Single comment row</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/AttachmentCarousel</code></td>
-<td>Horizontal media strip using <code>CachedNetworkImage</code></td>
-</tr>
-<tr>
-<td><code>presentation/widgets/LikeButton</code></td>
-<td>Stateless button; receives <code>isLiked</code> + <code>count</code> + <code>onTap</code></td>
+<td><code>presentation/widgets/</code></td>
+<td><code>AiSummaryPanel</code>, <code>AskAiSection</code>, <code>AiMessageBubble</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="data-loading-strategy-hybrid">Data loading strategy (hybrid)<a class="headerlink" href="#data-loading-strategy-hybrid" title="Permanent link">&para;</a></h3>
-<p><code>postDetailProvider</code> is a family provider keyed on <code>postId</code>. On construction:</p>
-<ol>
-<li>If GoRouter <code>extra</code> carries a <code>Post</code> object, the provider emits it immediately as the initial value (zero-latency render).</li>
-<li>Simultaneously, <code>WatchPost(postId)</code> opens a Firestore <code>snapshots()</code> stream. When the first snapshot arrives it supersedes the seed value, and subsequent snapshots update live (e.g., <code>likesCount</code> incremented by Cloud Function).</li>
-</ol>
-<p>For the cold-start / deep-link case, there is no seed from <code>extra</code>, so the provider starts in <code>AsyncValue.loading()</code> and populates once the first Firestore snapshot arrives. The screen shows a skeleton loader during this window.</p>
-<p>This design satisfies both the warm-start (instant render from feed cache) and cold-start (fetch by ID) cases without branching logic in the presentation layer — the provider handles the difference internally.</p>
-<h3 id="comments-subcollection">Comments subcollection<a class="headerlink" href="#comments-subcollection" title="Permanent link">&para;</a></h3>
-<p>Comments are stored in <code>posts/{postId}/comments/{commentId}</code> — a new subcollection not present in PROP-0003's schema. The detail screen opens a real-time stream (<code>watchComments</code>) and appends new comments as they arrive. Adding a comment writes directly to this subcollection; <code>commentsCount</code> denormalization on the post document is deferred (see Open Questions).</p>
-<h3 id="like-interaction">Like interaction<a class="headerlink" href="#like-interaction" title="Permanent link">&para;</a></h3>
-<p><code>ToggleLike</code> checks <code>posts/{postId}/likes/{currentUserId}</code> for existence. If absent, it creates the document; if present, it deletes it. <code>likesCount</code> on the post is maintained exclusively by a Cloud Function — the client never writes it directly. The <code>LikeButton</code> widget performs an optimistic local toggle on tap and reconciles with the live stream when the Cloud Function updates <code>likesCount</code>.</p>
-<h3 id="figma-compliance">Figma compliance<a class="headerlink" href="#figma-compliance" title="Permanent link">&para;</a></h3>
-<p>The implementation must reproduce the Figma layout exactly. Before the flutter-engineer begins, the architect must audit the Figma node (<code>node-id=0-1</code>) and enumerate every UI component on the Post Detail screen. Any component not already present in <code>apps/mobile/lib/shared/widgets/</code> or the design system (<code>packages/</code>) must be listed in the tech spec as a new widget to build. No Material defaults should be used for components that Figma specifies with custom tokens.</p>
+<p>The Cloud Function code lives outside the Flutter app at <code>functions/src/</code> in the repo root (standard Firebase project layout). It is not part of the <code>apps/mobile</code> package and introduces no Flutter or Dart dependencies.</p>
 <hr />
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-pass-post-via-gorouter-extra-no-firestore-fetch">A — Pass Post via GoRouter <code>extra</code>, no Firestore fetch<a class="headerlink" href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" title="Permanent link">&para;</a></h3>
-<p>The <code>PostCard</code> tap passes the full <code>Post</code> entity in GoRouter <code>extra</code>. The detail screen reads this object and renders it directly — no network call on open. The existing <code>postFeedProvider</code> is the sole data source.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Instant render with zero additional Firestore reads.</li>
-<li>No new domain use case or repository method needed for data loading.</li>
-<li>Simplest possible implementation.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Breaks on cold start. Deep links and push notifications provide only a <code>postId</code> in the URL path — <code>extra</code> is <code>null</code>. The screen has no fallback, so cold-start users see an error or blank screen.</li>
-<li>Data goes stale immediately. <code>likesCount</code>, <code>commentsCount</code> (if added), and <code>body</code> edits are frozen at the moment the feed loaded. A post with 200 likes shows the cached 150 from the feed snapshot.</li>
-<li>Comments are entirely unavailable — there is no <code>comments</code> field on the <code>Post</code> entity; comments live in a subcollection that the feed never fetches.</li>
-<li>Tightly couples the detail screen's data contract to the feed's load order, making the detail screen non-standalone.</li>
-</ul>
-<p><strong>Effort:</strong> XS (implementation) but produces a product that is broken for deep-link users.</p>
-<p><strong>Rejected:</strong> Cannot satisfy the deep-link requirement, which is a hard constraint. Data staleness is also unacceptable for social interaction counts.</p>
-<hr />
-<h3 id="b-always-fetch-post-fresh-from-firestore-by-id">B — Always fetch post fresh from Firestore by ID<a class="headerlink" href="#b-always-fetch-post-fresh-from-firestore-by-id" title="Permanent link">&para;</a></h3>
-<p>Ignore <code>extra</code> entirely. Every time the detail screen opens, <code>postDetailProvider</code> issues a one-shot <code>get()</code> call on <code>posts/{postId}</code>. Comments are fetched separately.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Uniform code path for warm-start and cold-start — no conditional branching on <code>extra</code>.</li>
-<li>Data is fresh at open time regardless of how the screen was reached.</li>
-<li>Simpler provider implementation than the hybrid stream approach.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Visible loading spinner on every tap from the feed, even when the post data is already in memory. On a slow connection this creates a noticeable and unnecessary delay — the user just tapped a card they could already read in the feed.</li>
-<li>A one-shot <code>get()</code> does not update after open. <code>likesCount</code> incremented by a Cloud Function while the user is reading the post is not reflected. The user must leave and re-enter to see updated counts.</li>
-<li>No real-time comments — new comments posted by others while the user reads do not appear without a manual refresh.</li>
-<li>Firestore billing: one extra document read per detail screen open, even for posts already in Firestore's local cache from the feed query.</li>
-</ul>
-<p><strong>Effort:</strong> S. Straightforward <code>FutureProvider.family</code> implementation.</p>
-<p><strong>Rejected:</strong> The unnecessary loading spinner on feed taps degrades UX for the most common path. Lack of live updates makes social interactions (likes, comments) feel unresponsive. The hybrid approach adds only marginal complexity for substantially better UX.</p>
-<hr />
-<h3 id="c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended">C — Hybrid: optimistic display from feed data, then stream live updates (recommended)<a class="headerlink" href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" title="Permanent link">&para;</a></h3>
-<p>Described fully in Proposed Solution above.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Instant render on feed tap (seed from <code>extra</code>) with no spinner for the common path.</li>
-<li>Correct cold-start behavior (falls back to Firestore fetch when <code>extra</code> is absent).</li>
-<li>Live updates via <code>snapshots()</code> stream keep <code>likesCount</code> and post content current throughout the session.</li>
-<li>Real-time comments via subcollection stream — new comments appear without refresh.</li>
-<li>Single provider interface for both cases — presentation layer is unaware of whether data came from <code>extra</code> or Firestore.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Slightly more complex provider implementation: the provider must accept an optional seed value and merge it with an incoming stream.</li>
-<li>Opens a persistent Firestore listener per active detail screen, which consumes one Firestore connection slot. This is negligible at current scale but worth monitoring.</li>
-<li><code>extra</code> carries a Dart object, which is not serializable by GoRouter's URL-based state restoration. If the OS kills the app and restores it to the detail screen, <code>extra</code> will be null and the screen will fall back to the Firestore fetch path — this is correct behavior but must be documented and tested.</li>
-</ul>
-<p><strong>Effort:</strong> M. The stream-seeding pattern in Riverpod requires a <code>StreamProvider.family</code> with a custom build step or an <code>AsyncNotifier</code> that combines seed + stream.</p>
-<p><strong>Recommended.</strong> The warm-start path is the dominant user flow (tapping from feed), so eliminating its loading spinner is the highest-impact UX win. The cold-start fallback is architecturally clean and correct. Real-time updates are table stakes for a social feature.</p>
+<h3 id="a-client-side-text-extraction-and-direct-llm-call-from-flutter">A — Client-side text extraction and direct LLM call from Flutter<a class="headerlink" href="#a-client-side-text-extraction-and-direct-llm-call-from-flutter" title="Permanent link">&para;</a></h3>
+<p>Extract text from the file on the device using a Dart PDF or DOCX library, then call the Groq HTTP API directly from Flutter.</p>
+<p><strong>Pros:</strong> No Cloud Functions required. No server-side infrastructure to maintain. Summary could be generated lazily on first view rather than at upload time, meaning only viewed posts incur API cost.</p>
+<p><strong>Cons:</strong> The Groq API key would be embedded in the Flutter app binary, where it is trivially extractable by any user with a decompiler. This violates the project's no-plaintext-secrets convention and would expose the team's free-tier quota to abuse. Text extraction on mobile is CPU and battery intensive for large PDFs; a 40-page lecture deck can take several seconds on a mid-range Android device. Offline extraction fails entirely when the user has no local copy of the file. The client also has no server-side caching surface, so the same file would be extracted repeatedly on every device that views the post. <strong>Rejected:</strong> API key exposure is a non-negotiable disqualifier. Battery and UX cost are secondary concerns that reinforce the rejection.</p>
+<h3 id="b-gemini-google-ai-instead-of-groq">B — Gemini (Google AI) instead of Groq<a class="headerlink" href="#b-gemini-google-ai-instead-of-groq" title="Permanent link">&para;</a></h3>
+<p>Use Gemini via the Vertex AI Firebase extension or direct Gemini API calls from Cloud Functions.</p>
+<p><strong>Pros:</strong> Gemini is deeply integrated with the Google/Firebase ecosystem. The Firebase Genkit framework provides first-class Firestore trigger patterns, reducing boilerplate. Gemini 1.5 Flash has a generous free tier (15 req/min, 1M tokens/day on AI Studio free tier) with a 1M-token context window — the 6,000-character document extract is trivial.</p>
+<p><strong>Cons:</strong> The team has already configured Groq API credentials in the environment. Switching to Gemini requires setting up a new API project, a separate billing account (even for free tier), and a different SDK. Gemini API latency from the Bangkok region has historically been higher than Groq for small-context requests. The Genkit framework is still in beta and adds a new dependency with an uncertain stability surface. The <code>llama-3.3-70b-versatile</code> model on Groq has demonstrated strong academic summarisation quality in the NestJS reference implementation. <strong>Not rejected outright</strong> — if Groq free-tier rate limits prove insufficient at scale, migrating to Gemini Flash is a viable path. The reversal cost is moderate: the Cloud Function logic is self-contained, so swapping the LLM client touches only the function code, not the Flutter app or Firestore schema.</p>
+<h3 id="c-on-demand-summary-generated-on-first-view-not-at-upload">C — On-demand summary (generated on first view, not at upload)<a class="headerlink" href="#c-on-demand-summary-generated-on-first-view-not-at-upload" title="Permanent link">&para;</a></h3>
+<p>Instead of triggering summarisation on <code>onCreate</code>, trigger it when the first user opens the post detail screen — either via a Firestore write from the client that the function watches, or via a direct HTTPS callable that the screen invokes if <code>summary</code> is null.</p>
+<p><strong>Pros:</strong> Only viewed posts are ever summarised, reducing Groq API call volume for posts that receive zero traffic (stale or niche uploads). Cold-start behaviour is visible only to the first viewer, not silently deferred.</p>
+<p><strong>Cons:</strong> The first viewer of any post experiences a 2–4 second loading delay while the function runs. This is particularly poor UX for popular posts where many users arrive at the same moment (Firestore <code>onUpdate</code> could trigger the function multiple times for a single document). Race conditions between concurrent first-view requests require deduplication logic (check-then-set). The upload-time trigger is cleaner: summarisation is a side-effect of ingestion, not of viewing, which aligns with the principle that the feed should always be ready to consume. The user brief explicitly states "pre-generated once at upload time." <strong>Rejected:</strong> the user brief rules it out directly, and the UX degradation for first viewers is not acceptable.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>Figma audit: new components</strong> — The Figma design at <code>node-id=0-1</code> must be inspected before the tech spec is written. Which UI components on the Post Detail screen (comment input bar, attachment carousel, like button, author chip, tag list) are already in the shared design system versus net-new widgets? The tech spec cannot be written without this inventory.</p>
+<p><strong>Supported file types at launch.</strong> The reference implementation handles PDF and DOCX. Should PPTX (PowerPoint) be in scope for launch, given that many lecture slides are shared in that format? <code>python-pptx</code> or <code>officeparser</code> could extract slide text in the Node.js function, but adds a dependency and increases cold-start time. A decision is needed before the spec enumerates extraction libraries.</p>
 </li>
 <li>
-<p><strong>Comments subcollection schema</strong> — Does the <code>comments</code> subcollection need a <code>likesCount</code> or nested reply structure (threaded comments), or is it a flat list for v1? The answer changes the Firestore schema and domain entity design.</p>
+<p><strong>Cold-start latency on the free Spark plan.</strong> The Firebase free tier does not support Cloud Functions with minimum instance configuration, meaning every cold start downloads <code>pdf-parse</code> and <code>mammoth</code> from the module cache. Cold starts on the Spark plan can take 3–8 seconds for Node.js functions with heavy native dependencies. Students uploading a post will not see the summary panel populate for up to 10–15 seconds after upload. Is this acceptable, or should a loading/pending state on the post detail screen persist until the <code>summary</code> field is written (real-time listener handles this automatically)?</p>
 </li>
 <li>
-<p><strong><code>commentsCount</code> denormalization</strong> — Should the <code>posts/{postId}</code> document carry a <code>commentsCount</code> field (updated by Cloud Function) for display on <code>PostCard</code> in the feed, or is the count shown only on the detail screen (where the full subcollection is streamed)? If needed on the feed card, a Cloud Function trigger on <code>comments</code> subcollection writes must be added.</p>
+<p><strong>Groq free-tier rate limit at scale.</strong> The <code>llama-3.3-70b-versatile</code> model on the Groq free tier allows 30 requests per minute and 14,400 requests per day. Each summarisation consumes up to three requests (screen + summary + auto-tag). At 100 posts uploaded per day, the daily cap is safe. At 500+ posts per day, the daily cap is breached. What is the expected upload volume at launch, and is a graceful degradation path (skip auto-tag to save one request, or fall back to a smaller model) acceptable?</p>
 </li>
 <li>
-<p><strong>Like state for the current user</strong> — The <code>LikeButton</code> must know whether the current user has already liked the post. The <code>posts/{postId}/likes/{userId}</code> document must be checked on screen open. Does this happen inside <code>WatchPost</code> (Firestore rules permitting a sub-read from the use case), or does <code>postDetailProvider</code> issue a separate existence check and pass <code>isLiked</code> as a field alongside the <code>Post</code>? A <code>userLikeStatusProvider</code> family keyed on <code>postId</code> may be the cleanest separation.</p>
+<p><strong>"Ask AI" availability gate.</strong> Should the Ask AI chat section be rendered only when <code>summaryStatus == done</code>, or should it be available as soon as the post document exists (even before summarisation completes)? Showing it only when <code>done</code> simplifies the UX and avoids chat sessions where the model has no document context. However, it means users who open a post in the first 15 seconds after upload see no AI affordance at all. The preferred behaviour must be confirmed before the presentation layer is specced.</p>
 </li>
 <li>
-<p><strong>Deep-link URL scheme</strong> — Push notifications from FCM and shared URLs must resolve to <code>/posts/:postId</code>. Is the path <code>/posts/:postId</code> the canonical deep-link path, or does the backend/notification service use a different scheme (e.g., <code>/p/:postId</code>, <code>unishare://post/:postId</code>)? The GoRouter route must match exactly.</p>
+<p><strong>Conversation history persistence.</strong> The <code>askAiProvider</code> holds conversation history in local Riverpod state (lost on screen pop). Should conversation history be persisted to Firestore (<code>posts/{postId}/aiChats/{userId}</code>) so users can resume a session? This significantly increases read/write volume and adds a new sub-collection. The simpler path (ephemeral in-memory history) should be the default unless there is a specific UX requirement for persistence.</p>
 </li>
 <li>
-<p><strong>Comment input and auth gate</strong> — Can unauthenticated (guest-mode) users view the detail screen read-only, with the comment input and like button disabled? Or does the detail route require authentication (redirect to <code>/welcome</code> if no session)? The current <code>_RouterNotifier</code> must be extended or the detail screen must handle this locally.</p>
-</li>
-<li>
-<p><strong>Attachment rendering</strong> — <code>mediaUrls</code> on the post document is a <code>string[]</code>. Are all entries image URLs, or can they include PDF or video links? The <code>AttachmentCarousel</code> widget design depends on whether it must handle heterogeneous media types or can assume images-only for v1.</p>
+<p><strong>Summary display when <code>summaryStatus == error</code>.</strong> If the Cloud Function fails (Groq timeout, extraction failure), the post detail screen shows no summary. Should there be a manual "Retry summary" action available to the post author, or is a silent failure (summary panel simply absent) acceptable for the first release?</p>
 </li>
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Tapping a <code>PostCard</code> in the feed navigates to <code>/posts/:postId</code> and renders the full post without a loading spinner (warm-start path).</li>
-<li>Cold-starting the app via a deep link to <code>/posts/:postId</code> renders a skeleton loader, then the full post once the Firestore snapshot arrives.</li>
-<li>The detail screen's visual layout matches the Figma design exactly — pixel-level fidelity is required for all components specified in the design.</li>
-<li><code>likesCount</code> displayed on the detail screen updates in real time when the Cloud Function increments it (no manual refresh required).</li>
-<li>The like button reflects the current user's like state on open and toggles correctly; optimistic local toggle is reconciled when the stream updates.</li>
-<li>Comments load from <code>posts/{postId}/comments</code> in ascending <code>createdAt</code> order and new comments from other users appear without refresh while the screen is open.</li>
-<li>Submitting a comment writes to the <code>comments</code> subcollection and appears in the list within one Firestore round-trip.</li>
-<li>The navbar (PROP-0005 shell) is absent from the Post Detail screen — the route is declared outside <code>StatefulShellRoute</code>.</li>
-<li>Android back button and iOS swipe-back return the user to the previous screen (feed or notification inbox) correctly.</li>
-<li>All new domain entities, repository interfaces, and use cases are pure Dart — zero Flutter or Firebase imports.</li>
-<li><code>flutter analyze</code> reports zero issues on all new code.</li>
-<li>Every new screen and widget has a corresponding widget test; the cold-start path has a unit test for <code>postDetailProvider</code> behavior when <code>extra</code> is null.</li>
+<li>When an authenticated user uploads a PDF or DOCX post, a <code>summary</code> field is written to the corresponding Firestore document within 30 seconds of the upload completing, without any additional client action.</li>
+<li>The post detail screen displays the <code>AiSummaryPanel</code> when <code>summaryStatus == done</code>. The panel shows one introductory sentence and between three and seven bullet points prefixed with an amber dot.</li>
+<li>The <code>AiSummaryPanel</code> is collapsible. Its expanded/collapsed state persists for the lifetime of the screen but is not persisted to storage.</li>
+<li>When <code>summaryStatus == pending</code>, the summary panel area displays a shimmer placeholder. When <code>summaryStatus</code> is <code>flagged</code>, <code>unsupported_type</code>, or <code>error</code>, the panel displays a muted descriptive message and the Ask AI section is not rendered.</li>
+<li>A post uploaded without tags receives auto-generated tags (up to 5) written to its <code>tags</code> array by the Cloud Function. A post uploaded with tags is not modified by the auto-tag step.</li>
+<li>The "Ask AI" section is rendered only when <code>summaryStatus == done</code>. It accepts a free-text question and returns a response grounded on the document content. If the question is off-topic, the UI displays a friendly "This question is outside the document's scope" message.</li>
+<li>The <code>askAiAboutPost</code> HTTPS callable function rejects unauthenticated requests with a Firebase <code>unauthenticated</code> error.</li>
+<li>The Groq API key is never present in Flutter source code, <code>pubspec.yaml</code>, or any file committed to the repository. It is stored exclusively in Cloud Functions environment configuration.</li>
+<li>The <code>Post</code> domain entity, <code>SummaryStatus</code> enum, <code>AiMessage</code> entity, and <code>AskAiRepository</code> interface contain zero Flutter or Firebase imports.</li>
+<li><code>AiSummaryPanel</code> and <code>AskAiSection</code> each have a widget test covering the <code>pending</code>, <code>done</code>, and error states.</li>
+<li><code>AskAiUseCase</code> has a unit test against a mock <code>AskAiRepository</code> covering successful response and <code>OFF_TOPIC</code> reply paths.</li>
+<li><code>flutter analyze</code> reports zero errors or warnings on all new Dart code.</li>
+<li>Firestore security rules do not grant read access to <code>summary</code> or <code>summaryStatus</code> to unauthenticated users (consistent with existing post-read rules).</li>
 </ul>
 
 

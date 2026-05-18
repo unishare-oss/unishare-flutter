@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Firebase-native authentication design for Unishare Flutter — Google sign-in, email/password, and guest browsing.">
+        <meta name="description" content="Unified FilePreviewScreen that replaces scattered inline preview logic with pinch-to-zoom image viewing, full PDF scrolling, video playback with Chewie controls, and a graceful fallback for unsupported types.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-specs/0001-auth-design/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-specs/0007-file-preview-screen/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../0006-post-detail-page/">
       
       
-        <link rel="next" href="../0001-notification/">
+        <link rel="next" href="../0007-save-post/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0001: Auth Feature Design - Unishare Engineering Docs</title>
+        <title>0007: File Preview Screen - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#spec-0001-auth-feature-design" class="md-skip">
+        <a href="#spec-0007-file-preview-screen" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0001: Auth Feature Design
+              0007: File Preview Screen
             
           </span>
         </div>
@@ -1386,37 +1386,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0001: Auth Feature Design
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0001-auth-design/" class="md-nav__link">
         
   
   
@@ -1432,142 +1405,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#screens-navigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Screens &amp; Navigation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#firebase-data-layer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firebase &amp; Data Layer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture Layers
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Clean Architecture Layers">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#domain-pure-dart-zero-firebaseflutter-imports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Domain (pure Dart — zero Firebase/Flutter imports)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#presentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Presentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling-edge-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Handling &amp; Edge Cases
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#out-of-scope-this-phase" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Out of Scope (this phase)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1745,10 +1582,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0007-file-preview-screen/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1764,6 +1628,186 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API contracts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behaviour-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behaviour specification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Behaviour specification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_imageviewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        _ImageViewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_pdfviewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        _PdfViewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_videoviewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        _VideoViewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_unsupportedviewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        _UnsupportedViewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#router-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Router changes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1898,10 +1942,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#screens-navigation" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Screens &amp; Navigation
+        Architecture
       
     </span>
   </a>
@@ -1909,10 +1953,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#firebase-data-layer" class="md-nav__link">
+  <a href="#file-map" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Firebase &amp; Data Layer
+        File map
       
     </span>
   </a>
@@ -1920,22 +1964,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
+  <a href="#api-contracts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clean Architecture Layers
+        API contracts
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Clean Architecture Layers">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behaviour-specification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behaviour specification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Behaviour specification">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#domain-pure-dart-zero-firebaseflutter-imports" class="md-nav__link">
+  <a href="#_imageviewer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domain (pure Dart — zero Firebase/Flutter imports)
+        _ImageViewer
       
     </span>
   </a>
@@ -1943,10 +1998,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data" class="md-nav__link">
+  <a href="#_pdfviewer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data
+        _PdfViewer
       
     </span>
   </a>
@@ -1954,10 +2009,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#presentation" class="md-nav__link">
+  <a href="#_videoviewer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Presentation
+        _VideoViewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_unsupportedviewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        _UnsupportedViewer
       
     </span>
   </a>
@@ -1970,10 +2036,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#error-handling-edge-cases" class="md-nav__link">
+  <a href="#router-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Error Handling &amp; Edge Cases
+        Router changes
       
     </span>
   </a>
@@ -1981,10 +2047,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
+  <a href="#new-dependencies" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Testing
+        New dependencies
       
     </span>
   </a>
@@ -1992,10 +2058,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#out-of-scope-this-phase" class="md-nav__link">
+  <a href="#test-plan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Out of Scope (this phase)
+        Test plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
       
     </span>
   </a>
@@ -2019,7 +2107,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0001-auth-design.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0007-file-preview-screen.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2027,221 +2115,358 @@
   
 
 
-<h1 id="spec-0001-auth-feature-design">SPEC-0001: Auth Feature Design<a class="headerlink" href="#spec-0001-auth-feature-design" title="Permanent link">&para;</a></h1>
+<h1 id="spec-0007-file-preview-screen">SPEC-0007: File Preview Screen<a class="headerlink" href="#spec-0007-file-preview-screen" title="Permanent link">&para;</a></h1>
 <p><strong>Status:</strong> APPROVED<br />
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-04-30<br />
-<strong>Scope:</strong> Firebase-native authentication for the Unishare Flutter app (separate product from the NestJS web platform)</p>
+<strong>Author:</strong> Architect<br />
+<strong>Date:</strong> 2026-05-07<br />
+<strong>Proposal:</strong> <a href="../../tech-proposals/0007-file-preview-screen/">PROP-0007</a><br />
+<strong>Approved by:</strong> Pyae Sone Shin Thant (2026-05-07)</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Implement authentication as the first feature of the Flutter app. The app is Firebase-native with no dependency on the NestJS API. Auth supports Google sign-in and email/password, with MS OAuth deferred to a later phase. Guest browsing (read-only) is supported.</p>
+<p><code>FilePreviewScreen</code> is a new GoRouter-registered screen that consolidates all file-preview logic currently scattered across <code>attachment_list.dart</code> and <code>attachment_carousel.dart</code>. A single <code>/preview</code> route receives <code>url</code>, <code>type</code>, and <code>filename</code> as a typed <code>FilePreviewArgs</code> object passed via GoRouter <code>extra</code>. Inside the screen, a <code>switch</code> on <code>type</code> selects one of four private sub-widgets: <code>_ImageViewer</code>, <code>_PdfViewer</code>, <code>_VideoViewer</code>, and <code>_UnsupportedViewer</code>. All existing inline <code>MaterialPageRoute</code> builders and the "Video playback coming soon" <code>SnackBar</code> are deleted. The two call sites are each reduced to a single <code>context.push('/preview', extra: ...)</code> call. No Firestore reads are involved — all data flows through navigation arguments.</p>
 <hr />
-<h2 id="screens-navigation">Screens &amp; Navigation<a class="headerlink" href="#screens-navigation" title="Permanent link">&para;</a></h2>
-<p>Five entry points in the auth feature:</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    AL[attachment_list.dart\nAttachmentList] --&gt;|context.push extra:FilePreviewArgs| R[GoRouter /preview]
+    AC[attachment_carousel.dart\nAttachmentCarousel] --&gt;|context.push extra:FilePreviewArgs| R
+    R --&gt; FPS[FilePreviewScreen\nPresentation layer]
+    FPS --&gt; IV[_ImageViewer\nCachedNetworkImage\nInteractiveViewer]
+    FPS --&gt; PV[_PdfViewer\npdfrx PdfViewer.uri]
+    FPS --&gt; VV[_VideoViewer\nvideo_player + Chewie\ndio cache]
+    FPS --&gt; UV[_UnsupportedViewer\nfallback message]</code></pre>
+<p>There is no Domain layer involvement: <code>FilePreviewScreen</code> is a pure presentation concern. It receives all required data as constructor arguments derived from the navigation <code>extra</code>; it makes no repository calls and owns no use cases.</p>
+<hr />
+<h2 id="file-map">File map<a class="headerlink" href="#file-map" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Route</th>
-<th>Screen</th>
-<th>Access</th>
+<th>Action</th>
+<th>Path</th>
+<th>Responsibility</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>/welcome</code></td>
-<td>Logo, tagline, Google button, "Sign in with email", "Create account", "Continue as guest"</td>
-<td>Unauthenticated</td>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/post/presentation/screens/file_preview_screen.dart</code></td>
+<td><code>FilePreviewArgs</code> record, <code>FilePreviewScreen</code>, <code>_ImageViewer</code>, <code>_PdfViewer</code>, <code>_VideoViewer</code>, <code>_UnsupportedViewer</code>, <code>_VideoDownloadState</code> enum</td>
 </tr>
 <tr>
-<td><code>/sign-in</code></td>
-<td>Email + password form with back navigation</td>
-<td>Unauthenticated</td>
+<td>Modify</td>
+<td><code>apps/mobile/lib/core/router/router.dart</code></td>
+<td>Add <code>/preview</code> <code>GoRoute</code> above the <code>StatefulShellRoute</code>; add import for <code>FilePreviewScreen</code>; add <code>/preview</code> to <code>knownPrefixes</code> in <code>_RouterNotifier.redirect</code></td>
 </tr>
 <tr>
-<td><code>/sign-up</code></td>
-<td>Name + university (optional) + email + password + confirm + consent</td>
-<td>Unauthenticated</td>
+<td>Modify</td>
+<td><code>apps/mobile/lib/features/post/presentation/widgets/attachment_list.dart</code></td>
+<td>Replace three <code>Navigator.push</code> / <code>SnackBar</code> blocks in <code>_AttachmentRow._onView</code> with a single <code>context.push('/preview', extra: FilePreviewArgs(...))</code></td>
 </tr>
 <tr>
-<td><code>/</code></td>
-<td>Home feed</td>
-<td>All (guest = read-only)</td>
+<td>Modify</td>
+<td><code>apps/mobile/lib/features/post/presentation/widgets/attachment_carousel.dart</code></td>
+<td>Replace <code>_PdfSlot._openPdfViewer</code> and the image fallback tap path with <code>context.push('/preview', extra: FilePreviewArgs(...))</code>; replace <code>_VideoSlot</code> <code>SnackBar</code> with the same push</td>
 </tr>
 <tr>
-<td>overlay</td>
-<td>Academic profile bottom sheet</td>
-<td>Authenticated + <code>departmentId == null</code></td>
+<td>Modify</td>
+<td><code>apps/mobile/pubspec.yaml</code></td>
+<td>Add <code>video_player</code>, <code>chewie</code>, <code>path_provider</code> under <code>dependencies</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/test/widget/features/post/file_preview_screen_test.dart</code></td>
+<td>Widget tests for all four <code>FilePreviewScreen</code> branches and error states</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/test/unit/features/post/video_cache_path_test.dart</code></td>
+<td>Unit test for cache-path derivation logic</td>
 </tr>
 </tbody>
 </table>
-<p><strong>GoRouter redirect rules:</strong>
-- No session + not guest → <code>/welcome</code>
-- Authenticated → <code>/</code> (feed)
-- Authenticated user hits <code>/welcome</code>, <code>/sign-in</code>, <code>/sign-up</code> → redirect to <code>/</code>
-- Authenticated + <code>departmentId == null</code> → feed loads, bottom sheet overlays on top (not a redirect)</p>
 <hr />
-<h2 id="firebase-data-layer">Firebase &amp; Data Layer<a class="headerlink" href="#firebase-data-layer" title="Permanent link">&para;</a></h2>
-<p><strong>Firebase Auth:</strong> <code>firebase_auth</code> + <code>google_sign_in</code>. Auth state exposed as a Riverpod stream provider watching <code>FirebaseAuth.instance.authStateChanges()</code>.</p>
-<p><strong>Firestore user document</strong> — created on first sign-in:</p>
-<div class="highlight"><pre><span></span><code>users/{uid}
-  name: String
-  email: String
-  photoUrl: String?
-  universityId: String?       ← collected during email sign-up
-  departmentId: String?       ← collected via academic profile modal
-  enrollmentYear: int?        ← collected via academic profile modal
-  role: &#39;student&#39; | &#39;admin&#39;   ← defaults to &#39;student&#39;
-  consentGivenAt: Timestamp?  ← written on email sign-up
-  createdAt: Timestamp
+<h2 id="api-contracts">API contracts<a class="headerlink" href="#api-contracts" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// ---- FilePreviewArgs -------------------------------------------------------</span>
+<span class="c1">// Passed as GoRouter `extra`. Pure Dart record — no Flutter/Firebase imports.</span>
+
+<span class="kd">typedef</span><span class="w"> </span><span class="n">FilePreviewArgs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">({</span>
+<span class="w">  </span><span class="kt">String</span><span class="w"> </span><span class="n">url</span><span class="p">,</span>
+<span class="w">  </span><span class="kt">String</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w">      </span><span class="c1">// &quot;image&quot; | &quot;pdf&quot; | &quot;video&quot; — anything else → _UnsupportedViewer</span>
+<span class="w">  </span><span class="kt">String</span><span class="w"> </span><span class="n">filename</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="c1">// ---- FilePreviewScreen -----------------------------------------------------</span>
+<span class="c1">// Located at:</span>
+<span class="c1">//   lib/features/post/presentation/screens/file_preview_screen.dart</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">FilePreviewScreen</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">StatelessWidget</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">FilePreviewScreen</span><span class="p">({</span>
+<span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">url</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">type</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">filename</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">url</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">filename</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">// AppBar title is `filename` for all types except video (which shows filename</span>
+<span class="w">  </span><span class="c1">// plus &quot; — page N/N&quot; suffix managed by _PdfViewer for pdf type).</span>
+<span class="p">}</span>
+
+<span class="c1">// ---- _VideoDownloadState ---------------------------------------------------</span>
+<span class="c1">// Internal enum used by _VideoViewer to drive its StatefulWidget rebuild cycle.</span>
+
+<span class="n">enum</span><span class="w"> </span><span class="n">_VideoDownloadState</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">/// Checking local cache / initiating download.</span>
+<span class="w">  </span><span class="n">loading</span><span class="p">,</span>
+
+<span class="w">  </span><span class="c1">/// Downloading from network; progress [0.0, 1.0] tracked separately.</span>
+<span class="w">  </span><span class="n">downloading</span><span class="p">,</span>
+
+<span class="w">  </span><span class="c1">/// Local file is ready; VideoPlayerController initialised, Chewie rendered.</span>
+<span class="w">  </span><span class="n">ready</span><span class="p">,</span>
+
+<span class="w">  </span><span class="c1">/// Network download failed (dio error or HTTP error status).</span>
+<span class="w">  </span><span class="n">downloadError</span><span class="p">,</span>
+
+<span class="w">  </span><span class="c1">/// No cached file AND device is offline.</span>
+<span class="w">  </span><span class="n">offlineUnavailable</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1">// ---- GoRoute registration --------------------------------------------------</span>
+<span class="c1">// In router.dart, added to the top-level `routes` list alongside</span>
+<span class="c1">// /welcome, /posts/create, /posts/:postId — NOT nested inside the shell.</span>
+
+<span class="n">GoRoute</span><span class="p">(</span>
+<span class="w">  </span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/preview&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">extra</span><span class="o">!</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">FilePreviewArgs</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">FilePreviewScreen</span><span class="p">(</span>
+<span class="w">      </span><span class="nl">url:</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">url</span><span class="p">,</span>
+<span class="w">      </span><span class="nl">type:</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">type</span><span class="p">,</span>
+<span class="w">      </span><span class="nl">filename:</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">filename</span><span class="p">,</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">),</span>
+
+<span class="c1">// ---- Call-site shape (both widgets must use this exact form) ---------------</span>
+<span class="n">context</span><span class="p">.</span><span class="n">push</span><span class="p">(</span>
+<span class="w">  </span><span class="s1">&#39;/preview&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nl">extra:</span><span class="w"> </span><span class="p">(</span><span class="nl">url:</span><span class="w"> </span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="nl">type:</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="nl">filename:</span><span class="w"> </span><span class="n">_filename</span><span class="p">(</span><span class="n">url</span><span class="p">)),</span>
+<span class="p">);</span>
 </code></pre></div>
-<p><strong>Supporting collections (read-only at this phase):</strong>
-- <code>universities/{id}</code> — sign-up university dropdown
-- <code>departments/{id}</code> — academic profile modal dropdown</p>
-<p><strong>Guest mode:</strong> no Firestore user doc. Router allows <code>/</code> feed. All write actions (upload, react, comment) show a "sign in to continue" prompt.</p>
 <hr />
-<h2 id="clean-architecture-layers">Clean Architecture Layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h2>
-<h3 id="domain-pure-dart-zero-firebaseflutter-imports">Domain (pure Dart — zero Firebase/Flutter imports)<a class="headerlink" href="#domain-pure-dart-zero-firebaseflutter-imports" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>features/auth/domain/
-  entities/
-    app_user.dart                  ← id, name, email, photoUrl, universityId,
-                                      departmentId, enrollmentYear, role
-  repositories/
-    auth_repository.dart           ← abstract interface
-  usecases/
-    sign_in_with_google.dart
-    sign_in_with_email.dart
-    sign_up_with_email.dart
-    sign_out.dart
-    get_current_user.dart
-    update_academic_profile.dart
-</code></pre></div>
-<h3 id="data">Data<a class="headerlink" href="#data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>features/auth/data/
-  datasources/
-    firebase_auth_datasource.dart  ← Firebase Auth calls
-    firestore_user_datasource.dart ← user doc reads/writes
-  models/
-    app_user_model.dart            ← Freezed + JSON, extends AppUser
-  repositories/
-    auth_repository_impl.dart
-</code></pre></div>
-<h3 id="presentation">Presentation<a class="headerlink" href="#presentation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>features/auth/presentation/
-  providers/
-    auth_state_provider.dart       ← streams FirebaseAuth.authStateChanges()
-    current_user_provider.dart     ← fetches Firestore user doc
-  screens/
-    welcome_screen.dart
-    sign_in_screen.dart
-    sign_up_screen.dart
-  widgets/
-    academic_profile_bottom_sheet.dart
-    google_sign_in_button.dart
-    auth_text_field.dart
-</code></pre></div>
-<hr />
-<h2 id="error-handling-edge-cases">Error Handling &amp; Edge Cases<a class="headerlink" href="#error-handling-edge-cases" title="Permanent link">&para;</a></h2>
-<p><strong>Auth errors</strong> mapped to user-facing messages:</p>
-<table>
-<thead>
-<tr>
-<th>Firebase code</th>
-<th>User message</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>wrong-password</code> / <code>user-not-found</code></td>
-<td>"Invalid email or password"</td>
-</tr>
-<tr>
-<td><code>email-already-in-use</code></td>
-<td>"An account with this email already exists"</td>
-</tr>
-<tr>
-<td><code>network-request-failed</code></td>
-<td>"Check your connection and try again"</td>
-</tr>
-<tr>
-<td>Google sign-in cancelled</td>
-<td>Silent — no snackbar</td>
-</tr>
-</tbody>
-</table>
-<p><strong>First-time Google sign-in:</strong> after Firebase Auth succeeds, check if <code>users/{uid}</code> exists. If not, create the doc from the OAuth token (name + photoUrl). University and department left null → triggers academic profile bottom sheet.</p>
-<p><strong>Academic profile modal:</strong>
-- "Do it later" dismisses for the session only
-- On next cold start, re-appears if <code>departmentId</code> is still null
-- Department dropdown is required to enable the save button
-- User can always escape via "Do it later"</p>
-<p><strong>Consent:</strong>
-- Email sign-up: explicit checkbox; <code>consentGivenAt</code> written to Firestore on submit
-- Google sign-up: footnote only ("By continuing you agree to Terms &amp; Privacy") — no checkbox, matches web behaviour</p>
-<hr />
-<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
-<p><strong>Widget tests (one per screen, mandatory per CLAUDE.md):</strong></p>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>What it covers</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>welcome_screen_test.dart</code></td>
-<td>Renders Google button, email links, guest link; tapping each navigates correctly</td>
-</tr>
-<tr>
-<td><code>sign_in_screen_test.dart</code></td>
-<td>Validation errors for empty/invalid fields; submit calls use case</td>
-</tr>
-<tr>
-<td><code>sign_up_screen_test.dart</code></td>
-<td>Password mismatch error; consent required before submit</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Unit tests:</strong></p>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>What it covers</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>auth_repository_impl_test.dart</code></td>
-<td>Mocked datasources; Firebase user → AppUser mapping</td>
-</tr>
-<tr>
-<td><code>sign_in_with_google_test.dart</code></td>
-<td>Delegates to repository</td>
-</tr>
-<tr>
-<td><code>sign_in_with_email_test.dart</code></td>
-<td>Delegates to repository</td>
-</tr>
-<tr>
-<td><code>sign_up_with_email_test.dart</code></td>
-<td>Delegates to repository</td>
-</tr>
-<tr>
-<td><code>update_academic_profile_test.dart</code></td>
-<td>Delegates to repository</td>
-</tr>
-</tbody>
-</table>
-<p>No golden tests at this phase — auth screens are simple enough that widget tests suffice.</p>
-<hr />
-<h2 id="out-of-scope-this-phase">Out of Scope (this phase)<a class="headerlink" href="#out-of-scope-this-phase" title="Permanent link">&para;</a></h2>
+<h2 id="behaviour-specification">Behaviour specification<a class="headerlink" href="#behaviour-specification" title="Permanent link">&para;</a></h2>
+<h3 id="_imageviewer"><code>_ImageViewer</code><a class="headerlink" href="#_imageviewer" title="Permanent link">&para;</a></h3>
 <ul>
-<li>MS OAuth (deferred)</li>
-<li>Forgot password / email reset flow</li>
-<li>Email verification gate</li>
-<li>Admin role enforcement (read from Firestore but not acted on yet)</li>
+<li><code>StatelessWidget</code>.</li>
+<li>Scaffold background: <code>Colors.black</code>.</li>
+<li>AppBar: title = <code>filename</code>, <code>backgroundColor: Colors.black</code>, <code>iconTheme: IconThemeData(color: Colors.white)</code>.</li>
+<li>Body: <code>InteractiveViewer(minScale: 0.5, maxScale: 4.0, transformationController: _controller)</code> wrapping <code>CachedNetworkImage(fit: BoxFit.contain)</code>.</li>
+<li>A <code>GestureDetector</code> with <code>onDoubleTap</code> resets <code>TransformationController</code> to <code>Matrix4.identity()</code>.</li>
+<li>Because double-tap reset requires a controller, <code>_ImageViewer</code> must be a <code>StatefulWidget</code> that owns and disposes the <code>TransformationController</code>.</li>
+<li>Bottom of body: <code>Text('Pinch to zoom', style: ...)</code> centred at 12 dp from bottom, muted colour.</li>
+<li>Error state: <code>CachedNetworkImage</code> <code>errorWidget</code> callback renders a centred broken-image <code>Icon</code> on a black background.</li>
 </ul>
+<h3 id="_pdfviewer"><code>_PdfViewer</code><a class="headerlink" href="#_pdfviewer" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>StatefulWidget</code>.</li>
+<li>Scaffold background: default (light/dark theme surface).</li>
+<li>AppBar: title = <code>filename</code>. Page counter ("Page N / N") added to AppBar actions once the document is loaded; managed via <code>PdfViewerController</code> listener.</li>
+<li>Body while loading: <code>Center(child: CircularProgressIndicator())</code>.</li>
+<li>Body when loaded: <code>PdfViewer.uri(Uri.parse(url), controller: _pdfController)</code> fills the body.</li>
+<li>Error state: <code>Center</code> column containing a <code>Text('Failed to load PDF')</code> and a <code>TextButton('Retry')</code> that calls <code>_pdfController.reload()</code> (or re-triggers the <code>PdfViewer.uri</code> widget rebuild via a <code>_loadKey</code> state variable).</li>
+<li><code>PdfViewerController</code> is instantiated in <code>initState</code> and disposed in <code>dispose</code>.</li>
+</ul>
+<h3 id="_videoviewer"><code>_VideoViewer</code><a class="headerlink" href="#_videoviewer" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>StatefulWidget</code>. Initial <code>_VideoDownloadState</code> = <code>_VideoDownloadState.loading</code>.</li>
+<li>Scaffold background: <code>Colors.black</code>.</li>
+<li>AppBar: title = <code>filename</code>, <code>backgroundColor: Colors.black</code>, <code>iconTheme: IconThemeData(color: Colors.white)</code>.</li>
+</ul>
+<p><strong>Cache-path derivation</strong> (extract to a package-private function <code>videoCachePath</code> for unit testing):</p>
+<div class="highlight"><pre><span></span><code><span class="n">Future</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">videoCachePath</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">await</span><span class="w"> </span><span class="n">getTemporaryDirectory</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">url</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">).</span><span class="n">last</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;?&#39;</span><span class="p">).</span><span class="n">first</span><span class="p">;</span><span class="w"> </span><span class="c1">// strip query params</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;</span><span class="si">${</span><span class="n">dir</span><span class="p">.</span><span class="n">path</span><span class="si">}</span><span class="s1">/unishare_video/</span><span class="si">$</span><span class="n">filename</span><span class="s1">&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Initialisation sequence</strong> (called from <code>initState</code> via <code>_init()</code>):</p>
+<ol>
+<li>Compute <code>cachePath</code> via <code>videoCachePath(url)</code>.</li>
+<li>If <code>File(cachePath).existsSync()</code> → set state <code>ready</code>, init <code>VideoPlayerController.file(File(cachePath))</code>.</li>
+<li>Else check connectivity via <code>connectivity_plus</code> (<code>ConnectivityResult.none</code> = offline).</li>
+<li>If offline → set state <code>offlineUnavailable</code>.</li>
+<li>If online → set state <code>downloading</code>, begin <code>Dio().download(url, cachePath, onReceiveProgress: ...)</code>, updating <code>_downloadProgress</code> (0.0–1.0).<ul>
+<li>On success → set state <code>ready</code>, init controller from file.</li>
+<li>On <code>DioException</code> → set state <code>downloadError</code>.</li>
+</ul>
+</li>
+<li>After controller initialised: <code>await _videoController!.initialize()</code>, then create <code>ChewieController(videoPlayerController: _videoController!, autoPlay: false, looping: false, allowFullScreen: true, materialProgressColors: ChewieProgressColors(playedColor: Colors.amber))</code>.</li>
+</ol>
+<p><strong>State rendering:</strong></p>
+<table>
+<thead>
+<tr>
+<th><code>_VideoDownloadState</code></th>
+<th>Widget shown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>loading</code></td>
+<td><code>Center(child: CircularProgressIndicator())</code></td>
+</tr>
+<tr>
+<td><code>downloading</code></td>
+<td><code>Center</code> column: <code>CircularProgressIndicator(value: _downloadProgress)</code> + <code>Text('Downloading… ${(_downloadProgress * 100).toInt()}%')</code></td>
+</tr>
+<tr>
+<td><code>ready</code></td>
+<td><code>Center(child: Chewie(controller: _chewieController!))</code></td>
+</tr>
+<tr>
+<td><code>downloadError</code></td>
+<td><code>Center</code> column: <code>Text('Download failed')</code> + <code>TextButton('Retry')</code> that calls <code>_init()</code> again</td>
+</tr>
+<tr>
+<td><code>offlineUnavailable</code></td>
+<td><code>Center</code> column: <code>Icon(Icons.wifi_off)</code> + <code>Text('Not available offline')</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Disposal:</strong> <code>dispose()</code> calls <code>_chewieController?.dispose()</code> then <code>_videoController?.dispose()</code>.</p>
+<h3 id="_unsupportedviewer"><code>_UnsupportedViewer</code><a class="headerlink" href="#_unsupportedviewer" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>StatelessWidget</code>.</li>
+<li>Scaffold background: default surface.</li>
+<li>AppBar: title = <code>filename</code>.</li>
+<li>Body: <code>Center</code> column: <code>Icon(Icons.attach_file, size: 64)</code> + <code>Text('Preview not available for this file type')</code>.</li>
+</ul>
+<hr />
+<h2 id="router-changes">Router changes<a class="headerlink" href="#router-changes" title="Permanent link">&para;</a></h2>
+<p>Two changes are required in <code>apps/mobile/lib/core/router/router.dart</code>:</p>
+<ol>
+<li>
+<p>Add the <code>/preview</code> <code>GoRoute</code> to the top-level <code>routes</code> list, alongside the existing <code>/welcome</code>, <code>/posts/create</code>, and <code>/posts/:postId</code> entries (before the <code>StatefulShellRoute</code>).</p>
+</li>
+<li>
+<p>Add <code>'/preview'</code> to the <code>knownPrefixes</code> set inside <code>_RouterNotifier.redirect</code> so unauthenticated users attempting to deep-link to a preview are redirected to <code>/welcome</code> rather than falling through to <code>/feed</code>.</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1">// Change this:</span>
+<span class="k">const</span><span class="w"> </span><span class="n">knownPrefixes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;/feed&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/posts&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/notifications&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/more&#39;</span><span class="p">};</span>
+
+<span class="c1">// To:</span>
+<span class="k">const</span><span class="w"> </span><span class="n">knownPrefixes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;/feed&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/posts&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/notifications&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/more&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;/preview&#39;</span><span class="p">};</span>
+</code></pre></div>
+<hr />
+<h2 id="new-dependencies">New dependencies<a class="headerlink" href="#new-dependencies" title="Permanent link">&para;</a></h2>
+<p>All three were approved by Pyae Sone Shin Thant on 2026-05-07 (recorded in PROP-0007 open questions and ADR-0007).</p>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Reason</th>
+<th>Min version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>video_player</code></td>
+<td>Flutter-team-maintained video playback controller</td>
+<td>latest stable</td>
+</tr>
+<tr>
+<td><code>chewie</code></td>
+<td>Control layer over <code>video_player</code> (play/pause, seek, fullscreen)</td>
+<td>latest stable</td>
+</tr>
+<tr>
+<td><code>path_provider</code></td>
+<td><code>getTemporaryDirectory()</code> for video cache path</td>
+<td>latest stable</td>
+</tr>
+</tbody>
+</table>
+<p><code>dio</code> is already present in <code>pubspec.yaml</code> at <code>^5.9.2</code> and is used for the video download.<br />
+<code>connectivity_plus</code> is already present at <code>^7.1.1</code> and is used for the offline check.</p>
+<hr />
+<h2 id="test-plan">Test plan<a class="headerlink" href="#test-plan" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test file</th>
+<th>Type</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test/widget/features/post/file_preview_screen_test.dart</code></td>
+<td>Widget</td>
+<td><code>_ImageViewer</code> branch: <code>InteractiveViewer</code> and <code>CachedNetworkImage</code> are present; AppBar shows filename</td>
+</tr>
+<tr>
+<td><code>test/widget/features/post/file_preview_screen_test.dart</code></td>
+<td>Widget</td>
+<td><code>_PdfViewer</code> branch: loading indicator shown initially; <code>PdfViewer.uri</code> is present</td>
+</tr>
+<tr>
+<td><code>test/widget/features/post/file_preview_screen_test.dart</code></td>
+<td>Widget</td>
+<td><code>_PdfViewer</code> error state: retry button visible when PDF fails to load</td>
+</tr>
+<tr>
+<td><code>test/widget/features/post/file_preview_screen_test.dart</code></td>
+<td>Widget</td>
+<td><code>_VideoViewer</code> branch: <code>_VideoDownloadState.offlineUnavailable</code> — "Not available offline" text visible when offline and no cache</td>
+</tr>
+<tr>
+<td><code>test/widget/features/post/file_preview_screen_test.dart</code></td>
+<td>Widget</td>
+<td><code>_VideoViewer</code> branch: <code>_VideoDownloadState.downloadError</code> — "Download failed" text and retry button visible</td>
+</tr>
+<tr>
+<td><code>test/widget/features/post/file_preview_screen_test.dart</code></td>
+<td>Widget</td>
+<td><code>_UnsupportedViewer</code> branch: attachment icon and "Preview not available" text visible for unknown type</td>
+</tr>
+<tr>
+<td><code>test/unit/features/post/video_cache_path_test.dart</code></td>
+<td>Unit</td>
+<td><code>videoCachePath</code> strips query parameters from URL and appends under <code>unishare_video/</code> subdirectory</td>
+</tr>
+<tr>
+<td><code>test/unit/features/post/video_cache_path_test.dart</code></td>
+<td>Unit</td>
+<td><code>videoCachePath</code> handles URLs with no query parameters correctly</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Widget test strategy:</strong> All four branches of <code>FilePreviewScreen</code> must be exercised by passing different <code>type</code> values to the constructor directly (no GoRouter involved in unit-level widget tests). <code>CachedNetworkImage</code>, <code>PdfViewer</code>, and <code>Chewie</code> should be stubbed or their network calls intercepted using <code>HttpOverrides</code> or a fake <code>HttpClient</code>.</p>
+<hr />
+<h2 id="out-of-scope">Out of scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Web platform (<code>kIsWeb</code> guard is not required — the screen is mobile-only, iOS and Android).</li>
+<li>Multi-image swipe navigation via <code>PageView</code> (deferred to a follow-up).</li>
+<li>Audio file types (<code>.mp3</code>, <code>.m4a</code>, etc.).</li>
+<li>Richly formatted document types beyond PDF (<code>.docx</code>, <code>.pptx</code>, etc.).</li>
+<li>Download-to-gallery / share-sheet action.</li>
+<li><code>url_launcher</code> fallback for unsupported types.</li>
+<li>Analytics events on preview open (to be added in a separate instrumentation pass).</li>
+</ul>
+<hr />
+<h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<p>All four open questions from PROP-0007 have been resolved prior to this spec being written:</p>
+<ol>
+<li><strong>Video offline support</strong> — resolved. Pre-download via <code>dio</code> to <code>getTemporaryDirectory()/unishare_video/</code>. See <code>_VideoViewer</code> behaviour specification above.</li>
+<li><strong>Multi-image swipe navigation</strong> — resolved as deferred. Out of scope for this release.</li>
+<li><strong>New dependency approval</strong> — resolved. <code>video_player</code>, <code>chewie</code>, <code>path_provider</code> approved by Pyae Sone Shin Thant (2026-05-07).</li>
+<li><strong>Unsupported types</strong> — resolved. Show <code>_UnsupportedViewer</code> with attachment icon and message. No <code>url_launcher</code> fallback.</li>
+</ol>
+<p>There are no remaining open questions. Status may be moved to APPROVED immediately upon architect sign-off.</p>
 
 
 

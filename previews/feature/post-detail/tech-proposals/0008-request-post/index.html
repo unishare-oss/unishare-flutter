@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Proposal for a dedicated post-detail screen that renders full post content, attachments, and social interactions, and serves as the deep-link target for push notifications and shared URLs.">
+        <meta name="description" content="Allow authenticated students to post content requests tied to a specific course, and allow uploaders to fulfill a request by linking one of their existing posts to it.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-proposals/0006-post-detail-page/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-proposals/0008-request-post/">
       
       
-        <link rel="prev" href="../0005-main-navbar/">
+        <link rel="prev" href="../0007-save-post/">
       
       
-        <link rel="next" href="../0007-file-preview-screen/">
+        <link rel="next" href="../0009-ai-post-summary/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0006: Post Detail Page - Unishare Engineering Docs</title>
+        <title>0008: Request Post - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0006-post-detail-page" class="md-skip">
+        <a href="#prop-0008-request-post" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0006: Post Detail Page
+              0008: Request Post
             
           </span>
         </div>
@@ -1159,37 +1159,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0006: Post Detail Page
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1205,192 +1178,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Proposed Solution
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Proposed Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GoRouter route
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture layers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data loading strategy (hybrid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments subcollection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Like interaction
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Figma compliance
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Pass Post via GoRouter extra, no Firestore fetch
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Always fetch post fresh from Firestore by ID
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1456,10 +1243,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0008-request-post/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1475,6 +1289,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-flows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-time updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#course-scoping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course scoping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-explicitly-out-of-scope-for-this-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is explicitly out of scope for this release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-requests-as-a-special-post-type-mixed-into-the-main-feed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Requests as a special post type mixed into the main feed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-dedicated-top-level-navigation-tab-fifth-tab-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Dedicated top-level navigation tab (fifth tab: REQUESTS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-requests-as-a-sub-collection-under-each-course-document-coursescourseidrequests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Requests as a sub-collection under each course document (courses/{courseId}/requests)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1960,10 +1960,43 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
+  <a href="#user-flows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GoRouter route
+        User flows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-time updates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#course-scoping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Course scoping
       
     </span>
   </a>
@@ -1982,43 +2015,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
+  <a href="#what-is-explicitly-out-of-scope-for-this-release" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data loading strategy (hybrid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments subcollection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Like interaction
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Figma compliance
+        What is explicitly out of scope for this release
       
     </span>
   </a>
@@ -2043,10 +2043,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+  <a href="#a-requests-as-a-special-post-type-mixed-into-the-main-feed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Pass Post via GoRouter extra, no Firestore fetch
+        A — Requests as a special post type mixed into the main feed
       
     </span>
   </a>
@@ -2054,10 +2054,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+  <a href="#b-dedicated-top-level-navigation-tab-fifth-tab-requests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Always fetch post fresh from Firestore by ID
+        B — Dedicated top-level navigation tab (fifth tab: REQUESTS)
       
     </span>
   </a>
@@ -2065,10 +2065,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+  <a href="#c-requests-as-a-sub-collection-under-each-course-document-coursescourseidrequests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+        C — Requests as a sub-collection under each course document (courses/{courseId}/requests)
       
     </span>
   </a>
@@ -2119,7 +2119,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0006-post-detail-page.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0008-request-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2127,219 +2127,151 @@
   
 
 
-<h1 id="prop-0006-post-detail-page">PROP-0006: Post Detail Page<a class="headerlink" href="#prop-0006-post-detail-page" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-06<br />
+<h1 id="prop-0008-request-post">PROP-0008: Request Post<a class="headerlink" href="#prop-0008-request-post" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> APPROVED
+<strong>Author:</strong><br />
+<strong>Date:</strong> 2026-05-09<br />
 <strong>Spec:</strong> (pending approval)<br />
-<strong>Approved by:</strong></p>
+<strong>Approved by:</strong> (fill in when accepted)</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The feed screen (PROP-0003) renders a scrollable list of <code>PostCard</code> widgets, but tapping a card has no destination. The <code>PostCard</code> tap handler is a no-op. Students have no way to read a post's full body, view all attached media, see comments, or like a post — the primary interaction surface of the app is unreachable.</p>
-<p>Beyond the tap-from-feed path, the detail screen must function as a <strong>standalone deep-link target</strong>. Push notifications and shared URLs reference a post by its Firestore document ID (e.g., <code>https://unishare.app/posts/abc123</code>), and the screen must render correctly when the app is cold-started directly into that route — meaning it cannot depend on feed state being populated in memory.</p>
-<p>Two structural concerns compound the data-loading problem:</p>
-<ol>
-<li>The feed's <code>postFeedProvider</code> loads posts in pages. A post the user taps may be on page 1 of the current session or may have been obtained by a completely different session (deep link). Feed data is therefore unreliable as a sole source.</li>
-<li><code>likesCount</code> on the post document is updated by a Cloud Function, not by the client. A snapshot from the feed may be stale by the time the user opens the detail screen, particularly for popular posts. The detail screen should reflect live counts.</li>
-</ol>
-<p>The UI must reproduce the Figma design exactly (https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare?node-id=0-1). The Figma introduces components — comments list, like button affordance, attachment carousel — that may not exist yet in the shared design system and must be audited before implementation begins.</p>
+<p>The Unishare feed is entirely supply-driven: content appears only after an uploader decides to share it. Students who need a specific resource — the past exam for CPE-231, the solution set for week-7 exercises, lecture notes for a module they missed — have no mechanism to signal that gap. They must either search and come up empty, or leave the app to ask classmates through external channels (LINE groups, Discord).</p>
+<p>The result is two-sided friction. Potential uploaders, who may have the material, do not know there is demand for it. Students who need material do not know whether to wait, ask, or give up. The upload side of the platform therefore lacks one of the strongest motivators for contribution: a visible, specific, unsatisfied request from a peer.</p>
+<p>This gap is most acute in course-specific contexts. A request for "CPE-231 midterm 2024" is actionable and discoverable by the handful of students enrolled in that course who may have the file. A generic "please upload more notes" sentiment is not. The missing feature is a structured, course-scoped, real-time request surface.</p>
+<p>Anonymous requests were evaluated and ruled out. Without identity, there is no accountability for spam, no way to notify a requester when their request is fulfilled, and no way to enforce the one-request-per-user-per-course limit that prevents flooding. All requests must be tied to an authenticated Firebase user.</p>
 <hr />
 <h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>Use <strong>Option C — Hybrid: optimistic display from feed data, then stream live updates from Firestore</strong>.</p>
-<h3 id="gorouter-route">GoRouter route<a class="headerlink" href="#gorouter-route" title="Permanent link">&para;</a></h3>
-<p>Declare <code>/posts/:postId</code> as a top-level route <strong>outside</strong> the <code>StatefulShellRoute</code> shell (following the same pattern established in PROP-0005 for New Post steps and Post Details). This means the navbar is automatically absent, and the route is reachable from both the feed tap and a cold-start deep link with no conditional logic.</p>
-<div class="highlight"><pre><span></span><code>/posts/:postId   →   PostDetailScreen(postId: postId)
+<p>Add a <strong>Requests</strong> screen under the existing MORE navigation branch (<code>/more/requests</code>). A placeholder screen already exists at that route; this proposal fills it in. The navbar and routing are untouched.</p>
+<h3 id="user-flows">User flows<a class="headerlink" href="#user-flows" title="Permanent link">&para;</a></h3>
+<p><strong>Requester flow:</strong> An authenticated user opens More → Requests. The screen shows all open requests filtered to their enrolled courses by default, with an option to view all courses. They tap a FAB to create a new request, fill in a course (required), a short title, and an optional description. The request is saved to Firestore and appears in the list in real time for all users watching that course.</p>
+<p><strong>Fulfiller flow:</strong> A user browsing the Requests list sees an open request that matches a post they have already uploaded. They tap "Fulfill" on the request card. A bottom sheet lists their existing posts that match the request's <code>courseId</code>. They select one post. The request's <code>fulfilledByPostId</code> field is written and its <code>status</code> field is set to <code>fulfilled</code>. The requester is not notified in this release (deferred — see Open Questions).</p>
+<h3 id="firestore-schema">Firestore schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>requests/{requestId}
+  id:                  string      (== document ID)
+  requesterId:         string      (UID of the requesting user)
+  requesterName:       string      (denormalized display name — snapshot at write time)
+  courseId:            string      (Firestore reference data ID — required)
+  courseName:          string      (denormalized — snapshot at write time)
+  title:               string      (max 120 characters)
+  description:         string      (optional, max 500 characters)
+  status:              string      (&quot;open&quot; | &quot;fulfilled&quot;)
+  fulfilledByPostId:   string?     (null until fulfilled; set to posts/{postId})
+  fulfilledByUserId:   string?     (UID of the fulfilling uploader)
+  createdAt:           Timestamp
+  updatedAt:           Timestamp
 </code></pre></div>
-<p>The <code>PostCard</code> tap handler calls <code>context.push('/posts/${post.id}', extra: post)</code>. GoRouter's <code>extra</code> carries the already-loaded <code>Post</code> entity for the warm-start case. For the cold-start case (deep link, push notification), <code>extra</code> is <code>null</code> — the screen falls back to fetching by ID.</p>
+<p>There are no sub-collections on <code>requests</code>. The <code>fulfilledByPostId</code> is a plain string referencing a <code>posts</code> document; the client resolves it lazily when the user taps through to view the fulfilling post.</p>
+<p>Composite indexes required:</p>
+<ul>
+<li><code>courseId ASC, status ASC, createdAt DESC</code> — for scoped, status-filtered, chronological listing</li>
+<li><code>requesterId ASC, createdAt DESC</code> — for "my requests" view</li>
+</ul>
+<h3 id="real-time-updates">Real-time updates<a class="headerlink" href="#real-time-updates" title="Permanent link">&para;</a></h3>
+<p>The Requests screen subscribes to a Firestore <code>snapshots()</code> stream scoped by <code>courseId</code> and optionally by <code>status</code>. Riverpod exposes this as a <code>StreamProvider</code> (or <code>AsyncNotifier</code> with a stream) so that new requests and status changes propagate to the UI without a manual refresh. This is consistent with the existing <code>watchFeed</code> and <code>watchPost</code> patterns already in <code>PostFirestoreDatasource</code>.</p>
+<h3 id="course-scoping">Course scoping<a class="headerlink" href="#course-scoping" title="Permanent link">&para;</a></h3>
+<p>Every request document carries a required <code>courseId</code>. The Create Request form reuses the existing course picker widget already present in the post-creation flow. The Requests list defaults to showing requests from the user's enrolled courses (drawn from their Firestore profile). A "Show all courses" toggle switches to a broader unfiltered view. This is the same filtering model used by the feed's tag-filter mechanism.</p>
 <h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Layer</th>
-<th>Addition</th>
+<th>Artifact</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>domain/entities/Comment</code></td>
-<td>Pure Dart entity: <code>id</code>, <code>authorId</code>, <code>authorName</code>, <code>authorAvatar</code>, <code>body</code>, <code>createdAt</code></td>
+<td><code>domain/entities/</code></td>
+<td><code>ContentRequest</code> (pure Dart), <code>RequestStatus</code> enum</td>
 </tr>
 <tr>
-<td><code>domain/repositories/PostRepository</code></td>
-<td>New method: <code>Stream&lt;Post&gt; watchPost(String postId)</code></td>
+<td><code>domain/repositories/</code></td>
+<td><code>RequestRepository</code> abstract interface</td>
 </tr>
 <tr>
-<td><code>domain/repositories/CommentRepository</code></td>
-<td>New interface: <code>Stream&lt;List&lt;Comment&gt;&gt; watchComments(String postId)</code>, <code>Future&lt;void&gt; addComment(String postId, String body)</code></td>
+<td><code>domain/usecases/</code></td>
+<td><code>WatchRequests</code>, <code>CreateRequest</code>, <code>FulfillRequest</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/WatchPost</code></td>
-<td>Wraps <code>PostRepository.watchPost</code></td>
+<td><code>data/datasources/</code></td>
+<td><code>RequestFirestoreDatasource</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/WatchComments</code></td>
-<td>Wraps <code>CommentRepository.watchComments</code></td>
+<td><code>data/models/</code></td>
+<td><code>RequestDto</code> (Freezed + <code>json_serializable</code>)</td>
 </tr>
 <tr>
-<td><code>domain/usecases/AddComment</code></td>
-<td>Validates body non-empty, delegates to <code>CommentRepository</code></td>
+<td><code>data/repositories/</code></td>
+<td><code>RequestRepositoryImpl</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/ToggleLike</code></td>
-<td>Writes/removes <code>posts/{postId}/likes/{userId}</code>, server-side <code>likesCount</code> is managed by Cloud Function</td>
+<td><code>presentation/providers/</code></td>
+<td><code>requestsProvider</code> (stream), <code>createRequestProvider</code>, <code>fulfillRequestProvider</code></td>
 </tr>
 <tr>
-<td><code>data/datasources/PostFirestoreDataSource</code></td>
-<td>Add <code>watchPost(String postId)</code> — <code>snapshots()</code> stream on <code>posts/{postId}</code></td>
+<td><code>presentation/screens/</code></td>
+<td><code>RequestsScreen</code> (list), <code>CreateRequestScreen</code> (form)</td>
 </tr>
 <tr>
-<td><code>data/datasources/CommentFirestoreDataSource</code></td>
-<td>Stream on <code>posts/{postId}/comments</code> ordered by <code>createdAt</code> ascending</td>
-</tr>
-<tr>
-<td><code>data/models/CommentDto</code></td>
-<td>Freezed + <code>fromJson</code>/<code>toJson</code></td>
-</tr>
-<tr>
-<td><code>data/repositories/CommentRepositoryImpl</code></td>
-<td>Maps <code>CommentDto</code> → <code>Comment</code> entity</td>
-</tr>
-<tr>
-<td><code>presentation/providers/postDetailProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;Post&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/providers/commentsProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;List&lt;Comment&gt;&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/screens/PostDetailScreen</code></td>
-<td>Full-screen layout per Figma</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/CommentTile</code></td>
-<td>Single comment row</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/AttachmentCarousel</code></td>
-<td>Horizontal media strip using <code>CachedNetworkImage</code></td>
-</tr>
-<tr>
-<td><code>presentation/widgets/LikeButton</code></td>
-<td>Stateless button; receives <code>isLiked</code> + <code>count</code> + <code>onTap</code></td>
+<td><code>presentation/widgets/</code></td>
+<td><code>RequestCard</code>, <code>FulfillBottomSheet</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="data-loading-strategy-hybrid">Data loading strategy (hybrid)<a class="headerlink" href="#data-loading-strategy-hybrid" title="Permanent link">&para;</a></h3>
-<p><code>postDetailProvider</code> is a family provider keyed on <code>postId</code>. On construction:</p>
-<ol>
-<li>If GoRouter <code>extra</code> carries a <code>Post</code> object, the provider emits it immediately as the initial value (zero-latency render).</li>
-<li>Simultaneously, <code>WatchPost(postId)</code> opens a Firestore <code>snapshots()</code> stream. When the first snapshot arrives it supersedes the seed value, and subsequent snapshots update live (e.g., <code>likesCount</code> incremented by Cloud Function).</li>
-</ol>
-<p>For the cold-start / deep-link case, there is no seed from <code>extra</code>, so the provider starts in <code>AsyncValue.loading()</code> and populates once the first Firestore snapshot arrives. The screen shows a skeleton loader during this window.</p>
-<p>This design satisfies both the warm-start (instant render from feed cache) and cold-start (fetch by ID) cases without branching logic in the presentation layer — the provider handles the difference internally.</p>
-<h3 id="comments-subcollection">Comments subcollection<a class="headerlink" href="#comments-subcollection" title="Permanent link">&para;</a></h3>
-<p>Comments are stored in <code>posts/{postId}/comments/{commentId}</code> — a new subcollection not present in PROP-0003's schema. The detail screen opens a real-time stream (<code>watchComments</code>) and appends new comments as they arrive. Adding a comment writes directly to this subcollection; <code>commentsCount</code> denormalization on the post document is deferred (see Open Questions).</p>
-<h3 id="like-interaction">Like interaction<a class="headerlink" href="#like-interaction" title="Permanent link">&para;</a></h3>
-<p><code>ToggleLike</code> checks <code>posts/{postId}/likes/{currentUserId}</code> for existence. If absent, it creates the document; if present, it deletes it. <code>likesCount</code> on the post is maintained exclusively by a Cloud Function — the client never writes it directly. The <code>LikeButton</code> widget performs an optimistic local toggle on tap and reconciles with the live stream when the Cloud Function updates <code>likesCount</code>.</p>
-<h3 id="figma-compliance">Figma compliance<a class="headerlink" href="#figma-compliance" title="Permanent link">&para;</a></h3>
-<p>The implementation must reproduce the Figma layout exactly. Before the flutter-engineer begins, the architect must audit the Figma node (<code>node-id=0-1</code>) and enumerate every UI component on the Post Detail screen. Any component not already present in <code>apps/mobile/lib/shared/widgets/</code> or the design system (<code>packages/</code>) must be listed in the tech spec as a new widget to build. No Material defaults should be used for components that Figma specifies with custom tokens.</p>
+<p>The feature lives at <code>apps/mobile/lib/features/requests/</code>. The Domain layer carries zero Flutter or Firebase imports.</p>
+<h3 id="what-is-explicitly-out-of-scope-for-this-release">What is explicitly out of scope for this release<a class="headerlink" href="#what-is-explicitly-out-of-scope-for-this-release" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Push notifications to the requester when their request is fulfilled</li>
+<li>Upvoting or voting on requests (demand signaling beyond simple creation)</li>
+<li>Anonymous requests (ruled out — see Problem section)</li>
+<li>Request expiry (see Open Questions)</li>
+<li>Multiple fulfillments for a single request (see Open Questions)</li>
+</ul>
 <hr />
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-pass-post-via-gorouter-extra-no-firestore-fetch">A — Pass Post via GoRouter <code>extra</code>, no Firestore fetch<a class="headerlink" href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" title="Permanent link">&para;</a></h3>
-<p>The <code>PostCard</code> tap passes the full <code>Post</code> entity in GoRouter <code>extra</code>. The detail screen reads this object and renders it directly — no network call on open. The existing <code>postFeedProvider</code> is the sole data source.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Instant render with zero additional Firestore reads.</li>
-<li>No new domain use case or repository method needed for data loading.</li>
-<li>Simplest possible implementation.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Breaks on cold start. Deep links and push notifications provide only a <code>postId</code> in the URL path — <code>extra</code> is <code>null</code>. The screen has no fallback, so cold-start users see an error or blank screen.</li>
-<li>Data goes stale immediately. <code>likesCount</code>, <code>commentsCount</code> (if added), and <code>body</code> edits are frozen at the moment the feed loaded. A post with 200 likes shows the cached 150 from the feed snapshot.</li>
-<li>Comments are entirely unavailable — there is no <code>comments</code> field on the <code>Post</code> entity; comments live in a subcollection that the feed never fetches.</li>
-<li>Tightly couples the detail screen's data contract to the feed's load order, making the detail screen non-standalone.</li>
-</ul>
-<p><strong>Effort:</strong> XS (implementation) but produces a product that is broken for deep-link users.</p>
-<p><strong>Rejected:</strong> Cannot satisfy the deep-link requirement, which is a hard constraint. Data staleness is also unacceptable for social interaction counts.</p>
-<hr />
-<h3 id="b-always-fetch-post-fresh-from-firestore-by-id">B — Always fetch post fresh from Firestore by ID<a class="headerlink" href="#b-always-fetch-post-fresh-from-firestore-by-id" title="Permanent link">&para;</a></h3>
-<p>Ignore <code>extra</code> entirely. Every time the detail screen opens, <code>postDetailProvider</code> issues a one-shot <code>get()</code> call on <code>posts/{postId}</code>. Comments are fetched separately.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Uniform code path for warm-start and cold-start — no conditional branching on <code>extra</code>.</li>
-<li>Data is fresh at open time regardless of how the screen was reached.</li>
-<li>Simpler provider implementation than the hybrid stream approach.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Visible loading spinner on every tap from the feed, even when the post data is already in memory. On a slow connection this creates a noticeable and unnecessary delay — the user just tapped a card they could already read in the feed.</li>
-<li>A one-shot <code>get()</code> does not update after open. <code>likesCount</code> incremented by a Cloud Function while the user is reading the post is not reflected. The user must leave and re-enter to see updated counts.</li>
-<li>No real-time comments — new comments posted by others while the user reads do not appear without a manual refresh.</li>
-<li>Firestore billing: one extra document read per detail screen open, even for posts already in Firestore's local cache from the feed query.</li>
-</ul>
-<p><strong>Effort:</strong> S. Straightforward <code>FutureProvider.family</code> implementation.</p>
-<p><strong>Rejected:</strong> The unnecessary loading spinner on feed taps degrades UX for the most common path. Lack of live updates makes social interactions (likes, comments) feel unresponsive. The hybrid approach adds only marginal complexity for substantially better UX.</p>
-<hr />
-<h3 id="c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended">C — Hybrid: optimistic display from feed data, then stream live updates (recommended)<a class="headerlink" href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" title="Permanent link">&para;</a></h3>
-<p>Described fully in Proposed Solution above.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Instant render on feed tap (seed from <code>extra</code>) with no spinner for the common path.</li>
-<li>Correct cold-start behavior (falls back to Firestore fetch when <code>extra</code> is absent).</li>
-<li>Live updates via <code>snapshots()</code> stream keep <code>likesCount</code> and post content current throughout the session.</li>
-<li>Real-time comments via subcollection stream — new comments appear without refresh.</li>
-<li>Single provider interface for both cases — presentation layer is unaware of whether data came from <code>extra</code> or Firestore.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Slightly more complex provider implementation: the provider must accept an optional seed value and merge it with an incoming stream.</li>
-<li>Opens a persistent Firestore listener per active detail screen, which consumes one Firestore connection slot. This is negligible at current scale but worth monitoring.</li>
-<li><code>extra</code> carries a Dart object, which is not serializable by GoRouter's URL-based state restoration. If the OS kills the app and restores it to the detail screen, <code>extra</code> will be null and the screen will fall back to the Firestore fetch path — this is correct behavior but must be documented and tested.</li>
-</ul>
-<p><strong>Effort:</strong> M. The stream-seeding pattern in Riverpod requires a <code>StreamProvider.family</code> with a custom build step or an <code>AsyncNotifier</code> that combines seed + stream.</p>
-<p><strong>Recommended.</strong> The warm-start path is the dominant user flow (tapping from feed), so eliminating its loading spinner is the highest-impact UX win. The cold-start fallback is architecturally clean and correct. Real-time updates are table stakes for a social feature.</p>
+<h3 id="a-requests-as-a-special-post-type-mixed-into-the-main-feed">A — Requests as a special post type mixed into the main feed<a class="headerlink" href="#a-requests-as-a-special-post-type-mixed-into-the-main-feed" title="Permanent link">&para;</a></h3>
+<p>Extend <code>PostType</code> with a <code>request</code> variant. Request creation reuses the existing create-post flow. Requests appear in the feed interleaved with uploaded content, differentiated by a visual badge.</p>
+<p><strong>Pros:</strong> No new Firestore collection; reuses existing <code>posts</code> schema, <code>PostRepository</code>, create-post flow, and <code>PostCard</code> widget. Fulfillment is just a comment or a reply post.</p>
+<p><strong>Cons:</strong> The feed becomes semantically mixed — users browsing for study materials see unfulfilled requests alongside actual content, degrading the discovery value of the feed. Filtering requests out of the feed requires an additional <code>postType != request</code> predicate on every feed query, adding a Firestore composite index and complicating the query path. The <code>Post</code> entity already carries fields (<code>mediaUrls</code>, <code>mediaTypes</code>, <code>codeSnippetUrl</code>) that are meaningless for a request, leading to a widening entity that serves two unrelated purposes. Fulfillment semantics (linking a response post back to the request) have no natural fit in the comment or reply model. <strong>Rejected:</strong> semantic pollution of the feed and entity bloat outweigh the reuse benefit. A dedicated collection is a cleaner boundary.</p>
+<h3 id="b-dedicated-top-level-navigation-tab-fifth-tab-requests">B — Dedicated top-level navigation tab (fifth tab: REQUESTS)<a class="headerlink" href="#b-dedicated-top-level-navigation-tab-fifth-tab-requests" title="Permanent link">&para;</a></h3>
+<p>Add a fifth bottom-bar tab alongside FEED, POSTS, NOTIFS, MORE. The Requests screen is a first-class destination at the same level as the feed.</p>
+<p><strong>Pros:</strong> Maximum discoverability. Users never need to navigate through MORE to find it. A dedicated tab could also carry a badge count for new or open requests.</p>
+<p><strong>Cons:</strong> The bottom bar currently has four tabs matching the Figma design (FEED, POSTS, NOTIFS, MORE). Adding a fifth tab breaks the established design system and requires updating <code>ShellScaffold</code>, <code>StatefulShellRoute</code>, and the custom bar widget — a non-trivial change with no approved design backing. The MORE tab was explicitly designed as the collection point for secondary destinations; Requests fits that role given its initial niche use. If Requests proves high-traffic after launch, promoting it to a top-level tab is a one-step migration (change the router branch order and update the bar widget). <strong>Rejected by the user:</strong> the team explicitly chose MORE-nested placement. Reversal cost is low if usage data later justifies promotion.</p>
+<h3 id="c-requests-as-a-sub-collection-under-each-course-document-coursescourseidrequests">C — Requests as a sub-collection under each course document (<code>courses/{courseId}/requests</code>)<a class="headerlink" href="#c-requests-as-a-sub-collection-under-each-course-document-coursescourseidrequests" title="Permanent link">&para;</a></h3>
+<p>Store requests as sub-collections nested under the corresponding course document rather than in a flat top-level <code>requests</code> collection.</p>
+<p><strong>Pros:</strong> Data is physically co-located with its course; security rules can scope reads and writes to course members without cross-collection joins. Queries for a single course require no composite index (just a collection-group query or a direct sub-collection read).</p>
+<p><strong>Cons:</strong> Showing a "my requests" view (all requests the current user has created across all their courses) requires a Firestore <code>collectionGroup('requests')</code> query, which demands a collection group index and opens the query surface wider than intended. Adding a global "all open requests" view becomes difficult without collectionGroup. The flat top-level collection with <code>courseId</code> as a field is a standard Firestore denormalization pattern that keeps all query paths simple and consistent with the existing <code>posts</code> collection design. <strong>Rejected:</strong> the collectionGroup query complexity for cross-course views outweighs the locality benefit, particularly since the <code>posts</code> collection already established the flat-collection-with-foreign-key pattern for this app.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>Figma audit: new components</strong> — The Figma design at <code>node-id=0-1</code> must be inspected before the tech spec is written. Which UI components on the Post Detail screen (comment input bar, attachment carousel, like button, author chip, tag list) are already in the shared design system versus net-new widgets? The tech spec cannot be written without this inventory.</p>
+<p><strong>Single vs. multiple fulfillments.</strong> The schema above allows exactly one fulfilling post (<code>fulfilledByPostId</code> is a single nullable string). Can a request be fulfilled by more than one post — for example, two different uploaders both sharing relevant material for the same request? If so, the schema needs to change to a <code>fulfillments</code> sub-collection (or an array of fulfillment objects), and the <code>status</code> field logic becomes more complex (e.g., <code>open</code> → <code>partially_fulfilled</code> → <code>fulfilled</code>). This must be decided before the data layer is implemented.</p>
 </li>
 <li>
-<p><strong>Comments subcollection schema</strong> — Does the <code>comments</code> subcollection need a <code>likesCount</code> or nested reply structure (threaded comments), or is it a flat list for v1? The answer changes the Firestore schema and domain entity design.</p>
+<p><strong>Who can mark a request as fulfilled?</strong> The current proposal allows any authenticated user (the fulfiller) to link their own post and transition <code>status</code> to <code>fulfilled</code>. Should the requester also be able to mark their own request as fulfilled manually — for example, if they found the material outside the app? Should admins or moderators have override capability? Firestore security rules depend on this decision.</p>
 </li>
 <li>
-<p><strong><code>commentsCount</code> denormalization</strong> — Should the <code>posts/{postId}</code> document carry a <code>commentsCount</code> field (updated by Cloud Function) for display on <code>PostCard</code> in the feed, or is the count shown only on the detail screen (where the full subcollection is streamed)? If needed on the feed card, a Cloud Function trigger on <code>comments</code> subcollection writes must be added.</p>
+<p><strong>Request expiry.</strong> Stale open requests from past semesters will accumulate. Should requests carry a <code>expiresAt</code> timestamp (e.g., end of the current semester)? If so, who sets it — the requester, the system, or a Cloud Function? Alternatively, should requests be soft-deleted by the requester, or simply filtered out of the default view after a configurable age? An unbounded open request list degrades the signal-to-noise ratio of the Requests screen over time.</p>
 </li>
 <li>
-<p><strong>Like state for the current user</strong> — The <code>LikeButton</code> must know whether the current user has already liked the post. The <code>posts/{postId}/likes/{userId}</code> document must be checked on screen open. Does this happen inside <code>WatchPost</code> (Firestore rules permitting a sub-read from the use case), or does <code>postDetailProvider</code> issue a separate existence check and pass <code>isLiked</code> as a field alongside the <code>Post</code>? A <code>userLikeStatusProvider</code> family keyed on <code>postId</code> may be the cleanest separation.</p>
+<p><strong>Requester notification.</strong> When a request transitions to <code>fulfilled</code>, should the requester receive a push notification? This is deferred from the current scope, but the domain event (<code>RequestFulfilled</code>) should be defined now so that the notification feature can be wired in later without a schema change. The team must decide whether a <code>notifyOnFulfill: bool</code> flag should be captured at request-creation time.</p>
 </li>
 <li>
-<p><strong>Deep-link URL scheme</strong> — Push notifications from FCM and shared URLs must resolve to <code>/posts/:postId</code>. Is the path <code>/posts/:postId</code> the canonical deep-link path, or does the backend/notification service use a different scheme (e.g., <code>/p/:postId</code>, <code>unishare://post/:postId</code>)? The GoRouter route must match exactly.</p>
-</li>
-<li>
-<p><strong>Comment input and auth gate</strong> — Can unauthenticated (guest-mode) users view the detail screen read-only, with the comment input and like button disabled? Or does the detail route require authentication (redirect to <code>/welcome</code> if no session)? The current <code>_RouterNotifier</code> must be extended or the detail screen must handle this locally.</p>
-</li>
-<li>
-<p><strong>Attachment rendering</strong> — <code>mediaUrls</code> on the post document is a <code>string[]</code>. Are all entries image URLs, or can they include PDF or video links? The <code>AttachmentCarousel</code> widget design depends on whether it must handle heterogeneous media types or can assume images-only for v1.</p>
+<p><strong>One-request-per-user-per-course limit.</strong> Should a user be prevented from creating multiple open requests for the same <code>courseId</code>? Enforcing this in the client is straightforward but bypassable; enforcing it in Firestore security rules requires a read-before-write that is awkward in rules. A Cloud Function trigger is the correct enforcement point, but adds operational surface. The team must decide whether to enforce the limit and at which layer.</p>
 </li>
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Tapping a <code>PostCard</code> in the feed navigates to <code>/posts/:postId</code> and renders the full post without a loading spinner (warm-start path).</li>
-<li>Cold-starting the app via a deep link to <code>/posts/:postId</code> renders a skeleton loader, then the full post once the Firestore snapshot arrives.</li>
-<li>The detail screen's visual layout matches the Figma design exactly — pixel-level fidelity is required for all components specified in the design.</li>
-<li><code>likesCount</code> displayed on the detail screen updates in real time when the Cloud Function increments it (no manual refresh required).</li>
-<li>The like button reflects the current user's like state on open and toggles correctly; optimistic local toggle is reconciled when the stream updates.</li>
-<li>Comments load from <code>posts/{postId}/comments</code> in ascending <code>createdAt</code> order and new comments from other users appear without refresh while the screen is open.</li>
-<li>Submitting a comment writes to the <code>comments</code> subcollection and appears in the list within one Firestore round-trip.</li>
-<li>The navbar (PROP-0005 shell) is absent from the Post Detail screen — the route is declared outside <code>StatefulShellRoute</code>.</li>
-<li>Android back button and iOS swipe-back return the user to the previous screen (feed or notification inbox) correctly.</li>
-<li>All new domain entities, repository interfaces, and use cases are pure Dart — zero Flutter or Firebase imports.</li>
-<li><code>flutter analyze</code> reports zero issues on all new code.</li>
-<li>Every new screen and widget has a corresponding widget test; the cold-start path has a unit test for <code>postDetailProvider</code> behavior when <code>extra</code> is null.</li>
+<li>An authenticated user can create a content request by specifying a course (required), a title (required, max 120 characters), and an optional description (max 500 characters). Unauthenticated and guest-mode users cannot access the create-request flow.</li>
+<li>The Requests screen at <code>/more/requests</code> displays open requests in reverse-chronological order. New requests submitted by any user appear in the list without a manual refresh (real-time Firestore listener).</li>
+<li>Each request is scoped to exactly one course. The course picker in the create-request form reuses the existing course selection widget from the post-creation flow.</li>
+<li>An authenticated user can fulfill a request by selecting one of their own existing posts from a bottom sheet. After fulfillment, the request card displays the linking post's title and the status badge changes from "Open" to "Fulfilled" without a page reload.</li>
+<li>A fulfilled request's <code>fulfilledByPostId</code> resolves to a navigable post — tapping it pushes <code>/posts/:postId</code> inside the MORE branch navigator.</li>
+<li>The Requests screen defaults to showing requests from the current user's enrolled courses. A toggle switches to all-courses view.</li>
+<li><code>flutter analyze</code> reports zero errors or warnings on all new code.</li>
+<li>The <code>ContentRequest</code> domain entity and <code>RequestRepository</code> interface contain zero Flutter or Firebase imports.</li>
+<li><code>RequestsScreen</code>, <code>CreateRequestScreen</code>, and <code>RequestCard</code> each have a widget test. <code>WatchRequests</code>, <code>CreateRequest</code>, and <code>FulfillRequest</code> use cases each have a unit test against a mock <code>RequestRepository</code>.</li>
+<li>Firestore security rules deny request creation to unauthenticated users and deny fulfillment writes where <code>fulfilledByUserId</code> does not match the authenticated user's UID.</li>
 </ul>
 
 

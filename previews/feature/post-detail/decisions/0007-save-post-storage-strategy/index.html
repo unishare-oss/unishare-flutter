@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Server-side tag filtering on the post feed uses a Firestore array-contains-any query on the existing tags field, with a composite index, rather than fan-out writes or client-side filtering.">
+        <meta name="description" content="The save-post feature stores saves in a local Hive box for guest users and in users/{uid}/savedPosts/{postId} for authenticated users, with an automatic merge when a guest signs in.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/decisions/0001-feed-filtering-via-array-contains-any/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/decisions/0007-save-post-storage-strategy/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../0007-file-preview-unified-route/">
       
       
-        <link rel="next" href="../0001-notification-delivery-mechanism/">
+        <link rel="next" href="../../stencils/adr/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0001: Use Firestore array-contains-any for feed tag filtering - Unishare Engineering Docs</title>
+        <title>0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0001-use-firestore-array-contains-any-for-feed-tag-filtering" class="md-skip">
+        <a href="#0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0001: Use Firestore array-contains-any for feed tag filtering
+              0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
             
           </span>
         </div>
@@ -481,37 +481,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0001: Use Firestore array-contains-any for feed tag filtering
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -527,81 +500,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options Considered
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reversal-cost" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reversal Cost
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -863,10 +761,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0007-save-post-storage-strategy/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -882,6 +807,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1897,7 +1897,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0001-feed-filtering-via-array-contains-any.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0007-save-post-storage-strategy.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1905,12 +1905,12 @@
   
 
 
-<h1 id="0001-use-firestore-array-contains-any-for-feed-tag-filtering">0001 — Use Firestore array-contains-any for feed tag filtering<a class="headerlink" href="#0001-use-firestore-array-contains-any-for-feed-tag-filtering" title="Permanent link">&para;</a></h1>
+<h1 id="0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login">0007 — Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login<a class="headerlink" href="#0007-save-post-feature-uses-hive-for-guest-storage-and-firestore-subcollection-for-authenticated-users-merged-on-login" title="Permanent link">&para;</a></h1>
 <p><strong>Status:</strong> PROPOSED<br />
-<strong>Author:</strong> Sudakarn<br />
-<strong>Date:</strong> 2026-05-04</p>
+<strong>Author:</strong> architect<br />
+<strong>Date:</strong> 2026-05-07</p>
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The Unishare post feed shows every post to every student regardless of relevance. Students need to filter the feed to posts matching one or more subject/department tags. The solution must work offline, stay within the Firebase free tier, require no schema migration, and use no external paid services.</p>
+<p>The save-post feature must serve two user contexts with incompatible storage requirements. Guest users have no server identity, so saves can only be stored locally; they must survive app restarts without requiring a Firebase account. Authenticated users expect saves to sync across devices and survive reinstalls, which requires Firestore. A single storage strategy cannot satisfy both contexts simultaneously, and the transition from guest to authenticated must not silently discard locally saved posts.</p>
 <h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1924,36 +1924,40 @@
 <tbody>
 <tr>
 <td>1</td>
-<td><code>array-contains-any</code> query on existing <code>tags</code> field with a composite index</td>
-<td>Zero migration; native Firestore operator; same read budget as today; single composite index</td>
-<td>30-value operator limit; cannot combine two <code>array-contains-any</code> clauses in one query</td>
+<td>Hive-only for all users</td>
+<td>Simplest; no Firestore writes; fully offline</td>
+<td>Authenticated users lose saves on device change or reinstall; no cross-device access</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Fan-out writes to per-tag sub-collections at post creation time</td>
-<td>Per-tag queries are simple ordered reads; no operator limit</td>
-<td>Multiplies write cost by tag count; complex multi-cursor pagination for OR queries; partial-failure risk on deletion fan-out</td>
+<td>Firestore-only; guests cannot save</td>
+<td>Single backend; no merge logic; full cross-device sync from day one</td>
+<td>Violates the stated guest requirement; forces sign-up before saving</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Flat <code>primaryTag</code> field with equality composite index</td>
-<td>Simple <code>==</code> + <code>orderBy</code> index; unambiguous per-tag query</td>
-<td>Requires schema backfill on all existing posts (explicitly ruled out); loses multi-tag richness</td>
+<td>Hive for guests + Firestore for authenticated, merge on login</td>
+<td>Satisfies all stated requirements; domain interface unified; no new dependencies</td>
+<td>Two repository implementations; merge logic adds complexity; provider must react to auth state transitions</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Anonymous Firebase Auth for guests, link account on sign-in</td>
+<td>Single Firestore backend for all users; no custom merge logic</td>
+<td>Rewrites the guest auth model; anonymous account expiry risk; auth-link failure edge cases; higher implementation effort</td>
 </tr>
 </tbody>
 </table>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen:</strong> Option 1 — <code>array-contains-any</code> query on the existing <code>tags</code> field.</p>
-<p>The <code>tags: string[]</code> field already exists on every post written since PROP-0004, so a Firestore composite index on <code>(tags array-contains, createdAt desc)</code> is all that is needed — no new collections, no write-path changes, no backfill. This fits the free tier because the index is free to create and the per-page read count is unchanged from the unfiltered feed. Options 2 and 3 both require either multiplicative write costs or a schema migration, making Option 1 the only approach that satisfies all three hard constraints (no migration, free tier, offline support) simultaneously.</p>
+<p><strong>Chosen:</strong> Option 3 — Hive for guest users, Firestore subcollection <code>users/{uid}/savedPosts/{postId}</code> for authenticated users, automatic merge on login.</p>
+<p><code>SavedPostRepository</code> is a unified domain interface implemented by two Data-layer classes: <code>SavedPostHiveRepositoryImpl</code> (active for guests) and <code>SavedPostFirestoreRepositoryImpl</code> (active for authenticated users). <code>saved_post_repository_provider</code> switches between them in response to <code>authStateProvider</code> changes. On the transition from unauthenticated to authenticated, <code>MergeGuestSaves</code> batch-writes all Hive entries into Firestore using <code>SetOptions(merge: true)</code> and then clears the Hive box. This approach is chosen because it satisfies all product requirements without introducing new dependencies or restructuring the existing guest-mode model, and the added complexity is confined entirely to the Data layer and one use case.</p>
 <h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
-<p><strong>Low.</strong> The composite index can be dropped from <code>firestore.indexes.json</code> and the <code>tagFilter</code> parameter removed from <code>PostRepository.getPostFeed</code>. No documents need to be rewritten. The only residual cost is updating the Riverpod provider and filter UI if the team adopts a different approach.</p>
+<p>Medium. Reverting to Hive-only (Option 1) removes the Firestore implementation, merge use case, and auth-reactive provider switch — roughly one day of work. Reverting to Firestore-only (Option 2) removes the Hive implementation and merge logic but requires a product decision to drop guest saves, which is a UX regression. Switching to anonymous auth (Option 4) requires restructuring <code>GuestMode</code> provider and <code>_RouterNotifier</code> — estimated at two to three days and affects the auth feature beyond the saved-posts scope.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <ul>
-<li>A composite Firestore index <code>(tags array-contains, createdAt desc)</code> must be declared in <code>firestore.indexes.json</code> and deployed before the filtered feed is released.</li>
-<li>The domain repository interface gains a <code>List&lt;String&gt; tagFilter</code> parameter; the data layer applies it conditionally — empty list → unfiltered query, non-empty list → <code>array-contains-any</code> query.</li>
-<li>Selecting more than 30 tags requires query batching in the data layer; the team must decide whether to cap the UI at a lower limit or handle batching transparently (tracked as an open question in PROP-0005).</li>
-<li>Posts predating PROP-0004 (with no <code>tags</code> field) are correctly excluded from filtered results. This is acceptable but must be communicated to users.</li>
-<li>A second independent tag-dimension filter (e.g., department AND subject type simultaneously via two <code>array-contains-any</code> clauses) is not possible in a single Firestore query; if that requirement emerges, this decision will need to be revisited.</li>
+<li><strong>Easier:</strong> Guest users save posts immediately without sign-up friction. Authenticated users get cross-device sync. The domain interface is unified, so the presentation layer never branches on storage backend.</li>
+<li><strong>Harder:</strong> Two <code>SavedPostRepository</code> implementations must be kept in sync with the interface. The merge-on-login path has failure-mode edge cases (partial merge on network drop, posts already saved on the authenticated account) that must be covered by unit tests. <code>saved_post_repository_provider</code> must be a <code>keepAlive</code> notifier that reacts correctly to auth state changes without causing read-after-dispose errors during the implementation switch.</li>
+<li><strong>Follow-up required:</strong> The Hive <code>typeId: 2</code> for <code>SavedPostHiveModelAdapter</code> must be reserved and documented alongside the existing <code>typeId: 1</code> for <code>PostDraftModelAdapter</code>. A future proposal may address refresh of denormalized post snapshots stored on save records if post-edit staleness becomes a reported issue.</li>
 </ul>
 
 

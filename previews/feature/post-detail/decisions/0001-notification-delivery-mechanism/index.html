@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Server-side tag filtering on the post feed uses a Firestore array-contains-any query on the existing tags field, with a composite index, rather than fan-out writes or client-side filtering.">
+        <meta name="description" content="Hybrid push architecture: Cloud Functions fan out FCM pushes and write canonical notification documents; the Flutter client reads those documents for the in-app center.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/decisions/0001-feed-filtering-via-array-contains-any/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/decisions/0001-notification-delivery-mechanism/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../0001-feed-filtering-via-array-contains-any/">
       
       
-        <link rel="next" href="../0001-notification-delivery-mechanism/">
+        <link rel="next" href="../0001-single-slot-theming/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0001: Use Firestore array-contains-any for feed tag filtering - Unishare Engineering Docs</title>
+        <title>0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0001-use-firestore-array-contains-any-for-feed-tag-filtering" class="md-skip">
+        <a href="#0001-use-fcm-cloud-functions-for-notification-delivery-with-firestore-subcollection-for-in-app-history" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0001: Use Firestore array-contains-any for feed tag filtering
+              0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
             
           </span>
         </div>
@@ -481,6 +481,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Use Firestore array-contains-any for feed tag filtering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -500,7 +528,7 @@
   <span class="md-ellipsis">
     
   
-    0001: Use Firestore array-contains-any for feed tag filtering
+    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
   
 
     
@@ -518,7 +546,7 @@
   <span class="md-ellipsis">
     
   
-    0001: Use Firestore array-contains-any for feed tag filtering
+    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
   
 
     
@@ -602,34 +630,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0001-notification-delivery-mechanism/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1897,7 +1897,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0001-feed-filtering-via-array-contains-any.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0001-notification-delivery-mechanism.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1905,12 +1905,12 @@
   
 
 
-<h1 id="0001-use-firestore-array-contains-any-for-feed-tag-filtering">0001 — Use Firestore array-contains-any for feed tag filtering<a class="headerlink" href="#0001-use-firestore-array-contains-any-for-feed-tag-filtering" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> PROPOSED<br />
-<strong>Author:</strong> Sudakarn<br />
-<strong>Date:</strong> 2026-05-04</p>
+<h1 id="0001-use-fcm-cloud-functions-for-notification-delivery-with-firestore-subcollection-for-in-app-history">0001 — Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history<a class="headerlink" href="#0001-use-fcm-cloud-functions-for-notification-delivery-with-firestore-subcollection-for-in-app-history" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> Nang Hayman Aye Mya<br />
+<strong>Date:</strong> 2026-05-14</p>
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The Unishare post feed shows every post to every student regardless of relevance. Students need to filter the feed to posts matching one or more subject/department tags. The solution must work offline, stay within the Firebase free tier, require no schema migration, and use no external paid services.</p>
+<p>Unishare students need to know when activity happens on their posts and requests (comments, upvotes, suggestions) without manually polling the app. Two requirements are in tension: true push delivery when the app is closed, and a persistent in-app notification history. A pure client-side or local-notification approach cannot satisfy both simultaneously within the existing Firebase stack.</p>
 <h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1924,37 +1924,43 @@
 <tbody>
 <tr>
 <td>1</td>
-<td><code>array-contains-any</code> query on existing <code>tags</code> field with a composite index</td>
-<td>Zero migration; native Firestore operator; same read budget as today; single composite index</td>
-<td>30-value operator limit; cannot combine two <code>array-contains-any</code> clauses in one query</td>
+<td>In-app only — Firestore stream + <code>flutter_local_notifications</code></td>
+<td>No Blaze required; easiest to build</td>
+<td>Cannot wake a terminated app; no true push; client-to-client Firestore writes create security rule complexity</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Fan-out writes to per-tag sub-collections at post creation time</td>
-<td>Per-tag queries are simple ordered reads; no operator limit</td>
-<td>Multiplies write cost by tag count; complex multi-cursor pagination for OR queries; partial-failure risk on deletion fan-out</td>
+<td>Client-side FCM dispatch (writing client sends push)</td>
+<td>No dedicated Cloud Function</td>
+<td>Exposes FCM server key on client (security violation); unreliable if writer goes offline; does not scale</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Flat <code>primaryTag</code> field with equality composite index</td>
-<td>Simple <code>==</code> + <code>orderBy</code> index; unambiguous per-tag query</td>
-<td>Requires schema backfill on all existing posts (explicitly ruled out); loses multi-tag richness</td>
+<td>FCM via Cloud Functions + Firestore <code>notifications</code> subcollection (hybrid)</td>
+<td>True push when app is closed; server-written notification history is tamper-free; security rules are simple</td>
+<td>Requires Blaze plan; adds Cloud Function operational surface</td>
 </tr>
 </tbody>
 </table>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen:</strong> Option 1 — <code>array-contains-any</code> query on the existing <code>tags</code> field.</p>
-<p>The <code>tags: string[]</code> field already exists on every post written since PROP-0004, so a Firestore composite index on <code>(tags array-contains, createdAt desc)</code> is all that is needed — no new collections, no write-path changes, no backfill. This fits the free tier because the index is free to create and the per-page read count is unchanged from the unfiltered feed. Options 2 and 3 both require either multiplicative write costs or a schema migration, making Option 1 the only approach that satisfies all three hard constraints (no migration, free tier, offline support) simultaneously.</p>
+<p><strong>Chosen:</strong> Option 3 — FCM via Cloud Functions + Firestore <code>users/{uid}/notifications</code> subcollection</p>
+<p>Firestore trigger Cloud Functions are the only mechanism in the Firebase stack that can reliably dispatch FCM pushes from a trusted server context without exposing credentials to clients; this satisfies the terminated-app push requirement. The same Cloud Function write that triggers FCM also creates the canonical notification document, so the in-app center reads an authoritative, client-tamper-free history without needing a separate write path. The assumption this relies on is that the team will upgrade to Blaze plan — expected costs are within the free invocation tier for a university-cohort audience.</p>
 <h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
-<p><strong>Low.</strong> The composite index can be dropped from <code>firestore.indexes.json</code> and the <code>tagFilter</code> parameter removed from <code>PostRepository.getPostFeed</code>. No documents need to be rewritten. The only residual cost is updating the Riverpod provider and filter UI if the team adopts a different approach.</p>
+<p><strong>Medium-to-High.</strong> Decommissioning Cloud Functions would require relocating fan-out logic to a different backend or accepting degraded client-side delivery. The <code>users/{uid}/notifications</code> Firestore schema and the <code>firebase_messaging</code> Flutter integration are reusable regardless of what writes notification documents, so those artifacts survive a function replacement. However, rewriting the trigger logic and re-testing delivery reliability represents meaningful rework.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<ul>
-<li>A composite Firestore index <code>(tags array-contains, createdAt desc)</code> must be declared in <code>firestore.indexes.json</code> and deployed before the filtered feed is released.</li>
-<li>The domain repository interface gains a <code>List&lt;String&gt; tagFilter</code> parameter; the data layer applies it conditionally — empty list → unfiltered query, non-empty list → <code>array-contains-any</code> query.</li>
-<li>Selecting more than 30 tags requires query batching in the data layer; the team must decide whether to cap the UI at a lower limit or handle batching transparently (tracked as an open question in PROP-0005).</li>
-<li>Posts predating PROP-0004 (with no <code>tags</code> field) are correctly excluded from filtered results. This is acceptable but must be communicated to users.</li>
-<li>A second independent tag-dimension filter (e.g., department AND subject type simultaneously via two <code>array-contains-any</code> clauses) is not possible in a single Firestore query; if that requirement emerges, this decision will need to be revisited.</li>
-</ul>
+<p><strong>Easier:</strong>
+- Security rules for notifications are simple read-only rules per UID — no client ever writes to another user's notification path.
+- FCM token rotation and stale-token cleanup can be handled centrally in the function, not across multiple clients.
+- Adding new notification types (e.g., suggestion accepted, request fulfilled) requires only a new function trigger and a new <code>type</code> enum value — the Flutter data layer does not change.</p>
+<p><strong>Harder:</strong>
+- Local development requires the Firebase Emulator Suite to test end-to-end notification flow.
+- The team must budget for Blaze plan billing (even if actual cost is near zero at current scale).
+- Function cold-start latency may add a few hundred milliseconds to first notification delivery after a period of inactivity.</p>
+<p><strong>Follow-up decisions required:</strong>
+- FCM token storage schema (<code>users/{uid}/fcmTokens</code> subcollection vs. array field on user document).
+- Read/unread state write ownership (client direct write vs. callable function).
+- Notification document TTL / retention policy (to prevent unbounded Firestore growth).
+- Web push VAPID configuration (deferred — not in scope for v1).</p>
 
 
 

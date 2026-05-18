@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Proposal for a dedicated post-detail screen that renders full post content, attachments, and social interactions, and serves as the deep-link target for push notifications and shared URLs.">
+        <meta name="description" content="Replace scattered inline preview logic with a unified FilePreviewScreen that delivers pinch-to-zoom images, full PDF scrolling, and video playback with controls.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-proposals/0006-post-detail-page/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-proposals/0007-file-preview-screen/">
       
       
-        <link rel="prev" href="../0005-main-navbar/">
+        <link rel="prev" href="../0006-post-detail-page/">
       
       
-        <link rel="next" href="../0007-file-preview-screen/">
+        <link rel="next" href="../0007-save-post/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0006: Post Detail Page - Unishare Engineering Docs</title>
+        <title>0007: File Preview Screen - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0006-post-detail-page" class="md-skip">
+        <a href="#prop-0007-file-preview-screen" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0006: Post Detail Page
+              0007: File Preview Screen
             
           </span>
         </div>
@@ -1159,6 +1159,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1178,7 +1206,7 @@
   <span class="md-ellipsis">
     
   
-    0006: Post Detail Page
+    0007: File Preview Screen
   
 
     
@@ -1196,7 +1224,7 @@
   <span class="md-ellipsis">
     
   
-    0006: Post Detail Page
+    0007: File Preview Screen
   
 
     
@@ -1241,78 +1269,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Proposed Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GoRouter route
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture layers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data loading strategy (hybrid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments subcollection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Like interaction
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Figma compliance
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1328,10 +1284,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+  <a href="#a-patch-in-place-fix-_onview-without-extracting-a-screen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Pass Post via GoRouter extra, no Firestore fetch
+        A — Patch in place: fix _onView without extracting a screen
       
     </span>
   </a>
@@ -1339,10 +1295,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+  <a href="#b-unified-filepreviewscreen-the-proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Always fetch post fresh from Firestore by ID
+        B — Unified FilePreviewScreen (the proposed solution)
       
     </span>
   </a>
@@ -1350,10 +1306,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+  <a href="#c-per-type-screens-imagepreviewscreen-pdfpreviewscreen-videopreviewscreen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+        C — Per-type screens: ImagePreviewScreen, PdfPreviewScreen, VideoPreviewScreen
       
     </span>
   </a>
@@ -1391,34 +1347,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0007-file-preview-screen/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0007: File Preview Screen
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1956,78 +1884,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Proposed Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GoRouter route
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture layers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data loading strategy (hybrid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments subcollection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Like interaction
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Figma compliance
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -2043,10 +1899,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+  <a href="#a-patch-in-place-fix-_onview-without-extracting-a-screen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Pass Post via GoRouter extra, no Firestore fetch
+        A — Patch in place: fix _onView without extracting a screen
       
     </span>
   </a>
@@ -2054,10 +1910,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+  <a href="#b-unified-filepreviewscreen-the-proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Always fetch post fresh from Firestore by ID
+        B — Unified FilePreviewScreen (the proposed solution)
       
     </span>
   </a>
@@ -2065,10 +1921,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+  <a href="#c-per-type-screens-imagepreviewscreen-pdfpreviewscreen-videopreviewscreen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+        C — Per-type screens: ImagePreviewScreen, PdfPreviewScreen, VideoPreviewScreen
       
     </span>
   </a>
@@ -2119,7 +1975,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0006-post-detail-page.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0007-file-preview-screen.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2127,219 +1983,69 @@
   
 
 
-<h1 id="prop-0006-post-detail-page">PROP-0006: Post Detail Page<a class="headerlink" href="#prop-0006-post-detail-page" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-06<br />
+<h1 id="prop-0007-file-preview-screen">PROP-0007: File Preview Screen<a class="headerlink" href="#prop-0007-file-preview-screen" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> Architect<br />
+<strong>Date:</strong> 2026-05-07<br />
 <strong>Spec:</strong> (pending approval)<br />
-<strong>Approved by:</strong></p>
+<strong>Approved by:</strong> Pyae Sone Shin Thant (2026-05-07)</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The feed screen (PROP-0003) renders a scrollable list of <code>PostCard</code> widgets, but tapping a card has no destination. The <code>PostCard</code> tap handler is a no-op. Students have no way to read a post's full body, view all attached media, see comments, or like a post — the primary interaction surface of the app is unreachable.</p>
-<p>Beyond the tap-from-feed path, the detail screen must function as a <strong>standalone deep-link target</strong>. Push notifications and shared URLs reference a post by its Firestore document ID (e.g., <code>https://unishare.app/posts/abc123</code>), and the screen must render correctly when the app is cold-started directly into that route — meaning it cannot depend on feed state being populated in memory.</p>
-<p>Two structural concerns compound the data-loading problem:</p>
-<ol>
-<li>The feed's <code>postFeedProvider</code> loads posts in pages. A post the user taps may be on page 1 of the current session or may have been obtained by a completely different session (deep link). Feed data is therefore unreliable as a sole source.</li>
-<li><code>likesCount</code> on the post document is updated by a Cloud Function, not by the client. A snapshot from the feed may be stale by the time the user opens the detail screen, particularly for popular posts. The detail screen should reflect live counts.</li>
-</ol>
-<p>The UI must reproduce the Figma design exactly (https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare?node-id=0-1). The Figma introduces components — comments list, like button affordance, attachment carousel — that may not exist yet in the shared design system and must be audited before implementation begins.</p>
+<p>Every authenticated student who opens the Post Detail screen to view an academic attachment hits one of three broken experiences today:</p>
+<ul>
+<li><strong>Images</strong> open in a plain <code>CachedNetworkImage</code> fullscreen scaffold with no gesture support. There is no pinch-to-zoom and no pan, making it impossible to read text in lecture slides or diagrams uploaded as images.</li>
+<li><strong>PDFs</strong> open via <code>PdfViewer.uri</code> from <code>pdfrx</code>, which renders but has never been tested. The viewer is assembled inline as an anonymous <code>MaterialPageRoute</code> builder — there is no shared logic, no error state, and no loading indicator beyond whatever <code>pdfrx</code> provides internally.</li>
+<li><strong>Videos</strong> show a <code>SnackBar</code> that reads "Video playback coming soon". Students who upload video recordings of lectures have no path to viewing them at all.</li>
+</ul>
+<p>The root technical cause is that preview routing is split across three separate <code>Navigator.push</code> blocks inside <code>_AttachmentRow._onView</code> in <code>attachment_list.dart</code>, plus a fourth duplicated <code>_openPdfViewer</code> method in <code>attachment_carousel.dart</code>. There is no shared abstraction. Fixing any behaviour requires touching multiple call sites, and the inconsistency will compound as more attachment types are added.</p>
+<p>The user impact is direct: the primary value proposition of Unishare is accessing peer-uploaded academic content. When that content cannot be viewed, the app fails its core job.</p>
 <hr />
 <h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>Use <strong>Option C — Hybrid: optimistic display from feed data, then stream live updates from Firestore</strong>.</p>
-<h3 id="gorouter-route">GoRouter route<a class="headerlink" href="#gorouter-route" title="Permanent link">&para;</a></h3>
-<p>Declare <code>/posts/:postId</code> as a top-level route <strong>outside</strong> the <code>StatefulShellRoute</code> shell (following the same pattern established in PROP-0005 for New Post steps and Post Details). This means the navbar is automatically absent, and the route is reachable from both the feed tap and a cold-start deep link with no conditional logic.</p>
-<div class="highlight"><pre><span></span><code>/posts/:postId   →   PostDetailScreen(postId: postId)
-</code></pre></div>
-<p>The <code>PostCard</code> tap handler calls <code>context.push('/posts/${post.id}', extra: post)</code>. GoRouter's <code>extra</code> carries the already-loaded <code>Post</code> entity for the warm-start case. For the cold-start case (deep link, push notification), <code>extra</code> is <code>null</code> — the screen falls back to fetching by ID.</p>
-<h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Layer</th>
-<th>Addition</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>domain/entities/Comment</code></td>
-<td>Pure Dart entity: <code>id</code>, <code>authorId</code>, <code>authorName</code>, <code>authorAvatar</code>, <code>body</code>, <code>createdAt</code></td>
-</tr>
-<tr>
-<td><code>domain/repositories/PostRepository</code></td>
-<td>New method: <code>Stream&lt;Post&gt; watchPost(String postId)</code></td>
-</tr>
-<tr>
-<td><code>domain/repositories/CommentRepository</code></td>
-<td>New interface: <code>Stream&lt;List&lt;Comment&gt;&gt; watchComments(String postId)</code>, <code>Future&lt;void&gt; addComment(String postId, String body)</code></td>
-</tr>
-<tr>
-<td><code>domain/usecases/WatchPost</code></td>
-<td>Wraps <code>PostRepository.watchPost</code></td>
-</tr>
-<tr>
-<td><code>domain/usecases/WatchComments</code></td>
-<td>Wraps <code>CommentRepository.watchComments</code></td>
-</tr>
-<tr>
-<td><code>domain/usecases/AddComment</code></td>
-<td>Validates body non-empty, delegates to <code>CommentRepository</code></td>
-</tr>
-<tr>
-<td><code>domain/usecases/ToggleLike</code></td>
-<td>Writes/removes <code>posts/{postId}/likes/{userId}</code>, server-side <code>likesCount</code> is managed by Cloud Function</td>
-</tr>
-<tr>
-<td><code>data/datasources/PostFirestoreDataSource</code></td>
-<td>Add <code>watchPost(String postId)</code> — <code>snapshots()</code> stream on <code>posts/{postId}</code></td>
-</tr>
-<tr>
-<td><code>data/datasources/CommentFirestoreDataSource</code></td>
-<td>Stream on <code>posts/{postId}/comments</code> ordered by <code>createdAt</code> ascending</td>
-</tr>
-<tr>
-<td><code>data/models/CommentDto</code></td>
-<td>Freezed + <code>fromJson</code>/<code>toJson</code></td>
-</tr>
-<tr>
-<td><code>data/repositories/CommentRepositoryImpl</code></td>
-<td>Maps <code>CommentDto</code> → <code>Comment</code> entity</td>
-</tr>
-<tr>
-<td><code>presentation/providers/postDetailProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;Post&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/providers/commentsProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;List&lt;Comment&gt;&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/screens/PostDetailScreen</code></td>
-<td>Full-screen layout per Figma</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/CommentTile</code></td>
-<td>Single comment row</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/AttachmentCarousel</code></td>
-<td>Horizontal media strip using <code>CachedNetworkImage</code></td>
-</tr>
-<tr>
-<td><code>presentation/widgets/LikeButton</code></td>
-<td>Stateless button; receives <code>isLiked</code> + <code>count</code> + <code>onTap</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="data-loading-strategy-hybrid">Data loading strategy (hybrid)<a class="headerlink" href="#data-loading-strategy-hybrid" title="Permanent link">&para;</a></h3>
-<p><code>postDetailProvider</code> is a family provider keyed on <code>postId</code>. On construction:</p>
-<ol>
-<li>If GoRouter <code>extra</code> carries a <code>Post</code> object, the provider emits it immediately as the initial value (zero-latency render).</li>
-<li>Simultaneously, <code>WatchPost(postId)</code> opens a Firestore <code>snapshots()</code> stream. When the first snapshot arrives it supersedes the seed value, and subsequent snapshots update live (e.g., <code>likesCount</code> incremented by Cloud Function).</li>
-</ol>
-<p>For the cold-start / deep-link case, there is no seed from <code>extra</code>, so the provider starts in <code>AsyncValue.loading()</code> and populates once the first Firestore snapshot arrives. The screen shows a skeleton loader during this window.</p>
-<p>This design satisfies both the warm-start (instant render from feed cache) and cold-start (fetch by ID) cases without branching logic in the presentation layer — the provider handles the difference internally.</p>
-<h3 id="comments-subcollection">Comments subcollection<a class="headerlink" href="#comments-subcollection" title="Permanent link">&para;</a></h3>
-<p>Comments are stored in <code>posts/{postId}/comments/{commentId}</code> — a new subcollection not present in PROP-0003's schema. The detail screen opens a real-time stream (<code>watchComments</code>) and appends new comments as they arrive. Adding a comment writes directly to this subcollection; <code>commentsCount</code> denormalization on the post document is deferred (see Open Questions).</p>
-<h3 id="like-interaction">Like interaction<a class="headerlink" href="#like-interaction" title="Permanent link">&para;</a></h3>
-<p><code>ToggleLike</code> checks <code>posts/{postId}/likes/{currentUserId}</code> for existence. If absent, it creates the document; if present, it deletes it. <code>likesCount</code> on the post is maintained exclusively by a Cloud Function — the client never writes it directly. The <code>LikeButton</code> widget performs an optimistic local toggle on tap and reconciles with the live stream when the Cloud Function updates <code>likesCount</code>.</p>
-<h3 id="figma-compliance">Figma compliance<a class="headerlink" href="#figma-compliance" title="Permanent link">&para;</a></h3>
-<p>The implementation must reproduce the Figma layout exactly. Before the flutter-engineer begins, the architect must audit the Figma node (<code>node-id=0-1</code>) and enumerate every UI component on the Post Detail screen. Any component not already present in <code>apps/mobile/lib/shared/widgets/</code> or the design system (<code>packages/</code>) must be listed in the tech spec as a new widget to build. No Material defaults should be used for components that Figma specifies with custom tokens.</p>
+<p>Introduce a single <code>FilePreviewScreen</code> widget under <code>features/post/presentation/screens/</code> that accepts a URL, a media type string (<code>"image"</code>, <code>"pdf"</code>, <code>"video"</code>), and an optional display filename. The screen is registered as a GoRouter route and receives its arguments via <code>extra</code>. All existing call sites (<code>_AttachmentRow._onView</code> and <code>_PdfSlot._openPdfViewer</code>) are replaced with a single <code>context.push('/preview', extra: previewArgs)</code> call.</p>
+<p>Inside <code>FilePreviewScreen</code>, a type-switch selects the appropriate viewer sub-widget:</p>
+<ul>
+<li><strong>Image viewer</strong> — <code>InteractiveViewer</code> wrapping <code>CachedNetworkImage</code>. <code>InteractiveViewer</code> is part of the Flutter SDK (no new dependency) and provides pinch-to-zoom and pan out of the box. A double-tap gesture resets zoom.</li>
+<li><strong>PDF viewer</strong> — <code>PdfViewer.uri</code> from <code>pdfrx</code> (already in <code>pubspec.yaml</code> at 2.3.0). The screen adds an explicit loading indicator and a retry-on-error state that the current inline usage omits.</li>
+<li><strong>Video viewer</strong> — <code>Chewie</code> widget backed by <code>video_player</code>. <code>video_player</code> is the Flutter-team-maintained package (free, open-source). <code>chewie</code> (free, open-source) adds a polished control layer: play/pause button, seek bar, mute toggle, and fullscreen toggle. Both packages must be added to <code>pubspec.yaml</code> — this must be flagged for team sign-off per the no-new-dependency rule (see Open Questions).</li>
+</ul>
+<p><code>AttachmentList</code> and <code>AttachmentCarousel</code> become thin callers: they each emit one <code>context.push</code> when the view action is triggered. No preview rendering logic remains in either widget.</p>
 <hr />
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-pass-post-via-gorouter-extra-no-firestore-fetch">A — Pass Post via GoRouter <code>extra</code>, no Firestore fetch<a class="headerlink" href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" title="Permanent link">&para;</a></h3>
-<p>The <code>PostCard</code> tap passes the full <code>Post</code> entity in GoRouter <code>extra</code>. The detail screen reads this object and renders it directly — no network call on open. The existing <code>postFeedProvider</code> is the sole data source.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Instant render with zero additional Firestore reads.</li>
-<li>No new domain use case or repository method needed for data loading.</li>
-<li>Simplest possible implementation.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Breaks on cold start. Deep links and push notifications provide only a <code>postId</code> in the URL path — <code>extra</code> is <code>null</code>. The screen has no fallback, so cold-start users see an error or blank screen.</li>
-<li>Data goes stale immediately. <code>likesCount</code>, <code>commentsCount</code> (if added), and <code>body</code> edits are frozen at the moment the feed loaded. A post with 200 likes shows the cached 150 from the feed snapshot.</li>
-<li>Comments are entirely unavailable — there is no <code>comments</code> field on the <code>Post</code> entity; comments live in a subcollection that the feed never fetches.</li>
-<li>Tightly couples the detail screen's data contract to the feed's load order, making the detail screen non-standalone.</li>
-</ul>
-<p><strong>Effort:</strong> XS (implementation) but produces a product that is broken for deep-link users.</p>
-<p><strong>Rejected:</strong> Cannot satisfy the deep-link requirement, which is a hard constraint. Data staleness is also unacceptable for social interaction counts.</p>
-<hr />
-<h3 id="b-always-fetch-post-fresh-from-firestore-by-id">B — Always fetch post fresh from Firestore by ID<a class="headerlink" href="#b-always-fetch-post-fresh-from-firestore-by-id" title="Permanent link">&para;</a></h3>
-<p>Ignore <code>extra</code> entirely. Every time the detail screen opens, <code>postDetailProvider</code> issues a one-shot <code>get()</code> call on <code>posts/{postId}</code>. Comments are fetched separately.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Uniform code path for warm-start and cold-start — no conditional branching on <code>extra</code>.</li>
-<li>Data is fresh at open time regardless of how the screen was reached.</li>
-<li>Simpler provider implementation than the hybrid stream approach.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Visible loading spinner on every tap from the feed, even when the post data is already in memory. On a slow connection this creates a noticeable and unnecessary delay — the user just tapped a card they could already read in the feed.</li>
-<li>A one-shot <code>get()</code> does not update after open. <code>likesCount</code> incremented by a Cloud Function while the user is reading the post is not reflected. The user must leave and re-enter to see updated counts.</li>
-<li>No real-time comments — new comments posted by others while the user reads do not appear without a manual refresh.</li>
-<li>Firestore billing: one extra document read per detail screen open, even for posts already in Firestore's local cache from the feed query.</li>
-</ul>
-<p><strong>Effort:</strong> S. Straightforward <code>FutureProvider.family</code> implementation.</p>
-<p><strong>Rejected:</strong> The unnecessary loading spinner on feed taps degrades UX for the most common path. Lack of live updates makes social interactions (likes, comments) feel unresponsive. The hybrid approach adds only marginal complexity for substantially better UX.</p>
-<hr />
-<h3 id="c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended">C — Hybrid: optimistic display from feed data, then stream live updates (recommended)<a class="headerlink" href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" title="Permanent link">&para;</a></h3>
-<p>Described fully in Proposed Solution above.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Instant render on feed tap (seed from <code>extra</code>) with no spinner for the common path.</li>
-<li>Correct cold-start behavior (falls back to Firestore fetch when <code>extra</code> is absent).</li>
-<li>Live updates via <code>snapshots()</code> stream keep <code>likesCount</code> and post content current throughout the session.</li>
-<li>Real-time comments via subcollection stream — new comments appear without refresh.</li>
-<li>Single provider interface for both cases — presentation layer is unaware of whether data came from <code>extra</code> or Firestore.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Slightly more complex provider implementation: the provider must accept an optional seed value and merge it with an incoming stream.</li>
-<li>Opens a persistent Firestore listener per active detail screen, which consumes one Firestore connection slot. This is negligible at current scale but worth monitoring.</li>
-<li><code>extra</code> carries a Dart object, which is not serializable by GoRouter's URL-based state restoration. If the OS kills the app and restores it to the detail screen, <code>extra</code> will be null and the screen will fall back to the Firestore fetch path — this is correct behavior but must be documented and tested.</li>
-</ul>
-<p><strong>Effort:</strong> M. The stream-seeding pattern in Riverpod requires a <code>StreamProvider.family</code> with a custom build step or an <code>AsyncNotifier</code> that combines seed + stream.</p>
-<p><strong>Recommended.</strong> The warm-start path is the dominant user flow (tapping from feed), so eliminating its loading spinner is the highest-impact UX win. The cold-start fallback is architecturally clean and correct. Real-time updates are table stakes for a social feature.</p>
+<h3 id="a-patch-in-place-fix-_onview-without-extracting-a-screen">A — Patch in place: fix <code>_onView</code> without extracting a screen<a class="headerlink" href="#a-patch-in-place-fix-_onview-without-extracting-a-screen" title="Permanent link">&para;</a></h3>
+<p>Each gap is fixed where it sits: add <code>InteractiveViewer</code> to the image block, add loading/error states to the PDF block, wire up <code>video_player</code> + <code>chewie</code> inside the video <code>else</code> branch. The two duplicated call sites (<code>attachment_list.dart</code> and <code>attachment_carousel.dart</code>) are patched independently.</p>
+<p><strong>Rejected:</strong> This is the lowest-friction path but leaves the structural problem intact. Two call sites means every future change (accessibility labels, analytics events, deep-link support) must be applied twice. The inline anonymous builders cannot be widget-tested without a full <code>PostDetailScreen</code> render tree. As more attachment types are added (e.g., audio, code files), the <code>if/else</code> chain grows without bound, and there is no natural boundary at which to stop. The short-term savings are real; the long-term cost is higher.</p>
+<h3 id="b-unified-filepreviewscreen-the-proposed-solution">B — Unified <code>FilePreviewScreen</code> (the proposed solution)<a class="headerlink" href="#b-unified-filepreviewscreen-the-proposed-solution" title="Permanent link">&para;</a></h3>
+<p>A named GoRouter route that centralises all preview logic. One widget to test, one call site to change, one place to add analytics or accessibility improvements.</p>
+<p>This is the recommended option — see Proposed Solution above.</p>
+<h3 id="c-per-type-screens-imagepreviewscreen-pdfpreviewscreen-videopreviewscreen">C — Per-type screens: <code>ImagePreviewScreen</code>, <code>PdfPreviewScreen</code>, <code>VideoPreviewScreen</code><a class="headerlink" href="#c-per-type-screens-imagepreviewscreen-pdfpreviewscreen-videopreviewscreen" title="Permanent link">&para;</a></h3>
+<p>Three separate screens, each registered as a GoRouter route. Callers choose the route based on type.</p>
+<p><strong>Rejected:</strong> This avoids a type-switch inside one screen by moving it into every caller. Each call site still branches on type to decide which route to push. There is no meaningful encapsulation gain over Option A. Three screens also triple the test surface for boilerplate concerns (AppBar title, back navigation, error states) that are identical across types. The only scenario where separate screens would be justified is if the routing arguments, lifecycle hooks, or state management differed substantially per type — they do not here.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>Figma audit: new components</strong> — The Figma design at <code>node-id=0-1</code> must be inspected before the tech spec is written. Which UI components on the Post Detail screen (comment input bar, attachment carousel, like button, author chip, tag list) are already in the shared design system versus net-new widgets? The tech spec cannot be written without this inventory.</p>
+<p><strong>Video offline support.</strong> ✅ <strong>RESOLVED — in scope.</strong> Pre-download via <code>dio</code> to <code>getTemporaryDirectory()</code> (OS-managed cache, same as <code>CachedNetworkImage</code>). Files are invisible to the user, evicted automatically when storage is low. Requires adding <code>path_provider</code> dependency. First view downloads and caches; subsequent views play from local file URI offline.</p>
 </li>
 <li>
-<p><strong>Comments subcollection schema</strong> — Does the <code>comments</code> subcollection need a <code>likesCount</code> or nested reply structure (threaded comments), or is it a flat list for v1? The answer changes the Firestore schema and domain entity design.</p>
+<p><strong>Multi-image swipe navigation.</strong> ✅ <strong>RESOLVED — deferred.</strong> Single-image fullscreen for this release. Swipe navigation requires <code>PageView</code> + passing the full image list and starting index, making <code>FilePreviewScreen</code> stateful. Will be addressed in a follow-up.</p>
 </li>
 <li>
-<p><strong><code>commentsCount</code> denormalization</strong> — Should the <code>posts/{postId}</code> document carry a <code>commentsCount</code> field (updated by Cloud Function) for display on <code>PostCard</code> in the feed, or is the count shown only on the detail screen (where the full subcollection is streamed)? If needed on the feed card, a Cloud Function trigger on <code>comments</code> subcollection writes must be added.</p>
+<p><strong>New dependency approval.</strong> ✅ <strong>RESOLVED — approved.</strong> <code>video_player</code>, <code>chewie</code>, and <code>path_provider</code> approved by Pyae Sone Shin Thant (2026-05-07).</p>
 </li>
 <li>
-<p><strong>Like state for the current user</strong> — The <code>LikeButton</code> must know whether the current user has already liked the post. The <code>posts/{postId}/likes/{userId}</code> document must be checked on screen open. Does this happen inside <code>WatchPost</code> (Firestore rules permitting a sub-read from the use case), or does <code>postDetailProvider</code> issue a separate existence check and pass <code>isLiked</code> as a field alongside the <code>Post</code>? A <code>userLikeStatusProvider</code> family keyed on <code>postId</code> may be the cleanest separation.</p>
-</li>
-<li>
-<p><strong>Deep-link URL scheme</strong> — Push notifications from FCM and shared URLs must resolve to <code>/posts/:postId</code>. Is the path <code>/posts/:postId</code> the canonical deep-link path, or does the backend/notification service use a different scheme (e.g., <code>/p/:postId</code>, <code>unishare://post/:postId</code>)? The GoRouter route must match exactly.</p>
-</li>
-<li>
-<p><strong>Comment input and auth gate</strong> — Can unauthenticated (guest-mode) users view the detail screen read-only, with the comment input and like button disabled? Or does the detail route require authentication (redirect to <code>/welcome</code> if no session)? The current <code>_RouterNotifier</code> must be extended or the detail screen must handle this locally.</p>
-</li>
-<li>
-<p><strong>Attachment rendering</strong> — <code>mediaUrls</code> on the post document is a <code>string[]</code>. Are all entries image URLs, or can they include PDF or video links? The <code>AttachmentCarousel</code> widget design depends on whether it must handle heterogeneous media types or can assume images-only for v1.</p>
+<p><strong>Unsupported types.</strong> ✅ <strong>RESOLVED — placeholder.</strong> Show "Preview not available" message. No <code>url_launcher</code> fallback.</p>
 </li>
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Tapping a <code>PostCard</code> in the feed navigates to <code>/posts/:postId</code> and renders the full post without a loading spinner (warm-start path).</li>
-<li>Cold-starting the app via a deep link to <code>/posts/:postId</code> renders a skeleton loader, then the full post once the Firestore snapshot arrives.</li>
-<li>The detail screen's visual layout matches the Figma design exactly — pixel-level fidelity is required for all components specified in the design.</li>
-<li><code>likesCount</code> displayed on the detail screen updates in real time when the Cloud Function increments it (no manual refresh required).</li>
-<li>The like button reflects the current user's like state on open and toggles correctly; optimistic local toggle is reconciled when the stream updates.</li>
-<li>Comments load from <code>posts/{postId}/comments</code> in ascending <code>createdAt</code> order and new comments from other users appear without refresh while the screen is open.</li>
-<li>Submitting a comment writes to the <code>comments</code> subcollection and appears in the list within one Firestore round-trip.</li>
-<li>The navbar (PROP-0005 shell) is absent from the Post Detail screen — the route is declared outside <code>StatefulShellRoute</code>.</li>
-<li>Android back button and iOS swipe-back return the user to the previous screen (feed or notification inbox) correctly.</li>
-<li>All new domain entities, repository interfaces, and use cases are pure Dart — zero Flutter or Firebase imports.</li>
-<li><code>flutter analyze</code> reports zero issues on all new code.</li>
-<li>Every new screen and widget has a corresponding widget test; the cold-start path has a unit test for <code>postDetailProvider</code> behavior when <code>extra</code> is null.</li>
+<li>Tapping the view action on an image attachment opens <code>FilePreviewScreen</code> with pinch-to-zoom and pan gesture support. Double-tap resets zoom to fit.</li>
+<li>Tapping the view action on a PDF attachment opens <code>FilePreviewScreen</code> showing the full document via <code>pdfrx</code>. A loading indicator is visible while the PDF fetches. An error state with a retry button is shown if loading fails.</li>
+<li>Tapping the view action on a video attachment opens <code>FilePreviewScreen</code> with a <code>chewie</code> player: play/pause, seek bar, mute toggle, and fullscreen toggle are all functional.</li>
+<li>All three preview types are reached via a single GoRouter route (<code>/preview</code>). No inline <code>MaterialPageRoute</code> builders remain in <code>attachment_list.dart</code> or <code>attachment_carousel.dart</code>.</li>
+<li><code>FilePreviewScreen</code> has a widget test for each media type branch (image, pdf, video, unknown/fallback).</li>
+<li>The screen is mobile-only (iOS + Android); web is explicitly out of scope.</li>
+<li>No new dependencies are added without team sign-off recorded in the decision log.</li>
 </ul>
 
 
