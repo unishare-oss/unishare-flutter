@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/auth_exception.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
-import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/universities_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/google_sign_in_button.dart';
@@ -624,7 +623,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           SizedBox(
             height: 42,
             child: OutlinedButton(
-              onPressed: () => ref.read(guestModeProvider.notifier).enter(),
+              onPressed: () =>
+                  ref.read(authRepositoryProvider).signInAnonymously(),
               style: OutlinedButton.styleFrom(
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(

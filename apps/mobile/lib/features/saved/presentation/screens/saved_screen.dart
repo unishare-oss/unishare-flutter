@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_posts_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/saved_post_card.dart';
@@ -67,10 +68,7 @@ class _GuestBanner extends ConsumerWidget {
             ),
           ),
           TextButton(
-            onPressed: () {
-              ref.read(guestModeProvider.notifier).exit();
-              context.go('/welcome');
-            },
+            onPressed: () => ref.read(authRepositoryProvider).signOut(),
             child: const Text('→ Sign in to sync'),
           ),
         ],

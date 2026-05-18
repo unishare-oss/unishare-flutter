@@ -11,6 +11,9 @@ class _FakeAuthRepository implements AuthRepository {
   Stream<AppUser?> get authStateChanges => const Stream.empty();
 
   @override
+  Future<AppUser> signInAnonymously() => throw UnimplementedError();
+
+  @override
   Future<AppUser> signInWithGoogle() async {
     called = true;
     return const AppUser(

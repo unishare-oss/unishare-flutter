@@ -4,6 +4,8 @@ abstract interface class AuthRepository {
   /// Emits null when signed out, AppUser when signed in.
   Stream<AppUser?> get authStateChanges;
 
+  Future<AppUser> signInAnonymously();
+
   Future<AppUser> signInWithGoogle();
 
   Future<AppUser> signInWithEmail({

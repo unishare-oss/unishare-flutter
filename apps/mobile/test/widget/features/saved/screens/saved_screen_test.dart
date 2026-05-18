@@ -12,20 +12,6 @@ import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
 // ---------------------------------------------------------------------------
-// GuestMode fakes
-// ---------------------------------------------------------------------------
-
-class _GuestModeOff extends GuestMode {
-  @override
-  bool build() => false;
-}
-
-class _GuestModeOn extends GuestMode {
-  @override
-  bool build() => true;
-}
-
-// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
@@ -61,7 +47,7 @@ void main() {
       ProviderScope(
         overrides: [
           savedPostsProvider.overrideWith((_) => Stream.value([])),
-          guestModeProvider.overrideWith(_GuestModeOff.new),
+          guestModeProvider.overrideWithValue(false),
         ],
         child: MaterialApp.router(
           theme: AppTheme.build(AppThemes.unishare),
@@ -78,7 +64,7 @@ void main() {
       ProviderScope(
         overrides: [
           savedPostsProvider.overrideWith((_) => Stream.value([])),
-          guestModeProvider.overrideWith(_GuestModeOff.new),
+          guestModeProvider.overrideWithValue(false),
         ],
         child: MaterialApp.router(
           theme: AppTheme.build(AppThemes.unishare),
@@ -97,7 +83,7 @@ void main() {
           savedPostsProvider.overrideWith(
             (_) => Stream.value([_fakePost('1'), _fakePost('2')]),
           ),
-          guestModeProvider.overrideWith(_GuestModeOff.new),
+          guestModeProvider.overrideWithValue(false),
         ],
         child: MaterialApp.router(
           theme: AppTheme.build(AppThemes.unishare),
@@ -117,7 +103,7 @@ void main() {
       ProviderScope(
         overrides: [
           savedPostsProvider.overrideWith((_) => Stream.value([])),
-          guestModeProvider.overrideWith(_GuestModeOn.new),
+          guestModeProvider.overrideWithValue(true),
         ],
         child: MaterialApp.router(
           theme: AppTheme.build(AppThemes.unishare),
@@ -145,7 +131,7 @@ void main() {
               StackTrace.empty,
             ),
           ),
-          guestModeProvider.overrideWith(_GuestModeOff.new),
+          guestModeProvider.overrideWithValue(false),
         ],
         child: MaterialApp.router(
           theme: AppTheme.build(AppThemes.unishare),

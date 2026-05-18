@@ -15,6 +15,9 @@ class _FakeAuthRepository implements AuthRepository {
   @override
   Stream<AppUser?> get authStateChanges => Stream.value(null);
   @override
+  Future<AppUser> signInAnonymously() => throw UnimplementedError();
+
+  @override
   Future<AppUser> signInWithGoogle() => throw UnimplementedError();
   @override
   Future<AppUser> signInWithEmail({

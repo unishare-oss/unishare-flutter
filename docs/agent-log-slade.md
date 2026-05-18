@@ -421,3 +421,28 @@ Files:
   ~ apps/mobile/lib/shared/widgets/guest_nav_bar.dart
 Summary:  9 files changed, 149 insertions(+), 31 deletions(-)
 
+  [17:04] Edit: apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  [17:04] Edit: apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+  [17:04] Edit: apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+  [17:06] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firebase_auth_datasource.dart
+  ~ apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/auth/domain/repositories/auth_repository.dart
+  ~ apps/mobile/lib/features/auth/presentation/providers/guest_mode_provider.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  ~ apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  ~ apps/mobile/test/unit/auth/fakes/fake_firebase_auth_datasource.dart
+  ~ apps/mobile/test/unit/auth/sign_in_with_email_test.dart
+  ~ apps/mobile/test/unit/auth/sign_in_with_google_test.dart
+  ~ apps/mobile/test/unit/auth/sign_up_with_email_test.dart
+  ~ apps/mobile/test/unit/auth/update_academic_profile_test.dart
+  ~ apps/mobile/test/widget/auth/welcome_screen_test.dart
+  ~ apps/mobile/test/widget/core/router/shell_router_test.dart
+  ~ apps/mobile/test/widget/features/feed/feed_filter_drawer_test.dart
+  ~ apps/mobile/test/widget/features/saved/screens/saved_screen_test.dart
+  ~ apps/mobile/test/widget/feed/feed_screen_test.dart
+Summary:  18 files changed, 103 insertions(+), 59 deletions(-)
+

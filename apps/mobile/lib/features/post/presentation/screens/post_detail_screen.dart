@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
@@ -569,8 +570,7 @@ class _PostHeader extends ConsumerWidget {
             TextButton(
               onPressed: () {
                 ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                ref.read(guestModeProvider.notifier).exit();
-                context.go('/welcome');
+                ref.read(authRepositoryProvider).signOut();
               },
               style: TextButton.styleFrom(
                 foregroundColor: ac.amber,
