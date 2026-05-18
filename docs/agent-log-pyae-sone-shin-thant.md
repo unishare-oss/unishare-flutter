@@ -1289,3 +1289,8 @@ Member: Pyae Sone Shin Thant
 Agent: architect
 Task: Brainstorm and write tech proposal + spec for achievements system (PROP-0010 / SPEC-0010)
 Prompt: I'd like to design an achievements system for the project — for example, awarding points for milestones such as a user's first post. What approach should we take for rewards in this context?
+
+Outcome: Brainstormed and produced PROP-0010, SPEC-0010, ADR-0010, and the 7-phase implementation plan for the v1 achievements system. Committed on feature/achievements branch.
+Decisions: Achievement-only XP (points only from badge unlocks, never per-action) selected over Stack-Overflow-style point-per-action XP to eliminate grinding incentives. Event-driven Cloud Function evaluator chosen over scheduled batch for real-time earn moments. Phosphor (thin) icon family for badge glyphs, with three custom BadgeFrame variants (onboarding=filled amber, progression=outlined amber on amber-subtle, prestige=dark surface with amber accent bar). v1 ships 20 badges, 4 surfaces (profile section, /achievements screen, modal/toast earn moments, notification entries); leaderboards + ajarn recognition deferred to v1.1. Firestore rules require a `gamification.earnedBadgesCache` mirror field maintained by the evaluator (rules can't list a subcollection in O(1)).
+Handoff: Plan is at docs/superpowers/plans/2026-05-18-achievements.md. Three open questions to confirm before phase 1: Phosphor licence + asset size; 03:00 ICT sweep window vs existing schedules; whether existing notification schema accommodates `type: 'badge_unlock'`.
+Review: PENDING
