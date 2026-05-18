@@ -16,9 +16,15 @@ import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class PostCard extends ConsumerWidget {
-  const PostCard({super.key, required this.post});
+  const PostCard({super.key, required this.post, this.suppressAuthorTapForUid});
 
   final Post post;
+
+  /// When set, suppresses the tappable author-name link if `post.authorId`
+  /// matches. Used by the public profile screen so visiting Alice's page
+  /// and tapping a post by Alice doesn't stack another `/profile/<Alice>`
+  /// on top.
+  final String? suppressAuthorTapForUid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -186,7 +192,7 @@ class PostCard extends ConsumerWidget {
         // user's public profile. Wrapped in a GestureDetector (not
         // InkWell) because the whole card already absorbs taps via the
         // top-level GestureDetector; we just intercept this region.
-        if (isAnonymous)
+        if (isAnonymous || suppressAuthorTapForUid == post.authorId)
           Text(
             displayName,
             style: Theme.of(

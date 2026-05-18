@@ -355,7 +355,12 @@ class _PublicPostsSection extends ConsumerWidget {
               itemCount: visible.length,
               separatorBuilder: (_, _) =>
                   Divider(height: 1, color: theme.dividerColor),
-              itemBuilder: (_, i) => PostCard(post: visible[i]),
+              itemBuilder: (_, i) => PostCard(
+                post: visible[i],
+                // We're already on this user's profile — re-tapping their
+                // name would just push another /profile/:uid on the stack.
+                suppressAuthorTapForUid: uid,
+              ),
             );
           },
         ),
