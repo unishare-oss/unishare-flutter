@@ -7,8 +7,8 @@ class ReactionRepositoryImpl implements ReactionRepository {
   ReactionRepositoryImpl({
     required FirebaseFirestore firestore,
     required FirebaseAuth auth,
-  })  : _firestore = firestore,
-        _auth = auth;
+  }) : _firestore = firestore,
+       _auth = auth;
 
   final FirebaseFirestore _firestore;
   final FirebaseAuth _auth;
@@ -33,21 +33,15 @@ class ReactionRepositoryImpl implements ReactionRepository {
 
       if (existing) {
         // Remove the reaction field from the user doc.
-        tx.set(
-          reactionRef,
-          {reactionType: FieldValue.delete()},
-          SetOptions(merge: true),
-        );
+        tx.set(reactionRef, {
+          reactionType: FieldValue.delete(),
+        }, SetOptions(merge: true));
         tx.update(postRef, {
           'reactionCounts.$reactionType': FieldValue.increment(-1),
         });
       } else {
         // Add the reaction field to the user doc.
-        tx.set(
-          reactionRef,
-          {reactionType: true},
-          SetOptions(merge: true),
-        );
+        tx.set(reactionRef, {reactionType: true}, SetOptions(merge: true));
         tx.update(postRef, {
           'reactionCounts.$reactionType': FieldValue.increment(1),
         });
@@ -67,12 +61,12 @@ class ReactionRepositoryImpl implements ReactionRepository {
         .doc(uid)
         .snapshots()
         .map((snap) {
-      if (!snap.exists) return const <String>{};
-      final data = snap.data() ?? {};
-      return data.entries
-          .where((e) => e.value == true)
-          .map((e) => e.key)
-          .toSet();
-    });
+          if (!snap.exists) return const <String>{};
+          final data = snap.data() ?? {};
+          return data.entries
+              .where((e) => e.value == true)
+              .map((e) => e.key)
+              .toSet();
+        });
   }
 }

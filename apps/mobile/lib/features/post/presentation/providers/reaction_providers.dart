@@ -12,8 +12,8 @@ final reactionRepositoryProvider = Provider<ReactionRepository>(
   ),
 );
 
-final userReactionsProvider =
-    StreamProvider.autoDispose.family<Set<String>, String>(
-  (ref, postId) =>
-      ref.watch(reactionRepositoryProvider).watchUserReactions(postId),
-);
+final userReactionsProvider = StreamProvider.autoDispose
+    .family<Set<String>, String>(
+      (ref, postId) =>
+          ref.watch(reactionRepositoryProvider).watchUserReactions(postId),
+    );

@@ -1032,8 +1032,8 @@ class _ReactionBar extends ConsumerWidget {
       }
     }
 
-    final total = likeCount +
-        reactionCounts.values.fold(0, (sum, c) => sum + c);
+    final total =
+        likeCount + reactionCounts.values.fold(0, (sum, c) => sum + c);
 
     return Row(
       children: [
