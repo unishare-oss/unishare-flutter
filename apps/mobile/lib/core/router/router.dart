@@ -61,7 +61,8 @@ enum DrawerDestination {
   profile('Profile', Icons.person_rounded),
   saved('Saved', Icons.bookmark_rounded),
   departments('Depts', Icons.apartment_rounded),
-  requests('Requests', Icons.inbox_rounded);
+  requests('Requests', Icons.inbox_rounded),
+  achievements('Achievements', Icons.workspace_premium_rounded);
 
   const DrawerDestination(this.label, this.icon);
 
@@ -77,6 +78,9 @@ enum DrawerDestination {
       return departments;
     }
     if (path == '/requests' || path.startsWith('/requests/')) return requests;
+    if (path == '/achievements' || path.startsWith('/achievements/')) {
+      return achievements;
+    }
     return null;
   }
 }
@@ -207,11 +211,6 @@ GoRouter router(Ref ref) {
           );
         },
       ),
-      GoRoute(
-        path: '/achievements/:uid',
-        builder: (context, state) =>
-            AchievementsScreen(uid: state.pathParameters['uid']!),
-      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => Consumer(
           builder: (context, ref, _) {
@@ -297,6 +296,11 @@ GoRouter router(Ref ref) {
                   final requestId = state.pathParameters['requestId']!;
                   return RequestDetailScreen(requestId: requestId);
                 },
+              ),
+              GoRoute(
+                path: '/achievements/:uid',
+                builder: (context, state) =>
+                    AchievementsScreen(uid: state.pathParameters['uid']!),
               ),
             ],
           ),
