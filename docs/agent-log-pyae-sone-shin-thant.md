@@ -1282,3 +1282,10 @@ Files:
 Summary:  9 files changed, 563 insertions(+), 187 deletions(-)
 
   [11:22] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+
+---
+Date: 2026-05-18 10:35
+Member: Pyae Sone Shin Thant
+Agent: architect
+Task: Brainstorm and write tech proposal + spec for achievements system (PROP-0010 / SPEC-0010)
+Prompt: I'd like to design an achievements system for the project — for example, awarding points for milestones such as a user's first post. What approach should we take for rewards in this context?
