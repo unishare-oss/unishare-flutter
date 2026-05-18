@@ -19,11 +19,7 @@ enum BurstIntensity { soft, confetti }
 /// and `cs.onSurface` so the effect blends into both light and dark themes
 /// without separate tuning.
 class BadgeBurst extends StatefulWidget {
-  const BadgeBurst({
-    super.key,
-    required this.intensity,
-    required this.child,
-  });
+  const BadgeBurst({super.key, required this.intensity, required this.child});
 
   final BurstIntensity intensity;
   final Widget child;
@@ -197,11 +193,7 @@ class _BurstPainter extends CustomPainter {
           canvas.translate(pos.dx, pos.dy);
           canvas.rotate(p.rotation + p.rotationVelocity * t);
           canvas.drawRect(
-            Rect.fromCenter(
-              center: Offset.zero,
-              width: p.size,
-              height: p.size,
-            ),
+            Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size),
             paint,
           );
           canvas.restore();

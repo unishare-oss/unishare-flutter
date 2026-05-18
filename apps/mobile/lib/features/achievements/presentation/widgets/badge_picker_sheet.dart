@@ -99,8 +99,9 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
                     type: MaterialType.transparency,
                     child: InkWell(
                       onTap: () => _toggle(b.id),
-                      borderRadius:
-                          BorderRadius.circular(badgeFrameRadius(pickerSize)),
+                      borderRadius: BorderRadius.circular(
+                        badgeFrameRadius(pickerSize),
+                      ),
                       child: Opacity(
                         opacity: isSelected ? 1.0 : 0.4,
                         child: BadgeIcon(

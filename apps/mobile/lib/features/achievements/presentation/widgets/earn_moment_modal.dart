@@ -33,10 +33,9 @@ class EarnMomentModal extends StatelessWidget {
                 // get the heavier confetti burst. Progression doesn't reach
                 // this modal — it uses the toast variant instead — so we
                 // default to soft for safety.
-                intensity:
-                    (badge.tier == BadgeTier.prestige || levelUp != null)
-                        ? BurstIntensity.confetti
-                        : BurstIntensity.soft,
+                intensity: (badge.tier == BadgeTier.prestige || levelUp != null)
+                    ? BurstIntensity.confetti
+                    : BurstIntensity.soft,
                 child: BadgeIcon(badge: badge, locked: false, size: 96),
               ),
             ),

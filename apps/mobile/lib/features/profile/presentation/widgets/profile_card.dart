@@ -323,12 +323,11 @@ class _NameRowState extends ConsumerState<_NameRow> {
     final uid = widget.user.id;
     final earned =
         ref.read(earnedBadgesProvider(uid)).asData?.value ?? const [];
-    final catalog =
-        ref.read(badgeCatalogProvider).asData?.value ?? const [];
+    final catalog = ref.read(badgeCatalogProvider).asData?.value ?? const [];
     if (earned.isEmpty || catalog.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No earned badges yet.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No earned badges yet.')));
       return;
     }
     // earnedBadges stream is ordered earnedAt desc — first entry is newest.
@@ -343,10 +342,7 @@ class _NameRowState extends ConsumerState<_NameRow> {
         points: latest.pointsAwarded,
         tier: BadgeTier.progression,
         category: BadgeCategory.content,
-        condition: const BadgeCondition(
-          statKey: 'postsCreated',
-          threshold: 0,
-        ),
+        condition: const BadgeCondition(statKey: 'postsCreated', threshold: 0),
         order: 0,
         active: true,
       ),
@@ -354,10 +350,8 @@ class _NameRowState extends ConsumerState<_NameRow> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => EarnMomentModal(
-        badge: badge,
-        points: latest.pointsAwarded,
-      ),
+      builder: (_) =>
+          EarnMomentModal(badge: badge, points: latest.pointsAwarded),
     );
   }
 
@@ -397,8 +391,10 @@ class _NameRowState extends ConsumerState<_NameRow> {
         ],
         Consumer(
           builder: (context, ref, _) {
-            final g =
-                ref.watch(userGamificationProvider(widget.user.id)).asData?.value;
+            final g = ref
+                .watch(userGamificationProvider(widget.user.id))
+                .asData
+                ?.value;
             return LevelChip(level: g?.level ?? 1);
           },
         ),

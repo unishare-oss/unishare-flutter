@@ -99,7 +99,9 @@ class _BadgeGrid extends StatelessWidget {
               Material(
                 type: MaterialType.transparency,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(badgeFrameRadius(iconSize)),
+                  borderRadius: BorderRadius.circular(
+                    badgeFrameRadius(iconSize),
+                  ),
                   onTap: () => showModalBottomSheet<void>(
                     context: context,
                     builder: (_) => BadgeDetailSheet(badge: b, earned: earned),
