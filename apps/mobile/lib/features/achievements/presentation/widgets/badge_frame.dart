@@ -75,7 +75,7 @@ class BadgeFrame extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          if (accent != null) accent,
+          ?accent,
           IconTheme.merge(
             data: IconThemeData(color: glyphColor, size: size * (24 / 48)),
             child: child,
