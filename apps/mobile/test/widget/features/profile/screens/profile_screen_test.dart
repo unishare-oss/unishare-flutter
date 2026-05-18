@@ -33,6 +33,7 @@ class _FakeAuthRepository implements AuthRepository {
   String? lastDepartmentId;
   int? lastEnrollmentYear;
   int saveCallCount = 0;
+  bool throwOnSignOut = false;
   Exception? throwOnUpdate;
 
   @override
@@ -56,7 +57,9 @@ class _FakeAuthRepository implements AuthRepository {
   }) => throw UnimplementedError();
 
   @override
-  Future<void> signOut() async {}
+  Future<void> signOut() async {
+    if (throwOnSignOut) throw Exception('network error');
+  }
 
   @override
   Future<AppUser?> getCurrentUser() async => null;
@@ -228,6 +231,18 @@ void main() {
       expect(auth.lastUid, 'u1');
       expect(auth.lastName, 'Alex Tester');
       expect(find.text('Profile saved'), findsOneWidget);
+    });
+
+    testWidgets('sign-out failure shows error snackbar', (tester) async {
+      await _useTallSurface(tester);
+      final auth = _FakeAuthRepository()..throwOnSignOut = true;
+      await tester.pumpWidget(_buildSubject(authRepository: auth));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Sign out'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sign out failed. Please try again.'), findsOneWidget);
     });
   });
 }
