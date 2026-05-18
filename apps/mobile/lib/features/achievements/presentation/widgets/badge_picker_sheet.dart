@@ -6,6 +6,7 @@ import 'package:unishare_mobile/features/achievements/domain/usecases/set_displa
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/user_gamification_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_frame.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_icon.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
@@ -93,11 +94,21 @@ class _BadgePickerSheetState extends ConsumerState<BadgePickerSheet> {
                 runSpacing: 12,
                 children: available.map((AchievementBadge b) {
                   final isSelected = _selected.contains(b.id);
-                  return InkWell(
-                    onTap: () => _toggle(b.id),
-                    child: Opacity(
-                      opacity: isSelected ? 1.0 : 0.4,
-                      child: BadgeIcon(badge: b, locked: false, size: 56),
+                  const pickerSize = 56.0;
+                  return Material(
+                    type: MaterialType.transparency,
+                    child: InkWell(
+                      onTap: () => _toggle(b.id),
+                      borderRadius:
+                          BorderRadius.circular(badgeFrameRadius(pickerSize)),
+                      child: Opacity(
+                        opacity: isSelected ? 1.0 : 0.4,
+                        child: BadgeIcon(
+                          badge: b,
+                          locked: false,
+                          size: pickerSize,
+                        ),
+                      ),
                     ),
                   );
                 }).toList(),

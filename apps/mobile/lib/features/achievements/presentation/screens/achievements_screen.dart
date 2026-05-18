@@ -6,6 +6,7 @@ import 'package:unishare_mobile/features/achievements/domain/entities/earned_bad
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_detail_sheet.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_frame.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_icon.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
@@ -88,25 +89,37 @@ class _BadgeGrid extends StatelessWidget {
         delegate: SliverChildBuilderDelegate((context, i) {
           final b = badges[i];
           final earned = earnedMap[b.id];
-          return InkWell(
-            onTap: () => showModalBottomSheet<void>(
-              context: context,
-              builder: (_) => BadgeDetailSheet(badge: b, earned: earned),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                BadgeIcon(badge: b, locked: earned == null, size: 72),
-                const SizedBox(height: 6),
-                Text(
-                  b.name,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.labelSmall,
+          const iconSize = 72.0;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Tap ripple is confined to the badge frame via a matching
+              // borderRadius; without this the splash would bleed across
+              // the whole column including the label below.
+              Material(
+                type: MaterialType.transparency,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(badgeFrameRadius(iconSize)),
+                  onTap: () => showModalBottomSheet<void>(
+                    context: context,
+                    builder: (_) => BadgeDetailSheet(badge: b, earned: earned),
+                  ),
+                  child: BadgeIcon(
+                    badge: b,
+                    locked: earned == null,
+                    size: iconSize,
+                  ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                b.name,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+            ],
           );
         }, childCount: badges.length),
       ),

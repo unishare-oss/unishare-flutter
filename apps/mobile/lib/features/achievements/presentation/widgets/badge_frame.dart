@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
+/// Corner radius for a badge frame of the given pixel [size]. Exposed so
+/// callers can pass a matching [BorderRadius] to `InkWell.borderRadius`
+/// and keep tap ripples clipped to the frame.
+double badgeFrameRadius(double size) => size * (8 / 48);
+
 /// Tier-aware frame for an achievement badge. Pure decoration — composed
 /// with a glyph in [BadgeIcon]. All colors come from the app theme via
 /// [AppColors] / [ColorScheme].
@@ -27,7 +32,10 @@ class BadgeFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ac = Theme.of(context).extension<AppColors>()!;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final ac = theme.extension<AppColors>()!;
+    final isDark = theme.brightness == Brightness.dark;
 
     final Color fill;
     final Color glyphColor;
@@ -40,8 +48,12 @@ class BadgeFrame extends StatelessWidget {
     } else {
       switch (tier) {
         case BadgeTier.onboarding:
+          // `cs.onPrimary` is the theme-provided contrast for the primary
+          // (amber) color — gives clean white-on-amber across both
+          // brightnesses, instead of muddy near-black-on-amber that some
+          // light themes produced via `ac.surfaceDark`.
           fill = ac.amber;
-          glyphColor = ac.surfaceDark;
+          glyphColor = cs.onPrimary;
           break;
         case BadgeTier.progression:
           fill = ac.amberSubtle;
@@ -49,7 +61,12 @@ class BadgeFrame extends StatelessWidget {
           border = Border.all(color: ac.amber, width: 1.5);
           break;
         case BadgeTier.prestige:
-          fill = ac.surfaceDark;
+          // `ac.surfaceDark` is reliably dark only in dark themes; some
+          // light themes define it as a mid-gray which makes the prestige
+          // medal look washed-out. Fall back to `cs.onSurface` in light
+          // themes — that's the high-contrast foreground (near-black) and
+          // gives a striking medal look.
+          fill = isDark ? ac.surfaceDark : cs.onSurface;
           glyphColor = ac.amber;
           accent = Positioned(
             top: 0,
@@ -61,7 +78,7 @@ class BadgeFrame extends StatelessWidget {
       }
     }
 
-    final radius = size * (8 / 48);
+    final radius = badgeFrameRadius(size);
     return Container(
       key: const Key('badge_frame_container'),
       width: size,
