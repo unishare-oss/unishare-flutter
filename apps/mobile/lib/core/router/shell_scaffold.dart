@@ -35,8 +35,7 @@ class ShellScaffold extends ConsumerWidget {
     final crossUserMatch = RegExp(
       r'^/(profile|achievements)/([^/]+)$',
     ).firstMatch(currentPath);
-    final isCrossUser =
-        crossUserMatch != null && crossUserMatch.group(2) != me;
+    final isCrossUser = crossUserMatch != null && crossUserMatch.group(2) != me;
     if (isCrossUser) {
       currentSub = DrawerDestination.publicProfile;
     }
@@ -45,7 +44,8 @@ class ShellScaffold extends ConsumerWidget {
     // Feed), `navigationShell.currentIndex` stays at the original branch.
     // Override the visual pill to point at the 4th slot so users see "I'm
     // on a sub-destination" without breaking back-stack semantics.
-    final displayedIndex = (currentSub != null && activeIndex != NavTab.more.index)
+    final displayedIndex =
+        (currentSub != null && activeIndex != NavTab.more.index)
         ? NavTab.more.index
         : null;
     final unreadCount = ref.watch(unreadNotificationCountProvider);
@@ -80,6 +80,12 @@ class ShellScaffold extends ConsumerWidget {
     // More is an action tab — it opens the drawer instead of switching branch.
     if (index == NavTab.more.index) {
       showMoreDrawer(context);
+      return;
+    }
+    // Feed acts as a global "home" — always reset and return to /feed
+    // regardless of which branch we're on or what's pushed on top.
+    if (index == NavTab.feed.index) {
+      context.go('/feed');
       return;
     }
     if (index == navigationShell.currentIndex) {

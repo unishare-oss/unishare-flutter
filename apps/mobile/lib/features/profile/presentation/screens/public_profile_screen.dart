@@ -149,8 +149,7 @@ class _SelectedTitle extends ConsumerWidget {
     // Resolve id -> human-readable badge name via the catalog. Same
     // fallback pattern as ProfileCard so the chip never disappears while
     // the catalog is still loading.
-    final catalog =
-        ref.watch(badgeCatalogProvider).asData?.value ?? const [];
+    final catalog = ref.watch(badgeCatalogProvider).asData?.value ?? const [];
     final match = catalog
         .where((b) => b.id == badgeId)
         .cast<AchievementBadge?>()
@@ -168,8 +167,7 @@ class _DisplayedBadges extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final ac = theme.extension<AppColors>()!;
-    final catalog =
-        ref.watch(badgeCatalogProvider).asData?.value ?? const [];
+    final catalog = ref.watch(badgeCatalogProvider).asData?.value ?? const [];
     final byId = {for (final b in catalog) b.id: b};
     final displayed = badgeIds
         .map((id) => byId[id])
@@ -248,11 +246,7 @@ class _DisplayedBadges extends ConsumerWidget {
 }
 
 class _Avatar extends StatelessWidget {
-  const _Avatar({
-    required this.photoUrl,
-    required this.name,
-    required this.ac,
-  });
+  const _Avatar({required this.photoUrl, required this.name, required this.ac});
   final String? photoUrl;
   final String name;
   final AppColors ac;

@@ -322,9 +322,8 @@ GoRouter router(Ref ref) {
                   }
                   return null;
                 },
-                builder: (context, state) => PublicProfileScreen(
-                  uid: state.pathParameters['uid']!,
-                ),
+                builder: (context, state) =>
+                    PublicProfileScreen(uid: state.pathParameters['uid']!),
               ),
             ],
           ),

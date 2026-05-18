@@ -198,8 +198,8 @@ class _Hero extends StatelessWidget {
           Text(
             allEarned
                 ? (isOwnProfile
-                    ? 'Every badge unlocked. Nice work.'
-                    : 'Every badge unlocked.')
+                      ? 'Every badge unlocked. Nice work.'
+                      : 'Every badge unlocked.')
                 : 'Earned ${DateFormat.yMMMd().format(earned.earnedAt)} · +${earned.pointsAwarded} pts',
             style: theme.textTheme.bodySmall?.copyWith(color: ac.textSecondary),
           ),

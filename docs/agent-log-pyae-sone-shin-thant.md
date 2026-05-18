@@ -1369,3 +1369,44 @@ Review: PENDING
   [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
   [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
   [22:50] Edit: apps/mobile/lib/core/router/router.dart
+  [23:02] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:02] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Files:
+  ~ apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Summary:  1 file changed, 9 insertions(+), 1 deletion(-)
+
+  [23:05] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:05] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Files:
+  ~ apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Summary:  1 file changed, 3 insertions(+)
+
+  [23:06] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:06] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:06] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:07] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+Files:
+  ~ apps/mobile/lib/core/router/shell_scaffold.dart
+  ~ apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Summary:  2 files changed, 16 insertions(+), 3 deletions(-)
+
+  [23:07] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [23:10] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+Files:
+  ~ apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+Summary:  1 file changed, 7 insertions(+), 1 deletion(-)
+
+  [23:10] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [23:10] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [23:13] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [23:13] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [23:14] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [23:14] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+Files:
+  ~ apps/mobile/lib/core/router/shell_scaffold.dart
+  ~ apps/mobile/lib/shared/widgets/main_nav_bar.dart
+Summary:  2 files changed, 25 insertions(+), 3 deletions(-)
+
+  [23:18] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [23:18] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [23:23] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
