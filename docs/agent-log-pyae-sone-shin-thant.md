@@ -1359,3 +1359,12 @@ Review: PENDING
   [15:29] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
   [22:34] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
   [22:34] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
+  [22:38] Write: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [22:38] Edit: apps/mobile/lib/core/router/router.dart
+  [22:39] Edit: apps/mobile/lib/core/router/router.dart
+  [22:39] Edit: apps/mobile/lib/core/router/router.dart
+  [22:39] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [22:42] Write: apps/mobile/lib/features/post/presentation/providers/posts_by_author_provider.dart
+  [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart

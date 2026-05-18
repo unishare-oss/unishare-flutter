@@ -10,7 +10,11 @@ import 'package:unishare_mobile/features/achievements/presentation/providers/pub
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_icon.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/level_chip.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/title_chip.dart';
+import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/posts_by_author_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 /// Read-only profile view for any uid other than the signed-in user.
@@ -52,7 +56,14 @@ class PublicProfileScreen extends ConsumerWidget {
               16,
               MainNavBar.bottomInset + 16,
             ),
-            child: _PublicProfileCard(user: user),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _PublicProfileCard(user: user),
+                const SizedBox(height: 24),
+                _PublicPostsSection(uid: user.uid, name: user.name),
+              ],
+            ),
           );
         },
       ),
@@ -280,6 +291,77 @@ class _Avatar extends StatelessWidget {
       ),
     ),
   );
+}
+
+/// Renders the author's public posts (anonymous posts filtered out)
+/// below the achievements card. Uses `ListView.builder(shrinkWrap: true,
+/// primary: false)` so it nests inside the outer SingleChildScrollView
+/// without owning its own scroll position.
+class _PublicPostsSection extends ConsumerWidget {
+  const _PublicPostsSection({required this.uid, required this.name});
+  final String uid;
+  final String name;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final ac = theme.extension<AppColors>()!;
+    final async = ref.watch(postsByAuthorProvider(uid));
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'POSTS BY ${name.toUpperCase()}',
+          style: AppTypography.mono(
+            base: theme.textTheme.labelSmall?.copyWith(
+              color: ac.textMuted,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        async.when(
+          loading: () => const Padding(
+            padding: EdgeInsets.symmetric(vertical: 24),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          error: (_, _) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              'Could not load posts.',
+              style: theme.textTheme.bodySmall?.copyWith(color: ac.textMuted),
+            ),
+          ),
+          data: (all) {
+            final visible = all
+                .where((p) => p.postingIdentity != PostingIdentity.anonymous)
+                .toList(growable: false);
+            if (visible.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text(
+                  'No public posts yet.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: ac.textMuted,
+                  ),
+                ),
+              );
+            }
+            return ListView.separated(
+              shrinkWrap: true,
+              primary: false,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: visible.length,
+              separatorBuilder: (_, _) =>
+                  Divider(height: 1, color: theme.dividerColor),
+              itemBuilder: (_, i) => PostCard(post: visible[i]),
+            );
+          },
+        ),
+      ],
+    );
+  }
 }
 
 class _CenteredMessage extends StatelessWidget {
