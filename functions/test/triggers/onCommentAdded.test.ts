@@ -1,9 +1,11 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
-const { writeNotificationMock, sendPushMock, postGetMock } = vi.hoisted(() => ({
+const { writeNotificationMock, sendPushMock, postGetMock, incrementStatMock, evaluateBadgesMock } = vi.hoisted(() => ({
   writeNotificationMock: vi.fn().mockResolvedValue('notif-1'),
   sendPushMock: vi.fn().mockResolvedValue(undefined),
   postGetMock: vi.fn(),
+  incrementStatMock: vi.fn().mockResolvedValue(undefined),
+  evaluateBadgesMock: vi.fn().mockResolvedValue({ newlyEarnedIds: [], pointsAdded: 0, newLevel: 1 }),
 }));
 
 vi.mock('../../src/lib/writeNotification', () => ({
@@ -11,6 +13,8 @@ vi.mock('../../src/lib/writeNotification', () => ({
 }));
 vi.mock('../../src/lib/sendPush', () => ({ sendPush: sendPushMock }));
 vi.mock('../../src/lib/actorLookup', () => ({ getActor: vi.fn() }));
+vi.mock('../../src/badges/counters', () => ({ incrementStat: incrementStatMock }));
+vi.mock('../../src/badges/evaluateBadges', () => ({ evaluateBadges: evaluateBadgesMock }));
 
 vi.mock('../../src/admin', () => ({
   db: {
@@ -39,6 +43,8 @@ beforeEach(() => {
   writeNotificationMock.mockClear();
   sendPushMock.mockClear();
   postGetMock.mockReset();
+  incrementStatMock.mockClear();
+  evaluateBadgesMock.mockClear();
 });
 
 function event(commentData: Record<string, unknown>) {
@@ -83,9 +89,12 @@ describe('onCommentAddedHandler', () => {
       targetType: 'post',
       targetId: 'post-1',
     });
+
+    expect(incrementStatMock).toHaveBeenCalledWith('commenter-uid', 'commentsWritten', 1);
+    expect(evaluateBadgesMock).toHaveBeenCalledWith('commenter-uid', ['commentsWritten']);
   });
 
-  it('skips when comment has a parentId (handled by onCommentReply)', async () => {
+  it('skips notification for parentId comments but still increments commentsWritten', async () => {
     await onCommentAddedHandler(
       event({
         authorId: 'commenter-uid',
@@ -99,6 +108,11 @@ describe('onCommentAddedHandler', () => {
     expect(postGetMock).not.toHaveBeenCalled();
     expect(writeNotificationMock).not.toHaveBeenCalled();
     expect(sendPushMock).not.toHaveBeenCalled();
+
+    // Replies still count as written comments — onCommentReply handles
+    // the notification side, but the increment lives here so it only fires once.
+    expect(incrementStatMock).toHaveBeenCalledWith('commenter-uid', 'commentsWritten', 1);
+    expect(evaluateBadgesMock).toHaveBeenCalledWith('commenter-uid', ['commentsWritten']);
   });
 
   it('skips self-comments', async () => {
@@ -117,6 +131,9 @@ describe('onCommentAddedHandler', () => {
 
     expect(writeNotificationMock).not.toHaveBeenCalled();
     expect(sendPushMock).not.toHaveBeenCalled();
+
+    // Self-comment still counts toward commentsWritten.
+    expect(incrementStatMock).toHaveBeenCalledWith('commenter-uid', 'commentsWritten', 1);
   });
 
   it('skips when post is missing', async () => {
