@@ -20,7 +20,9 @@ import 'package:unishare_mobile/features/post/domain/usecases/delete_comment.dar
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_post.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/reaction_repository.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/reaction_providers.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
@@ -96,6 +98,15 @@ class _FakeLikeRepository implements LikeRepository {
   Future<void> toggleLike(String postId) async {}
 }
 
+class _FakeReactionRepository implements ReactionRepository {
+  @override
+  Stream<Set<String>> watchUserReactions(String postId) =>
+      Stream.value(const {});
+
+  @override
+  Future<void> toggleReaction(String postId, String reactionType) async {}
+}
+
 // ---------------------------------------------------------------------------
 // Factory helpers
 // ---------------------------------------------------------------------------
@@ -134,10 +145,12 @@ Widget _buildSubject({
   _FakePostRepository? postRepo,
   _FakeCommentRepository? commentRepo,
   _FakeLikeRepository? likeRepo,
+  _FakeReactionRepository? reactionRepo,
 }) {
   final p = postRepo ?? _FakePostRepository();
   final c = commentRepo ?? _FakeCommentRepository();
   final l = likeRepo ?? _FakeLikeRepository();
+  final r = reactionRepo ?? _FakeReactionRepository();
 
   return ProviderScope(
     retry: disableRetry ? (retryCount, error) => null : null,
@@ -149,6 +162,7 @@ Widget _buildSubject({
       addCommentUseCaseProvider.overrideWithValue(AddComment(c)),
       deleteCommentUseCaseProvider.overrideWithValue(DeleteComment(c)),
       toggleLikeUseCaseProvider.overrideWithValue(ToggleLike(l)),
+      reactionRepositoryProvider.overrideWithValue(r),
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),

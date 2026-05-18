@@ -13,6 +13,7 @@ import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/comments_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_detail_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/reaction_providers.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/user_like_status_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/ai_summary_panel.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/ask_ai_section.dart';
@@ -608,8 +609,11 @@ class _PostHeader extends ConsumerWidget {
 
           // ── Reaction bar ──────────────────────────────────────────────────
           _ReactionBar(
+            postId: post.id,
             isLiked: isLiked,
             likeCount: post.likesCount,
+            reactionCounts: post.reactionCounts,
+            isGuest: isGuest,
             onToggleLike: isGuest ? null : onToggleLike,
           ),
           const SizedBox(height: 20),
@@ -991,107 +995,98 @@ class _PostTypeBadge extends StatelessWidget {
 // Reaction bar — 6 interactive reaction buttons + total count
 // ---------------------------------------------------------------------------
 
-enum _ReactionType { thumbsUp, heart, fire, bolt, star, skull }
-
-class _ReactionBar extends StatefulWidget {
+class _ReactionBar extends ConsumerWidget {
   const _ReactionBar({
+    required this.postId,
     required this.isLiked,
     required this.likeCount,
+    required this.reactionCounts,
+    required this.isGuest,
     this.onToggleLike,
   });
 
+  final String postId;
   final bool isLiked;
   final int likeCount;
+  final Map<String, int> reactionCounts;
+  final bool isGuest;
   final VoidCallback? onToggleLike;
 
   @override
-  State<_ReactionBar> createState() => _ReactionBarState();
-}
-
-class _ReactionBarState extends State<_ReactionBar> {
-  final Set<_ReactionType> _localActive = {};
-
-  void _toggle(_ReactionType type) {
-    if (type == _ReactionType.heart) {
-      widget.onToggleLike?.call();
-      return;
-    }
-    setState(() {
-      if (_localActive.contains(type)) {
-        _localActive.remove(type);
-      } else {
-        _localActive.add(type);
-      }
-    });
-  }
-
-  bool _isActive(_ReactionType type) => type == _ReactionType.heart
-      ? widget.isLiked
-      : _localActive.contains(type);
-
-  int _countFor(_ReactionType type) => type == _ReactionType.heart
-      ? widget.likeCount
-      : (_localActive.contains(type) ? 1 : 0);
-
-  int get _total => widget.likeCount + _localActive.length;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userReactions =
+        ref.watch(userReactionsProvider(postId)).asData?.value ?? {};
     final scheme = Theme.of(context).colorScheme;
     final appColors = Theme.of(context).extension<AppColors>()!;
+
+    Future<void> handleReaction(String type) async {
+      if (isGuest) return;
+      try {
+        await ref.read(reactionRepositoryProvider).toggleReaction(postId, type);
+      } catch (_) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to update reaction')),
+          );
+        }
+      }
+    }
+
+    final total = likeCount +
+        reactionCounts.values.fold(0, (sum, c) => sum + c);
 
     return Row(
       children: [
         _ReactionBtn(
           icon: Icons.thumb_up_alt_outlined,
-          count: _countFor(_ReactionType.thumbsUp),
-          isActive: _isActive(_ReactionType.thumbsUp),
+          count: reactionCounts['thumbsUp'] ?? 0,
+          isActive: userReactions.contains('thumbsUp'),
           activeColor: appColors.amber,
-          onTap: () => _toggle(_ReactionType.thumbsUp),
+          onTap: isGuest ? null : () => handleReaction('thumbsUp'),
         ),
         const SizedBox(width: 6),
         _ReactionBtn(
-          icon: widget.isLiked ? Icons.favorite : Icons.favorite_border,
-          count: _countFor(_ReactionType.heart),
-          isActive: _isActive(_ReactionType.heart),
+          icon: isLiked ? Icons.favorite : Icons.favorite_border,
+          count: likeCount,
+          isActive: isLiked,
           activeColor: scheme.error,
-          onTap: () => _toggle(_ReactionType.heart),
+          onTap: onToggleLike,
         ),
         const SizedBox(width: 6),
         _ReactionBtn(
           icon: Icons.local_fire_department,
-          count: _countFor(_ReactionType.fire),
-          isActive: _isActive(_ReactionType.fire),
+          count: reactionCounts['fire'] ?? 0,
+          isActive: userReactions.contains('fire'),
           activeColor: appColors.amber,
-          onTap: () => _toggle(_ReactionType.fire),
+          onTap: isGuest ? null : () => handleReaction('fire'),
         ),
         const SizedBox(width: 6),
         _ReactionBtn(
           icon: Icons.bolt,
-          count: _countFor(_ReactionType.bolt),
-          isActive: _isActive(_ReactionType.bolt),
+          count: reactionCounts['bolt'] ?? 0,
+          isActive: userReactions.contains('bolt'),
           activeColor: appColors.amber,
-          onTap: () => _toggle(_ReactionType.bolt),
+          onTap: isGuest ? null : () => handleReaction('bolt'),
         ),
         const SizedBox(width: 6),
         _ReactionBtn(
           icon: Icons.star_border,
-          count: _countFor(_ReactionType.star),
-          isActive: _isActive(_ReactionType.star),
+          count: reactionCounts['star'] ?? 0,
+          isActive: userReactions.contains('star'),
           activeColor: appColors.amber,
-          onTap: () => _toggle(_ReactionType.star),
+          onTap: isGuest ? null : () => handleReaction('star'),
         ),
         const SizedBox(width: 6),
         _ReactionBtn(
           icon: Icons.dangerous_outlined,
-          count: _countFor(_ReactionType.skull),
-          isActive: _isActive(_ReactionType.skull),
+          count: reactionCounts['skull'] ?? 0,
+          isActive: userReactions.contains('skull'),
           activeColor: appColors.amber,
-          onTap: () => _toggle(_ReactionType.skull),
+          onTap: isGuest ? null : () => handleReaction('skull'),
         ),
         const SizedBox(width: 12),
         Text(
-          '$_total ${_total == 1 ? 'reaction' : 'reactions'}',
+          '$total ${total == 1 ? 'reaction' : 'reactions'}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: appColors.textMuted,
             fontWeight: FontWeight.w500,

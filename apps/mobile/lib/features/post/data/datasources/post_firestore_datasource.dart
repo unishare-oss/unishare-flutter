@@ -105,6 +105,10 @@ class PostFirestoreDatasource {
       tags: List<String>.from(data['tags'] as List? ?? []),
       likesCount: (data['likesCount'] as num?)?.toInt() ?? 0,
       viewsCount: (data['viewsCount'] as num?)?.toInt() ?? 0,
+      reactionCounts: Map<String, int>.from(
+        ((data['reactionCounts'] as Map<String, dynamic>?) ?? {})
+            .map((k, v) => MapEntry(k, (v as num).toInt())),
+      ),
       departmentId: data['departmentId'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),

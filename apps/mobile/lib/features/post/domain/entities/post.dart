@@ -38,6 +38,7 @@ class Post {
     required this.updatedAt,
     this.mediaTypes = const [],
     this.viewsCount = 0,
+    this.reactionCounts = const {},
     this.departmentId,
     this.externalUrl,
     this.codeSnippetUrl,
@@ -67,6 +68,7 @@ class Post {
   final List<String> tags;
   final int likesCount;
   final int viewsCount;
+  final Map<String, int> reactionCounts;
   final String? departmentId;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -100,6 +102,7 @@ class Post {
     List<String>? tags,
     int? likesCount,
     int? viewsCount,
+    Map<String, int>? reactionCounts,
     String? departmentId,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -127,6 +130,7 @@ class Post {
       tags: tags ?? this.tags,
       likesCount: likesCount ?? this.likesCount,
       viewsCount: viewsCount ?? this.viewsCount,
+      reactionCounts: reactionCounts ?? this.reactionCounts,
       departmentId: departmentId ?? this.departmentId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
