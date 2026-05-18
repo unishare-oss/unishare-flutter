@@ -1083,10 +1083,10 @@ class _ReactionBarState extends State<_ReactionBar> {
         ),
         const SizedBox(width: 6),
         _ReactionBtn(
-          emoji: '💀',
+          icon: Icons.dangerous_outlined,
           count: _countFor(_ReactionType.skull),
           isActive: _isActive(_ReactionType.skull),
-          activeColor: appColors.textMuted,
+          activeColor: appColors.amber,
           onTap: () => _toggle(_ReactionType.skull),
         ),
         const SizedBox(width: 12),
@@ -1104,16 +1104,14 @@ class _ReactionBarState extends State<_ReactionBar> {
 
 class _ReactionBtn extends StatelessWidget {
   const _ReactionBtn({
-    this.icon,
-    this.emoji,
+    required this.icon,
     this.count = 0,
     this.isActive = false,
     this.activeColor,
     this.onTap,
-  }) : assert(icon != null || emoji != null);
+  });
 
-  final IconData? icon;
-  final String? emoji;
+  final IconData icon;
   final int count;
   final bool isActive;
   final Color? activeColor;
@@ -1127,9 +1125,7 @@ class _ReactionBtn extends StatelessWidget {
         : appColors.textMuted;
     final hasCnt = count > 0;
 
-    final iconWidget = emoji != null
-        ? Text(emoji!, style: const TextStyle(fontSize: 14, height: 1))
-        : Icon(icon!, size: 16, color: color);
+    final iconWidget = Icon(icon, size: 16, color: color);
 
     return GestureDetector(
       onTap: onTap,
