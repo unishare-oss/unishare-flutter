@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_burst.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_icon.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
@@ -26,7 +27,19 @@ class EarnMomentModal extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(child: BadgeIcon(badge: badge, locked: false, size: 96)),
+            Center(
+              child: BadgeBurst(
+                // Onboarding gets a soft sparkle; prestige and any level-up
+                // get the heavier confetti burst. Progression doesn't reach
+                // this modal — it uses the toast variant instead — so we
+                // default to soft for safety.
+                intensity:
+                    (badge.tier == BadgeTier.prestige || levelUp != null)
+                        ? BurstIntensity.confetti
+                        : BurstIntensity.soft,
+                child: BadgeIcon(badge: badge, locked: false, size: 96),
+              ),
+            ),
             const SizedBox(height: 16),
             Text(
               'Achievement unlocked',
