@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:unishare_mobile/features/achievements/presentation/earn_moment_dispatcher.dart';
+import 'package:unishare_mobile/features/achievements/presentation/screens/achievements_screen.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/screens/welcome_screen.dart';
@@ -59,7 +61,8 @@ enum DrawerDestination {
   profile('Profile', Icons.person_rounded),
   saved('Saved', Icons.bookmark_rounded),
   departments('Depts', Icons.apartment_rounded),
-  requests('Requests', Icons.inbox_rounded);
+  requests('Requests', Icons.inbox_rounded),
+  achievements('Achievements', Icons.workspace_premium_rounded);
 
   const DrawerDestination(this.label, this.icon);
 
@@ -75,6 +78,9 @@ enum DrawerDestination {
       return departments;
     }
     if (path == '/requests' || path.startsWith('/requests/')) return requests;
+    if (path == '/achievements' || path.startsWith('/achievements/')) {
+      return achievements;
+    }
     return null;
   }
 }
@@ -145,6 +151,7 @@ class _RouterNotifier extends ChangeNotifier {
       '/requests',
       '/preview',
       '/upload-progress',
+      '/achievements',
     };
     final isKnown =
         authRoutes.contains(currentPath) ||
@@ -208,9 +215,12 @@ GoRouter router(Ref ref) {
         builder: (context, state, navigationShell) => Consumer(
           builder: (context, ref, _) {
             final isGuest = ref.watch(guestModeProvider);
-            return isGuest
-                ? GuestShellScaffold(navigationShell: navigationShell)
-                : ShellScaffold(navigationShell: navigationShell);
+            if (isGuest) {
+              return GuestShellScaffold(navigationShell: navigationShell);
+            }
+            return EarnMomentDispatcher(
+              child: ShellScaffold(navigationShell: navigationShell),
+            );
           },
         ),
         branches: [
@@ -286,6 +296,11 @@ GoRouter router(Ref ref) {
                   final requestId = state.pathParameters['requestId']!;
                   return RequestDetailScreen(requestId: requestId);
                 },
+              ),
+              GoRoute(
+                path: '/achievements/:uid',
+                builder: (context, state) =>
+                    AchievementsScreen(uid: state.pathParameters['uid']!),
               ),
             ],
           ),

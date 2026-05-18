@@ -64,6 +64,8 @@ dependencies:
   liquid_glass_renderer: ^0.2.0-dev.4
   firebase_messaging: ^16.2.1
   crypto: ^3.0.6
+  phosphor_flutter: ^2.1.0
+  intl: ^0.20.2
 
 
 dev_dependencies:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_card.dart';
@@ -15,41 +16,55 @@ class MoreDrawerUserRow extends StatelessWidget {
     final ac = theme.extension<AppColors>()!;
     final cs = theme.colorScheme;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(color: ac.amber, shape: BoxShape.circle),
-            alignment: Alignment.center,
-            child: Text(
-              _initials(user.name),
-              style: theme.textTheme.labelLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
+    // The row is tappable: opens the user's own profile. Profile no longer
+    // has a dedicated tile in the grid (which is now reserved for
+    // destinations like ACHIEVEMENTS), so this is the primary entry point.
+    return InkWell(
+      onTap: () {
+        final router = GoRouter.of(context);
+        Navigator.of(context).pop();
+        router.go('/profile');
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: ac.amber,
+                shape: BoxShape.circle,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                _initials(user.name),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.name,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: cs.onSurface,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.name,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: cs.onSurface,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                ProfileBadge(user.role.toUpperCase()),
-              ],
+                  const SizedBox(height: 4),
+                  ProfileBadge(user.role.toUpperCase()),
+                ],
+              ),
             ),
-          ),
-        ],
+            Icon(Icons.chevron_right, size: 18, color: ac.textMuted),
+          ],
+        ),
       ),
     );
   }

@@ -109,7 +109,7 @@ Widget _buildSubject({
         ),
       ),
       GoRoute(
-        path: '/more/requests/:id',
+        path: '/requests/:id',
         builder: (_, state) => Scaffold(
           body: Center(
             child: Text('request-route-${state.pathParameters['id']}'),
@@ -314,32 +314,31 @@ void main() {
       },
     );
 
-    testWidgets(
-      'tapping a request notification navigates to /more/requests/:id',
-      (tester) async {
-        final repo = _RecorderRepo();
+    testWidgets('tapping a request notification navigates to /requests/:id', (
+      tester,
+    ) async {
+      final repo = _RecorderRepo();
 
-        await tester.pumpWidget(
-          _buildSubject(
-            repo: repo,
-            notifsState: AsyncValue.data([
-              _notif(
-                id: 'n2',
-                isRead: true,
-                targetType: 'request',
-                targetId: 'r99',
-              ),
-            ]),
-          ),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        _buildSubject(
+          repo: repo,
+          notifsState: AsyncValue.data([
+            _notif(
+              id: 'n2',
+              isRead: true,
+              targetType: 'request',
+              targetId: 'r99',
+            ),
+          ]),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        await tester.tap(find.byType(NotificationItemTile));
-        await tester.pumpAndSettle();
+      await tester.tap(find.byType(NotificationItemTile));
+      await tester.pumpAndSettle();
 
-        expect(find.text('request-route-r99'), findsOneWidget);
-      },
-    );
+      expect(find.text('request-route-r99'), findsOneWidget);
+    });
 
     testWidgets(
       'tapping an already-read notification does NOT call markAsRead',

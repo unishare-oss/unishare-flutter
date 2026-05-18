@@ -2,6 +2,8 @@ import { onDocumentUpdated } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 
 import { db } from '../admin';
+import { incrementStat } from '../badges/counters';
+import { evaluateBadges } from '../badges/evaluateBadges';
 import { writeNotification } from '../lib/writeNotification';
 import { sendPush } from '../lib/sendPush';
 import type { RequestDoc, SuggestionDoc } from '../lib/types';
@@ -81,6 +83,10 @@ export async function onRequestFulfilledHandler(event: {
     targetType: 'request',
     targetId: requestId,
   });
+
+  // Achievements: the fulfiller earns toward requestsFulfilled.
+  await incrementStat(suggestion.suggestedByUserId, 'requestsFulfilled', 1);
+  await evaluateBadges(suggestion.suggestedByUserId, ['requestsFulfilled']);
 }
 
 export const onRequestFulfilled = onDocumentUpdated(
