@@ -3,11 +3,17 @@ import './admin';
 
 export { onCommentAdded } from './triggers/onCommentAdded';
 export { onCommentReply } from './triggers/onCommentReply';
+export { onCommentRemoved } from './triggers/onCommentRemoved';
 export { onPostLiked } from './triggers/onPostLiked';
+export { onPostCreated } from './triggers/onPostCreated';
+export { onPostDeleted } from './triggers/onPostDeleted';
 export { onRequestUpvoted } from './triggers/onRequestUpvoted';
 export { onSuggestionSubmitted } from './triggers/onSuggestionSubmitted';
+export { onRequestCreated } from './triggers/onRequestCreated';
 export { onRequestFulfilled } from './triggers/onRequestFulfilled';
 export { onPostSaved } from './triggers/onPostSaved';
 export { onPostUnsaved } from './triggers/onPostUnsaved';
+export { onProfileUpdated } from './triggers/onProfileUpdated';
 export { purgeOldNotifications } from './scheduled/purgeOldNotifications';
+export { integritySweep } from './scheduled/integritySweep';
 export { autoDisableBilling } from './billing/autoDisableBilling';
