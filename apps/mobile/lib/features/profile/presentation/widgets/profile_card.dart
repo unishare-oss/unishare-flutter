@@ -2,6 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:unishare_mobile/features/achievements/presentation/providers/user_gamification_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/level_chip.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/profile_achievements_section.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/title_chip.dart';
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/providers/profile_stats_provider.dart';
@@ -52,11 +56,43 @@ class ProfileCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      user.name,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            user.name,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Consumer(
+                          builder: (context, ref, _) {
+                            final g = ref
+                                .watch(userGamificationProvider(user.id))
+                                .asData
+                                ?.value;
+                            return LevelChip(level: g?.level ?? 1);
+                          },
+                        ),
+                      ],
+                    ),
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final g = ref
+                            .watch(userGamificationProvider(user.id))
+                            .asData
+                            ?.value;
+                        final t = g?.selectedTitle;
+                        if (t == null || t.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: TitleChip(title: t),
+                        );
+                      },
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -125,6 +161,10 @@ class ProfileCard extends ConsumerWidget {
               ProfileStat(label: 'SAVED', value: savedCount.toString()),
             ],
           ),
+          const SizedBox(height: 16),
+          Divider(color: theme.dividerColor),
+          const SizedBox(height: 8),
+          ProfileAchievementsSection(uid: user.id),
         ],
       ),
     );
