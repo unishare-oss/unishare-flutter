@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
@@ -406,7 +407,10 @@ class _NameRowState extends ConsumerState<_NameRow> {
                 .watch(userGamificationProvider(widget.user.id))
                 .asData
                 ?.value;
-            return LevelChip(level: g?.level ?? 1);
+            return LevelChip(
+              level: g?.level ?? 1,
+              onTap: () => context.push('/achievements/${widget.user.id}'),
+            );
           },
         ),
       ],
