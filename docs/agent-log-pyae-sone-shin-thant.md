@@ -1368,3 +1368,4 @@ Review: PENDING
   [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
   [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
   [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [22:50] Edit: apps/mobile/lib/core/router/router.dart

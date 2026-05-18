@@ -50,7 +50,8 @@ describe('publicUserProjection', () => {
   });
 
   it('returns null when name is missing (incomplete profile)', () => {
-    const { name: _omit, ...withoutName } = fullDoc;
+    const withoutName: Record<string, unknown> = { ...fullDoc };
+    delete withoutName.name;
     expect(publicUserProjection('u1', withoutName)).toBeNull();
   });
 
