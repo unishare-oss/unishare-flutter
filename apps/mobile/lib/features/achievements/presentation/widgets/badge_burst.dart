@@ -37,8 +37,6 @@ class _BadgeBurstState extends State<BadgeBurst>
   late final AnimationController _controller;
   late List<_Particle> _particles;
 
-  bool get _shouldLoop => widget.intensity == BurstIntensity.confetti;
-
   @override
   void initState() {
     super.initState();
@@ -48,16 +46,16 @@ class _BadgeBurstState extends State<BadgeBurst>
       duration: Duration(milliseconds: isConfetti ? 1200 : 650),
     );
     _particles = _seedParticles(widget.intensity);
-    if (_shouldLoop) {
-      // Reseed particles on each cycle so consecutive bursts don't look
-      // identical, then drive a continuous shower while the modal is open.
-      _controller.addStatusListener((status) {
-        if (status == AnimationStatus.completed && mounted) {
-          setState(() => _particles = _seedParticles(widget.intensity));
-          _controller.forward(from: 0);
-        }
-      });
-    }
+    // Reseed particles on each cycle so consecutive bursts don't look
+    // identical, then drive a continuous shower while the modal is open.
+    // Loops for both intensities — the modal is a "rest" surface, so a
+    // calm repeating sparkle stays celebratory without feeling stale.
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed && mounted) {
+        setState(() => _particles = _seedParticles(widget.intensity));
+        _controller.forward(from: 0);
+      }
+    });
     _controller.forward();
   }
 
