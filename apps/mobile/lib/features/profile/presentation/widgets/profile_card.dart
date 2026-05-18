@@ -1,12 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
+import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
+import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/user_gamification_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/earn_moment_modal.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/level_chip.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/profile_achievements_section.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/title_chip.dart';
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/providers/profile_stats_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_posts_provider.dart';
@@ -56,28 +62,7 @@ class ProfileCard extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            user.name,
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Consumer(
-                          builder: (context, ref, _) {
-                            final g = ref
-                                .watch(userGamificationProvider(user.id))
-                                .asData
-                                ?.value;
-                            return LevelChip(level: g?.level ?? 1);
-                          },
-                        ),
-                      ],
-                    ),
+                    _NameRow(user: user),
                     Consumer(
                       builder: (context, ref, _) {
                         final g = ref
@@ -288,6 +273,134 @@ class ProfileStat extends StatelessWidget {
               letterSpacing: 0.5,
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Name row
+// ---------------------------------------------------------------------------
+
+/// Renders the user's name on the left and a [LevelChip] on the right.
+///
+/// Easter egg: tap the name 7 times within 3 seconds (only on your own
+/// profile) to reveal a "replay last earn" debug button beside the chip.
+/// The button re-shows the [EarnMomentModal] for the most recently
+/// earned badge so the burst animation can be retested without messing
+/// with Firestore. No server writes happen — the modal is local-only.
+class _NameRow extends ConsumerStatefulWidget {
+  const _NameRow({required this.user});
+  final AppUser user;
+
+  @override
+  ConsumerState<_NameRow> createState() => _NameRowState();
+}
+
+class _NameRowState extends ConsumerState<_NameRow> {
+  static const _tapThreshold = 7;
+  static const _tapWindow = Duration(seconds: 3);
+
+  int _taps = 0;
+  DateTime? _firstTap;
+  bool _replayUnlocked = false;
+
+  void _handleTap() {
+    final now = DateTime.now();
+    if (_firstTap == null || now.difference(_firstTap!) > _tapWindow) {
+      _firstTap = now;
+      _taps = 1;
+    } else {
+      _taps += 1;
+    }
+    if (_taps >= _tapThreshold && !_replayUnlocked) {
+      setState(() => _replayUnlocked = true);
+    }
+  }
+
+  Future<void> _replayLastEarn() async {
+    final uid = widget.user.id;
+    final earned =
+        ref.read(earnedBadgesProvider(uid)).asData?.value ?? const [];
+    final catalog =
+        ref.read(badgeCatalogProvider).asData?.value ?? const [];
+    if (earned.isEmpty || catalog.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No earned badges yet.')),
+      );
+      return;
+    }
+    // earnedBadges stream is ordered earnedAt desc — first entry is newest.
+    final latest = earned.first;
+    final badge = catalog.firstWhere(
+      (b) => b.id == latest.badgeId,
+      orElse: () => AchievementBadge(
+        id: latest.badgeId,
+        name: latest.badgeId,
+        description: '',
+        glyph: 'sparkle',
+        points: latest.pointsAwarded,
+        tier: BadgeTier.progression,
+        category: BadgeCategory.content,
+        condition: const BadgeCondition(
+          statKey: 'postsCreated',
+          threshold: 0,
+        ),
+        order: 0,
+        active: true,
+      ),
+    );
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => EarnMomentModal(
+        badge: badge,
+        points: latest.pointsAwarded,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final ac = theme.extension<AppColors>()!;
+    final currentUid = ref.watch(authStateProvider).asData?.value?.id;
+    final isOwnProfile = currentUid == widget.user.id;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: isOwnProfile ? _handleTap : null,
+            child: Text(
+              widget.user.name,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        if (isOwnProfile && _replayUnlocked) ...[
+          IconButton(
+            tooltip: 'Replay last earn',
+            iconSize: 18,
+            visualDensity: VisualDensity.compact,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+            icon: Icon(PhosphorIconsThin.sparkle, color: ac.amber),
+            onPressed: _replayLastEarn,
+          ),
+          const SizedBox(width: 4),
+        ],
+        Consumer(
+          builder: (context, ref, _) {
+            final g =
+                ref.watch(userGamificationProvider(widget.user.id)).asData?.value;
+            return LevelChip(level: g?.level ?? 1);
+          },
         ),
       ],
     );
