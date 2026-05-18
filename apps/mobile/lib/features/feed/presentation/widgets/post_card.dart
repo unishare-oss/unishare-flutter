@@ -153,7 +153,11 @@ class PostCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildAuthorRow(BuildContext context, AppColors appColors, WidgetRef ref) {
+  Widget _buildAuthorRow(
+    BuildContext context,
+    AppColors appColors,
+    WidgetRef ref,
+  ) {
     final isAnonymous = post.postingIdentity == PostingIdentity.anonymous;
     final initials = isAnonymous
         ? '?'
@@ -188,9 +192,7 @@ class PostCard extends ConsumerWidget {
         // publicUserProvider. Hidden for anonymous posts, while the
         // provider is loading, when the author doc isn't mirrored, and
         // for level 1 (clutter-reduction — fresh accounts get nothing).
-        if (!isAnonymous) ...[
-          ..._authorLevelChip(ref),
-        ],
+        if (!isAnonymous) ...[..._authorLevelChip(ref)],
         Text(
           ' · Year ${post.year}',
           style: Theme.of(
@@ -207,10 +209,7 @@ class PostCard extends ConsumerWidget {
   List<Widget> _authorLevelChip(WidgetRef ref) {
     final pu = ref.watch(publicUserProvider(post.authorId)).asData?.value;
     if (pu == null || pu.level < 2) return const [];
-    return [
-      const SizedBox(width: 6),
-      LevelChip(level: pu.level),
-    ];
+    return [const SizedBox(width: 6), LevelChip(level: pu.level)];
   }
 
   Widget _buildMetaRow(BuildContext context, AppColors appColors) {

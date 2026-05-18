@@ -5,6 +5,7 @@ import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart
 import 'package:unishare_mobile/features/achievements/domain/entities/earned_badge.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/achievements_hero.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_detail_sheet.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_frame.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_icon.dart';
@@ -35,6 +36,7 @@ class AchievementsScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Achievements')),
       body: CustomScrollView(
         slivers: [
+          SliverToBoxAdapter(child: AchievementsHero(uid: uid)),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             sliver: SliverToBoxAdapter(

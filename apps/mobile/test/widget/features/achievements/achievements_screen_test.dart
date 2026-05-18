@@ -4,8 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
 import 'package:unishare_mobile/features/achievements/domain/entities/earned_badge.dart';
+import 'package:unishare_mobile/features/achievements/domain/entities/user_stats.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/providers/user_gamification_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/screens/achievements_screen.dart';
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
 
@@ -43,6 +45,11 @@ void main() {
               ),
             ]),
           ),
+          // The hero block consumes userStatsProvider to compute the
+          // "Up next" line — supply an empty stats stream so it can resolve.
+          userStatsProvider(
+            'u1',
+          ).overrideWith((ref) => Stream.value(UserStats.empty)),
         ],
         child: MaterialApp(
           theme: AppTheme.fromId('unishare'),
@@ -51,7 +58,9 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('First Steps'), findsOneWidget);
+    // 'First Steps' appears once in the hero (most recent unlock) and
+    // once in the Earned grid below — at least one match is enough.
+    expect(find.text('First Steps'), findsAtLeastNWidgets(1));
     expect(find.text('Beloved'), findsOneWidget);
     expect(find.text('Earned · 1'), findsOneWidget);
     expect(find.text('Locked · 1'), findsOneWidget);

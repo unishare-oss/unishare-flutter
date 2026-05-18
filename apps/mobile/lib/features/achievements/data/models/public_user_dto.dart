@@ -24,8 +24,9 @@ class PublicUserDto {
         : null;
 
     final photoUrlRaw = data['photoUrl'];
-    final photoUrl =
-        photoUrlRaw is String && photoUrlRaw.isNotEmpty ? photoUrlRaw : null;
+    final photoUrl = photoUrlRaw is String && photoUrlRaw.isNotEmpty
+        ? photoUrlRaw
+        : null;
 
     final bioRaw = data['bio'];
     final bio = bioRaw is String && bioRaw.isNotEmpty ? bioRaw : null;

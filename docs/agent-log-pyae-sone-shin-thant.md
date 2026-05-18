@@ -1335,3 +1335,25 @@ Review: PENDING
   [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
   [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
   [14:15] Edit: apps/mobile/lib/features/achievements/presentation/widgets/title_picker_sheet.dart
+  [14:56] Write: apps/mobile/lib/features/achievements/domain/entities/public_user.dart
+  [14:56] Write: apps/mobile/lib/features/achievements/data/models/public_user_dto.dart
+  [14:56] Write: apps/mobile/lib/features/achievements/data/datasources/public_user_firestore_datasource.dart
+  [14:56] Write: apps/mobile/lib/features/achievements/presentation/providers/public_user_provider.dart
+  [14:58] Write: apps/mobile/lib/features/achievements/presentation/widgets/level_chip.dart
+  [14:58] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:58] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:59] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [15:00] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [15:00] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [15:00] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [15:01] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart
+  [15:01] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [15:03] Write: apps/mobile/lib/features/profile/presentation/widgets/bio_visibility_notice.dart
+  [15:03] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [15:03] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [15:24] Edit: apps/mobile/lib/core/router/router.dart
+  [15:25] Edit: apps/mobile/lib/core/router/router.dart
+  [15:25] Edit: apps/mobile/lib/core/router/router.dart
+  [15:29] Write: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [15:29] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
+  [15:29] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
