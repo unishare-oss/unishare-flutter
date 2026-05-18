@@ -12,6 +12,15 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Public-safe mirror of users/{uid} — name, photoUrl, bio, and the
+    // gamification fields safe to expose cross-user (level, selectedTitle,
+    // displayedBadges). Maintained by the onUserChangedPublicSync Cloud
+    // Function; never client-written.
+    match /users_public/{uid} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
     // Tunable level threshold table and other app-wide config — public read,
     // seed-only writes.
     match /app_config/{docId} {
