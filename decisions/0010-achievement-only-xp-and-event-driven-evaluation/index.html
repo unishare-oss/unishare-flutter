@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="App-wide navigation shell — bottom nav, navigation rail, route structure, and upload FAB.">
+        <meta name="description" content="Points are awarded only by unlocking badges (not per action), and badges are evaluated by Cloud Function triggers extending the existing notification pipeline.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/0002-navigation-design/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0010-achievement-only-xp-and-event-driven-evaluation/">
       
       
-        <link rel="prev" href="../0001-notification/">
+        <link rel="prev" href="../0007-save-post-storage-strategy/">
       
       
-        <link rel="next" href="../0004-post-integration/">
+        <link rel="next" href="../../stencils/adr/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0002: Navigation Design - Unishare Engineering Docs</title>
+        <title>0010: Achievement-only XP with event-driven badge evaluation - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#spec-0002-navigation-design" class="md-skip">
+        <a href="#0010-achievement-only-xp-with-event-driven-badge-evaluation" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0002: Navigation Design
+              0010: Achievement-only XP with event-driven badge evaluation
             
           </span>
         </div>
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../decisions/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -302,13 +304,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../tech-specs/" class="md-tabs__link">
           
   
   
@@ -396,26 +396,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -433,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -451,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -479,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -507,7 +512,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
+      <a href="../0001-notification-delivery-mechanism/" class="md-nav__link">
         
   
   
@@ -535,7 +540,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -570,7 +575,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -605,7 +610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -640,7 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -675,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -703,7 +708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+      <a href="../0006-post-detail-data-loading-strategy/" class="md-nav__link">
         
   
   
@@ -731,7 +736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
+      <a href="../0007-file-preview-unified-route/" class="md-nav__link">
         
   
   
@@ -759,7 +764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
+      <a href="../0007-save-post-storage-strategy/" class="md-nav__link">
         
   
   
@@ -784,10 +789,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../decisions/0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievement-only XP with event-driven badge evaluation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -803,6 +835,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1357,31 +1464,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
@@ -1399,7 +1501,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1417,7 +1519,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../tech-specs/" class="md-nav__link">
         
   
   
@@ -1445,7 +1547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-auth-design/" class="md-nav__link">
+      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
         
   
   
@@ -1473,7 +1575,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-notification/" class="md-nav__link">
+      <a href="../../tech-specs/0001-notification/" class="md-nav__link">
         
   
   
@@ -1498,37 +1600,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0002: Navigation Design
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
         
   
   
@@ -1544,103 +1619,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nav-items-auth-states" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Nav Items &amp; Auth States
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adaptive-layout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adaptive Layout
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#route-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Route Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#file-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        File Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#out-of-scope-this-phase" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Out of Scope (this phase)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1653,7 +1631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1681,7 +1659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
+      <a href="../../tech-specs/0005-feed-filtering-tags/" class="md-nav__link">
         
   
   
@@ -1709,7 +1687,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-specs/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1737,7 +1715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-post-detail-page/" class="md-nav__link">
+      <a href="../../tech-specs/0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1765,7 +1743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-file-preview-screen/" class="md-nav__link">
+      <a href="../../tech-specs/0007-file-preview-screen/" class="md-nav__link">
         
   
   
@@ -1793,7 +1771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-save-post/" class="md-nav__link">
+      <a href="../../tech-specs/0007-save-post/" class="md-nav__link">
         
   
   
@@ -1821,7 +1799,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0008-request-post/" class="md-nav__link">
+      <a href="../../tech-specs/0008-request-post/" class="md-nav__link">
         
   
   
@@ -1849,7 +1827,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0009-ai-post-summary/" class="md-nav__link">
+      <a href="../../tech-specs/0009-ai-post-summary/" class="md-nav__link">
         
   
   
@@ -1877,7 +1855,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0010-achievements/" class="md-nav__link">
+      <a href="../../tech-specs/0010-achievements/" class="md-nav__link">
         
   
   
@@ -1905,7 +1883,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-users-public-and-discoverability/" class="md-nav__link">
+      <a href="../../tech-specs/0011-users-public-and-discoverability/" class="md-nav__link">
         
   
   
@@ -1960,10 +1938,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        Problem
       
     </span>
   </a>
@@ -1971,10 +1949,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nav-items-auth-states" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Nav Items &amp; Auth States
+        Options Considered
       
     </span>
   </a>
@@ -1982,10 +1960,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adaptive-layout" class="md-nav__link">
+  <a href="#decision" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adaptive Layout
+        Decision
       
     </span>
   </a>
@@ -1993,10 +1971,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#route-structure" class="md-nav__link">
+  <a href="#reversal-cost" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Route Structure
+        Reversal Cost
       
     </span>
   </a>
@@ -2004,32 +1982,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#file-structure" class="md-nav__link">
+  <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        File Structure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#out-of-scope-this-phase" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Out of Scope (this phase)
+        Consequences
       
     </span>
   </a>
@@ -2053,7 +2009,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0002-navigation-design.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0010-achievement-only-xp-and-event-driven-evaluation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2061,161 +2017,82 @@
   
 
 
-<h1 id="spec-0002-navigation-design">SPEC-0002: Navigation Design<a class="headerlink" href="#spec-0002-navigation-design" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> APPROVED<br />
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-04-30<br />
-<strong>Scope:</strong> App-wide navigation shell — bottom nav, navigation rail, route structure, and upload FAB</p>
-<hr />
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Adaptive navigation shell using GoRouter's <code>StatefulShellRoute</code>. Bottom nav on mobile (&lt; 600dp), NavigationRail on tablet/desktop (≥ 600dp). Four destination tabs with an Upload FAB scoped to the Feed screen only.</p>
-<hr />
-<h2 id="nav-items-auth-states">Nav Items &amp; Auth States<a class="headerlink" href="#nav-items-auth-states" title="Permanent link">&para;</a></h2>
+<h1 id="0010-achievement-only-xp-with-event-driven-badge-evaluation">0010 — Achievement-only XP with event-driven badge evaluation<a class="headerlink" href="#0010-achievement-only-xp-with-event-driven-badge-evaluation" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED
+<strong>Author:</strong> Pyae Sone Shin Thant
+<strong>Date:</strong> 2026-05-18</p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>Unishare wants to recognise quality contribution before launch, but without creating a per-action grinding loop that incentivises low-effort posting. Whatever scoring mechanism we pick has to also support a future leaderboard (sortable score), real-time earn-moment UX (the user sees their badge pop seconds after triggering it), and resist spam from sybil rings and self-engagement.</p>
+<p>Two coupled decisions had to be made together: (1) where do points come from, and (2) where does the badge-evaluation logic run?</p>
+<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Tab</th>
-<th>Guest</th>
-<th>Authenticated</th>
+<th>#</th>
+<th>Option</th>
+<th>Upside</th>
+<th>Downside</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Feed</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>Departments</td>
-<td>✓</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>Saved</td>
-<td>→ sign-in prompt</td>
-<td>✓</td>
-</tr>
-<tr>
-<td>Profile</td>
-<td>→ sign-in screen</td>
-<td>✓ (avatar + name)</td>
-</tr>
-<tr>
-<td>Upload FAB</td>
-<td>hidden</td>
-<td>Feed screen only</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Active indicator:</strong> accent color on icon + label, indicator line at top of tab (BottomNavigationBar) or leading edge (NavigationRail). Matches the web platform's amber indicator style.</p>
-<hr />
-<h2 id="adaptive-layout">Adaptive Layout<a class="headerlink" href="#adaptive-layout" title="Permanent link">&para;</a></h2>
-<p><strong>Breakpoints (Material 3):</strong>
-- <code>&lt; 600dp</code> → <code>BottomNavigationBar</code>
-- <code>≥ 600dp</code> → <code>NavigationRail</code></p>
-<p><strong>NavigationRail (tablet/desktop):</strong>
-- Fixed left rail, icons + labels visible
-- Upload action moves from FAB to a button at the top of the rail
-- No collapse/expand at this phase</p>
-<p><strong>Shell:</strong> <code>AppShell</code> reads <code>MediaQuery</code> width and switches between <code>BottomNavigationBar</code> layout and <code>Row(NavigationRail, VerticalDivider, Expanded(content))</code> layout.</p>
-<hr />
-<h2 id="route-structure">Route Structure<a class="headerlink" href="#route-structure" title="Permanent link">&para;</a></h2>
-<p><code>StatefulShellRoute</code> is used (not plain <code>ShellRoute</code>) so each tab maintains its own independent navigator stack — navigating deep in one tab does not affect another.</p>
-<div class="highlight"><pre><span></span><code>GoRouter
-├── /welcome                    ← unauthenticated landing
-├── /sign-in                    ← email sign-in
-├── /sign-up                    ← email sign-up
-└── StatefulShellRoute          ← AppShell (nav bar / rail)
-    ├── branch: /feed           ← Feed tab (+ Upload FAB)
-    │   └── /feed/posts/:id     ← Post detail (stacked within branch)
-    ├── branch: /departments    ← Departments tab
-    │   └── /departments/:id    ← Department detail (stacked within branch)
-    ├── branch: /saved          ← Saved tab
-    └── branch: /profile        ← Profile tab
-        └── /profile/edit       ← Edit profile (stacked within branch)
-</code></pre></div>
-<p><strong>Tab index → branch mapping:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Index</th>
-<th>Branch</th>
-<th>Route</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>Feed</td>
-<td><code>/feed</code></td>
-</tr>
 <tr>
 <td>1</td>
-<td>Departments</td>
-<td><code>/departments</code></td>
+<td>Point-per-action XP, badges as side milestones, evaluation embedded in trigger code</td>
+<td>Familiar (Stack Overflow / Reddit), clear feedback per action</td>
+<td>Strong grinding incentive — rational user posts as many low-effort items as possible; defending it needs quality multipliers, diminishing returns, deductions — significantly more machinery and still gameable</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Saved</td>
-<td><code>/saved</code></td>
+<td>Achievement-only XP (points only from badges), event-driven evaluator extending existing Firestore triggers</td>
+<td>No per-action grinding loop; one transactional grant per unlock; idempotent by doc id; real-time earn moments; fits the existing <code>onPostLiked</code> / <code>onRequestFulfilled</code> / <code>onCommentAdded</code> trigger pattern; cheat-proof</td>
+<td>A few more triggers to maintain; counters need invariant upkeep across event types; needs a daily integrity sweep as belt-and-braces</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Profile</td>
-<td><code>/profile</code></td>
+<td>Achievement-only XP, scheduled batch evaluator (every 5–15 min)</td>
+<td>Centralised eval logic in one file; trivial to add new badges</td>
+<td>Kills the "Bing! you earned X" moment for onboarding (modal arriving 7 minutes later isn't the same dopamine hit); scales poorly with user count; won't catch the high-stakes first-post flow</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Badges only, no points or levels</td>
+<td>Simplest possible model; no leaderboard incentive surface</td>
+<td>Loses the legible "I'm a strong contributor" signal; leaderboards (v1.1) have nothing to rank by; rep-score reward type (F in the rewards menu) becomes impossible</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Redirect logic</strong> lives in the <code>router.dart</code> redirect callback, reading from <code>authStateProvider</code>:
-- No session → <code>/welcome</code>
-- Authenticated → allow through
-- Authenticated user hits <code>/welcome</code>, <code>/sign-in</code>, <code>/sign-up</code> → redirect to <code>/feed</code></p>
-<hr />
-<h2 id="file-structure">File Structure<a class="headerlink" href="#file-structure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>core/
-  router/
-    router.dart                  ← GoRouter config, StatefulShellRoute, redirects
-    app_shell.dart               ← adaptive shell widget
-
-shared/
-  widgets/
-    bottom_nav_bar.dart          ← BottomNavigationBar wrapper
-    navigation_rail.dart         ← NavigationRail wrapper
-    upload_fab.dart              ← FAB, visible only when branch index == 0
-</code></pre></div>
-<hr />
-<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
-<p><strong>Widget tests:</strong></p>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>What it covers</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>app_shell_test.dart</code></td>
-<td>Shows <code>BottomNavigationBar</code> on narrow screen, <code>NavigationRail</code> on wide screen</td>
-</tr>
-<tr>
-<td><code>bottom_nav_bar_test.dart</code></td>
-<td>Correct tabs render; active tab highlights; tapping switches branch</td>
-</tr>
-<tr>
-<td><code>upload_fab_test.dart</code></td>
-<td>FAB visible on Feed tab, hidden on all other tabs; hidden for guests</td>
-</tr>
-</tbody>
-</table>
-<p>No unit tests — this feature is pure UI with no business logic.</p>
-<hr />
-<h2 id="out-of-scope-this-phase">Out of Scope (this phase)<a class="headerlink" href="#out-of-scope-this-phase" title="Permanent link">&para;</a></h2>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen:</strong> Option 2 — Achievement-only XP with event-driven Cloud Function evaluator.</p>
+<p>Points are awarded <strong>exclusively</strong> by unlocking milestone badges; raw actions (creating a post, writing a comment, saving a post) increment denormalised counters but never directly grant points. Cloud Function triggers — extending the existing notification / engagement trigger pipeline — call a targeted <code>evaluateBadges(uid, changedStatKeys)</code> function that examines only the badges whose <code>condition.type</code> matches the changed stat. Newly-earned badges are written into <code>users/{uid}/earnedBadges/{badgeId}</code> and points / level are bumped in one Firestore transaction. The client streams the subcollection for real-time earn moments. A daily 03:00 ICT integrity sweep recomputes counters from source-of-truth queries and re-runs the evaluator to catch any trigger failures.</p>
+<p>This combination removes the spam vector entirely (you can't grind points without unlocking a new milestone, and milestones are dominated by outcome-based conditions like "10 saves received" or "5 requests fulfilled" that require other users' validating actions), gives real-time UX, and slots into the codebase's existing trigger pattern without inventing new infrastructure.</p>
+<p>It relies on the assumption that the evaluator's targeted query (<code>badges where active == true &amp;&amp; condition.type IN changedStatKeys</code>) keeps eval cost O(small constant) even as the badge catalog grows, and that Firestore transactions make double-grants impossible. Both hold for the v1 catalog of 20 badges and the planned v1.1 expansion.</p>
+<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
+<p><strong>Medium.</strong> The achievement-only XP shape is encoded across Cloud Functions, Firestore rules, Riverpod providers, and the badge catalog schema. Switching to a point-per-action model would require:</p>
 <ul>
-<li>Chat tab</li>
-<li>Notifications tab</li>
-<li>Sidebar collapse/expand on desktop</li>
-<li>Admin section in nav</li>
+<li>Adding per-action point values to each trigger</li>
+<li>Replacing the badge-condition shape (currently <code>{type, threshold}</code> against a stat) with a more complex point-source model</li>
+<li>Migrating existing earnedBadges / gamification data to the new schema</li>
+</ul>
+<p>It is reversible — we are pre-launch with no users — but the migration is more than a one-line config flip. Switching the evaluation site (Option 3, scheduled batch) is cheaper: same data model, different scheduler. The shape is the bigger commitment.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<p><strong>Easier:</strong></p>
+<ul>
+<li>New badges added by editing <code>tools/seeds/badges.js</code> and re-running the seed; no client redeploy needed for catalog changes (only for badges that need new stats to be tracked, which require trigger work).</li>
+<li>Anti-abuse story is simple — there's nothing to abuse at the per-action level. Defences only have to cover sybil and self-engagement at the milestone level.</li>
+<li>Earn-moment UX is real-time and reliable (Firestore stream + idempotent write).</li>
+<li>Cloud Function code lives next to existing notification triggers, making counter maintenance and notification dispatch share patterns and tests.</li>
+</ul>
+<p><strong>Harder:</strong></p>
+<ul>
+<li>Counters must be maintained carefully across <code>onCreate</code> and <code>onDelete</code> (and the moderation-removal path). A bug that leaves a counter out of sync produces silent wrong badge grants; the integrity sweep is the safety net but it isn't free.</li>
+<li>Adding a badge that needs a stat we don't already track means: new stat field, new trigger work to maintain it, possible backfill — not just a seed-file edit.</li>
+<li>The level-progress UX between badges is chunky (no continuous progress within a badge interval, since points only land when a badge unlocks). This is mostly hidden by always showing a "X / Y pts to Lv N+1" progress bar tied to total points, but users will notice the jumps. Considered acceptable.</li>
+</ul>
+<p><strong>Follow-up decisions required:</strong></p>
+<ul>
+<li>v1.1 leaderboard ranking key — total points or some normalised "active points" decay-weighted by time since earn? Decide once we have launch data.</li>
+<li>Moderation revocation threshold — currently proposed at 3 strikes; revisit when moderation tools land.</li>
+<li>Whether to maintain <code>uniqueDepartmentsContributed</code> as an array (current spec, used for two badges) or a denormalised count for cleaner evaluator code. Defer to implementation.</li>
 </ul>
 
 
