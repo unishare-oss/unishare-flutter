@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Shows a sign-out confirmation dialog and returns `true` when the user
+/// confirms the action.
 Future<bool> confirmSignOut(BuildContext context) async {
   final confirmed = await showDialog<bool>(
     context: context,
