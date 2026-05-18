@@ -1357,3 +1357,5 @@ Review: PENDING
   [15:29] Write: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
   [15:29] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
   [15:29] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
+  [22:34] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
+  [22:34] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart

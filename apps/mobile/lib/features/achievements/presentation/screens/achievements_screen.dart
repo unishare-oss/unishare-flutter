@@ -11,6 +11,7 @@ import 'package:unishare_mobile/features/achievements/presentation/widgets/badge
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_icon.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 class AchievementsScreen extends ConsumerWidget {
   const AchievementsScreen({super.key, required this.uid});
@@ -65,7 +66,12 @@ class AchievementsScreen extends ConsumerWidget {
             ),
           ),
           _BadgeGrid(badges: locked, earnedMap: earnedMap),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
+          // Bottom-inset convention from MainNavBar — the shell uses
+          // extendBody: true so each screen pads its scrollable past the
+          // glass nav bar instead of letting the last items hide behind it.
+          const SliverPadding(
+            padding: EdgeInsets.only(bottom: MainNavBar.bottomInset + 16),
+          ),
         ],
       ),
     );
