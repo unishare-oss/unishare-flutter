@@ -154,19 +154,23 @@ async function summarizeImage(groq: Groq, env: Env, buffer: ArrayBuffer): Promis
   let outputImg: PhotonImage | null = null
   let jpegBytes: Uint8Array
   try {
-    inputImg = PhotonImage.new_from_byteslice(new Uint8Array(buffer))
-    const w = inputImg.get_width()
-    const h = inputImg.get_height()
-    const needsResize = w > MAX_IMAGE_DIM || h > MAX_IMAGE_DIM
-    if (needsResize) {
-      const ratio = Math.min(MAX_IMAGE_DIM / w, MAX_IMAGE_DIM / h)
-      const targetW = Math.max(1, Math.round(w * ratio))
-      const targetH = Math.max(1, Math.round(h * ratio))
-      outputImg = resize(inputImg, targetW, targetH, SamplingFilter.Lanczos3)
-      jpegBytes = outputImg.get_bytes_jpeg(JPEG_QUALITY)
-    } else {
-      // Still re-encode to JPEG so PNG/WebP uploads aren't sent at original size.
-      jpegBytes = inputImg.get_bytes_jpeg(JPEG_QUALITY)
+    try {
+      inputImg = PhotonImage.new_from_byteslice(new Uint8Array(buffer))
+      const w = inputImg.get_width()
+      const h = inputImg.get_height()
+      const needsResize = w > MAX_IMAGE_DIM || h > MAX_IMAGE_DIM
+      if (needsResize) {
+        const ratio = Math.min(MAX_IMAGE_DIM / w, MAX_IMAGE_DIM / h)
+        const targetW = Math.max(1, Math.round(w * ratio))
+        const targetH = Math.max(1, Math.round(h * ratio))
+        outputImg = resize(inputImg, targetW, targetH, SamplingFilter.Lanczos3)
+        jpegBytes = outputImg.get_bytes_jpeg(JPEG_QUALITY)
+      } else {
+        // Still re-encode to JPEG so PNG/WebP uploads aren't sent at original size.
+        jpegBytes = inputImg.get_bytes_jpeg(JPEG_QUALITY)
+      }
+    } catch {
+      throw new Error('unsupported_format')
     }
   } catch {
     throw new Error('unsupported_format')
