@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
 import 'package:unishare_mobile/features/achievements/presentation/widgets/badge_frame.dart';
@@ -7,47 +7,47 @@ import 'package:unishare_mobile/features/achievements/presentation/widgets/badge
 IconData _resolveGlyph(String name) {
   switch (name) {
     case 'user-circle':
-      return PhosphorIconsThin.userCircle;
+      return LucideIcons.userCircle;
     case 'paper-plane-tilt':
-      return PhosphorIconsThin.paperPlaneTilt;
+      return LucideIcons.send;
     case 'bookmark-simple':
-      return PhosphorIconsThin.bookmarkSimple;
+      return LucideIcons.bookmark;
     case 'chat-circle-dots':
-      return PhosphorIconsThin.chatCircleDots;
+      return LucideIcons.messageCircleMore;
     case 'hand-waving':
-      return PhosphorIconsThin.handWaving;
+      return LucideIcons.hand;
     case 'sparkle':
-      return PhosphorIconsThin.sparkle;
+      return LucideIcons.sparkle;
     case 'stack':
-      return PhosphorIconsThin.stack;
+      return LucideIcons.layers;
     case 'lightbulb':
-      return PhosphorIconsThin.lightbulb;
+      return LucideIcons.lightbulb;
     case 'notebook':
-      return PhosphorIconsThin.notebook;
+      return LucideIcons.notebook;
     case 'chats':
-      return PhosphorIconsThin.chats;
+      return LucideIcons.messagesSquare;
     case 'hand-heart':
-      return PhosphorIconsThin.handHeart;
+      return LucideIcons.heartHandshake;
     case 'compass':
-      return PhosphorIconsThin.compass;
+      return LucideIcons.compass;
     case 'books':
-      return PhosphorIconsThin.books;
+      return LucideIcons.bookOpenText;
     case 'ear':
-      return PhosphorIconsThin.ear;
+      return LucideIcons.ear;
     case 'anchor':
-      return PhosphorIconsThin.anchor;
+      return LucideIcons.anchor;
     case 'crown-simple':
-      return PhosphorIconsThin.crownSimple;
+      return LucideIcons.crown;
     case 'tree':
-      return PhosphorIconsThin.tree;
+      return LucideIcons.treePine;
     case 'seal-check':
-      return PhosphorIconsThin.sealCheck;
+      return LucideIcons.badgeCheck;
     case 'globe':
-      return PhosphorIconsThin.globe;
+      return LucideIcons.globe;
     case 'medal':
-      return PhosphorIconsThin.medal;
+      return LucideIcons.medal;
     default:
-      return PhosphorIconsThin.question;
+      return LucideIcons.circleHelp;
   }
 }
 
@@ -69,7 +69,7 @@ class BadgeIcon extends StatelessWidget {
       tier: badge.tier,
       locked: locked,
       size: size,
-      child: Icon(locked ? PhosphorIconsThin.lock : _resolveGlyph(badge.glyph)),
+      child: Icon(locked ? LucideIcons.lock : _resolveGlyph(badge.glyph)),
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
@@ -396,7 +396,7 @@ class _NameRowState extends ConsumerState<_NameRow> {
             visualDensity: VisualDensity.compact,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
-            icon: Icon(PhosphorIconsThin.sparkle, color: ac.amber),
+            icon: Icon(LucideIcons.sparkle, color: ac.amber),
             onPressed: _replayLastEarn,
           ),
           const SizedBox(width: 4),
