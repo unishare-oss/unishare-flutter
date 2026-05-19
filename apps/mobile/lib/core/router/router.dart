@@ -127,16 +127,21 @@ class _RouterNotifier extends ChangeNotifier {
     const authRoutes = {'/welcome'};
     final currentPath = state.uri.path;
 
-    // 1. No session + not guest → force /welcome
+    // 1. No session + not guest → force /welcome, preserving intended URL
     if (!isAuthenticated && !isGuest) {
       if (!authRoutes.contains(currentPath)) {
-        return '/welcome';
+        final encoded = Uri.encodeComponent(state.uri.toString());
+        return '/welcome?redirect=$encoded';
       }
       return null;
     }
 
-    // 2. Authenticated on an auth route → go to /feed
+    // 2. Authenticated on an auth route → honour redirect param or go to /feed
     if (isAuthenticated && authRoutes.contains(currentPath)) {
+      final redirect = state.uri.queryParameters['redirect'];
+      if (redirect != null && redirect.isNotEmpty) {
+        return Uri.decodeComponent(redirect);
+      }
       return '/feed';
     }
 

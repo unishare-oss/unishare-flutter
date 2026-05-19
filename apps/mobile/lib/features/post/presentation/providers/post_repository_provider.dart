@@ -7,16 +7,20 @@ import 'package:unishare_mobile/features/post/data/datasources/comment_firestore
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_firestore_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_storage_datasource.dart';
+import 'package:unishare_mobile/features/post/data/datasources/share_plus_datasource.dart';
 import 'package:unishare_mobile/features/post/data/models/post_draft_model.dart';
 import 'package:unishare_mobile/features/post/data/repositories/comment_repository_impl.dart';
 import 'package:unishare_mobile/features/post/data/repositories/like_repository_impl.dart';
 import 'package:unishare_mobile/features/post/data/repositories/post_repository_impl.dart';
+import 'package:unishare_mobile/features/post/data/repositories/share_repository_impl.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/comment_repository.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/like_repository.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/share_repository.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/add_comment.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/delete_comment.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/create_post.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/share_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
@@ -111,3 +115,18 @@ DeleteComment deleteCommentUseCase(Ref ref) {
 ToggleLike toggleLikeUseCase(Ref ref) {
   return ToggleLike(ref.watch(likeRepositoryProvider));
 }
+
+// ---------------------------------------------------------------------------
+// SPEC-0010 — Share providers
+// ---------------------------------------------------------------------------
+
+@Riverpod(keepAlive: true)
+SharePlusDataSource sharePlusDatasource(Ref ref) => const SharePlusDataSource();
+
+@Riverpod(keepAlive: true)
+ShareRepository shareRepository(Ref ref) =>
+    ShareRepositoryImpl(ref.watch(sharePlusDatasourceProvider));
+
+@Riverpod(keepAlive: true)
+SharePostUseCase sharePostUseCase(Ref ref) =>
+    SharePostUseCase(ref.watch(shareRepositoryProvider));
