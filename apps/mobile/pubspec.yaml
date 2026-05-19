@@ -41,7 +41,7 @@ dependencies:
   firebase_auth: ^6.5.0
   cloud_firestore: ^6.3.0
   firebase_crashlytics: ^5.2.0
-  firebase_remote_config: ^6.5.0
+  firebase_remote_config: ^6.5.1
   google_sign_in: ^7.2.0
   local_auth: ^3.0.1
   hive_flutter: ^1.1.0
