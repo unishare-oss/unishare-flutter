@@ -6,29 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Owner edit/delete actions are placed in a PostDetailScreen AppBar overflow menu, not on PostCard or exclusively on MyPostsScreen.">
       
       
       
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0011-edit-delete-own-post-action-surface/">
       
+      
+        <link rel="prev" href="../0010-achievement-only-xp-and-event-driven-evaluation/">
+      
+      
+        <link rel="next" href="../../stencils/adr/">
       
       
         
       
       
-      <link rel="icon" href="/unishare-flutter/assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Unishare Engineering Docs</title>
+        <title>0011: Edit and delete own post — action surface on PostDetailScreen only - Unishare Engineering Docs</title>
       
     
     
-      <link rel="stylesheet" href="/unishare-flutter/assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="/unishare-flutter/assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -47,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("/unishare-flutter/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -71,6 +77,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#0011-edit-and-delete-own-post-action-surface-on-postdetailscreen-only" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -81,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/unishare-flutter/." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+    <a href="../.." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -101,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              0011: Edit and delete own post — action surface on PostDetailScreen only
             
           </span>
         </div>
@@ -214,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/unishare-flutter/." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -231,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="/unishare-flutter/decisions/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -255,7 +268,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/unishare-flutter/stencils/adr/" class="md-tabs__link">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -275,7 +288,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/unishare-flutter/tech-proposals/" class="md-tabs__link">
+        <a href="../../tech-proposals/" class="md-tabs__link">
           
   
   
@@ -295,7 +308,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="/unishare-flutter/tech-specs/" class="md-tabs__link">
+        <a href="../../tech-specs/" class="md-tabs__link">
           
   
   
@@ -329,7 +342,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/unishare-flutter/." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+    <a href="../.." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -359,7 +372,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -383,26 +396,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -420,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -438,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -466,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -494,7 +512,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
+      <a href="../0001-notification-delivery-mechanism/" class="md-nav__link">
         
   
   
@@ -522,7 +540,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -557,7 +575,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -592,7 +610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -627,7 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -662,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -690,7 +708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+      <a href="../0006-post-detail-data-loading-strategy/" class="md-nav__link">
         
   
   
@@ -718,7 +736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0007-file-preview-unified-route/" class="md-nav__link">
+      <a href="../0007-file-preview-unified-route/" class="md-nav__link">
         
   
   
@@ -746,7 +764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0007-save-post-storage-strategy/" class="md-nav__link">
+      <a href="../0007-save-post-storage-strategy/" class="md-nav__link">
         
   
   
@@ -774,7 +792,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0008-share-post-deep-link-strategy/" class="md-nav__link">
+      <a href="../0008-share-post-deep-link-strategy/" class="md-nav__link">
         
   
   
@@ -802,7 +820,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
+      <a href="../0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
         
   
   
@@ -827,10 +845,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/unishare-flutter/decisions/0011-edit-delete-own-post-action-surface/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: Edit and delete own post — action surface on PostDetailScreen only
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -846,6 +891,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -917,7 +1037,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/stencils/adr/" class="md-nav__link">
+      <a href="../../stencils/adr/" class="md-nav__link">
         
   
   
@@ -945,7 +1065,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/stencils/tech-proposal/" class="md-nav__link">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
         
   
   
@@ -973,7 +1093,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/stencils/tech-spec/" class="md-nav__link">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
         
   
   
@@ -1060,7 +1180,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/" class="md-nav__link">
+      <a href="../../tech-proposals/" class="md-nav__link">
         
   
   
@@ -1088,7 +1208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0001-notification/" class="md-nav__link">
+      <a href="../../tech-proposals/0001-notification/" class="md-nav__link">
         
   
   
@@ -1116,7 +1236,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0003-post-feed/" class="md-nav__link">
+      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
         
   
   
@@ -1144,7 +1264,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1172,7 +1292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0005-feed-filtering-tags/" class="md-nav__link">
+      <a href="../../tech-proposals/0005-feed-filtering-tags/" class="md-nav__link">
         
   
   
@@ -1200,7 +1320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-proposals/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1228,7 +1348,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0006-post-detail-page/" class="md-nav__link">
+      <a href="../../tech-proposals/0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1256,7 +1376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0007-file-preview-screen/" class="md-nav__link">
+      <a href="../../tech-proposals/0007-file-preview-screen/" class="md-nav__link">
         
   
   
@@ -1284,7 +1404,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0007-save-post/" class="md-nav__link">
+      <a href="../../tech-proposals/0007-save-post/" class="md-nav__link">
         
   
   
@@ -1312,7 +1432,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0008-request-post/" class="md-nav__link">
+      <a href="../../tech-proposals/0008-request-post/" class="md-nav__link">
         
   
   
@@ -1340,7 +1460,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0009-ai-post-summary/" class="md-nav__link">
+      <a href="../../tech-proposals/0009-ai-post-summary/" class="md-nav__link">
         
   
   
@@ -1368,7 +1488,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0010-achievements/" class="md-nav__link">
+      <a href="../../tech-proposals/0010-achievements/" class="md-nav__link">
         
   
   
@@ -1396,7 +1516,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0010-share-post/" class="md-nav__link">
+      <a href="../../tech-proposals/0010-share-post/" class="md-nav__link">
         
   
   
@@ -1424,7 +1544,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-proposals/0011-edit-delete-own-post/" class="md-nav__link">
+      <a href="../../tech-proposals/0011-edit-delete-own-post/" class="md-nav__link">
         
   
   
@@ -1511,7 +1631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/" class="md-nav__link">
+      <a href="../../tech-specs/" class="md-nav__link">
         
   
   
@@ -1539,7 +1659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0001-auth-design/" class="md-nav__link">
+      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
         
   
   
@@ -1567,7 +1687,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0001-notification/" class="md-nav__link">
+      <a href="../../tech-specs/0001-notification/" class="md-nav__link">
         
   
   
@@ -1595,7 +1715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0002-navigation-design/" class="md-nav__link">
+      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
         
   
   
@@ -1623,7 +1743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1651,7 +1771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0005-feed-filtering-tags/" class="md-nav__link">
+      <a href="../../tech-specs/0005-feed-filtering-tags/" class="md-nav__link">
         
   
   
@@ -1679,7 +1799,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-specs/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1707,7 +1827,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0006-post-detail-page/" class="md-nav__link">
+      <a href="../../tech-specs/0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1735,7 +1855,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0007-file-preview-screen/" class="md-nav__link">
+      <a href="../../tech-specs/0007-file-preview-screen/" class="md-nav__link">
         
   
   
@@ -1763,7 +1883,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0007-save-post/" class="md-nav__link">
+      <a href="../../tech-specs/0007-save-post/" class="md-nav__link">
         
   
   
@@ -1791,7 +1911,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0008-request-post/" class="md-nav__link">
+      <a href="../../tech-specs/0008-request-post/" class="md-nav__link">
         
   
   
@@ -1819,7 +1939,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0009-ai-post-summary/" class="md-nav__link">
+      <a href="../../tech-specs/0009-ai-post-summary/" class="md-nav__link">
         
   
   
@@ -1847,7 +1967,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0010-achievements/" class="md-nav__link">
+      <a href="../../tech-specs/0010-achievements/" class="md-nav__link">
         
   
   
@@ -1875,7 +1995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0010-share-post/" class="md-nav__link">
+      <a href="../../tech-specs/0010-share-post/" class="md-nav__link">
         
   
   
@@ -1903,7 +2023,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0011-edit-delete-own-post/" class="md-nav__link">
+      <a href="../../tech-specs/0011-edit-delete-own-post/" class="md-nav__link">
         
   
   
@@ -1931,7 +2051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/unishare-flutter/tech-specs/0011-users-public-and-discoverability/" class="md-nav__link">
+      <a href="../../tech-specs/0011-users-public-and-discoverability/" class="md-nav__link">
         
   
   
@@ -1976,6 +2096,71 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1988,8 +2173,88 @@
               
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0011-edit-delete-own-post-action-surface.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="0011-edit-and-delete-own-post-action-surface-on-postdetailscreen-only">0011 — Edit and delete own post — action surface on PostDetailScreen only<a class="headerlink" href="#0011-edit-and-delete-own-post-action-surface-on-postdetailscreen-only" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> PROPOSED
+<strong>Author:</strong> architect
+<strong>Date:</strong> 2026-05-19</p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>Post owners need a way to correct errors or remove their own posts. Three surfaces are candidates: the detail screen AppBar, the <code>PostCard</code> widget (visible in the feed and on <code>MyPostsScreen</code>), and <code>MyPostsScreen</code> exclusively. Each involves a different coupling risk, discovery model, and accidental-action probability. A decision was needed before the Tech Spec could enumerate files and routes.</p>
+<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Option</th>
+<th>Upside</th>
+<th>Downside</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Overflow menu on <code>PostDetailScreen</code> AppBar only</td>
+<td>Follows established <code>_deleteComment</code> pattern; detail screen is where authors notice errors; lowest accidental-tap risk; no changes to <code>PostCard</code></td>
+<td>Author must navigate to detail view before acting; one extra navigation step to delete</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Overflow menu on <code>PostCard</code> (feed + detail)</td>
+<td>Fastest path to delete from any list; consistent action surface everywhere the card appears</td>
+<td>Adds ownership-awareness coupling to a shared widget; competes for top-right layout space with <code>SaveButton</code>; higher accidental-tap risk in dense scroll lists; two call sites to maintain</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Long-press or swipe-to-reveal on <code>MyPostsScreen</code> only</td>
+<td>Zero changes to <code>PostCard</code> or <code>PostDetailScreen</code>; management intent is explicit</td>
+<td>Requires gesture interceptor wrapping over <code>PostCard</code> in <code>MyPostsScreen</code>; hides edit from the most natural discovery point; not reachable from deep-link entry into detail</td>
+</tr>
+</tbody>
+</table>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen:</strong> Option 1 — overflow menu on <code>PostDetailScreen</code> AppBar only.</p>
+<p>The detail screen is where an author is most likely to notice a mistake — they are reading the full content. Putting the action there creates a direct cause-effect relationship with no intermediate navigation. Option 2's faster delete path does not justify adding ownership-awareness to a shared feed widget and doubling the accidental-action surface. Option 3 breaks discoverability for deep-link entry paths and adds gesture complexity without meaningful benefit over Option 1.</p>
+<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
+<p><strong>Low.</strong> The domain layer (use cases, repository interface) is independent of which widget hosts the trigger. Moving from Option 1 to Option 2 later requires extending <code>PostCard</code> with an optional ownership parameter and wiring a second call site — no schema changes. Moving to Option 3 requires rerouting the navigation trigger but no domain changes.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<p><strong>Easier:</strong>
+- <code>PostCard</code> stays a pure display widget with no ownership or mutation logic.
+- The implementation pattern mirrors <code>_deleteComment</code> in <code>PostDetailScreen</code>, making it immediately reviewable by the team.
+- The new <code>EditPostScreen</code> route is additive — no existing screens are modified beyond <code>PostDetailScreen</code>'s AppBar actions list.</p>
+<p><strong>Harder:</strong>
+- Authors who arrive at <code>MyPostsScreen</code> must tap into a post's detail view before they can delete it — one extra tap compared to a swipe-to-delete card pattern.
+- A future "quick-delete from My Posts" request would require revisiting this decision, though the reversal cost is low.</p>
+<p><strong>Follow-up decisions required:</strong>
+- Which fields are mutable in an edit (title, description, tags, external URL, module number — explicit allowlist needed for security rules). Resolved in the Tech Spec.
+- Whether Storage file deletion is client-side or Cloud Function cascaded. Resolved in the Tech Spec.
+- Whether an "edited" indicator should appear in <code>PostDetailScreen</code> when <code>updatedAt != createdAt</code>. Product owner decision.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -2032,10 +2297,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "/unishare-flutter/", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "/unishare-flutter/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/unishare-flutter/assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
