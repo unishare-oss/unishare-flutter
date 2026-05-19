@@ -7,7 +7,9 @@ Future<bool> confirmSignOut(BuildContext context) async {
     context: context,
     builder: (ctx) => AlertDialog(
       title: const Text('Sign out?'),
-      content: const Text("You'll need to sign in again to access your account."),
+      content: const Text(
+        "You'll need to sign in again to access your account.",
+      ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(ctx).pop(false),
