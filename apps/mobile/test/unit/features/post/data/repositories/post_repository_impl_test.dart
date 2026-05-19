@@ -20,6 +20,7 @@ class _FakeAiSummarizeDatasource extends AiSummarizeDatasource {
   Map<String, dynamic>? result;
   Object? error;
   String? capturedFileUrl;
+  List<String>? capturedExistingTags;
 
   _FakeAiSummarizeDatasource({this.result, this.error});
 
@@ -27,8 +28,10 @@ class _FakeAiSummarizeDatasource extends AiSummarizeDatasource {
   Future<Map<String, dynamic>> call({
     required String fileUrl,
     required String filename,
+    List<String> existingTags = const [],
   }) async {
     capturedFileUrl = fileUrl;
+    capturedExistingTags = existingTags;
     if (error != null) throw error!;
     return result ?? {'summaryStatus': 'done', 'summary': 'Test summary'};
   }

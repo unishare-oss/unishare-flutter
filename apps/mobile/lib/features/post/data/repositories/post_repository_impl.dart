@@ -8,6 +8,7 @@ import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 
 import 'package:unishare_mobile/features/post/data/datasources/ai_summarize_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
+import 'package:unishare_mobile/features/post/data/datasources/tag_whitelist_service.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
@@ -23,8 +24,10 @@ class PostRepositoryImpl implements PostRepository {
     required this.feedCache,
     this.cacheTtl = const Duration(minutes: 5),
     AiSummarizeDatasource? aiSummarizeDatasource,
-  }) : _aiSummarizeDatasource =
-           aiSummarizeDatasource ?? AiSummarizeDatasource();
+    TagWhitelistService? tagWhitelistService,
+  })  : _aiSummarizeDatasource =
+            aiSummarizeDatasource ?? AiSummarizeDatasource(),
+        _tagWhitelistService = tagWhitelistService;
 
   final PostFirestoreDatasource firestoreDatasource;
   final PostStorageDatasource storageDatasource;
@@ -32,6 +35,10 @@ class PostRepositoryImpl implements PostRepository {
   final FeedCache feedCache;
   final Duration cacheTtl;
   final AiSummarizeDatasource _aiSummarizeDatasource;
+  /// Optional — null in unit tests that don't exercise vocabulary control.
+  /// When set, [triggerSummarize] passes the cached top-tags list to the
+  /// worker so the model prefers reusing existing tag vocabulary.
+  final TagWhitelistService? _tagWhitelistService;
 
   @override
   Stream<List<Post>> watchFeed({int limit = 20}) async* {
@@ -216,29 +223,37 @@ class PostRepositoryImpl implements PostRepository {
 
   @visibleForTesting
   void triggerSummarize(String postId, String fileUrl, String filename) {
-    _aiSummarizeDatasource
-        .call(fileUrl: fileUrl, filename: filename)
-        .then(
-          (data) async {
-            final summaryStatus = data['summaryStatus'] as String? ?? 'error';
-            final summary = data['summary'] as String?;
-            final extractedText = data['extractedText'] as String?;
-            final extractedTextTruncated =
-                data['extractedTextTruncated'] as bool?;
-            final aiTags = (data['aiTags'] as List?)?.cast<String>();
-            await firestoreDatasource.updatePostSummary(
-              postId,
-              summary,
-              summaryStatus,
-              extractedText: extractedText,
-              extractedTextTruncated: extractedTextTruncated,
-              aiTags: aiTags,
-            );
-          },
-          onError: (_) async {
-            await firestoreDatasource.updatePostSummary(postId, null, 'error');
-          },
+    // Fire-and-forget: fetch the Phase A whitelist (advisory; failures
+    // degrade to an empty list), then dispatch summarize and write back
+    // whatever the worker returns.
+    Future<void> runSummarize() async {
+      final existingTags = await _tagWhitelistService?.topTags() ?? const [];
+      try {
+        final data = await _aiSummarizeDatasource.call(
+          fileUrl: fileUrl,
+          filename: filename,
+          existingTags: existingTags,
         );
+        final summaryStatus = data['summaryStatus'] as String? ?? 'error';
+        final summary = data['summary'] as String?;
+        final extractedText = data['extractedText'] as String?;
+        final extractedTextTruncated = data['extractedTextTruncated'] as bool?;
+        final aiTags = (data['aiTags'] as List?)?.cast<String>();
+        await firestoreDatasource.updatePostSummary(
+          postId,
+          summary,
+          summaryStatus,
+          extractedText: extractedText,
+          extractedTextTruncated: extractedTextTruncated,
+          aiTags: aiTags,
+        );
+      } catch (_) {
+        await firestoreDatasource.updatePostSummary(postId, null, 'error');
+      }
+    }
+
+    // ignore: unawaited_futures
+    runSummarize();
   }
 
   @override

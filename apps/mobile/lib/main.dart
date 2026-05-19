@@ -12,6 +12,7 @@ import 'package:unishare_mobile/core/logging/app_logger.dart';
 import 'package:unishare_mobile/core/router/router.dart';
 import 'package:unishare_mobile/core/storage/post_draft_box.dart';
 import 'package:unishare_mobile/core/storage/saved_post_box.dart';
+import 'package:unishare_mobile/core/storage/tag_whitelist_box.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/new_badge_alert_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/notifications/presentation/providers/notification_repository_provider.dart';
@@ -27,6 +28,7 @@ void main() async {
   await Hive.initFlutter();
   await initPostDraftBox();
   await initSavedPostBox();
+  await initTagWhitelistBox();
   await Hive.openBox('settings');
   await openAchievementsAlertsBox();
   runApp(const ProviderScope(child: App()));

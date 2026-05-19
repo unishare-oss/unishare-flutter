@@ -8,16 +8,32 @@ import { json, jsonError } from './response'
 /// Shared aiTags rules — a flat list of specific topic strings. Mirrors the
 /// shape of the user-typed `tags` field on the post doc, just labeled as
 /// AI-derived so the UI can render them distinctly and the search backend
-/// can index both. Open-vocabulary in this phase; Phase A will inject a
-/// daily-refreshed whitelist of top tags to encourage reuse and dedup.
-const AI_TAGS_RULES = `aiTags rules:
+/// can index both.
+const AI_TAGS_RULES_BASE = `aiTags rules:
 - 3 to 7 specific topic strings (no broad subject areas like "biology" alone — use specific concepts like "krebs-cycle", "rsa-encryption", "matrix-multiplication").
 - Lowercase kebab-case (hyphen-separated). Convert "Krebs Cycle" → "krebs-cycle".
 - Each tag should be a concept a student would plausibly search for.`
 
+/// Phase A vocabulary control (PROP-0011): when the client passes a whitelist
+/// of "tags already in heavy use across the corpus", we append a preference
+/// line to the prompt. The model is *encouraged* to reuse these tags so the
+/// global vocabulary stays consistent, but it is *not* constrained — genuinely
+/// novel topics should still get fresh tags. Phase B (embedding dedup) will
+/// collapse near-synonyms automatically.
+function buildAiTagsRules(existingTags: string[]): string {
+  if (existingTags.length === 0) return AI_TAGS_RULES_BASE
+  // Truncate the whitelist defensively so a runaway client can't blow up the
+  // prompt size — 80 tags is plenty of signal for the model.
+  const trimmed = existingTags.slice(0, 80).join(', ')
+  return `${AI_TAGS_RULES_BASE}
+- PREFER these tags already in heavy use across the corpus when applicable (reuse the exact kebab-case string): ${trimmed}. Only invent new tags for genuinely novel topics not covered by this list.`
+}
+
 /// Text-path prompt. Input is already-extracted document text. We ask for a
-/// JSON envelope to get summary + aiTags in one round trip.
-const TEXT_SUMMARY_PROMPT = `You are processing an academic document for university students.
+/// JSON envelope to get summary + aiTags in one round trip. Built per-request
+/// so the Phase A whitelist can be injected into the aiTags rules.
+function buildTextSummaryPrompt(existingTags: string[]): string {
+  return `You are processing an academic document for university students.
 
 Return EXACTLY a JSON object with these fields. No preamble. No markdown code fence. No closing remarks.
 
@@ -39,14 +55,16 @@ Summary rules:
 - Name actual topics, theorems, formulas, or terms (e.g. "Lagrangian mechanics", "RSA encryption", "Krebs cycle") — avoid generic phrases like "discusses concepts" or "covers material".
 - For math/science documents, identify the specific method or theorem applied, not just the subject area.
 
-${AI_TAGS_RULES}
+${buildAiTagsRules(existingTags)}
 
 Set status to "unreadable" if the document is blank, gibberish, or contains no academic content (aiTags may be []).
 Set status to "flagged" if the document contains harmful or clearly inappropriate content (aiTags may be []).`
+}
 
 /// Image-path prompt. We additionally ask for verbatim transcription so the
 /// page text is searchable / RAG-able for downstream features.
-const VISION_SUMMARY_PROMPT = `You are processing an academic page (printed, scanned, or handwritten) for university students.
+function buildVisionSummaryPrompt(existingTags: string[]): string {
+  return `You are processing an academic page (printed, scanned, or handwritten) for university students.
 
 Return EXACTLY a JSON object with these fields. No preamble. No markdown code fence. No closing remarks.
 
@@ -74,10 +92,11 @@ transcribedText rules:
 - Do NOT add commentary or interpretation. Just the page's text.
 - For partially illegible handwriting, transcribe what you can and mark gaps with [...].
 
-${AI_TAGS_RULES}
+${buildAiTagsRules(existingTags)}
 
 Set status to "unreadable" if the page is blank, unreadable, or contains no academic content (aiTags may be []).
 Set status to "flagged" if the page contains harmful or clearly inappropriate content (aiTags may be []).`
+}
 
 const TEXT_MODEL_DEFAULT = 'llama-3.3-70b-versatile'
 const VISION_MODEL_DEFAULT = 'meta-llama/llama-4-scout-17b-16e-instruct'
@@ -115,7 +134,7 @@ interface SummarizeResult {
 }
 
 export async function handleAiSummarize(request: Request, env: Env): Promise<Response> {
-  let body: { fileUrl: string; filename: string }
+  let body: { fileUrl: string; filename: string; existingTags?: unknown }
   try {
     body = await request.json()
   } catch {
@@ -125,6 +144,12 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
   const { fileUrl, filename } = body
   if (!fileUrl || typeof fileUrl !== 'string') return jsonError('fileUrl required', 400)
   if (!filename || typeof filename !== 'string') return jsonError('filename required', 400)
+
+  // Phase A whitelist (PROP-0011). Advisory — empty/missing disables vocabulary
+  // control for this call. Defensive validation: drop non-strings.
+  const existingTags: string[] = Array.isArray(body.existingTags)
+    ? body.existingTags.filter((t): t is string => typeof t === 'string' && t.length > 0)
+    : []
 
   let parsed: URL
   try {
@@ -170,8 +195,8 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
   let result: SummarizeResult
   try {
     result = isImage
-      ? await summarizeImage(groq, env, buffer)
-      : await summarizeText(groq, env, buffer, filename)
+      ? await summarizeImage(groq, env, buffer, existingTags)
+      : await summarizeText(groq, env, buffer, filename, existingTags)
   } catch (e) {
     const msg = (e as Error).message
     if (msg === 'unsupported_format') {
@@ -208,6 +233,7 @@ async function summarizeText(
   env: Env,
   buffer: ArrayBuffer,
   filename: string,
+  existingTags: string[],
 ): Promise<SummarizeResult> {
   const { text, truncated } = await extractText(buffer, filename)
   if (!text.trim()) throw new Error('empty_text')
@@ -221,7 +247,7 @@ async function summarizeText(
     const response = await groq.chat.completions.create({
       model,
       messages: [
-        { role: 'system', content: TEXT_SUMMARY_PROMPT },
+        { role: 'system', content: buildTextSummaryPrompt(existingTags) },
         { role: 'user', content: llmInput },
       ],
       // 600 tokens covers summary + aiTags JSON envelope with margin.
@@ -253,6 +279,7 @@ async function summarizeImage(
   groq: Groq,
   env: Env,
   buffer: ArrayBuffer,
+  existingTags: string[],
 ): Promise<SummarizeResult> {
   // Resize + re-encode the upload so Groq stays under its 5 MB image cap and
   // we don't pay to upload a 12 MP camera shot for handwriting summarization.
@@ -296,7 +323,7 @@ async function summarizeImage(
     const response = await groq.chat.completions.create({
       model,
       messages: [
-        { role: 'system', content: VISION_SUMMARY_PROMPT },
+        { role: 'system', content: buildVisionSummaryPrompt(existingTags) },
         {
           role: 'user',
           content: [

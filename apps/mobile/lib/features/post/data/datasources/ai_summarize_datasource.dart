@@ -11,10 +11,17 @@ class AiSummarizeDatasource {
   final http.Client _client;
 
   /// Calls the Worker `/ai/summarize` endpoint.
-  /// Returns `{summaryStatus, summary}` from the Worker response.
+  /// Returns `{summaryStatus, summary, extractedText?, extractedTextTruncated?, aiTags?}`
+  /// from the Worker response.
+  ///
+  /// [existingTags] is the Phase A vocabulary control whitelist (PROP-0011).
+  /// When non-empty, the worker injects it into the summarize prompt so the
+  /// model prefers reusing tags already in heavy use across the corpus.
+  /// Advisory only — the model can still invent new tags for novel topics.
   Future<Map<String, dynamic>> call({
     required String fileUrl,
     required String filename,
+    List<String> existingTags = const [],
   }) async {
     final token = await FirebaseAuth.instance.currentUser?.getIdToken();
     if (token == null) throw Exception('not_authenticated');
@@ -25,7 +32,11 @@ class AiSummarizeDatasource {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
-      body: jsonEncode({'fileUrl': fileUrl, 'filename': filename}),
+      body: jsonEncode({
+        'fileUrl': fileUrl,
+        'filename': filename,
+        if (existingTags.isNotEmpty) 'existingTags': existingTags,
+      }),
     );
 
     if (response.statusCode != 200) {
