@@ -40,6 +40,8 @@ class _FakeDatasource extends PostFirestoreDatasource {
 
   String? lastSummaryStatus;
   String? lastSummary;
+  String? lastExtractedText;
+  bool? lastExtractedTextTruncated;
 
   void emit(List<Post> posts) => _ctrl.add(posts);
   void close() => _ctrl.close();
@@ -51,10 +53,14 @@ class _FakeDatasource extends PostFirestoreDatasource {
   Future<void> updatePostSummary(
     String postId,
     String? summary,
-    String summaryStatus,
-  ) async {
+    String summaryStatus, {
+    String? extractedText,
+    bool? extractedTextTruncated,
+  }) async {
     lastSummary = summary;
     lastSummaryStatus = summaryStatus;
+    lastExtractedText = extractedText;
+    lastExtractedTextTruncated = extractedTextTruncated;
   }
 }
 
@@ -208,7 +214,12 @@ void main() {
       'success path — updatePostSummary called with worker response',
       () async {
         final ai = _FakeAiSummarizeDatasource(
-          result: {'summaryStatus': 'done', 'summary': 'Great summary'},
+          result: {
+            'summaryStatus': 'done',
+            'summary': 'Great summary',
+            'extractedText': 'The full source text…',
+            'extractedTextTruncated': false,
+          },
         );
         final ds = _FakeDatasource();
         final repo = makeRepo(
@@ -226,6 +237,39 @@ void main() {
 
         expect(ds.lastSummaryStatus, 'done');
         expect(ds.lastSummary, 'Great summary');
+        expect(ds.lastExtractedText, 'The full source text…');
+        expect(ds.lastExtractedTextTruncated, false);
+      },
+    );
+
+    test(
+      'image response — extractedText from transcription persisted with truncated flag',
+      () async {
+        final ai = _FakeAiSummarizeDatasource(
+          result: {
+            'summaryStatus': 'done',
+            'summary': 'Handwritten notes on Krebs cycle',
+            'extractedText': 'Step 1: Acetyl-CoA + Oxaloacetate → Citrate…',
+            'extractedTextTruncated': true,
+          },
+        );
+        final ds = _FakeDatasource();
+        final repo = makeRepo(
+          feedCache: FeedCache(),
+          datasource: ds,
+          aiDatasource: ai,
+        );
+
+        repo.triggerSummarize(
+          'post-image',
+          'https://cdn.example.com/posts/notes.jpg',
+          'notes.jpg',
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        expect(ds.lastSummaryStatus, 'done');
+        expect(ds.lastExtractedText, startsWith('Step 1: Acetyl-CoA'));
+        expect(ds.lastExtractedTextTruncated, true);
       },
     );
 

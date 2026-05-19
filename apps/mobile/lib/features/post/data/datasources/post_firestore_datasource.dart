@@ -35,8 +35,7 @@ class PostFirestoreDatasource {
       'externalUrl': draft.externalUrl,
       'mediaUrls': mediaUrls,
       'mediaTypes': mediaTypes,
-      if (mediaTypes.contains('pdf') || mediaTypes.contains('docx'))
-        'summaryStatus': 'pending',
+      if (_isSummarizable(mediaTypes)) 'summaryStatus': 'pending',
       'codeSnippetUrl': codeSnippetUrl,
       'tags': draft.tags,
       'likesCount': 0,
@@ -120,6 +119,8 @@ class PostFirestoreDatasource {
         data['summaryStatus'] as String?,
       ),
       summarizedAt: (data['summarizedAt'] as Timestamp?)?.toDate(),
+      extractedText: data['extractedText'] as String?,
+      extractedTextTruncated: data['extractedTextTruncated'] as bool?,
     );
   }
 
@@ -149,17 +150,28 @@ class PostFirestoreDatasource {
     });
   }
 
+  /// Persists the worker's summarize response onto the post doc. `summary`
+  /// and `extractedText` are deleted from the doc when null so we don't
+  /// leave stale partials behind on retried calls.
   Future<void> updatePostSummary(
     String postId,
     String? summary,
-    String summaryStatus,
-  ) async {
+    String summaryStatus, {
+    String? extractedText,
+    bool? extractedTextTruncated,
+  }) async {
     await _firestore.collection('posts').doc(postId).update({
       'summaryStatus': summaryStatus,
       'summary': summary ?? FieldValue.delete(),
       'summarizedAt': summaryStatus == 'done'
           ? FieldValue.serverTimestamp()
           : FieldValue.delete(),
+      'extractedText':
+          (extractedText != null && extractedText.isNotEmpty)
+              ? extractedText
+              : FieldValue.delete(),
+      'extractedTextTruncated':
+          extractedTextTruncated ?? FieldValue.delete(),
     });
   }
 
@@ -192,4 +204,15 @@ class PostFirestoreDatasource {
     }
     await _firestore.collection('posts').doc(postId).update(data);
   }
+}
+
+/// Media types we send to the AI summarize worker. Kept in sync with the
+/// worker's accepted file types (PDF/DOCX via text extraction, images via
+/// vision model). Defined here so createPost can pre-set
+/// `summaryStatus: 'pending'` for the same set the repository will trigger.
+bool _isSummarizable(List<String> mediaTypes) {
+  for (final t in mediaTypes) {
+    if (t == 'pdf' || t == 'docx' || t == 'image') return true;
+  }
+  return false;
 }

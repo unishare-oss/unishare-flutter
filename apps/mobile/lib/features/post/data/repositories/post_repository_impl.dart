@@ -196,7 +196,7 @@ class PostRepositoryImpl implements PostRepository {
       await removeDraft(draft.id);
 
       final supportedIndex = mediaTypes.indexWhere(
-        (t) => t == 'pdf' || t == 'docx',
+        (t) => t == 'pdf' || t == 'docx' || t == 'image',
       );
       if (supportedIndex != -1) {
         final fileUrl = mediaUrls[supportedIndex];
@@ -222,10 +222,15 @@ class PostRepositoryImpl implements PostRepository {
           (data) async {
             final summaryStatus = data['summaryStatus'] as String? ?? 'error';
             final summary = data['summary'] as String?;
+            final extractedText = data['extractedText'] as String?;
+            final extractedTextTruncated =
+                data['extractedTextTruncated'] as bool?;
             await firestoreDatasource.updatePostSummary(
               postId,
               summary,
               summaryStatus,
+              extractedText: extractedText,
+              extractedTextTruncated: extractedTextTruncated,
             );
           },
           onError: (_) async {
