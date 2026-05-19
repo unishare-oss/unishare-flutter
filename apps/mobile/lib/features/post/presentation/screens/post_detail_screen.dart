@@ -237,14 +237,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                 }
               },
               itemBuilder: (_) => const [
-                PopupMenuItem(
-                  value: _PostAction.edit,
-                  child: Text('Edit'),
-                ),
-                PopupMenuItem(
-                  value: _PostAction.delete,
-                  child: Text('Delete'),
-                ),
+                PopupMenuItem(value: _PostAction.edit, child: Text('Edit')),
+                PopupMenuItem(value: _PostAction.delete, child: Text('Delete')),
               ],
             ),
           Semantics(

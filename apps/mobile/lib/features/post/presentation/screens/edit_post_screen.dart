@@ -73,25 +73,29 @@ class _EditPostScreenState extends ConsumerState<EditPostScreen> {
     if (title.isEmpty || desc.isEmpty) return;
 
     final post = widget.post;
-    await ref.read(editPostProvider.notifier).save(
-      postId: widget.postId,
-      title: title,
-      description: desc,
-      tags: _tags,
-      externalUrl: _urlCtrl.text.trim().isEmpty ? null : _urlCtrl.text.trim(),
-      moduleNumber: _moduleCtrl.text.trim(),
-      descriptionChanged: desc != _originalDescription,
-      currentSummaryStatus: post?.summaryStatus,
-    );
+    await ref
+        .read(editPostProvider.notifier)
+        .save(
+          postId: widget.postId,
+          title: title,
+          description: desc,
+          tags: _tags,
+          externalUrl: _urlCtrl.text.trim().isEmpty
+              ? null
+              : _urlCtrl.text.trim(),
+          moduleNumber: _moduleCtrl.text.trim(),
+          descriptionChanged: desc != _originalDescription,
+          currentSummaryStatus: post?.summaryStatus,
+        );
 
     if (!mounted) return;
     final state = ref.read(editPostProvider);
     if (state is AsyncData) {
       context.pop();
     } else if (state is AsyncError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save: ${state.error}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to save: ${state.error}')));
     }
   }
 

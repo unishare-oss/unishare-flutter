@@ -256,15 +256,15 @@ class PostRepositoryImpl implements PostRepository {
     required bool descriptionChanged,
     required SummaryStatus? currentSummaryStatus,
   }) => firestoreDatasource.updatePost(
-        postId: postId,
-        title: title,
-        description: description,
-        tags: tags,
-        externalUrl: externalUrl,
-        moduleNumber: moduleNumber,
-        descriptionChanged: descriptionChanged,
-        currentSummaryStatus: currentSummaryStatus,
-      );
+    postId: postId,
+    title: title,
+    description: description,
+    tags: tags,
+    externalUrl: externalUrl,
+    moduleNumber: moduleNumber,
+    descriptionChanged: descriptionChanged,
+    currentSummaryStatus: currentSummaryStatus,
+  );
 
   static String _mediaTypeFromPath(String path) {
     final ext = path.split('.').last.toLowerCase();

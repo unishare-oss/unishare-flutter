@@ -22,7 +22,9 @@ class EditPostNotifier extends _$EditPostNotifier {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
-      () => ref.read(updatePostUseCaseProvider).call(
+      () => ref
+          .read(updatePostUseCaseProvider)
+          .call(
             postId: postId,
             title: title,
             description: description,
