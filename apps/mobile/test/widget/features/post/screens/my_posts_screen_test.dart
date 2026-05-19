@@ -38,6 +38,9 @@ class _FakePostRepository implements PostRepository {
   Future<int> countPostsByAuthor(String authorId) async => 0;
 
   @override
+  Future<void> incrementViewCount(String postId) async {}
+
+  @override
   Stream<List<Post>> watchFeed({int limit = 20}) => throw UnimplementedError();
 
   @override

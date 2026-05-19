@@ -9,6 +9,12 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    # Orphaned generated file — source was deleted; remove this entry after
+    # running `dart run build_runner build` regenerates or cleans it.
+    - lib/features/feed/presentation/providers/active_tag_filters_provider.g.dart
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`

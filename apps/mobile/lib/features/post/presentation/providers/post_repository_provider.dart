@@ -22,6 +22,7 @@ import 'package:unishare_mobile/features/post/domain/usecases/delete_comment.dar
 import 'package:unishare_mobile/features/post/domain/usecases/create_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/share_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/increment_view_count.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_my_posts.dart';
@@ -116,6 +117,10 @@ ToggleLike toggleLikeUseCase(Ref ref) {
   return ToggleLike(ref.watch(likeRepositoryProvider));
 }
 
+@Riverpod(keepAlive: true)
+IncrementViewCount incrementViewCountUseCase(Ref ref) {
+  return IncrementViewCount(ref.watch(postRepositoryProvider));
+}
 // ---------------------------------------------------------------------------
 // SPEC-0010 — Share providers
 // ---------------------------------------------------------------------------
