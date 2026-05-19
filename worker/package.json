@@ -8,6 +8,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.0.0",
     "@aws-sdk/s3-request-presigner": "^3.0.0",
+    "@cf-wasm/photon": "^0.3.5",
     "groq-sdk": "^0.11.0",
     "mammoth": "^1.7.0",
     "nanoid": "^5.0.0",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
+    "@types/node": "^25.9.0",
     "typescript": "^5.0.0",
     "wrangler": "^4.88.0"
   }

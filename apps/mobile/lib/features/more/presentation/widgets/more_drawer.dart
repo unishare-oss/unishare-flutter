@@ -9,6 +9,7 @@ import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_
 import 'package:unishare_mobile/features/auth/presentation/widgets/unishare_logo.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_grid.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_user_row.dart';
+import 'package:unishare_mobile/shared/widgets/confirm_sign_out_dialog.dart';
 
 /// Shows the More drawer as a modal bottom sheet. Auth-only.
 Future<void> showMoreDrawer(BuildContext context) {
@@ -117,7 +118,11 @@ class MoreDrawerSheet extends ConsumerWidget {
                     onSavedTap: () => _go(context, '/saved'),
                     onDepartmentsTap: () => _go(context, '/departments'),
                     onRequestsTap: () => _go(context, '/requests'),
-                    onProfileTap: () => _go(context, '/profile'),
+                    onAchievementsTap: () {
+                      final uid = userAsync.asData?.value?.id;
+                      if (uid == null) return;
+                      _go(context, '/achievements/$uid');
+                    },
                   ),
                   _SignOutRow(
                     onTap: () => _signOut(context, ref),
@@ -146,34 +151,25 @@ class MoreDrawerSheet extends ConsumerWidget {
   }
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Sign out?'),
-        content: const Text(
-          "You'll need to sign in again to access your account.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Sign out'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true) return;
+    // Capture messenger before the first async gap — it lives above the drawer
+    // in the widget tree and remains valid after the sheet is dismissed.
+    final messenger = ScaffoldMessenger.of(context);
+
+    if (!await confirmSignOut(context)) return;
 
     // Capture providers before popping — the modal's ConsumerWidget is torn
     // down by the pop, after which `ref` reads can warn.
     final signOut = ref.read(signOutUseCaseProvider);
     final guestMode = ref.read(guestModeProvider.notifier);
     if (context.mounted) Navigator.of(context).pop();
-    await signOut.call();
-    guestMode.exit();
+    try {
+      await signOut.call();
+      guestMode.exit();
+    } catch (e) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Sign out failed. Please try again.')),
+      );
+    }
   }
 }
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/features/achievements/presentation/providers/public_user_provider.dart';
+import 'package:unishare_mobile/features/achievements/presentation/widgets/level_chip.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/saved/domain/entities/saved_post_snapshot.dart';
@@ -14,9 +16,15 @@ import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class PostCard extends ConsumerWidget {
-  const PostCard({super.key, required this.post});
+  const PostCard({super.key, required this.post, this.suppressAuthorTapForUid});
 
   final Post post;
+
+  /// When set, suppresses the tappable author-name link if `post.authorId`
+  /// matches. Used by the public profile screen so visiting Alice's page
+  /// and tapping a post by Alice doesn't stack another `/profile/<Alice>`
+  /// on top.
+  final String? suppressAuthorTapForUid;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +48,7 @@ class PostCard extends ConsumerWidget {
               _buildTagsWrap(context, appColors),
             ],
             const SizedBox(height: 8),
-            _buildAuthorRow(context, appColors),
+            _buildAuthorRow(context, appColors, ref),
             const SizedBox(height: 6),
             _buildMetaRow(context, appColors),
           ],
@@ -151,7 +159,11 @@ class PostCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildAuthorRow(BuildContext context, AppColors appColors) {
+  Widget _buildAuthorRow(
+    BuildContext context,
+    AppColors appColors,
+    WidgetRef ref,
+  ) {
     final isAnonymous = post.postingIdentity == PostingIdentity.anonymous;
     final initials = isAnonymous
         ? '?'
@@ -176,12 +188,32 @@ class PostCard extends ConsumerWidget {
           ),
         ),
         const SizedBox(width: 6),
-        Text(
-          displayName,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: appColors.textSecondary),
-        ),
+        // Author name is tappable for non-anonymous posts — opens that
+        // user's public profile. Wrapped in a GestureDetector (not
+        // InkWell) because the whole card already absorbs taps via the
+        // top-level GestureDetector; we just intercept this region.
+        if (isAnonymous || suppressAuthorTapForUid == post.authorId)
+          Text(
+            displayName,
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: appColors.textSecondary),
+          )
+        else
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => context.push('/profile/${post.authorId}'),
+            child: Text(
+              displayName,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: appColors.textSecondary,
+                decoration: TextDecoration.underline,
+                decorationColor: appColors.textMuted,
+                decorationStyle: TextDecorationStyle.dotted,
+              ),
+            ),
+          ),
+        if (!isAnonymous) ...[..._authorLevelChip(ref)],
         Text(
           ' · Year ${post.year}',
           style: Theme.of(
@@ -190,6 +222,15 @@ class PostCard extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  /// Returns either `[SizedBox(6), LevelChip(...)]` when the author has
+  /// a renderable level, or an empty list. Keeps the chip width-stable
+  /// at the call site.
+  List<Widget> _authorLevelChip(WidgetRef ref) {
+    final pu = ref.watch(publicUserProvider(post.authorId)).asData?.value;
+    if (pu == null || pu.level < 2) return const [];
+    return [const SizedBox(width: 6), LevelChip(level: pu.level)];
   }
 
   Widget _buildMetaRow(BuildContext context, AppColors appColors) {

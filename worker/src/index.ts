@@ -14,6 +14,7 @@ export interface Env {
   R2_BUCKET: string;
   GROQ_API_KEY: string;
   GROQ_MODEL?: string;
+  GROQ_VISION_MODEL?: string;
 }
 
 const MIME_TO_EXT: Record<string, string> = {

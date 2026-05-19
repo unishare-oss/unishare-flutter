@@ -2,6 +2,8 @@ import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 
 import { db } from '../admin';
+import { incrementStat } from '../badges/counters';
+import { evaluateBadges } from '../badges/evaluateBadges';
 import { writeNotification } from '../lib/writeNotification';
 import { sendPush } from '../lib/sendPush';
 import { truncate } from '../lib/types';
@@ -19,6 +21,15 @@ export async function onCommentAddedHandler(event: {
   const snap = event.data;
   if (!snap) return;
   const comment = snap.data() as CommentDoc;
+
+  // Achievements: every comment (top-level or reply) counts toward
+  // commentsWritten. Done before the parentId early-return so replies still
+  // increment, and only here — onCommentReply fires on the same path but
+  // must not double-count.
+  if (comment.authorId) {
+    await incrementStat(comment.authorId, 'commentsWritten', 1);
+    await evaluateBadges(comment.authorId, ['commentsWritten']);
+  }
 
   if (comment.parentId) {
     return;

@@ -196,8 +196,8 @@ jobs:
 
       - name: Write GoogleService-Info.plist
         env:
-          GOOGLESERVICE_INFO_PLIST: ${{ secrets.GOOGLESERVICE_INFO_PLIST }}
-        run: echo "$GOOGLESERVICE_INFO_PLIST" > apps/mobile/ios/Runner/GoogleService-Info.plist
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+        run: echo "$GOOGLE_SERVICE_INFO_PLIST" > apps/mobile/ios/Runner/GoogleService-Info.plist
 
       - name: Install dependencies
         working-directory: apps/mobile
@@ -209,6 +209,10 @@ jobs:
 
       - name: Install FlutterFire CLI
         run: dart pub global activate flutterfire_cli
+
+      - uses: google-github-actions/auth@v3
+        with:
+          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
       - name: Remove WASM modules (not needed for iOS)
         working-directory: apps/mobile

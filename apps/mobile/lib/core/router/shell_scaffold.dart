@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/core/router/router.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer.dart';
 import 'package:unishare_mobile/features/notifications/presentation/providers/unread_count_provider.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
@@ -26,7 +27,27 @@ class ShellScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeIndex = navigationShell.currentIndex;
     final currentPath = GoRouterState.of(context).uri.path;
-    final currentSub = DrawerDestination.fromPath(currentPath);
+    final me = ref.watch(authStateProvider).asData?.value?.id;
+    // Re-route cross-user `/achievements/:uid` and `/profile/:uid` to the
+    // generic "Viewing" slot so the navbar doesn't claim "Achievements"
+    // or "Profile" — those should mean the user's own destinations.
+    var currentSub = DrawerDestination.fromPath(currentPath);
+    final crossUserMatch = RegExp(
+      r'^/(profile|achievements)/([^/]+)$',
+    ).firstMatch(currentPath);
+    final isCrossUser = crossUserMatch != null && crossUserMatch.group(2) != me;
+    if (isCrossUser) {
+      currentSub = DrawerDestination.publicProfile;
+    }
+    // When the user pushed a route that *lives in* the drawer-destinations
+    // branch (Branch 3) but pushed it on top of another branch (typically
+    // Feed), `navigationShell.currentIndex` stays at the original branch.
+    // Override the visual pill to point at the 4th slot so users see "I'm
+    // on a sub-destination" without breaking back-stack semantics.
+    final displayedIndex =
+        (currentSub != null && activeIndex != NavTab.more.index)
+        ? NavTab.more.index
+        : null;
     final unreadCount = ref.watch(unreadNotificationCountProvider);
 
     return PopScope(
@@ -46,6 +67,7 @@ class ShellScaffold extends ConsumerWidget {
         body: navigationShell,
         bottomNavigationBar: MainNavBar(
           activeIndex: activeIndex,
+          displayedIndex: displayedIndex,
           onTap: (index) => _handleTabTap(context, index),
           currentSubDestination: currentSub,
           notificationsBadgeCount: unreadCount,
@@ -60,7 +82,20 @@ class ShellScaffold extends ConsumerWidget {
       showMoreDrawer(context);
       return;
     }
+    // Feed acts as a global "home" — always reset and return to /feed
+    // regardless of which branch we're on or what's pushed on top.
+    if (index == NavTab.feed.index) {
+      context.go('/feed');
+      return;
+    }
     if (index == navigationShell.currentIndex) {
+      // If the active branch has a pushed route on top (e.g., user pushed
+      // /profile/:uid from feed), tapping the tab should pop back to the
+      // branch root rather than scroll-to-top a screen that isn't visible.
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+        return;
+      }
       final state = scrollTargetKeys[index].currentState;
       if (state is ScrollToTopTarget) {
         (state as ScrollToTopTarget).scrollToTop();

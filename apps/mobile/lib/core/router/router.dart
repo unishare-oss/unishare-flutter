@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:unishare_mobile/features/achievements/presentation/earn_moment_dispatcher.dart';
+import 'package:unishare_mobile/features/achievements/presentation/screens/achievements_screen.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/screens/welcome_screen.dart';
@@ -17,6 +19,7 @@ import 'package:unishare_mobile/features/post/presentation/screens/my_posts_scre
 import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
+import 'package:unishare_mobile/features/profile/presentation/screens/public_profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/request_detail_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
 import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen.dart';
@@ -57,9 +60,15 @@ enum NavTab {
 /// and icon instead of the default "More" / menu icon.
 enum DrawerDestination {
   profile('Profile', Icons.person_rounded),
+  // Distinct label so users can tell whether they're on their own
+  // editable profile (`/profile`) vs viewing someone else's public view
+  // (`/profile/:uid`). Different icon (outlined) reinforces the read-only
+  // nature of the public view.
+  publicProfile('Viewing', Icons.person_outline_rounded),
   saved('Saved', Icons.bookmark_rounded),
   departments('Depts', Icons.apartment_rounded),
-  requests('Requests', Icons.inbox_rounded);
+  requests('Requests', Icons.inbox_rounded),
+  achievements('Achievements', Icons.workspace_premium_rounded);
 
   const DrawerDestination(this.label, this.icon);
 
@@ -70,11 +79,15 @@ enum DrawerDestination {
   /// inside the drawer-destinations branch.
   static DrawerDestination? fromPath(String path) {
     if (path == '/profile') return profile;
+    if (path.startsWith('/profile/')) return publicProfile;
     if (path == '/saved') return saved;
     if (path == '/departments' || path.startsWith('/departments/')) {
       return departments;
     }
     if (path == '/requests' || path.startsWith('/requests/')) return requests;
+    if (path == '/achievements' || path.startsWith('/achievements/')) {
+      return achievements;
+    }
     return null;
   }
 }
@@ -154,6 +167,7 @@ class _RouterNotifier extends ChangeNotifier {
       '/requests',
       '/preview',
       '/upload-progress',
+      '/achievements',
     };
     final isKnown =
         authRoutes.contains(currentPath) ||
@@ -217,9 +231,12 @@ GoRouter router(Ref ref) {
         builder: (context, state, navigationShell) => Consumer(
           builder: (context, ref, _) {
             final isGuest = ref.watch(guestModeProvider);
-            return isGuest
-                ? GuestShellScaffold(navigationShell: navigationShell)
-                : ShellScaffold(navigationShell: navigationShell);
+            if (isGuest) {
+              return GuestShellScaffold(navigationShell: navigationShell);
+            }
+            return EarnMomentDispatcher(
+              child: ShellScaffold(navigationShell: navigationShell),
+            );
           },
         ),
         branches: [
@@ -295,6 +312,27 @@ GoRouter router(Ref ref) {
                   final requestId = state.pathParameters['requestId']!;
                   return RequestDetailScreen(requestId: requestId);
                 },
+              ),
+              GoRoute(
+                path: '/achievements/:uid',
+                builder: (context, state) =>
+                    AchievementsScreen(uid: state.pathParameters['uid']!),
+              ),
+              // Read-only profile for any uid. If the uid matches the
+              // signed-in user, redirect to /profile so they land on the
+              // editable owner view instead of the public mirror.
+              GoRoute(
+                path: '/profile/:uid',
+                redirect: (context, state) {
+                  final viewedUid = state.pathParameters['uid'];
+                  final me = ref.read(authStateProvider).asData?.value?.id;
+                  if (viewedUid != null && viewedUid == me) {
+                    return '/profile';
+                  }
+                  return null;
+                },
+                builder: (context, state) =>
+                    PublicProfileScreen(uid: state.pathParameters['uid']!),
               ),
             ],
           ),
