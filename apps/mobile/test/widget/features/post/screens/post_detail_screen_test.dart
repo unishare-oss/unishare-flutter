@@ -22,6 +22,7 @@ import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dar
 import 'package:unishare_mobile/features/post/domain/usecases/watch_post.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/reaction_repository.dart';
 import 'package:unishare_mobile/features/post/data/repositories/share_repository_impl.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/share_exceptions.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/share_repository.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/share_post.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
