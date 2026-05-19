@@ -51,10 +51,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   @override
   void initState() {
     super.initState();
-    ref
-        .read(incrementViewCountUseCaseProvider)
-        .call(widget.postId)
-        .ignore();
+    ref.read(incrementViewCountUseCaseProvider).call(widget.postId).ignore();
   }
 
   @override
