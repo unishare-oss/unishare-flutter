@@ -13,6 +13,7 @@ vi.mock('firebase-functions/v2', () => ({
 }));
 vi.mock('firebase-functions/v2/firestore', () => ({
   onDocumentUpdated: (_path: string, h: unknown) => h,
+  onDocumentCreated: (_path: string, h: unknown) => h,
 }));
 
 import { onUserChangedPublicSyncHandler } from '../../src/triggers/onUserChangedPublicSync';
