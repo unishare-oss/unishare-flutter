@@ -44,4 +44,19 @@ class FakePostRepository implements PostRepository {
     Map<String, Uint8List>? fileDataOverride,
     CancellationToken? cancellationToken,
   }) => throw UnimplementedError();
+
+  @override
+  Future<void> deletePost(String postId) => throw UnimplementedError();
+
+  @override
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
+  }) => throw UnimplementedError();
 }

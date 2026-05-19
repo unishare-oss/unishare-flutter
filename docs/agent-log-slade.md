@@ -141,12 +141,6 @@ Files:
   ~ apps/mobile/lib/main.dart
 Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
 
-Files:
-  ~ apps/mobile/lib/core/router/router.dart
-  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
-  ~ apps/mobile/lib/main.dart
-Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
-
   [14:58] Write: apps/mobile/lib/features/post/domain/entities/code_snippet.dart
   [14:59] Write: apps/mobile/lib/features/post/domain/entities/post_draft.dart
   [14:59] Write: apps/mobile/lib/features/post/domain/entities/post.dart
@@ -372,4 +366,28 @@ Prompt: Implement SPEC-0010: Share Post — OS share sheet via share_plus, deep-
 Outcome: SPEC-0010 Share Post fully implemented — datasource, repository, providers, PostDetailScreen share button, GoRouter redirect preservation, AndroidManifest App Links intent-filter, firebase.json hosting block, and all 23 tests passing.
 Decisions: share_plus v10 uses static Share.share(text) not SharePlus.instance.share(ShareParams) — corrected from spec snippet. Flutter Clipboard channel is flutter/platform with JSONMethodCodec (not plugins.flutter.io/clipboard) — fixed datasource test accordingly. _ThrowingShareRepo accepted as ShareRepository? rather than _FakeShareRepository? to allow any ShareRepository implementation in _buildSubject.
 Handoff: All files formatted. flutter analyze clean. submit for QA/architect review. firebase.json hosting block requires 'hosting/public' directory and apple-app-site-association + assetlinks.json files to be set up separately before deploy.
+Review: PENDING
+
+---
+Date: 2026-05-19
+Member: Slade
+Agent: architect
+Task: Write Tech Proposal 0011 — Edit and Delete Own Post
+Prompt: Write a Tech Proposal at tech-proposals/0011-edit-delete-own-post.md for post edit and delete, comparing three action-surface options (PostDetailScreen overflow menu, PostCard contextual menu, MyPostsScreen only).
+
+Outcome: PROP-0011 written at tech-proposals/0011-edit-delete-own-post.md (DRAFT). ADR-0011 written at docs/decisions/0011-edit-delete-own-post-action-surface.md (PROPOSED). Recommendation is Option A — overflow menu on PostDetailScreen AppBar only.
+Decisions: Option A recommended over B (PostCard coupling risk, accidental-tap risk) and C (discoverability gap from deep-link entry, gesture interceptor complexity). Five open questions raised: Storage file deletion strategy (client vs Cloud Function cascade), mutable field allowlist, AI summary invalidation on edit, Firestore update rule field enumeration, and whether an "edited" indicator should be shown.
+Handoff: Proposal requires team approval before a Tech Spec is written. Five open questions must be resolved during spec authorship — OQ2 (mutable fields) and OQ4 (Firestore update rules) are blockers for implementation.
+Review: PENDING
+
+---
+Date: 2026-05-19 00:00
+Member: Slade
+Agent: flutter-engineer
+Task: Implement SPEC-0011 — Edit and Delete Own Post
+Prompt: Implement SPEC-0011 (Edit and Delete Own Post) for Unishare Flutter. All architectural decisions are finalised — implement exactly as described.
+
+Outcome: Implemented SPEC-0011 across 15 files — domain interface extended, two new use cases, storage/Firestore datasource methods, repository impl, two new Riverpod providers, EditPostNotifier, EditPostScreen, PostDetailScreen overflow menu with delete, /posts/:postId/edit route, and updated Firestore security rules.
+Decisions: firebase_storage ^12.3.7 was incompatible with firebase_remote_config ^6.5.1; bumped to ^13.4.1 as suggested by pub resolver. The `override_on_non_overriding_member` warning in edit_post_provider.dart is expected until build_runner regenerates edit_post_provider.g.dart — not a real error.
+Handoff: Run `dart run build_runner build` from apps/mobile to generate edit_post_provider.g.dart and regenerate post_repository_provider.g.dart. After codegen, run `flutter analyze` and `flutter test` to confirm clean. Submit for QA/architect review — do not self-approve.
 Review: PENDING
