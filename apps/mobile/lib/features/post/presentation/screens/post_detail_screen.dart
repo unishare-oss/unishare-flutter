@@ -10,7 +10,7 @@ import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/comments_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_detail_provider.dart';
-import 'package:unishare_mobile/features/post/data/repositories/share_repository_impl.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/share_exceptions.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/share_post_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/user_like_status_provider.dart';
@@ -135,7 +135,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   }
 
   static bool _isNotFoundError(Object error) {
-    if (error is StateError) return true;
+    if (error is StateError && error.message == 'post_not_found') return true;
     final msg = error.toString().toLowerCase();
     return msg.contains('not found') ||
         msg.contains('no document') ||

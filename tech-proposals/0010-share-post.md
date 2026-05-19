@@ -8,7 +8,7 @@ description: "Allow users to share academic posts outside the app via platform s
 **Status:** ACCEPTED  
 **Author:** Slade  
 **Date:** 2026-05-17  
-**Spec:** (pending)  
+**Spec:** [SPEC-0010](../tech-specs/0010-share-post.md)  
 **Approved by:** Slade
 
 ---
