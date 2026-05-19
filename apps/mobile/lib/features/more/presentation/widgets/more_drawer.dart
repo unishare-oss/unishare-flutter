@@ -150,6 +150,10 @@ class MoreDrawerSheet extends ConsumerWidget {
   }
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
+    // Capture messenger before the first async gap — it lives above the drawer
+    // in the widget tree and remains valid after the sheet is dismissed.
+    final messenger = ScaffoldMessenger.of(context);
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -176,8 +180,14 @@ class MoreDrawerSheet extends ConsumerWidget {
     final signOut = ref.read(signOutUseCaseProvider);
     final guestMode = ref.read(guestModeProvider.notifier);
     if (context.mounted) Navigator.of(context).pop();
-    await signOut.call();
-    guestMode.exit();
+    try {
+      await signOut.call();
+      guestMode.exit();
+    } catch (e) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Sign out failed. Please try again.')),
+      );
+    }
   }
 }
 

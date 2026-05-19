@@ -13,10 +13,11 @@ import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
 class _FakeAuthRepository implements AuthRepository {
-  _FakeAuthRepository({this.user});
+  _FakeAuthRepository({this.user, this.throwOnSignOut = false});
 
   AppUser? user;
   int signOutCalls = 0;
+  bool throwOnSignOut;
 
   @override
   Stream<AppUser?> get authStateChanges => Stream.value(user);
@@ -27,6 +28,7 @@ class _FakeAuthRepository implements AuthRepository {
   @override
   Future<void> signOut() async {
     signOutCalls++;
+    if (throwOnSignOut) throw Exception('network error');
   }
 
   @override
@@ -250,5 +252,25 @@ void main() {
 
     expect(find.byType(AlertDialog), findsNothing);
     expect(repo.signOutCalls, 0);
+  });
+
+  testWidgets('sign-out failure shows error snackbar', (tester) async {
+    final repo = _FakeAuthRepository(user: _user, throwOnSignOut: true);
+    await tester.pumpWidget(_buildApp(repo));
+    await tester.pumpAndSettle();
+    await _openSheet(tester);
+
+    await tester.tap(find.text('Sign out'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.widgetWithText(TextButton, 'Sign out'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sign out failed. Please try again.'), findsOneWidget);
   });
 }

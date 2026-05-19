@@ -125,8 +125,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _signOut() async {
-    await ref.read(signOutUseCaseProvider).call();
-    ref.read(guestModeProvider.notifier).exit();
+    try {
+      await ref.read(signOutUseCaseProvider).call();
+      ref.read(guestModeProvider.notifier).exit();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign out failed. Please try again.')),
+        );
+      }
+    }
   }
 
   @override
