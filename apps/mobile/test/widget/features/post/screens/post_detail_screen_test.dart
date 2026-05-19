@@ -116,6 +116,8 @@ class _FakeReactionRepository implements ReactionRepository {
 
   @override
   Future<void> toggleReaction(String postId, String reactionType) async {}
+}
+
 class _ThrowingShareRepo implements ShareRepository {
   const _ThrowingShareRepo(this.error);
   final Object error;
