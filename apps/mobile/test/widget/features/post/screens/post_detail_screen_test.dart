@@ -187,7 +187,9 @@ Widget _buildSubject({
       reactionRepositoryProvider.overrideWithValue(r),
       shareRepositoryProvider.overrideWithValue(s),
       sharePostUseCaseProvider.overrideWithValue(SharePostUseCase(s)),
-      incrementViewCountUseCaseProvider.overrideWithValue(IncrementViewCount(p)),
+      incrementViewCountUseCaseProvider.overrideWithValue(
+        IncrementViewCount(p),
+      ),
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
