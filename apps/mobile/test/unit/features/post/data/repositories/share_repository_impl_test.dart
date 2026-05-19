@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/data/datasources/share_plus_datasource.dart';
 import 'package:unishare_mobile/features/post/data/repositories/share_repository_impl.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/share_exceptions.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 

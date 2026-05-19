@@ -120,31 +120,25 @@ class SharePostUseCase {
 // apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart
 
 class SharePlusDataSource {
-  const SharePlusDataSource({
-    required SharePlus sharePlus,
-    required Clipboard clipboard,
-  })  : _sharePlus = sharePlus,
-        _clipboard = clipboard;
+  const SharePlusDataSource();
 
-  final SharePlus _sharePlus;
-  final Clipboard _clipboard;
+  static const _baseUrl = 'https://share.psstee.dev';
 
-  /// Builds the share text and triggers the OS share sheet.
+  /// Builds the share text and triggers the OS share sheet via [Share.share].
   ///
-  /// Falls back to [_clipboard] if [SharePlatformException] is thrown
-  /// or if the platform signals Web Share API is unavailable.
-  /// Returns [ShareFallbackResult] to indicate whether the fallback was used.
+  /// Falls back to [Clipboard.setData] on [PlatformException] or any other
+  /// error. Returns [ShareFallbackResult] to indicate whether the fallback
+  /// was used.
   Future<ShareFallbackResult> share({
     required String postId,
     required String postTitle,
-    required String baseUrl,
   });
 }
 
 enum ShareFallbackResult { shared, copiedToClipboard }
 ```
 
-The share text format is: `"<postTitle> — <baseUrl>/posts/<postId>"`
+The share text format is: `"<postTitle> — https://share.psstee.dev/posts/<postId>"`. The base URL is an internal constant; no `baseUrl` parameter is exposed.
 
 ### Presentation layer
 
@@ -165,7 +159,7 @@ class SharePost extends _$SharePost {
 }
 ```
 
-The provider is a family-less `AsyncNotifier<void>`. One instance lives for the lifetime of `PostDetailScreen`. The screen observes `ref.listen<AsyncValue<void>>(sharePostProvider, ...)` to show the clipboard fallback SnackBar when `ShareRepositoryImpl` signals a fallback was used. The transport of the fallback signal is via a custom exception type `ShareFallbackException` caught by the screen's listener, not by propagating to `AsyncError`.
+The provider is a family-less `AsyncNotifier<void>`. One instance lives for the lifetime of `PostDetailScreen`. The screen observes `ref.listen<AsyncValue<void>>(sharePostProvider, ...)` to show the clipboard fallback SnackBar when `ShareRepositoryImpl` signals a fallback was used. The transport of the fallback signal is `ShareFallbackException` (defined in the domain layer at `features/post/domain/repositories/share_exceptions.dart`). Because `AsyncValue.guard` wraps all thrown exceptions, `ShareFallbackException` arrives in the listener as `AsyncError` — the screen checks `next.error is ShareFallbackException` to distinguish the "clipboard copy" path from a real error.
 
 ---
 

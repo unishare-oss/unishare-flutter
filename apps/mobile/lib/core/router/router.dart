@@ -138,9 +138,13 @@ class _RouterNotifier extends ChangeNotifier {
 
     // 2. Authenticated on an auth route → honour redirect param or go to /feed
     if (isAuthenticated && authRoutes.contains(currentPath)) {
-      final redirect = state.uri.queryParameters['redirect'];
-      if (redirect != null && redirect.isNotEmpty) {
-        return Uri.decodeComponent(redirect);
+      final redirectParam = state.uri.queryParameters['redirect'];
+      if (redirectParam != null && redirectParam.isNotEmpty) {
+        final decoded = Uri.decodeComponent(redirectParam);
+        // Only follow in-app paths to prevent open-redirect abuse.
+        if (decoded.startsWith('/') && !decoded.contains('://')) {
+          return decoded;
+        }
       }
       return '/feed';
     }

@@ -21,14 +21,32 @@
       var playStore = 'https://play.google.com/store/apps/details?id=<ANDROID_PACKAGE_NAME>';
       var appStore = 'https://apps.apple.com/app/id<APP_STORE_ID>';
 
-      if (isAndroid) {
-        window.location.replace(playStore);
-      } else if (isIOS) {
-        window.location.replace(appStore);
+      // Attempt to open the app via a custom scheme before falling back to
+      // the store. The timeout fires if the app is not installed.
+      var appScheme = 'unishare://posts/' + postId;
+      var fallbackTimer;
+
+      function goToStore() {
+        if (isAndroid) {
+          window.location.replace(playStore);
+        } else if (isIOS) {
+          window.location.replace(appStore);
+        } else {
+          // Desktop fallback — TODO: replace with web app URL once deployed
+          document.querySelector('p').textContent =
+            'Install the Unishare app to view this post.';
+        }
+      }
+
+      if (isAndroid || isIOS) {
+        fallbackTimer = setTimeout(goToStore, 1500);
+        window.location.href = appScheme;
+        // Cancel store redirect if the app opened (page becomes hidden).
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) clearTimeout(fallbackTimer);
+        });
       } else {
-        // Desktop fallback — TODO: replace with web app URL once deployed
-        document.querySelector('p').textContent =
-          'Install the Unishare app to view this post.';
+        goToStore();
       }
     })();
   </script>
