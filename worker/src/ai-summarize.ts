@@ -1,18 +1,33 @@
 import Groq from 'groq-sdk'
+import { PhotonImage, resize, SamplingFilter } from '@cf-wasm/photon'
 import { extractText } from './text-extractor'
 import type { Env } from './index'
 import { json, jsonError } from './response'
 
-const SUMMARY_PROMPT = `You are summarizing an academic document for university students.
-Respond with exactly this format — no extra text, no markdown headers:
+/// Summary prompt used for both text and image inputs. The text path feeds
+/// extracted PDF/DOCX content; the vision path feeds a compressed image of a
+/// printed, scanned, or handwritten page.
+const SUMMARY_PROMPT = `You are summarizing an academic document for university students. The input is either extracted text from a PDF or DOCX, or an image of a printed, scanned, or handwritten page — including lecture notes, textbook excerpts, problem sets, diagrams, and equations.
+
+Respond with EXACTLY this format — no preamble, no markdown headers, no closing line:
 
 One sentence describing what this document is.
-• Key topic or concept covered
-• Key topic or concept covered
-• Key topic or concept covered
+• Specific topic or concept
+• Specific topic or concept
+• Specific topic or concept
 
-Use 3 to 7 bullet points. Be specific about subject matter — not generic.
-If the document contains harmful or clearly inappropriate content, respond with only: FLAGGED`
+Rules:
+- Use 3 to 7 bullet points.
+- Name actual topics, theorems, formulas, or terms (e.g. "Lagrangian mechanics", "RSA encryption", "Krebs cycle") — avoid generic phrases like "discusses concepts" or "covers material".
+- If the page is mostly equations or a worked problem, identify the specific method or theorem applied, not just the subject area.
+- If the input is unreadable, blank, or contains no academic content, respond with only: UNREADABLE
+- If the input contains harmful or clearly inappropriate content, respond with only: FLAGGED`
+
+const TEXT_MODEL_DEFAULT = 'llama-3.3-70b-versatile'
+const VISION_MODEL_DEFAULT = 'meta-llama/llama-4-scout-17b-16e-instruct'
+const MAX_IMAGE_DIM = 1600
+const JPEG_QUALITY = 80
+const IMAGE_EXT = /\.(jpe?g|png|webp)$/i
 
 export async function handleAiSummarize(request: Request, env: Env): Promise<Response> {
   let body: { fileUrl: string; filename: string }
@@ -63,25 +78,49 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
   const buffer = await fileRes.arrayBuffer()
   if (buffer.byteLength > MAX_BYTES) return jsonError('File too large', 413)
 
-  let text: string
+  const groq = new Groq({ apiKey: env.GROQ_API_KEY })
+  const isImage = IMAGE_EXT.test(filename)
+
+  let summary: string
   try {
-    text = await extractText(buffer, filename)
+    summary = isImage
+      ? await summarizeImage(groq, env, buffer)
+      : await summarizeText(groq, env, buffer, filename)
   } catch (e) {
     const msg = (e as Error).message
     if (msg === 'unsupported_format') {
       return json({ summaryStatus: 'unsupported_type', summary: null })
     }
-    return jsonError('Text extraction failed', 500)
+    if (msg === 'empty_text') {
+      return json({ summaryStatus: 'unsupported_type', summary: null })
+    }
+    if (msg === 'llm_failed') {
+      return jsonError('LLM call failed', 502)
+    }
+    return jsonError('Summarization failed', 500)
   }
 
-  if (!text.trim()) {
+  const verdict = summary.trim().toUpperCase()
+  if (verdict === 'FLAGGED') {
+    return json({ summaryStatus: 'flagged', summary: null })
+  }
+  if (verdict === 'UNREADABLE') {
     return json({ summaryStatus: 'unsupported_type', summary: null })
   }
 
-  const groq = new Groq({ apiKey: env.GROQ_API_KEY })
-  const model = env.GROQ_MODEL ?? 'llama-3.3-70b-versatile'
+  return json({ summaryStatus: 'done', summary })
+}
 
-  let summary: string
+async function summarizeText(
+  groq: Groq,
+  env: Env,
+  buffer: ArrayBuffer,
+  filename: string,
+): Promise<string> {
+  const text = await extractText(buffer, filename)
+  if (!text.trim()) throw new Error('empty_text')
+
+  const model = env.GROQ_MODEL ?? TEXT_MODEL_DEFAULT
   try {
     const response = await groq.chat.completions.create({
       model,
@@ -92,14 +131,71 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
       max_tokens: 300,
       temperature: 0,
     })
-    summary = response.choices[0]?.message?.content?.trim() ?? ''
+    return response.choices[0]?.message?.content?.trim() ?? ''
   } catch {
-    return jsonError('LLM call failed', 502)
+    throw new Error('llm_failed')
+  }
+}
+
+async function summarizeImage(groq: Groq, env: Env, buffer: ArrayBuffer): Promise<string> {
+  // Resize + re-encode the upload so Groq stays under its 5 MB image cap and
+  // we don't pay to upload a 12 MP camera shot for handwriting summarization.
+  let inputImg: PhotonImage | null = null
+  let outputImg: PhotonImage | null = null
+  let jpegBytes: Uint8Array
+  try {
+    inputImg = PhotonImage.new_from_byteslice(new Uint8Array(buffer))
+    const w = inputImg.get_width()
+    const h = inputImg.get_height()
+    const needsResize = w > MAX_IMAGE_DIM || h > MAX_IMAGE_DIM
+    if (needsResize) {
+      const ratio = Math.min(MAX_IMAGE_DIM / w, MAX_IMAGE_DIM / h)
+      const targetW = Math.max(1, Math.round(w * ratio))
+      const targetH = Math.max(1, Math.round(h * ratio))
+      outputImg = resize(inputImg, targetW, targetH, SamplingFilter.Lanczos3)
+      jpegBytes = outputImg.get_bytes_jpeg(JPEG_QUALITY)
+    } else {
+      // Still re-encode to JPEG so PNG/WebP uploads aren't sent at original size.
+      jpegBytes = inputImg.get_bytes_jpeg(JPEG_QUALITY)
+    }
+  } finally {
+    inputImg?.free()
+    outputImg?.free()
   }
 
-  if (summary.toUpperCase() === 'FLAGGED') {
-    return json({ summaryStatus: 'flagged', summary: null })
-  }
+  const dataUrl = `data:image/jpeg;base64,${uint8ArrayToBase64(jpegBytes)}`
+  const model = env.GROQ_VISION_MODEL ?? VISION_MODEL_DEFAULT
 
-  return json({ summaryStatus: 'done', summary })
+  try {
+    const response = await groq.chat.completions.create({
+      model,
+      messages: [
+        { role: 'system', content: SUMMARY_PROMPT },
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: 'Summarize this page.' },
+            { type: 'image_url', image_url: { url: dataUrl } },
+          ],
+        },
+      ],
+      max_tokens: 300,
+      temperature: 0,
+    })
+    return response.choices[0]?.message?.content?.trim() ?? ''
+  } catch {
+    throw new Error('llm_failed')
+  }
+}
+
+/// btoa is single-string only and String.fromCharCode(...big) blows the stack,
+/// so chunk through 32 KB windows to base64-encode the JPEG bytes.
+function uint8ArrayToBase64(bytes: Uint8Array): string {
+  const CHUNK = 0x8000
+  let binary = ''
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    const chunk = bytes.subarray(i, i + CHUNK) as unknown as number[]
+    binary += String.fromCharCode.apply(null, chunk)
+  }
+  return btoa(binary)
 }
