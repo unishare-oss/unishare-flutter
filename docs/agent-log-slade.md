@@ -147,12 +147,6 @@ Files:
   ~ apps/mobile/lib/main.dart
 Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
 
-Files:
-  ~ apps/mobile/lib/core/router/router.dart
-  ~ apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
-  ~ apps/mobile/lib/main.dart
-Summary:  3 files changed, 9 insertions(+), 5 deletions(-)
-
   [14:58] Write: apps/mobile/lib/features/post/domain/entities/code_snippet.dart
   [14:59] Write: apps/mobile/lib/features/post/domain/entities/post_draft.dart
   [14:59] Write: apps/mobile/lib/features/post/domain/entities/post.dart
@@ -262,3 +256,120 @@ Summary:  1 file changed, 5 insertions(+), 1 deletion(-)
   [12:40] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
   [12:40] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
   [12:40] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+
+---
+Date: 2026-05-18
+Member: Slade
+Agent: architect
+Task: Write Tech Spec 0010 — Share Post
+Prompt: Write a Tech Spec for the Unishare Flutter project at tech-specs/0010-share-post.md based on PROP-0010 (Firebase Hosting + share_plus universal deep-link sharing).
+
+Outcome: SPEC-0010 written at tech-specs/0010-share-post.md (DRAFT). ADR-0008 written at docs/decisions/0008-share-post-deep-link-strategy.md (ACCEPTED).
+Decisions: Option A from proposal confirmed — Firebase Hosting + share_plus; Dynamic Links ruled out (deprecated Aug 2025); Branch.io ruled out (unapproved vendor). Android Play Install Referrer deferred to post-v1 to match iOS best-effort parity. ShareFallbackException pattern chosen over AsyncError to signal clipboard fallback to the screen listener. GoRouter redirect preservation uses `?redirect=` query parameter on /welcome rather than any new package.
+Handoff: Four open questions block finalisation — OQ1 (Firebase Hosting domain), OQ2 (share_plus team approval), OQ4 (OG meta tags), OQ5 (Android SHA-256 fingerprints). Flutter-engineer must not begin implementation until OQ1, OQ2, and OQ5 are resolved, and spec status is changed to APPROVED.
+Review: PENDING
+
+2026-05-18
+  [23:42] Write: apps/mobile/lib/features/post/domain/repositories/share_repository.dart
+  [23:42] Write: apps/mobile/lib/features/post/domain/usecases/share_post.dart
+  [23:42] Write: apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart
+  [23:42] Write: apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart
+  [23:42] Write: apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart
+Files:
+  ? apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/repositories/share_repository.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/usecases/share_post.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/repositories/share_repository.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/usecases/share_post.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/repositories/share_repository.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/usecases/share_post.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart (untracked)
+
+
+2026-05-19
+  [11:41] Edit: apps/mobile/pubspec.yaml
+Files:
+  ~ apps/mobile/pubspec.yaml
+  ? apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/repositories/share_repository.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/usecases/share_post.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart (untracked)
+Summary:  1 file changed, 1 insertion(+)
+
+Files:
+  ~ apps/mobile/pubspec.yaml
+  ? apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/repositories/share_repository.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/usecases/share_post.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart (untracked)
+Summary:  1 file changed, 1 insertion(+)
+
+Files:
+  ~ apps/mobile/pubspec.yaml
+  ? apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/repositories/share_repository.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/usecases/share_post.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart (untracked)
+Summary:  1 file changed, 1 insertion(+)
+
+Files:
+  ~ apps/mobile/pubspec.yaml
+  ? apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/repositories/share_repository.dart (untracked)
+  ? apps/mobile/lib/features/post/domain/usecases/share_post.dart (untracked)
+  ? apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart (untracked)
+Summary:  1 file changed, 1 insertion(+)
+
+
+---
+Date: 2026-05-19 00:00
+Member: Slade
+Agent: flutter-engineer
+Task: Implement SPEC-0010 Share Post feature
+Prompt: Implement SPEC-0010: Share Post — OS share sheet via share_plus, deep-link intent filter, GoRouter redirect preservation, PostDetailScreen share button, ShareFallbackException SnackBar, "Post not found" error state, and all unit/widget tests.
+  [15:43] Write: apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart
+  [15:44] Write: apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart
+  [15:44] Edit: apps/mobile/lib/features/post/presentation/providers/post_repository_provider.dart
+  [15:44] Edit: apps/mobile/lib/features/post/presentation/providers/post_repository_provider.dart
+  [15:44] Write: apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart
+  [15:44] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [15:44] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [15:44] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  [15:45] Edit: apps/mobile/lib/core/router/router.dart
+  [15:45] Edit: apps/mobile/android/app/src/main/AndroidManifest.xml
+  [15:46] Write: apps/mobile/test/unit/features/post/domain/usecases/share_post_test.dart
+  [15:46] Write: apps/mobile/test/unit/features/post/data/repositories/share_repository_impl_test.dart
+  [15:46] Edit: apps/mobile/test/unit/features/post/data/repositories/share_repository_impl_test.dart
+  [15:46] Write: apps/mobile/test/unit/features/post/data/datasources/share_plus_datasource_test.dart
+  [15:46] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:47] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:47] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:47] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:47] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:48] Write: apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart
+  [15:48] Edit: apps/mobile/test/unit/features/post/data/repositories/share_repository_impl_test.dart
+  [15:49] Edit: apps/mobile/test/unit/features/post/domain/usecases/share_post_test.dart
+  [15:49] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:49] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [15:50] Write: apps/mobile/test/unit/features/post/data/datasources/share_plus_datasource_test.dart
+  [15:50] Write: apps/mobile/test/unit/features/post/data/datasources/share_plus_datasource_test.dart
+
+Outcome: SPEC-0010 Share Post fully implemented — datasource, repository, providers, PostDetailScreen share button, GoRouter redirect preservation, AndroidManifest App Links intent-filter, firebase.json hosting block, and all 23 tests passing.
+Decisions: share_plus v10 uses static Share.share(text) not SharePlus.instance.share(ShareParams) — corrected from spec snippet. Flutter Clipboard channel is flutter/platform with JSONMethodCodec (not plugins.flutter.io/clipboard) — fixed datasource test accordingly. _ThrowingShareRepo accepted as ShareRepository? rather than _FakeShareRepository? to allow any ShareRepository implementation in _buildSubject.
+Handoff: All files formatted. flutter analyze clean. submit for QA/architect review. firebase.json hosting block requires 'hosting/public' directory and apple-app-site-association + assetlinks.json files to be set up separately before deploy.
+Review: PENDING

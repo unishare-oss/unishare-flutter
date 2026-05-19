@@ -9,11 +9,13 @@ import 'package:unishare_mobile/features/auth/presentation/providers/current_use
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/providers/profile_form_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/appearance_section.dart';
+import 'package:unishare_mobile/features/profile/presentation/widgets/bio_visibility_notice.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/connected_accounts_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/danger_zone_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_form_card.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/confirm_sign_out_dialog.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 /// ProfileScreen still holds [TextEditingController]s (they have their own
@@ -124,8 +126,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _signOut() async {
-    await ref.read(signOutUseCaseProvider).call();
-    ref.read(guestModeProvider.notifier).exit();
+    if (!await confirmSignOut(context)) return;
+
+    try {
+      await ref.read(signOutUseCaseProvider).call();
+      ref.read(guestModeProvider.notifier).exit();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Sign out failed. Please try again.')),
+        );
+      }
+    }
   }
 
   @override
@@ -183,6 +195,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
           final notifier = ref.read(profileFormProvider.notifier);
           final sections = <Widget>[
+            BioVisibilityNotice(user: user),
             ProfileCard(user: user),
             const SizedBox(height: 16),
             ProfileFormCard(

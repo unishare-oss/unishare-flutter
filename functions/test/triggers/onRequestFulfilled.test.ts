@@ -1,10 +1,12 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 
-const { writeNotificationMock, sendPushMock, suggestionsGetMock } = vi.hoisted(
+const { writeNotificationMock, sendPushMock, suggestionsGetMock, incrementStatMock, evaluateBadgesMock } = vi.hoisted(
   () => ({
     writeNotificationMock: vi.fn().mockResolvedValue('notif-1'),
     sendPushMock: vi.fn().mockResolvedValue(undefined),
     suggestionsGetMock: vi.fn(),
+    incrementStatMock: vi.fn().mockResolvedValue(undefined),
+    evaluateBadgesMock: vi.fn().mockResolvedValue({ newlyEarnedIds: [], pointsAdded: 0, newLevel: 1 }),
   }),
 );
 
@@ -12,6 +14,8 @@ vi.mock('../../src/lib/writeNotification', () => ({
   writeNotification: writeNotificationMock,
 }));
 vi.mock('../../src/lib/sendPush', () => ({ sendPush: sendPushMock }));
+vi.mock('../../src/badges/counters', () => ({ incrementStat: incrementStatMock }));
+vi.mock('../../src/badges/evaluateBadges', () => ({ evaluateBadges: evaluateBadgesMock }));
 
 vi.mock('../../src/admin', () => ({
   db: {
@@ -49,6 +53,8 @@ beforeEach(() => {
   writeNotificationMock.mockClear();
   sendPushMock.mockClear();
   suggestionsGetMock.mockReset();
+  incrementStatMock.mockClear();
+  evaluateBadgesMock.mockClear();
 });
 
 function event(before: Record<string, unknown>, after: Record<string, unknown>) {
@@ -99,6 +105,8 @@ describe('onRequestFulfilledHandler', () => {
       }),
     );
     expect(sendPushMock).toHaveBeenCalled();
+    expect(incrementStatMock).toHaveBeenCalledWith('suggester-uid', 'requestsFulfilled', 1);
+    expect(evaluateBadgesMock).toHaveBeenCalledWith('suggester-uid', ['requestsFulfilled']);
   });
 
   it('skips when status did not transition to fulfilled', async () => {

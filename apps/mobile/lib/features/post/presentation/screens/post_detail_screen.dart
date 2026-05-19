@@ -12,8 +12,10 @@ import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/comments_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_detail_provider.dart';
+import 'package:unishare_mobile/features/post/data/repositories/share_repository_impl.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/reaction_providers.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/share_post_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/user_like_status_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/ai_summary_panel.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/ask_ai_section.dart';
@@ -146,6 +148,14 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     }
   }
 
+  static bool _isNotFoundError(Object error) {
+    if (error is StateError) return true;
+    final msg = error.toString().toLowerCase();
+    return msg.contains('not found') ||
+        msg.contains('no document') ||
+        msg.contains('does not exist');
+  }
+
   @override
   Widget build(BuildContext context) {
     final postAsync = ref.watch(
@@ -154,6 +164,17 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     final isGuest = ref.watch(guestModeProvider);
     final currentUid = ref.watch(currentUserProvider).asData?.value?.id;
     final replyTarget = ref.watch(replyStateProvider(widget.postId));
+
+    ref.listen<AsyncValue<void>>(sharePostProvider, (_, next) {
+      if (!next.isLoading && next.hasError) {
+        final msg = next.error is ShareFallbackException
+            ? 'Link copied to clipboard'
+            : 'Could not share post';
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(msg)));
+      }
+    });
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -164,11 +185,27 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         leading: BackButton(color: Theme.of(context).colorScheme.onSurface),
         titleSpacing: 0,
         title: _BreadcrumbBar(post: postAsync.whenOrNull(data: (p) => p)),
+        actions: [
+          Semantics(
+            label: 'Share post',
+            child: IconButton(
+              icon: Icon(
+                Icons.share_rounded,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              onPressed: postAsync.whenOrNull(
+                data: (post) =>
+                    () => ref.read(sharePostProvider.notifier).share(post),
+              ),
+            ),
+          ),
+        ],
       ),
       body: postAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) {
           final appColors = Theme.of(context).extension<AppColors>()!;
+          final isNotFound = _isNotFoundError(error);
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -176,18 +213,20 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    Icons.error_outline,
+                    isNotFound ? Icons.search_off_rounded : Icons.error_outline,
                     size: 48,
                     color: appColors.textMuted,
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Could not load post',
+                    isNotFound ? 'Post not found' : 'Could not load post',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    error.toString(),
+                    isNotFound
+                        ? 'This post may have been deleted or moved.'
+                        : error.toString(),
                     textAlign: TextAlign.center,
                     style: Theme.of(
                       context,

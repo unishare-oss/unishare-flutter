@@ -21,6 +21,9 @@ import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_post.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/reaction_repository.dart';
+import 'package:unishare_mobile/features/post/data/repositories/share_repository_impl.dart';
+import 'package:unishare_mobile/features/post/domain/repositories/share_repository.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/share_post.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/reaction_providers.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
@@ -91,6 +94,11 @@ class _FakeCommentRepository implements CommentRepository {
   Future<int> countCommentsByAuthor(String uid) async => 0;
 }
 
+class _FakeShareRepository implements ShareRepository {
+  @override
+  Future<void> share(Post post) async {}
+}
+
 class _FakeLikeRepository implements LikeRepository {
   final StreamController<bool> controller = StreamController<bool>.broadcast();
 
@@ -108,6 +116,12 @@ class _FakeReactionRepository implements ReactionRepository {
 
   @override
   Future<void> toggleReaction(String postId, String reactionType) async {}
+class _ThrowingShareRepo implements ShareRepository {
+  const _ThrowingShareRepo(this.error);
+  final Object error;
+
+  @override
+  Future<void> share(Post post) async => throw error;
 }
 
 // ---------------------------------------------------------------------------
@@ -149,11 +163,13 @@ Widget _buildSubject({
   _FakeCommentRepository? commentRepo,
   _FakeLikeRepository? likeRepo,
   _FakeReactionRepository? reactionRepo,
+  ShareRepository? shareRepo,
 }) {
   final p = postRepo ?? _FakePostRepository();
   final c = commentRepo ?? _FakeCommentRepository();
   final l = likeRepo ?? _FakeLikeRepository();
   final r = reactionRepo ?? _FakeReactionRepository();
+  final s = shareRepo ?? _FakeShareRepository();
 
   return ProviderScope(
     retry: disableRetry ? (retryCount, error) => null : null,
@@ -166,6 +182,8 @@ Widget _buildSubject({
       deleteCommentUseCaseProvider.overrideWithValue(DeleteComment(c)),
       toggleLikeUseCaseProvider.overrideWithValue(ToggleLike(l)),
       reactionRepositoryProvider.overrideWithValue(r),
+      shareRepositoryProvider.overrideWithValue(s),
+      sharePostUseCaseProvider.overrideWithValue(SharePostUseCase(s)),
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
@@ -313,6 +331,60 @@ void main() {
       await tester.pump();
       expect(find.text('Replying to Alice'), findsNothing);
     });
+  });
+
+  group('PostDetailScreen — share button', () {
+    testWidgets(
+      'share IconButton is present in the AppBar when post is loaded',
+      (tester) async {
+        await tester.pumpWidget(_buildSubject(seed: _fakePost()));
+        await tester.pump();
+
+        expect(find.bySemanticsLabel('Share post'), findsOneWidget);
+      },
+    );
+
+    testWidgets('share IconButton uses share_rounded icon', (tester) async {
+      await tester.pumpWidget(_buildSubject(seed: _fakePost()));
+      await tester.pump();
+
+      expect(find.byIcon(Icons.share_rounded), findsOneWidget);
+    });
+
+    testWidgets(
+      'share button is disabled (onPressed null) while post is loading',
+      (tester) async {
+        // No seed → post is in loading state; button should be disabled.
+        await tester.pumpWidget(_buildSubject());
+        await tester.pump();
+
+        final iconButton = tester.widget<IconButton>(
+          find.descendant(
+            of: find.bySemanticsLabel('Share post'),
+            matching: find.byType(IconButton),
+          ),
+        );
+        expect(iconButton.onPressed, isNull);
+      },
+    );
+
+    testWidgets(
+      'shows "Link copied to clipboard" SnackBar when ShareFallbackException',
+      (tester) async {
+        // Fake share repo that throws ShareFallbackException.
+        final shareRepo = _ThrowingShareRepo(const ShareFallbackException());
+        await tester.pumpWidget(
+          _buildSubject(seed: _fakePost(), shareRepo: shareRepo),
+        );
+        await tester.pump();
+
+        await tester.tap(find.byIcon(Icons.share_rounded));
+        await tester.pump(); // trigger state update
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Link copied to clipboard'), findsOneWidget);
+      },
+    );
   });
 
   group('PostDetailScreen — AI summary panel', () {

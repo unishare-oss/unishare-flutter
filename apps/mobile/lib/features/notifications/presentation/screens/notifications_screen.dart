@@ -100,9 +100,17 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen>
                     );
                   }
                   // Navigate based on targetType.
-                  final destination = notif.targetType == 'request'
-                      ? '/more/requests/${notif.targetId}'
-                      : '/posts/${notif.targetId}';
+                  final String destination;
+                  switch (notif.targetType) {
+                    case 'request':
+                      destination = '/requests/${notif.targetId}';
+                      break;
+                    case 'badge':
+                      destination = '/achievements/${user.id}';
+                      break;
+                    default:
+                      destination = '/posts/${notif.targetId}';
+                  }
                   context.push(destination);
                 },
               );

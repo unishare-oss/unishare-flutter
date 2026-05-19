@@ -164,6 +164,8 @@ class NotificationItemTile extends StatelessWidget {
         return 'suggested a post for your request';
       case NotificationType.suggestionAccepted:
         return 'accepted your suggestion';
+      case NotificationType.badgeUnlock:
+        return 'awarded you a new badge';
     }
   }
 

@@ -39,13 +39,14 @@ dependencies:
   go_router: ^17.2.3
   firebase_core: ^4.7.0
   firebase_auth: ^6.5.0
-  cloud_firestore: ^6.3.0
-  firebase_crashlytics: ^5.2.0
-  firebase_remote_config: ^6.5.0
+  cloud_firestore: ^6.4.1
+  firebase_crashlytics: ^5.2.2
+  firebase_remote_config: ^6.5.1
   google_sign_in: ^7.2.0
   local_auth: ^3.0.1
   hive_flutter: ^1.1.0
   cached_network_image: ^3.4.1
+  share_plus: ^10.0.0
   flutter_secure_storage: ^10.1.0
   freezed_annotation: ^3.1.0
   json_annotation: ^4.11.0
@@ -53,7 +54,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   connectivity_plus: ^7.1.1
   file_picker: ^11.0.2
-  pdfrx: 2.3.0
+  pdfrx: 2.4.1
   flutter_web_plugins:
     sdk: flutter
   dio: ^5.9.2
@@ -64,6 +65,8 @@ dependencies:
   liquid_glass_renderer: ^0.2.0-dev.4
   firebase_messaging: ^16.2.1
   crypto: ^3.0.6
+  lucide_icons_flutter: ^3.1.14
+  intl: ^0.20.2
 
 
 dev_dependencies:

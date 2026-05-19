@@ -1,0 +1,37 @@
+// Badge catalog for the achievements v1 system.
+// Seeded into Firestore collection: `badges` (one doc per id, idempotent via merge).
+//
+// `order` values intentionally leave gaps so future badges can be inserted without
+// renumbering existing entries:
+//   onboarding:  1–9   (1–6 used)
+//   progression: 10–19 (10–18 used)
+//   prestige:    20–29 (20–24 used)
+//
+// The `legacy` badge name contains a literal `{year}` placeholder; substitution is
+// performed by the v1.1 semester-end granting job, not by the v1 evaluator. The
+// `semesterCohort` condition type is intentionally not handled by Phase 1 triggers.
+
+module.exports = [
+  { id: 'profile_complete', name: 'Set the Stage', description: 'Complete your profile so others know who you are.', glyph: 'user-circle', points: 10, tier: 'onboarding', category: 'profile', condition: { type: 'profileCompleted', threshold: 1 }, order: 1, active: true },
+  { id: 'first_post', name: 'First Steps', description: 'Share your first post with the community.', glyph: 'paper-plane-tilt', points: 15, tier: 'onboarding', category: 'content', condition: { type: 'postsCreated', threshold: 1 }, order: 2, active: true },
+  { id: 'first_save_given', name: 'Curator', description: 'Save your first post from someone else.', glyph: 'bookmark-simple', points: 10, tier: 'onboarding', category: 'content', condition: { type: 'savesGiven', threshold: 1 }, order: 3, active: true },
+  { id: 'first_comment', name: 'Conversation Starter', description: 'Leave your first comment.', glyph: 'chat-circle-dots', points: 10, tier: 'onboarding', category: 'community', condition: { type: 'commentsWritten', threshold: 1 }, order: 4, active: true },
+  { id: 'first_request', name: 'Ask the Community', description: 'Create your first request.', glyph: 'hand-waving', points: 10, tier: 'onboarding', category: 'community', condition: { type: 'requestsCreated', threshold: 1 }, order: 5, active: true },
+  { id: 'first_save_received', name: 'Someone Found It Useful', description: 'Receive your first save on a post you shared.', glyph: 'sparkle', points: 20, tier: 'onboarding', category: 'content', condition: { type: 'savesReceived', threshold: 1 }, order: 6, active: true },
+
+  { id: 'steady_sharer', name: 'Steady Sharer', description: 'Share 10 posts with the community.', glyph: 'stack', points: 30, tier: 'progression', category: 'content', condition: { type: 'postsCreated', threshold: 10 }, order: 10, active: true },
+  { id: 'useful', name: 'Useful', description: 'Receive 10 saves on your posts.', glyph: 'lightbulb', points: 40, tier: 'progression', category: 'content', condition: { type: 'savesReceived', threshold: 10 }, order: 11, active: true },
+  { id: 'notes_master', name: 'Notes Master', description: 'Have 5 of your posts saved by at least one person.', glyph: 'notebook', points: 50, tier: 'progression', category: 'content', condition: { type: 'postsWithAtLeastOneSave', threshold: 5 }, order: 12, active: true },
+  { id: 'active_voice', name: 'Active Voice', description: 'Write 25 comments.', glyph: 'chats', points: 30, tier: 'progression', category: 'community', condition: { type: 'commentsWritten', threshold: 25 }, order: 13, active: true },
+  { id: 'helpful_hand', name: 'Helpful Hand', description: 'Help fulfill 5 requests from other students.', glyph: 'hand-heart', points: 50, tier: 'progression', category: 'community', condition: { type: 'requestsFulfilled', threshold: 5 }, order: 14, active: true },
+  { id: 'cross_discipline', name: 'Cross-Discipline', description: 'Contribute posts to 3 different departments.', glyph: 'compass', points: 40, tier: 'progression', category: 'recognition', condition: { type: 'uniqueDepartmentsCount', threshold: 3 }, order: 15, active: true },
+  { id: 'well_versed', name: 'Well-Versed', description: 'Share 25 posts.', glyph: 'books', points: 30, tier: 'progression', category: 'content', condition: { type: 'postsCreated', threshold: 25 }, order: 16, active: true },
+  { id: 'lend_an_ear', name: 'Lend an Ear', description: 'Write 50 comments.', glyph: 'ear', points: 30, tier: 'progression', category: 'community', condition: { type: 'commentsWritten', threshold: 50 }, order: 17, active: true },
+  { id: 'community_anchor', name: 'Community Anchor', description: 'Help fulfill 10 requests.', glyph: 'anchor', points: 60, tier: 'progression', category: 'community', condition: { type: 'requestsFulfilled', threshold: 10 }, order: 18, active: true },
+
+  { id: 'beloved', name: 'Beloved', description: 'Receive 100 saves on your posts.', glyph: 'crown-simple', points: 100, tier: 'prestige', category: 'content', condition: { type: 'savesReceived', threshold: 100 }, order: 20, active: true },
+  { id: 'pillar', name: 'Pillar of the Community', description: 'Help fulfill 25 requests.', glyph: 'tree', points: 100, tier: 'prestige', category: 'community', condition: { type: 'requestsFulfilled', threshold: 25 }, order: 21, active: true },
+  { id: 'trusted_source', name: 'Trusted Source', description: 'Have 50 distinct people save your posts.', glyph: 'seal-check', points: 100, tier: 'prestige', category: 'content', condition: { type: 'uniqueSaversCount', threshold: 50 }, order: 22, active: true },
+  { id: 'renaissance', name: 'Renaissance Contributor', description: 'Contribute posts to 5 different departments.', glyph: 'globe', points: 100, tier: 'prestige', category: 'recognition', condition: { type: 'uniqueDepartmentsCount', threshold: 5 }, order: 23, active: true },
+  { id: 'legacy', name: 'Class of {year}', description: 'Awarded to top contributors per department at semester end.', glyph: 'medal', points: 50, tier: 'prestige', category: 'recognition', condition: { type: 'semesterCohort', threshold: 1 }, order: 24, active: true },
+];

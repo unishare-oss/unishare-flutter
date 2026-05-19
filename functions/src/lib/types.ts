@@ -9,9 +9,10 @@ export type NotificationType =
   | 'comment_reply'
   | 'request_upvoted'
   | 'suggestion_submitted'
-  | 'suggestion_accepted';
+  | 'suggestion_accepted'
+  | 'badge_unlock';
 
-export type TargetType = 'post' | 'request';
+export type TargetType = 'post' | 'request' | 'badge';
 
 /**
  * Payload written to `users/{recipientUid}/notifications/{notifId}`.

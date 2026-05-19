@@ -13,10 +13,11 @@ import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
 class _FakeAuthRepository implements AuthRepository {
-  _FakeAuthRepository({this.user});
+  _FakeAuthRepository({this.user, this.throwOnSignOut = false});
 
   AppUser? user;
   int signOutCalls = 0;
+  bool throwOnSignOut;
 
   @override
   Stream<AppUser?> get authStateChanges => Stream.value(user);
@@ -27,6 +28,7 @@ class _FakeAuthRepository implements AuthRepository {
   @override
   Future<void> signOut() async {
     signOutCalls++;
+    if (throwOnSignOut) throw Exception('network error');
   }
 
   @override
@@ -184,13 +186,17 @@ void main() {
     expect(find.text('Requests page'), findsOneWidget);
   });
 
-  testWidgets('tapping PROFILE tile navigates to /profile', (tester) async {
+  testWidgets('tapping the user row navigates to /profile', (tester) async {
+    // Profile moved out of the tile grid into the tappable user row at
+    // the top of the drawer — see SPEC-0011.
     final repo = _FakeAuthRepository(user: _user);
     await tester.pumpWidget(_buildApp(repo));
     await tester.pumpAndSettle();
     await _openSheet(tester);
 
-    await tester.tap(find.text('PROFILE'));
+    // The user row surfaces the user's display name; tapping it should
+    // close the sheet and route to /profile.
+    await tester.tap(find.text(_user.name));
     await tester.pumpAndSettle();
 
     expect(find.text('Profile page'), findsOneWidget);
@@ -246,5 +252,25 @@ void main() {
 
     expect(find.byType(AlertDialog), findsNothing);
     expect(repo.signOutCalls, 0);
+  });
+
+  testWidgets('sign-out failure shows error snackbar', (tester) async {
+    final repo = _FakeAuthRepository(user: _user, throwOnSignOut: true);
+    await tester.pumpWidget(_buildApp(repo));
+    await tester.pumpAndSettle();
+    await _openSheet(tester);
+
+    await tester.tap(find.text('Sign out'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.widgetWithText(TextButton, 'Sign out'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Sign out failed. Please try again.'), findsOneWidget);
   });
 }

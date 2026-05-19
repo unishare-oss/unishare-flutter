@@ -1282,3 +1282,137 @@ Files:
 Summary:  9 files changed, 563 insertions(+), 187 deletions(-)
 
   [11:22] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+
+---
+Date: 2026-05-18 10:35
+Member: Pyae Sone Shin Thant
+Agent: architect
+Task: Brainstorm and write tech proposal + spec for achievements system (PROP-0010 / SPEC-0010)
+Prompt: I'd like to design an achievements system for the project — for example, awarding points for milestones such as a user's first post. What approach should we take for rewards in this context?
+
+Outcome: Brainstormed and produced PROP-0010, SPEC-0010, ADR-0010, and the 7-phase implementation plan for the v1 achievements system. Committed on feature/achievements branch.
+Decisions: Achievement-only XP (points only from badge unlocks, never per-action) selected over Stack-Overflow-style point-per-action XP to eliminate grinding incentives. Event-driven Cloud Function evaluator chosen over scheduled batch for real-time earn moments. Phosphor (thin) icon family for badge glyphs, with three custom BadgeFrame variants (onboarding=filled amber, progression=outlined amber on amber-subtle, prestige=dark surface with amber accent bar). v1 ships 20 badges, 4 surfaces (profile section, /achievements screen, modal/toast earn moments, notification entries); leaderboards + ajarn recognition deferred to v1.1. Firestore rules require a `gamification.earnedBadgesCache` mirror field maintained by the evaluator (rules can't list a subcollection in O(1)).
+Handoff: Plan is at docs/superpowers/plans/2026-05-18-achievements.md. Three open questions to confirm before phase 1: Phosphor licence + asset size; 03:00 ICT sweep window vs existing schedules; whether existing notification schema accommodates `type: 'badge_unlock'`.
+Review: PENDING
+
+2026-05-18
+  [11:38] Write: apps/mobile/lib/features/achievements/domain/entities/badge.dart
+  [11:38] Write: apps/mobile/lib/features/achievements/domain/entities/earned_badge.dart
+  [11:38] Write: apps/mobile/lib/features/achievements/domain/entities/user_gamification.dart
+  [11:38] Write: apps/mobile/lib/features/achievements/domain/entities/user_stats.dart
+  [11:39] Write: apps/mobile/lib/features/achievements/domain/entities/level_tier.dart
+
+---
+Date: 2026-05-18 11:50
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Execute the achievements v1 plan (Phases 0–6 plus partial Phase 7) per SPEC-0010 / docs/superpowers/plans/2026-05-18-achievements.md
+Prompt: subagent-driven, go ahead
+Outcome: Implemented the achievements system on feature/achievements across 37 commits. Phase 0 (seeds + runner), Phase 1 (Cloud Functions: counters, evaluator, notification dispatch, 8 triggers, daily integrity sweep, index exports), Phase 2 (Firestore rules guarding stats/gamification + new earnedBadgesCache mirror), Phase 3 (domain entities, repositories, use cases, ComputeLevelProgress with TDD), Phase 4 (Freezed DTOs with abstract+with pattern matching codebase, Firestore datasources, repo impls), Phase 5 (Riverpod providers, BadgeFrame, BadgeIcon with Phosphor thin glyphs, LevelChip/TitleChip/ProgressBar, ProfileAchievementsSection, AchievementsScreen, BadgeDetailSheet, picker sheets, EarnMomentModal/Toast — profile-card integration done), Phase 6 (Hive-backed alert queue + rest-route dispatcher + /achievements/:uid route).
+Decisions: 
+- Split the badge evaluator into pure `findNewlyEarnedBadges` (unit-tested with 8 cases) + Firestore I/O wrapper (covered by Phase 7 integration test) to match the codebase's mock-based test pattern rather than emulator-backed tests.
+- Save trigger path corrected from the planned `posts/{postId}/saves/{saverUid}` to the actual `users/{uid}/savedPosts/{postId}` after inspecting the existing client datasource.
+- Comment increment placed in `onCommentAdded` *before* the parentId early-return so replies count toward commentsWritten, avoiding double-count via onCommentReply.
+- onCommentRemoved path corrected to `posts/{postId}/comments/{commentId}` (nested under posts) to match the actual collection.
+- Notifications routed through the existing `writeNotification` helper at `users/{uid}/notifications/` with new `'badge_unlock'` type + `'badge'` target rather than a separate top-level collection.
+- Generated Riverpod provider for the alert notifier exposes `newBadgeAlertProvider` (without "Notifier"), matched accordingly in the dispatcher.
+- DTO classes converted to `abstract class … with _$X` per Freezed 3.x.
+- Integrity sweep limited to easily-derivable counters (postsCreated, commentsWritten, requestsCreated, uniqueSaversCount) — savesReceived/savesGiven/requestsFulfilled/postsWithAtLeastOneSave rely on trigger correctness.
+- Skipped Task 1.13 user-deletion cascade — no existing user-deletion handler in the codebase; the broader cascade is its own feature.
+- Phase 7 goldens (Task 7.1) and emulator-backed integration test (Task 7.2) deferred — color-based widget tests already cover frame variants; integration test requires emulator + auth, slated for CI.
+Handoff: Branch feature/achievements is on commit 6a249d9. Tests pass locally on the achievements feature; full suite to be run in CI. Three open questions remain: Phosphor licence/asset size confirmation, 03:00 ICT sweep window clash check, and confirmation that adding `type: 'badge_unlock'` doesn't break the Flutter NotificationModel (it should fall through to a default since the model uses snake_case→camelCase mapping). v1.1 follow-ups: leaderboards, ajarn recognition, profile cosmetic accents, account-deletion cascade for earnedBadges + uniqueSavers.
+Review: PENDING
+  [12:23] Edit: apps/mobile/lib/features/achievements/data/datasources/badge_firestore_datasource.dart
+  [12:23] Edit: apps/mobile/lib/features/achievements/presentation/widgets/profile_achievements_section.dart
+  [12:23] Edit: apps/mobile/lib/features/achievements/presentation/widgets/profile_achievements_section.dart
+  [14:12] Edit: apps/mobile/lib/features/notifications/presentation/screens/notifications_screen.dart
+  [14:13] Edit: apps/mobile/test/widget/features/notifications/screens/notifications_screen_test.dart
+  [14:13] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:13] Edit: apps/mobile/lib/features/achievements/presentation/providers/new_badge_alert_provider.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/providers/new_badge_alert_provider.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
+  [14:14] Edit: apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart
+  [14:15] Edit: apps/mobile/lib/features/achievements/presentation/widgets/title_picker_sheet.dart
+  [14:56] Write: apps/mobile/lib/features/achievements/domain/entities/public_user.dart
+  [14:56] Write: apps/mobile/lib/features/achievements/data/models/public_user_dto.dart
+  [14:56] Write: apps/mobile/lib/features/achievements/data/datasources/public_user_firestore_datasource.dart
+  [14:56] Write: apps/mobile/lib/features/achievements/presentation/providers/public_user_provider.dart
+  [14:58] Write: apps/mobile/lib/features/achievements/presentation/widgets/level_chip.dart
+  [14:58] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:58] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [14:59] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [15:00] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [15:00] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [15:00] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [15:01] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart
+  [15:01] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [15:03] Write: apps/mobile/lib/features/profile/presentation/widgets/bio_visibility_notice.dart
+  [15:03] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [15:03] Edit: apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart
+  [15:24] Edit: apps/mobile/lib/core/router/router.dart
+  [15:25] Edit: apps/mobile/lib/core/router/router.dart
+  [15:25] Edit: apps/mobile/lib/core/router/router.dart
+  [15:29] Write: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [15:29] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
+  [15:29] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
+  [22:34] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
+  [22:34] Edit: apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart
+  [22:38] Write: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [22:38] Edit: apps/mobile/lib/core/router/router.dart
+  [22:39] Edit: apps/mobile/lib/core/router/router.dart
+  [22:39] Edit: apps/mobile/lib/core/router/router.dart
+  [22:39] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [22:42] Write: apps/mobile/lib/features/post/presentation/providers/posts_by_author_provider.dart
+  [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [22:42] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [22:50] Edit: apps/mobile/lib/core/router/router.dart
+  [23:02] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:02] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Files:
+  ~ apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Summary:  1 file changed, 9 insertions(+), 1 deletion(-)
+
+  [23:05] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:05] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Files:
+  ~ apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Summary:  1 file changed, 3 insertions(+)
+
+  [23:06] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:06] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:06] Edit: apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+  [23:07] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+Files:
+  ~ apps/mobile/lib/core/router/shell_scaffold.dart
+  ~ apps/mobile/lib/features/achievements/presentation/widgets/achievements_hero.dart
+Summary:  2 files changed, 16 insertions(+), 3 deletions(-)
+
+  [23:07] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [23:10] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+Files:
+  ~ apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+Summary:  1 file changed, 7 insertions(+), 1 deletion(-)
+
+  [23:10] Edit: apps/mobile/lib/features/feed/presentation/widgets/post_card.dart
+  [23:10] Edit: apps/mobile/lib/features/profile/presentation/screens/public_profile_screen.dart
+  [23:13] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [23:13] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [23:14] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [23:14] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+Files:
+  ~ apps/mobile/lib/core/router/shell_scaffold.dart
+  ~ apps/mobile/lib/shared/widgets/main_nav_bar.dart
+Summary:  2 files changed, 25 insertions(+), 3 deletions(-)
+
+  [23:18] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [23:18] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [23:23] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+
+2026-05-19
+  [09:45] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [09:45] Edit: apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart
+  [09:46] Write: apps/mobile/lib/features/achievements/presentation/widgets/badge_icon.dart
+  [09:46] Edit: apps/mobile/pubspec.yaml
