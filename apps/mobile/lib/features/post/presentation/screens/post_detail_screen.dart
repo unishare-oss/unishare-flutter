@@ -49,6 +49,15 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   bool _commentsVisible = true;
 
   @override
+  void initState() {
+    super.initState();
+    ref
+        .read(incrementViewCountUseCaseProvider)
+        .call(widget.postId)
+        .ignore();
+  }
+
+  @override
   void dispose() {
     _commentController.dispose();
     super.dispose();

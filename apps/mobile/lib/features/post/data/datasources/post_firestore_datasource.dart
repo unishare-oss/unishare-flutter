@@ -143,6 +143,12 @@ class PostFirestoreDatasource {
         );
   }
 
+  Future<void> incrementViewCount(String postId) async {
+    await _firestore.collection('posts').doc(postId).update({
+      'viewsCount': FieldValue.increment(1),
+    });
+  }
+
   Future<void> updatePostSummary(
     String postId,
     String? summary,
