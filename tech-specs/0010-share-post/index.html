@@ -6,15 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Public-safe user projection for cross-user UI plus three small discoverability surfaces for v1 achievements.">
+        <meta name="description" content="Share a post's canonical URL via the OS share sheet (iOS/Android) or Web Share API (web), with Firebase Hosting serving Universal Links / App Links well-known files for reliable deep linking.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/0011-users-public-and-discoverability/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/0010-share-post/">
       
       
-        <link rel="prev" href="../0010-share-post/">
+        <link rel="prev" href="../0010-achievements/">
       
+      
+        <link rel="next" href="../0011-users-public-and-discoverability/">
       
       
         
@@ -25,7 +27,7 @@
     
     
       
-        <title>0011: users_public mirror + achievements discoverability - Unishare Engineering Docs</title>
+        <title>0010: Share Post - Unishare Engineering Docs</title>
       
     
     
@@ -76,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#spec-0011-users_public-mirror-achievements-discoverability" class="md-skip">
+        <a href="#spec-0010-share-post" class="md-skip">
           Skip to content
         </a>
       
@@ -110,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0011: users_public mirror + achievements discoverability
+              0010: Share Post
             
           </span>
         </div>
@@ -1832,34 +1834,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../0010-share-post/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0010: Share Post
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -1879,7 +1853,7 @@
   <span class="md-ellipsis">
     
   
-    0011: users_public mirror + achievements discoverability
+    0010: Share Post
   
 
     
@@ -1897,7 +1871,7 @@
   <span class="md-ellipsis">
     
   
-    0011: users_public mirror + achievements discoverability
+    0010: Share Post
   
 
     
@@ -1945,45 +1919,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Model
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Data Model">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#firestore-users_publicuid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore — users_public/{uid}
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#firestore-usersuid-unchanged" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore — users/{uid} (unchanged)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#file-map" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1991,67 +1926,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="File map">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cloud-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud Functions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#firestore-rules-indexes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore rules + indexes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#seeds-backfill" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Seeds + backfill
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#flutter-app" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Flutter app
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tests
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2068,10 +1942,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pure-projection-function" class="md-nav__link">
+  <a href="#domain-layer-pure-dart-no-framework-imports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pure projection function
+        Domain layer — pure Dart, no framework imports
       
     </span>
   </a>
@@ -2079,10 +1953,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#trigger-contract" class="md-nav__link">
+  <a href="#data-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trigger contract
+        Data layer
       
     </span>
   </a>
@@ -2090,10 +1964,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#riverpod-provider" class="md-nav__link">
+  <a href="#presentation-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Riverpod provider
+        Presentation layer
       
     </span>
   </a>
@@ -2106,83 +1980,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ux-contracts" class="md-nav__link">
+  <a href="#firestore-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        UX Contracts
+        Firestore schema
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="UX Contracts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tappable-levelchip" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tappable LevelChip
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#more-drawer-achievements-tile" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        More drawer "Achievements" tile
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#postcard-level-chip" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PostCard level chip
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bio-visibility-notice" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bio visibility notice
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-anti-abuse" class="md-nav__link">
+  <a href="#firebase-hosting-and-native-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security &amp; Anti-Abuse
+        Firebase Hosting and native config
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Security &amp; Anti-Abuse">
+    <nav class="md-nav" aria-label="Firebase Hosting and native config">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rule-additions" class="md-nav__link">
+  <a href="#firebasejson-additions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rule additions
+        firebase.json additions
       
     </span>
   </a>
@@ -2190,10 +2014,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#loop-prevention" class="md-nav__link">
+  <a href="#hostingpublicwell-knownapple-app-site-association" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loop prevention
+        hosting/public/.well-known/apple-app-site-association
       
     </span>
   </a>
@@ -2201,10 +2025,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bio-privacy" class="md-nav__link">
+  <a href="#hostingpublicwell-knownassetlinksjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bio privacy
+        hosting/public/.well-known/assetlinks.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hostingpublicpostsindexhtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hosting/public/posts/index.html
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appsmobileandroidappsrcmainandroidmanifestxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apps/mobile/android/app/src/main/AndroidManifest.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appsmobileiosrunnerrunnerentitlements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apps/mobile/ios/Runner/Runner.entitlements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gorouter-cold-start-redirect-preservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GoRouter cold-start / redirect preservation
       
     </span>
   </a>
@@ -2224,23 +2092,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Test plan">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#coverage-targets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coverage targets
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2270,6 +2121,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-users-public-and-discoverability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: users_public mirror + achievements discoverability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2331,45 +2210,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Model
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Data Model">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#firestore-users_publicuid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore — users_public/{uid}
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#firestore-usersuid-unchanged" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore — users/{uid} (unchanged)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#file-map" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2377,67 +2217,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="File map">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cloud-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud Functions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#firestore-rules-indexes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore rules + indexes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#seeds-backfill" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Seeds + backfill
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#flutter-app" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Flutter app
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tests
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2454,10 +2233,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#pure-projection-function" class="md-nav__link">
+  <a href="#domain-layer-pure-dart-no-framework-imports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pure projection function
+        Domain layer — pure Dart, no framework imports
       
     </span>
   </a>
@@ -2465,10 +2244,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#trigger-contract" class="md-nav__link">
+  <a href="#data-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Trigger contract
+        Data layer
       
     </span>
   </a>
@@ -2476,10 +2255,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#riverpod-provider" class="md-nav__link">
+  <a href="#presentation-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Riverpod provider
+        Presentation layer
       
     </span>
   </a>
@@ -2492,83 +2271,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ux-contracts" class="md-nav__link">
+  <a href="#firestore-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        UX Contracts
+        Firestore schema
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="UX Contracts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#tappable-levelchip" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tappable LevelChip
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#more-drawer-achievements-tile" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        More drawer "Achievements" tile
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#postcard-level-chip" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PostCard level chip
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bio-visibility-notice" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bio visibility notice
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-anti-abuse" class="md-nav__link">
+  <a href="#firebase-hosting-and-native-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security &amp; Anti-Abuse
+        Firebase Hosting and native config
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Security &amp; Anti-Abuse">
+    <nav class="md-nav" aria-label="Firebase Hosting and native config">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#rule-additions" class="md-nav__link">
+  <a href="#firebasejson-additions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rule additions
+        firebase.json additions
       
     </span>
   </a>
@@ -2576,10 +2305,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#loop-prevention" class="md-nav__link">
+  <a href="#hostingpublicwell-knownapple-app-site-association" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Loop prevention
+        hosting/public/.well-known/apple-app-site-association
       
     </span>
   </a>
@@ -2587,10 +2316,54 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bio-privacy" class="md-nav__link">
+  <a href="#hostingpublicwell-knownassetlinksjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bio privacy
+        hosting/public/.well-known/assetlinks.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hostingpublicpostsindexhtml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        hosting/public/posts/index.html
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appsmobileandroidappsrcmainandroidmanifestxml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apps/mobile/android/app/src/main/AndroidManifest.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appsmobileiosrunnerrunnerentitlements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apps/mobile/ios/Runner/Runner.entitlements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gorouter-cold-start-redirect-preservation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GoRouter cold-start / redirect preservation
       
     </span>
   </a>
@@ -2610,23 +2383,6 @@
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Test plan">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#coverage-targets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coverage targets
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2669,7 +2425,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0011-users-public-and-discoverability.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0010-share-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2677,61 +2433,53 @@
   
 
 
-<h1 id="spec-0011-users_public-mirror-achievements-discoverability">SPEC-0011: users_public mirror + achievements discoverability<a class="headerlink" href="#spec-0011-users_public-mirror-achievements-discoverability" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> DRAFT
-<strong>Author:</strong> Pyae Sone Shin Thant
+<h1 id="spec-0010-share-post">SPEC-0010: Share Post<a class="headerlink" href="#spec-0010-share-post" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> APPROVED
+<strong>Author:</strong> Slade
 <strong>Date:</strong> 2026-05-18
-<strong>Proposal:</strong> <em>none — lightweight v1.1 follow-up to <a href="../../tech-proposals/0010-achievements/">PROP-0010</a></em>
-<strong>Approved by:</strong> (pending)</p>
+<strong>Proposal:</strong> <a href="../../tech-proposals/0010-share-post/">PROP-0010</a>
+<strong>Approved by:</strong> Slade</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Two coupled deliverables. (1) Introduce a <code>users_public/{uid}</code> Firestore collection that mirrors the public-safe subset of <code>users/{uid}</code> (name, photoUrl, bio, gamification.level, gamification.selectedTitle, gamification.displayedBadges). Server-maintained by a Cloud Function trigger; public-readable. This unblocks any cross-user gamification surface, which is currently blocked because v1's owner-only <code>users/{uid}</code> rule keeps the private collection from being read by other users. (2) Use that mirror to ship three small discoverability tweaks: a tappable <code>LevelChip</code>, an "Achievements" entry in the More drawer, and a level chip next to author names on <code>PostCard</code>.</p>
+<p>When a viewer taps a share icon button on <code>PostDetailScreen</code>, the app builds a canonical URL (<code>https://share.psstee.dev/posts/&lt;postId&gt;</code>), invokes <code>share_plus</code> to surface the OS share sheet (iOS/Android) or the Web Share API (web), and the recipient's device re-opens the Unishare app directly to that post. Firebase Hosting serves the two well-known files required by Universal Links (iOS) and App Links (Android). GoRouter's existing redirect guard preserves the intended <code>/posts/:postId</code> path as a redirect destination when the deep link arrives on an unauthenticated device, resuming navigation after sign-in. If the share sheet is dismissed, no action is taken. If the platform rejects the share call, the URL is copied to the clipboard and a SnackBar confirms this. If the target post is not found when the link is opened, <code>PostDetailScreen</code> renders an inline "Post not found" error state.</p>
+<hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    subgraph Client[Flutter App]
-        PC[PostCard]
-        PA[ProfileCard]
-        MD[MoreDrawer]
-        AS[AchievementsScreen]
+<pre class="mermaid"><code>flowchart TB
+    subgraph Presentation
+        PDS[PostDetailScreen\nshare IconButton]
+        SPP[sharePostProvider\nAsyncNotifier]
     end
 
-    subgraph Firestore
-        UPriv[users/{uid}&lt;br/&gt;owner-only]
-        UPub[users_public/{uid}&lt;br/&gt;public read]
+    subgraph Domain
+        UC[SharePostUseCase]
+        REPO_I[ShareRepository\nabstract interface]
     end
 
-    subgraph CloudFns
-        Sync[onUserChangedPublicSync]
+    subgraph Data
+        REPO_IMPL[ShareRepositoryImpl]
+        DS[SharePlusDataSource]
     end
 
-    UPriv -- onUpdate --&gt; Sync
-    Sync -- diff-and-skip&lt;br/&gt;set merge:true --&gt; UPub
+    subgraph Infrastructure
+        SP[share_plus]
+        CB[Clipboard API\nfallback]
+        FH[Firebase Hosting\nwell-known files]
+        AM[AndroidManifest\nApp Links intent-filter]
+        ENT[Runner.entitlements\nassociated-domains]
+    end
 
-    PC -- watches by authorId --&gt; UPub
-    PA -- watches own --&gt; UPriv
-    MD -- new tile --&gt; AS</code></pre>
-<p><strong>Boundary:</strong> the client never writes to <code>users_public/{uid}</code>. Profile edits write <code>users/{uid}</code>; the trigger fans out the public projection.</p>
-<h2 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h2>
-<h3 id="firestore-users_publicuid">Firestore — <code>users_public/{uid}</code><a class="headerlink" href="#firestore-users_publicuid" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;uid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc123&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Jane Doe&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;photoUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://...&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;bio&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;MSc CS — focus on theory and algorithms.&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;selectedTitle&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;first_post&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;displayedBadges&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;first_post&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;first_save_given&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;helpful_hand&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;ts&gt;&quot;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><strong>Excluded</strong> (stay private in <code>users/{uid}</code>): <code>email</code>, <code>enrollmentYear</code>, <code>role</code>, <code>departmentId</code>, <code>universityId</code>, <code>stats</code>, <code>gamification.totalPoints</code>, <code>gamification.earnedBadgesCache</code>, FCM tokens, fcm subscription state, etc.</p>
-<p><strong>Note on <code>bio</code>:</strong> included because the contributor-display use case needs context. This is a behavioral change from v1 (where bio was effectively private — only owners could read their own <code>users/{uid}</code>). Mitigation:
-- One-time in-app notice on next sign-in: "Your bio is now visible to other students. Edit it on your profile if needed." Dismissible toast with a button to open profile.
-- No content filter / length cap in v1.1 — bios remain freeform. Add length cap later if abuse appears.</p>
-<h3 id="firestore-usersuid-unchanged">Firestore — <code>users/{uid}</code> (unchanged)<a class="headerlink" href="#firestore-usersuid-unchanged" title="Permanent link">&para;</a></h3>
-<p>Continues to hold the full private user doc. Owner-only read.</p>
+    PDS --&gt; SPP
+    SPP --&gt; UC
+    UC --&gt; REPO_I
+    REPO_I -.implements.- REPO_IMPL
+    REPO_IMPL --&gt; DS
+    DS --&gt; SP
+    DS --&gt; CB
+    FH --&gt; AM
+    FH --&gt; ENT</code></pre>
+<hr />
 <h2 id="file-map">File map<a class="headerlink" href="#file-map" title="Permanent link">&para;</a></h2>
-<h3 id="cloud-functions">Cloud Functions<a class="headerlink" href="#cloud-functions" title="Permanent link">&para;</a></h3>
+<p>All paths are relative to the repo root unless prefixed with <code>apps/mobile/</code>.</p>
 <table>
 <thead>
 <tr>
@@ -2742,305 +2490,317 @@
 </thead>
 <tbody>
 <tr>
-<td>Create</td>
-<td><code>functions/src/triggers/onUserChangedPublicSync.ts</code></td>
-<td>Diff public-projection between before/after; if changed, <code>set({ merge: true })</code> to <code>users_public/{uid}</code>. Diff-and-skip loops by exiting early when the projection is identical.</td>
+<td><strong>Domain</strong></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>functions/src/lib/publicUserProjection.ts</code></td>
-<td>Pure function: takes a <code>users/{uid}</code> doc and returns the <code>users_public/{uid}</code> projection (or <code>null</code> if the doc is incomplete). Unit-tested.</td>
+<td><code>apps/mobile/lib/features/post/domain/repositories/share_repository.dart</code></td>
+<td>Abstract <code>ShareRepository</code> interface</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>functions/test/lib/publicUserProjection.test.ts</code></td>
-<td>Table-driven tests for the projection function.</td>
+<td><code>apps/mobile/lib/features/post/domain/usecases/share_post.dart</code></td>
+<td><code>SharePostUseCase</code> — delegates to <code>ShareRepository.share</code></td>
+</tr>
+<tr>
+<td><strong>Data</strong></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>functions/test/triggers/onUserChangedPublicSync.test.ts</code></td>
-<td>Mock-based test: same input pre/post → no write; differing input → exactly one write with the expected projection.</td>
+<td><code>apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart</code></td>
+<td>Calls <code>share_plus</code>; clipboard fallback on <code>ShareException</code> or Web Share unavailable</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart</code></td>
+<td>Implements <code>ShareRepository</code>; injects <code>SharePlusDataSource</code></td>
+</tr>
+<tr>
+<td><strong>Presentation</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart</code></td>
+<td><code>sharePostProvider</code> — <code>AsyncNotifier&lt;void&gt;</code> scoped to <code>postId</code>; exposes <code>share(Post)</code></td>
 </tr>
 <tr>
 <td>Modify</td>
-<td><code>functions/src/index.ts</code></td>
-<td>Export <code>onUserChangedPublicSync</code>.</td>
+<td><code>apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart</code></td>
+<td>Add share <code>IconButton</code> to <code>AppBar.actions</code>; add "Post not found" inline error state for document-missing errors</td>
+</tr>
+<tr>
+<td><strong>Infrastructure</strong></td>
+<td></td>
+<td></td>
 </tr>
 <tr>
 <td>Modify</td>
-<td><code>functions/src/triggers/onUserDeleted.ts</code> (or wherever the cascade lives)</td>
-<td>Delete <code>users_public/{uid}</code> when the user is deleted. <em>Note: there's no existing user-deletion handler in the codebase per the v1 plan deferral. If still none in v1.1, defer this to the same future feature.</em></td>
+<td><code>apps/mobile/android/app/src/main/AndroidManifest.xml</code></td>
+<td>Add <code>&lt;intent-filter&gt;</code> for App Links on <code>https://&lt;domain&gt;/posts/*</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/ios/Runner/Runner.entitlements</code></td>
+<td>Add <code>com.apple.developer.associated-domains</code> for <code>applinks:&lt;domain&gt;</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>firebase.json</code></td>
+<td>Add <code>hosting</code> block: rewrites, <code>/.well-known/</code> headers, <code>posts/**</code> → <code>posts/index.html</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/pubspec.yaml</code></td>
+<td>Add <code>share_plus: ^10.x</code> (pending team approval — OQ2)</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>hosting/public/.well-known/apple-app-site-association</code></td>
+<td>iOS AASA JSON — <code>applinks</code> component for <code>/posts/*</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>hosting/public/.well-known/assetlinks.json</code></td>
+<td>Android digital asset links JSON — SHA-256 fingerprints (pending OQ5)</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>hosting/public/posts/index.html</code></td>
+<td>Deferred deep-link landing page — JS redirect to App/Play Store when app not installed</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/lib/core/router/router.dart</code></td>
+<td>Preserve deep-link path through auth redirect using <code>state.uri.toString()</code> as <code>extra</code> on the <code>/welcome</code> redirect</td>
 </tr>
 </tbody>
 </table>
-<h3 id="firestore-rules-indexes">Firestore rules + indexes<a class="headerlink" href="#firestore-rules-indexes" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Action</th>
-<th>Path</th>
-<th>Responsibility</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Modify</td>
-<td><code>firestore.rules</code></td>
-<td>Add <code>match /users_public/{uid}</code> — <code>allow read: if request.auth != null; allow write: if false;</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="seeds-backfill">Seeds + backfill<a class="headerlink" href="#seeds-backfill" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Action</th>
-<th>Path</th>
-<th>Responsibility</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Create</td>
-<td><code>tools/backfill_users_public.js</code></td>
-<td>One-off script. Reads every <code>users/{uid}</code>, computes projection, batched-writes to <code>users_public/{uid}</code>. Idempotent. Skip users where projection returns <code>null</code>.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="flutter-app">Flutter app<a class="headerlink" href="#flutter-app" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Action</th>
-<th>Path</th>
-<th>Responsibility</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/lib/features/achievements/domain/entities/public_user.dart</code></td>
-<td>Pure-Dart entity matching the projection.</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/lib/features/achievements/data/models/public_user_dto.dart</code></td>
-<td>Freezed DTO; <code>fromSnapshot</code> factory.</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/lib/features/achievements/data/datasources/public_user_firestore_datasource.dart</code></td>
-<td><code>watch(uid)</code> and <code>watchMany(Iterable&lt;uid&gt;)</code> (per-uid stream so Riverpod auto-dedupes).</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/lib/features/achievements/presentation/providers/public_user_provider.dart</code></td>
-<td><code>@riverpod Stream&lt;PublicUser?&gt; publicUser(Ref ref, String uid)</code>.</td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/lib/features/achievements/presentation/widgets/level_chip.dart</code></td>
-<td>Wrap in <code>InkWell</code> with <code>onTap</code> parameter (optional, no behavior change at call site when null).</td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart</code></td>
-<td>Wire <code>onTap</code> on the level chip → <code>/achievements/&lt;user.id&gt;</code>.</td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/lib/features/feed/presentation/widgets/post_card.dart</code></td>
-<td>Inline <code>LevelChip</code> next to author name. Watches <code>publicUserProvider(post.authorId)</code> — falls back to no chip if loading / null.</td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart</code></td>
-<td>Add fifth "ACHIEVEMENTS" tile alongside SAVED / DEPARTMENTS / REQUESTS / PROFILE. Grid becomes 5-wide or wraps; spec is "tile renders, navigation to <code>/achievements/&lt;currentUid&gt;</code> works".</td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart</code></td>
-<td>Pass <code>onAchievementsTap</code> callback.</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/lib/features/profile/presentation/widgets/bio_visibility_notice.dart</code></td>
-<td>Dismissible amber banner shown once after launch. Persisted via Hive <code>bio_visibility_dismissed: true</code>. Banner copy + "OK, got it" button + "Edit profile" button.</td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/lib/features/profile/presentation/screens/profile_screen.dart</code></td>
-<td>Mount the bio-visibility notice above the profile card.</td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/lib/main.dart</code></td>
-<td>Open the <code>users_public</code> Hive box if we add one (or reuse <code>settings</code>).</td>
-</tr>
-</tbody>
-</table>
-<h3 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Action</th>
-<th>Path</th>
-<th>Responsibility</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/test/widget/features/achievements/level_chip_test.dart</code></td>
-<td>Tappable variant: tapping pushes the expected route.</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/test/widget/features/feed/post_card_level_chip_test.dart</code></td>
-<td>Renders chip when public user loads; renders nothing when null / loading.</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/test/widget/features/more/more_drawer_grid_test.dart</code> (or update existing)</td>
-<td>Achievements tile renders and navigates.</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>apps/mobile/test/widget/features/profile/bio_visibility_notice_test.dart</code></td>
-<td>Renders once, dismissed state persists, "Edit profile" navigates to /profile.</td>
-</tr>
-</tbody>
-</table>
+<hr />
 <h2 id="api-contracts">API contracts<a class="headerlink" href="#api-contracts" title="Permanent link">&para;</a></h2>
-<h3 id="pure-projection-function">Pure projection function<a class="headerlink" href="#pure-projection-function" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// functions/src/lib/publicUserProjection.ts</span>
-<span class="k">export</span><span class="w"> </span><span class="kd">interface</span><span class="w"> </span><span class="nx">PublicUserDoc</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nx">uid</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">photoUrl</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">bio</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">level</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">selectedTitle</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="w">  </span><span class="nx">displayedBadges</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[];</span>
+<h3 id="domain-layer-pure-dart-no-framework-imports">Domain layer — pure Dart, no framework imports<a class="headerlink" href="#domain-layer-pure-dart-no-framework-imports" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/domain/repositories/share_repository.dart</span>
+
+<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">ShareRepository</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">/// Shares the canonical URL for [post] via the platform share mechanism.</span>
+<span class="w">  </span><span class="c1">///</span>
+<span class="w">  </span><span class="c1">/// Throws [ShareException] only for hard platform errors.</span>
+<span class="w">  </span><span class="c1">/// A user dismissal (share-sheet cancelled) resolves normally.</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">share</span><span class="p">(</span><span class="n">Post</span><span class="w"> </span><span class="n">post</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/domain/usecases/share_post.dart</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">SharePostUseCase</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">SharePostUseCase</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">_repo</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">ShareRepository</span><span class="w"> </span><span class="n">_repo</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">call</span><span class="p">(</span><span class="n">Post</span><span class="w"> </span><span class="n">post</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_repo</span><span class="p">.</span><span class="n">share</span><span class="p">(</span><span class="n">post</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="data-layer">Data layer<a class="headerlink" href="#data-layer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">SharePlusDataSource</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">SharePlusDataSource</span><span class="p">({</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">SharePlus</span><span class="w"> </span><span class="n">sharePlus</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">Clipboard</span><span class="w"> </span><span class="n">clipboard</span><span class="p">,</span>
+<span class="w">  </span><span class="p">})</span><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="n">_sharePlus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sharePlus</span><span class="p">,</span>
+<span class="w">        </span><span class="n">_clipboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clipboard</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">SharePlus</span><span class="w"> </span><span class="n">_sharePlus</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">Clipboard</span><span class="w"> </span><span class="n">_clipboard</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">/// Builds the share text and triggers the OS share sheet.</span>
+<span class="w">  </span><span class="c1">///</span>
+<span class="w">  </span><span class="c1">/// Falls back to [_clipboard] if [SharePlatformException] is thrown</span>
+<span class="w">  </span><span class="c1">/// or if the platform signals Web Share API is unavailable.</span>
+<span class="w">  </span><span class="c1">/// Returns [ShareFallbackResult] to indicate whether the fallback was used.</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="n">ShareFallbackResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">share</span><span class="p">({</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postTitle</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">baseUrl</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
 <span class="p">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Returns the public projection of a `users/{uid}` doc, or null when the</span>
-<span class="cm"> * doc doesn&#39;t have enough information to expose publicly (e.g., during the</span>
-<span class="cm"> * brief window after auth account create + before profile is set).</span>
-<span class="cm"> *</span>
-<span class="cm"> * Pure — server-only — caller passes the raw Firestore data.</span>
-<span class="cm"> */</span>
-<span class="k">export</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">publicUserProjection</span><span class="p">(</span>
-<span class="w">  </span><span class="nx">uid</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
-<span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">Record</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">unknown</span><span class="o">&gt;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">,</span>
-<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nx">PublicUserDoc</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="n">enum</span><span class="w"> </span><span class="n">ShareFallbackResult</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">shared</span><span class="p">,</span><span class="w"> </span><span class="n">copiedToClipboard</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<h3 id="trigger-contract">Trigger contract<a class="headerlink" href="#trigger-contract" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">onUserChangedPublicSync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">onDocumentUpdated</span><span class="p">(</span>
-<span class="w">  </span><span class="s1">&#39;users/{uid}&#39;</span><span class="p">,</span>
-<span class="w">  </span><span class="cm">/* handler: diff projection, skip if unchanged, else set merge:true */</span>
-<span class="p">);</span>
+<p>The share text format is: <code>"&lt;postTitle&gt; — &lt;baseUrl&gt;/posts/&lt;postId&gt;"</code></p>
+<h3 id="presentation-layer">Presentation layer<a class="headerlink" href="#presentation-layer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart</span>
+
+<span class="nd">@riverpod</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">SharePost</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">_$SharePost</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">FutureOr</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">build</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">share</span><span class="p">(</span><span class="n">Post</span><span class="w"> </span><span class="n">post</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">AsyncLoading</span><span class="p">();</span>
+<span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">await</span><span class="w"> </span><span class="n">AsyncValue</span><span class="p">.</span><span class="n">guard</span><span class="p">(</span>
+<span class="w">      </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">sharePostUseCaseProvider</span><span class="p">).</span><span class="n">call</span><span class="p">(</span><span class="n">post</span><span class="p">),</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
-<p>Behaviour:
-- Compute <code>before</code> and <code>after</code> projections.
-- If projection is unchanged (deep equal), return without writing.
-- Else <code>set({ merge: true })</code> to <code>users_public/{uid}</code> with <code>after</code> + a server timestamp.</p>
-<h3 id="riverpod-provider">Riverpod provider<a class="headerlink" href="#riverpod-provider" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@riverpod</span>
-<span class="n">Stream</span><span class="o">&lt;</span><span class="n">PublicUser</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">publicUser</span><span class="p">(</span><span class="n">Ref</span><span class="w"> </span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">);</span>
+<p>The provider is a family-less <code>AsyncNotifier&lt;void&gt;</code>. One instance lives for the lifetime of <code>PostDetailScreen</code>. The screen observes <code>ref.listen&lt;AsyncValue&lt;void&gt;&gt;(sharePostProvider, ...)</code> to show the clipboard fallback SnackBar when <code>ShareRepositoryImpl</code> signals a fallback was used. The transport of the fallback signal is via a custom exception type <code>ShareFallbackException</code> caught by the screen's listener, not by propagating to <code>AsyncError</code>.</p>
+<hr />
+<h2 id="firestore-schema">Firestore schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h2>
+<p>No Firestore changes. This feature reads from the existing <code>posts/{postId}</code> document only via the already-loaded <code>Post</code> entity on <code>PostDetailScreen</code>. No new collections, no new fields, no new indexes.</p>
+<hr />
+<h2 id="firebase-hosting-and-native-config">Firebase Hosting and native config<a class="headerlink" href="#firebase-hosting-and-native-config" title="Permanent link">&para;</a></h2>
+<h3 id="firebasejson-additions"><code>firebase.json</code> additions<a class="headerlink" href="#firebasejson-additions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;hosting&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;public&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hosting/public&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;ignore&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;firebase.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;**/.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;**/node_modules/**&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/.well-known/apple-app-site-association&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/.well-known/assetlinks.json&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;rewrites&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/posts/**&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;destination&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/posts/index.html&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
 </code></pre></div>
-<p>Returns <code>null</code> while loading or if doc is missing. Consumers fall back to no chip in that case.</p>
-<h2 id="ux-contracts">UX Contracts<a class="headerlink" href="#ux-contracts" title="Permanent link">&para;</a></h2>
-<h3 id="tappable-levelchip">Tappable <code>LevelChip</code><a class="headerlink" href="#tappable-levelchip" title="Permanent link">&para;</a></h3>
-<p>Existing <code>LevelChip(level: 5)</code> keeps working unchanged. New optional <code>onTap</code> parameter:
-<div class="highlight"><pre><span></span><code><span class="n">LevelChip</span><span class="p">(</span><span class="nl">level:</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="nl">onTap:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="s1">&#39;/achievements/&lt;uid&gt;&#39;</span><span class="p">))</span>
+<h3 id="hostingpublicwell-knownapple-app-site-association"><code>hosting/public/.well-known/apple-app-site-association</code><a class="headerlink" href="#hostingpublicwell-knownapple-app-site-association" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;applinks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;apps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;appID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;TEAM_ID&gt;.&lt;BUNDLE_ID&gt;&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/posts/*&quot;</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
-When <code>onTap</code> is provided, the chip is wrapped in a <code>Material(transparent) + InkWell</code> with a borderRadius matching the chip (4px). Tap ripple confined to the chip.</p>
-<h3 id="more-drawer-achievements-tile">More drawer "Achievements" tile<a class="headerlink" href="#more-drawer-achievements-tile" title="Permanent link">&para;</a></h3>
-<p>Fifth tile in <code>MoreDrawerGrid</code>. Label: <code>ACHIEVEMENTS</code>. Icon: <code>Icons.workspace_premium_outlined</code>. Tap closes the drawer and navigates to <code>/achievements/&lt;currentUid&gt;</code>. Grid layout becomes either 5-wide (compact) or 2-row.</p>
-<h3 id="postcard-level-chip">PostCard level chip<a class="headerlink" href="#postcard-level-chip" title="Permanent link">&para;</a></h3>
-<p>Inline next to the author display name. Size 18dp (smaller than the 24dp profile chip — it's a label, not a control). Hidden when:
-- <code>post.postingIdentity == PostingIdentity.anonymous</code>
-- <code>publicUser(post.authorId)</code> is loading or null
-- Level == 1 (clutter reduction — anyone who hasn't earned anything yet doesn't need a chip)</p>
-<h3 id="bio-visibility-notice">Bio visibility notice<a class="headerlink" href="#bio-visibility-notice" title="Permanent link">&para;</a></h3>
-<p>One-time amber banner above the profile card on first launch after v1.1. Copy: "Your bio is now visible to other students. Tap to review or edit." Two buttons: "Edit profile" → <code>/profile</code> edit, "Got it" → dismiss. Persisted via Hive key <code>bio_visibility_notice_dismissed: bool</code>. Shown only when:
-- User is signed in
-- Hive key is unset
-- User has a non-empty bio (no reason to nag users with empty bios)</p>
-<h2 id="security-anti-abuse">Security &amp; Anti-Abuse<a class="headerlink" href="#security-anti-abuse" title="Permanent link">&para;</a></h2>
-<h3 id="rule-additions">Rule additions<a class="headerlink" href="#rule-additions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>match /users_public/{uid} {
-  allow read: if request.auth != null;
-  allow write: if false;
-}
+<p><code>TEAM_ID</code> and <code>BUNDLE_ID</code> must be confirmed before this file is deployed (related to OQ1 and OQ5).</p>
+<h3 id="hostingpublicwell-knownassetlinksjson"><code>hosting/public/.well-known/assetlinks.json</code><a class="headerlink" href="#hostingpublicwell-knownassetlinksjson" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;relation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;delegate_permission/common.handle_all_urls&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;android_app&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;package_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;ANDROID_PACKAGE_NAME&gt;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;sha256_cert_fingerprints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;SHA256_FINGERPRINT&gt;&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
 </code></pre></div>
-<h3 id="loop-prevention">Loop prevention<a class="headerlink" href="#loop-prevention" title="Permanent link">&para;</a></h3>
-<p>The trigger fires on <code>users/{uid}</code> onUpdate. Diff-and-skip ensures that:
-- The trigger doesn't write to its own watched path (it writes to <code>users_public/{uid}</code>).
-- The <code>onProfileUpdated</code> trigger's writes to <code>stats.profileCompleted</code> don't cause <code>users_public</code> rewrites because the projection ignores stats.
-- The evaluator's writes to <code>gamification.totalPoints</code> / <code>earnedBadgesCache</code> don't cause rewrites because the projection ignores those fields too.
-- Only changes to <code>name</code>, <code>photoUrl</code>, <code>bio</code>, <code>gamification.level</code>, <code>gamification.selectedTitle</code>, or <code>gamification.displayedBadges</code> actually flow through to a write.</p>
-<h3 id="bio-privacy">Bio privacy<a class="headerlink" href="#bio-privacy" title="Permanent link">&para;</a></h3>
-<p>Mitigations beyond the in-app notice are intentionally out of scope. If abuse surfaces:
-- Add length cap (280 char) in the projection function — cheap.
-- Add URL / phone regex stripping — moderately complex, can wait until needed.</p>
+<p>SHA-256 fingerprints for debug, release, and Play App Signing certificate are required (OQ5).</p>
+<h3 id="hostingpublicpostsindexhtml"><code>hosting/public/posts/index.html</code><a class="headerlink" href="#hostingpublicpostsindexhtml" title="Permanent link">&para;</a></h3>
+<p>A minimal HTML page with a <code>&lt;script&gt;</code> block that:
+1. Reads <code>window.location.pathname</code> to extract <code>postId</code>.
+2. Attempts to open the custom scheme deep link (<code>unishare://posts/&lt;postId&gt;</code>) for a brief timeout.
+3. Falls back to the Play Store / App Store URL if the app is not installed.</p>
+<p>This page is intentionally static — no server-side rendering or OG tags for v1 (OQ4).</p>
+<h3 id="appsmobileandroidappsrcmainandroidmanifestxml"><code>apps/mobile/android/app/src/main/AndroidManifest.xml</code><a class="headerlink" href="#appsmobileandroidappsrcmainandroidmanifestxml" title="Permanent link">&para;</a></h3>
+<p>Add inside the <code>&lt;activity&gt;</code> element that hosts the Flutter content:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;intent-filter</span><span class="w"> </span><span class="na">android:autoVerify=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;action</span><span class="w"> </span><span class="na">android:name=</span><span class="s">&quot;android.intent.action.VIEW&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;category</span><span class="w"> </span><span class="na">android:name=</span><span class="s">&quot;android.intent.category.DEFAULT&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;category</span><span class="w"> </span><span class="na">android:name=</span><span class="s">&quot;android.intent.category.BROWSABLE&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="w">  </span><span class="nt">&lt;data</span>
+<span class="w">    </span><span class="na">android:scheme=</span><span class="s">&quot;https&quot;</span>
+<span class="w">    </span><span class="na">android:host=</span><span class="s">&quot;share.psstee.dev&quot;</span>
+<span class="w">    </span><span class="na">android:pathPrefix=</span><span class="s">&quot;/posts/&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/intent-filter&gt;</span>
+</code></pre></div>
+<h3 id="appsmobileiosrunnerrunnerentitlements"><code>apps/mobile/ios/Runner/Runner.entitlements</code><a class="headerlink" href="#appsmobileiosrunnerrunnerentitlements" title="Permanent link">&para;</a></h3>
+<p>Add to the existing entitlements dict:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;key&gt;</span>com.apple.developer.associated-domains<span class="nt">&lt;/key&gt;</span>
+<span class="nt">&lt;array&gt;</span>
+<span class="w">  </span><span class="nt">&lt;string&gt;</span>applinks:share.psstee.dev<span class="nt">&lt;/string&gt;</span>
+<span class="nt">&lt;/array&gt;</span>
+</code></pre></div>
+<h3 id="gorouter-cold-start-redirect-preservation">GoRouter cold-start / redirect preservation<a class="headerlink" href="#gorouter-cold-start-redirect-preservation" title="Permanent link">&para;</a></h3>
+<p>The existing redirect guard in <code>router.dart</code> already blocks unauthenticated paths to <code>/welcome</code>. The current guard at line 118–122 redirects without preserving the intended URL:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Current behaviour — destination is lost:</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isAuthenticated</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">isGuest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">authRoutes</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">currentPath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/welcome&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The flutter-engineer must extend this redirect to encode the original URI as a query parameter:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isAuthenticated</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">isGuest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">authRoutes</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">currentPath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">encoded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uri</span><span class="p">.</span><span class="n">encodeComponent</span><span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">uri</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/welcome?redirect=</span><span class="si">$</span><span class="n">encoded</span><span class="s1">&#39;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The <code>/welcome</code> screen (or its post-auth success handler) must read <code>state.uri.queryParameters['redirect']</code>, decode it, and call <code>context.go(decoded)</code> after successful sign-in. This is consistent with standard GoRouter redirect patterns and does not require any new package.</p>
+<hr />
 <h2 id="test-plan">Test plan<a class="headerlink" href="#test-plan" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Test file</th>
+<th>Type</th>
 <th>Covers</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>functions/test/lib/publicUserProjection.test.ts</code></td>
-<td>All-fields-present → full projection. Missing required field → null. Optional fields default appropriately.</td>
+<td><code>apps/mobile/test/unit/features/post/domain/usecases/share_post_test.dart</code></td>
+<td>Unit</td>
+<td><code>SharePostUseCase.call</code> delegates to <code>ShareRepository.share</code>; verifies mock is called with correct <code>Post</code> argument</td>
 </tr>
 <tr>
-<td><code>functions/test/triggers/onUserChangedPublicSync.test.ts</code></td>
-<td>(1) Same projection pre/post → no write. (2) Name changes → one write. (3) Only stats change → no write. (4) Only <code>gamification.totalPoints</code> change → no write. (5) <code>gamification.level</code> change → one write.</td>
+<td><code>apps/mobile/test/unit/features/post/data/datasources/share_plus_datasource_test.dart</code></td>
+<td>Unit</td>
+<td>Share text format is <code>"&lt;title&gt; — &lt;baseUrl&gt;/posts/&lt;postId&gt;"</code>; <code>ShareFallbackResult.shared</code> returned on success; <code>ShareFallbackResult.copiedToClipboard</code> returned when <code>SharePlatformException</code> is thrown; clipboard receives the canonical URL on fallback</td>
 </tr>
 <tr>
-<td><code>apps/mobile/test/widget/features/achievements/level_chip_test.dart</code></td>
-<td>Renders without InkWell when no onTap. With onTap, tapping triggers callback.</td>
+<td><code>apps/mobile/test/unit/features/post/data/repositories/share_repository_impl_test.dart</code></td>
+<td>Unit</td>
+<td><code>ShareRepositoryImpl.share</code> calls <code>SharePlusDataSource.share</code> with correct <code>postId</code>, <code>postTitle</code>, <code>baseUrl</code>; propagates <code>ShareFallbackException</code> when datasource returns <code>copiedToClipboard</code></td>
 </tr>
 <tr>
-<td><code>apps/mobile/test/widget/features/feed/post_card_level_chip_test.dart</code></td>
-<td>Anonymous post → no chip. publicUser loading → no chip. Level 1 → no chip. Level 2+ → chip with correct level.</td>
-</tr>
-<tr>
-<td><code>apps/mobile/test/widget/features/more/more_drawer_grid_test.dart</code></td>
-<td>Achievements tile renders, tapping calls <code>onAchievementsTap</code>.</td>
-</tr>
-<tr>
-<td><code>apps/mobile/test/widget/features/profile/bio_visibility_notice_test.dart</code></td>
-<td>Renders when Hive flag unset + bio non-empty. Hidden when dismissed. "Got it" persists flag.</td>
+<td><code>apps/mobile/test/widget/features/post/presentation/screens/post_detail_screen_test.dart</code></td>
+<td>Widget</td>
+<td>Share <code>IconButton</code> is present in the <code>AppBar</code>; tapping it calls <code>sharePostProvider</code>; when post document returns null/not-found error, the inline "Post not found" error widget is rendered (not a crash); SnackBar "Link copied to clipboard" is shown when <code>ShareFallbackException</code> is received</td>
 </tr>
 </tbody>
 </table>
-<h3 id="coverage-targets">Coverage targets<a class="headerlink" href="#coverage-targets" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Projection function: 100%.</li>
-<li>Trigger: 100% of branches via mock-based tests.</li>
-<li>Flutter widgets: covered by widget tests above.</li>
-</ul>
+<hr />
 <h2 id="out-of-scope">Out of scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Leaderboards</strong> — needs <code>users_public</code> but also new screens / ranking queries. Separate spec.</li>
-<li><strong>Ajarn recognition (L2)</strong> — needs a <code>role: 'faculty'</code> flag and faculty-only UI. Separate spec.</li>
-<li><strong>Cosmetic profile accents</strong> at Lv 10/20 — pure design work, not blocked on infrastructure.</li>
-<li><strong>Account-deletion cascade</strong> for <code>users_public/{uid}</code> — depends on the broader user-deletion feature still being absent.</li>
-<li><strong>PostCard level chip authored-by-current-user case</strong> — works via <code>userGamificationProvider</code> (faster, owner-readable), but for v1.1 simplicity we use <code>publicUserProvider</code> everywhere on PostCard. One-frame staleness vs your own actions is acceptable.</li>
-<li><strong>Realtime level-up animation on PostCard chip</strong> — when the chip ticks up, no special FX; the existing earn-moment modal carries the celebration.</li>
+<li>iOS Universal Links — <code>apple-app-site-association</code> and <code>Runner.entitlements</code> (post-v1; Team ID not yet available). On iOS, tapping a shared link opens the browser landing page which redirects to the App Store. The share button and share sheet work normally on iOS.</li>
+<li>iOS true deferred deep linking via Pasteboard URL / SKAdNetwork (post-v1)</li>
+<li>OG meta tags with post-specific <code>og:title</code>, <code>og:description</code>, <code>og:image</code> (post-v1; current <code>posts/index.html</code> uses static placeholder content only)</li>
+<li>Share analytics and share count tracking (no new Firestore fields in this spec)</li>
+<li>Share affordance in feed cards (OQ6 resolved: post detail only)</li>
+<li>Branch.io or any third-party deep-link SDK integration</li>
+<li>Android Play Install Referrer API deferred deep linking (descoped to post-v1)</li>
 </ul>
+<hr />
 <h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] Confirm Hive key naming for the bio-visibility dismissal. Proposed: <code>bio_visibility_notice_dismissed</code> in the existing <code>settings</code> box.</li>
-<li>[ ] Confirm 5-tile More-drawer grid layout (5-wide vs 2-row). Depends on tablet visual.</li>
-<li>[ ] Whether to add a <code>client_version</code> field to the projection so clients can detect schema drift if we add fields later (defer if not obviously useful).</li>
+<li>[x] <strong>OQ1</strong> — Firebase Hosting domain confirmed: <code>share.psstee.dev</code>. Replace all <code>share.psstee.dev</code> placeholders with this value.</li>
+<li>[x] <strong>OQ2</strong> — <code>share_plus: ^10.0.0</code> approved and added to <code>pubspec.yaml</code>.</li>
+<li>[ ] <strong>OQ4</strong> — OG meta tag strategy for v1 not confirmed. This spec assumes a static placeholder <code>posts/index.html</code> (no post title/description in the page head). A follow-up spec is needed if the team wants per-post social previews.</li>
+<li>[ ] <strong>OQ5</strong> — Android SHA-256 certificate fingerprints not yet enumerated. Three fingerprints are required: debug keystore, release keystore, and Play App Signing certificate. <code>assetlinks.json</code> cannot be finalised until all three are provided.</li>
+<li>[x] <strong>OQ3</strong> — iOS deferred deep linking: resolved as best-effort for v1 (descoped; see Out of scope).</li>
+<li>[x] <strong>OQ6</strong> — Share affordance placement: resolved as post detail screen only (no feed card share).</li>
 </ul>
 
 

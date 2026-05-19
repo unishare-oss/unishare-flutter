@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Proposal for a dedicated post-detail screen that renders full post content, attachments, and social interactions, and serves as the deep-link target for push notifications and shared URLs.">
+        <meta name="description" content="Allow users to share academic posts outside the app via platform share sheets, with deferred deep links so recipients who do not yet have the app are routed to the correct post on first launch.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0006-post-detail-page/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0010-share-post/">
       
       
-        <link rel="prev" href="../0005-main-navbar/">
+        <link rel="prev" href="../0010-achievements/">
       
       
-        <link rel="next" href="../0007-file-preview-screen/">
+        <link rel="next" href="../../tech-specs/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0006: Post Detail Page - Unishare Engineering Docs</title>
+        <title>0010: Share Post - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0006-post-detail-page" class="md-skip">
+        <a href="#prop-0010-share-post" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0006: Post Detail Page
+              0010: Share Post
             
           </span>
         </div>
@@ -1215,37 +1215,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0006: Post Detail Page
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1261,192 +1234,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Proposed Solution
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Proposed Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GoRouter route
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture layers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data loading strategy (hybrid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments subcollection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Like interaction
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Figma compliance
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Pass Post via GoRouter extra, no Firestore fetch
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Always fetch post fresh from Firestore by ID
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1596,10 +1383,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0010-share-post/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1615,6 +1429,247 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-url-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical URL structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ios-universal-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iOS: Universal Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#android-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Android: App Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-platform-web-share-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web platform: Web Share API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-landing-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: landing page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-first-launch-handling-in-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: first-launch handling in Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-package-addition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter package addition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firebase-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firebase Hosting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-custom-url-scheme-only-no-universal-links-or-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Custom URL scheme only (no Universal Links or App Links)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-third-party-deep-link-service-branchio-free-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Third-party deep link service (Branch.io free tier)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-firebase-app-distribution-invite-links-not-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Firebase App Distribution / Invite Links (not applicable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2156,10 +2211,87 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#gorouter-route" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GoRouter route
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-url-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical URL structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ios-universal-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iOS: Universal Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#android-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Android: App Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-platform-web-share-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web platform: Web Share API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-landing-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: landing page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-first-launch-handling-in-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: first-launch handling in Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-package-addition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter package addition
       
     </span>
   </a>
@@ -2178,43 +2310,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-loading-strategy-hybrid" class="md-nav__link">
+  <a href="#firebase-hosting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data loading strategy (hybrid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#comments-subcollection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comments subcollection
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#like-interaction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Like interaction
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#figma-compliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Figma compliance
+        Firebase Hosting
       
     </span>
   </a>
@@ -2239,10 +2338,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" class="md-nav__link">
+  <a href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Pass Post via GoRouter extra, no Firestore fetch
+        A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)
       
     </span>
   </a>
@@ -2250,10 +2349,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-always-fetch-post-fresh-from-firestore-by-id" class="md-nav__link">
+  <a href="#b-custom-url-scheme-only-no-universal-links-or-app-links" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Always fetch post fresh from Firestore by ID
+        B — Custom URL scheme only (no Universal Links or App Links)
       
     </span>
   </a>
@@ -2261,10 +2360,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" class="md-nav__link">
+  <a href="#c-third-party-deep-link-service-branchio-free-tier" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Hybrid: optimistic display from feed data, then stream live updates (recommended)
+        C — Third-party deep link service (Branch.io free tier)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-firebase-app-distribution-invite-links-not-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Firebase App Distribution / Invite Links (not applicable)
       
     </span>
   </a>
@@ -2315,7 +2425,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0006-post-detail-page.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0010-share-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2323,219 +2433,191 @@
   
 
 
-<h1 id="prop-0006-post-detail-page">PROP-0006: Post Detail Page<a class="headerlink" href="#prop-0006-post-detail-page" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-06<br />
-<strong>Spec:</strong> (pending approval)<br />
-<strong>Approved by:</strong></p>
+<h1 id="prop-0010-share-post">PROP-0010: Share Post<a class="headerlink" href="#prop-0010-share-post" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> Slade<br />
+<strong>Date:</strong> 2026-05-17<br />
+<strong>Spec:</strong> (pending)<br />
+<strong>Approved by:</strong> Slade</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The feed screen (PROP-0003) renders a scrollable list of <code>PostCard</code> widgets, but tapping a card has no destination. The <code>PostCard</code> tap handler is a no-op. Students have no way to read a post's full body, view all attached media, see comments, or like a post — the primary interaction surface of the app is unreachable.</p>
-<p>Beyond the tap-from-feed path, the detail screen must function as a <strong>standalone deep-link target</strong>. Push notifications and shared URLs reference a post by its Firestore document ID (e.g., <code>https://unishare.app/posts/abc123</code>), and the screen must render correctly when the app is cold-started directly into that route — meaning it cannot depend on feed state being populated in memory.</p>
-<p>Two structural concerns compound the data-loading problem:</p>
-<ol>
-<li>The feed's <code>postFeedProvider</code> loads posts in pages. A post the user taps may be on page 1 of the current session or may have been obtained by a completely different session (deep link). Feed data is therefore unreliable as a sole source.</li>
-<li><code>likesCount</code> on the post document is updated by a Cloud Function, not by the client. A snapshot from the feed may be stale by the time the user opens the detail screen, particularly for popular posts. The detail screen should reflect live counts.</li>
-</ol>
-<p>The UI must reproduce the Figma design exactly (https://www.figma.com/design/gIUtcwNTmPi17dOuuv5oDB/Unishare?node-id=0-1). The Figma introduces components — comments list, like button affordance, attachment carousel — that may not exist yet in the shared design system and must be audited before implementation begins.</p>
+<p>Unishare has no affordance for sharing a post outside the application. A student who finds a relevant lecture summary, past exam paper, or course note cannot forward it to a classmate through WhatsApp, Telegram, iMessage, or any other channel — they can only describe it verbally or copy-paste the post title and hope the recipient finds it independently. An educator cannot promote newly uploaded material on a department group chat.</p>
+<p>This matters at two levels. First, there is no share button anywhere on the post detail screen, so the action is entirely invisible to users. Second, even if a raw URL were shared manually, there is no URL structure in the app to open a specific post, and no infrastructure to route a non-user who taps the link to the App Store or Play Store and then onward to the correct post after installation (deferred deep link). Links shared without deferred deep linking are dead ends for recipients who have not yet installed the app — the group most important to grow the user base.</p>
+<p>The absence of sharing also limits organic growth. Academic content communities depend heavily on peer recommendation; without a low-friction share mechanism, posts circulate only within the existing in-app audience.</p>
+<p>From a technical standpoint the app currently has no:
+- Share trigger in the presentation layer (no "share" button or action sheet entry on post detail).
+- Canonical URL structure for individual posts.
+- Firebase Hosting configuration for web serving (the <code>firebase.json</code> does not contain a <code>hosting</code> key).
+- Universal Links (<code>/.well-known/apple-app-site-association</code>) or App Links (<code>/.well-known/assetlinks.json</code>) configuration.
+- <code>share_plus</code> dependency in <code>pubspec.yaml</code>.
+- Deferred deep link landing page or launch-state handling in GoRouter.</p>
+<p>All of these gaps must be addressed together for end-to-end sharing to work.</p>
 <hr />
 <h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>Use <strong>Option C — Hybrid: optimistic display from feed data, then stream live updates from Firestore</strong>.</p>
-<h3 id="gorouter-route">GoRouter route<a class="headerlink" href="#gorouter-route" title="Permanent link">&para;</a></h3>
-<p>Declare <code>/posts/:postId</code> as a top-level route <strong>outside</strong> the <code>StatefulShellRoute</code> shell (following the same pattern established in PROP-0005 for New Post steps and Post Details). This means the navbar is automatically absent, and the route is reachable from both the feed tap and a cold-start deep link with no conditional logic.</p>
-<div class="highlight"><pre><span></span><code>/posts/:postId   →   PostDetailScreen(postId: postId)
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>The recommended approach is <strong>self-hosted Universal Links and App Links via Firebase Hosting</strong> (Option A below). A share button on the post detail screen invokes <code>share_plus</code> to trigger the platform share sheet (iOS, Android) or the Web Share API (web). The shared URL points to a Firebase Hosting domain under the team's control. On a device with the app installed, the OS intercepts the link and opens the app directly to the correct post. On a device without the app, the browser lands on a minimal Firebase Hosting HTML redirect page that stores the target post ID (in <code>sessionStorage</code> or a URL fragment) and redirects the user to the App Store or Play Store. When the user subsequently installs and opens the app, a first-launch routine reads a stored post ID and navigates GoRouter to that post detail screen.</p>
+<p>This approach uses only Firebase Hosting (already part of the Firebase project, free tier) and <code>share_plus</code> (free, open-source). No paid service is required.</p>
+<h3 id="canonical-url-structure">Canonical URL structure<a class="headerlink" href="#canonical-url-structure" title="Permanent link">&para;</a></h3>
+<p>Every post gets a shareable URL of the form:</p>
+<div class="highlight"><pre><span></span><code>https://&lt;firebase-hosting-domain&gt;/posts/&lt;postId&gt;
 </code></pre></div>
-<p>The <code>PostCard</code> tap handler calls <code>context.push('/posts/${post.id}', extra: post)</code>. GoRouter's <code>extra</code> carries the already-loaded <code>Post</code> entity for the warm-start case. For the cold-start case (deep link, push notification), <code>extra</code> is <code>null</code> — the screen falls back to fetching by ID.</p>
+<p>Example: <code>https://unishare-app.web.app/posts/abc123</code></p>
+<p>The <code>postId</code> is the Firestore document ID already assigned at upload time — no new identifier is introduced.</p>
+<h3 id="ios-universal-links">iOS: Universal Links<a class="headerlink" href="#ios-universal-links" title="Permanent link">&para;</a></h3>
+<p>A JSON file is deployed to Firebase Hosting at:</p>
+<div class="highlight"><pre><span></span><code>/.well-known/apple-app-site-association
+</code></pre></div>
+<p>It lists the app's Team ID and Bundle ID and associates the <code>/posts/*</code> path pattern with the app. When an iOS device with the app installed receives a tap on a <code>https://unishare-app.web.app/posts/&lt;id&gt;</code> URL (in iMessage, WhatsApp, Safari, etc.), iOS intercepts the link and calls <code>AppDelegate.application(_:continue:restorationHandler:)</code> without opening the browser. The app's GoRouter deep-link handler (already in place for push notification routing) parses the incoming URL and navigates to the post detail screen for the given <code>postId</code>.</p>
+<h3 id="android-app-links">Android: App Links<a class="headerlink" href="#android-app-links" title="Permanent link">&para;</a></h3>
+<p>A JSON file is deployed to Firebase Hosting at:</p>
+<div class="highlight"><pre><span></span><code>/.well-known/assetlinks.json
+</code></pre></div>
+<p>It lists the app's SHA-256 certificate fingerprint and package name. Android verifies this file at install time and on OS startup (Digital Asset Links verification). When the app is installed and a matching URL is tapped, Android routes it directly to the app via an intent filter with <code>android:autoVerify="true"</code>.</p>
+<h3 id="web-platform-web-share-api">Web platform: Web Share API<a class="headerlink" href="#web-platform-web-share-api" title="Permanent link">&para;</a></h3>
+<p>On web, <code>share_plus</code> 10.x wraps the browser's <code>navigator.share()</code> API. When <code>navigator.share()</code> is available (Chrome for Android, Safari on iOS/macOS, Edge), the native system share sheet opens with the post title and URL pre-populated. When <code>navigator.share()</code> is unavailable (desktop Chrome, Firefox), <code>share_plus</code> falls back to copying the URL to the clipboard and showing a snackbar.</p>
+<h3 id="deferred-deep-link-landing-page">Deferred deep link: landing page<a class="headerlink" href="#deferred-deep-link-landing-page" title="Permanent link">&para;</a></h3>
+<p>Firebase Hosting serves an <code>index.html</code> at <code>/posts/&lt;postId&gt;</code> via a rewrite rule (catch-all SPA rewrite, same pattern used for web app hosting). This page contains:</p>
+<ol>
+<li>Open Graph and Twitter Card meta tags (<code>og:title</code>, <code>og:description</code>, <code>og:image</code>) populated via a Cloud Function that renders the page server-side, or — for v1 — static meta tags with a generic title and the post URL. (OG tag strategy is an open question below.)</li>
+<li>A small JavaScript snippet that detects the platform (iOS / Android / other) and redirects to the App Store, Play Store, or a web fallback. Before redirecting, it writes the <code>postId</code> to <code>localStorage</code> under a key such as <code>unishare_pending_post</code>.</li>
+</ol>
+<h3 id="deferred-deep-link-first-launch-handling-in-flutter">Deferred deep link: first-launch handling in Flutter<a class="headerlink" href="#deferred-deep-link-first-launch-handling-in-flutter" title="Permanent link">&para;</a></h3>
+<p>On app cold start, a Riverpod provider (e.g., <code>pendingShareProvider</code>) checks whether a stored post ID exists. On native platforms the mechanism differs:</p>
+<ul>
+<li><strong>iOS/Android:</strong> The landing page cannot write to the app's <code>localStorage</code>, so deferred state must be passed through the store install flow. The standard approach without a third-party SDK is a Firebase Hosting redirect that appends the post ID to the App Store URL as a referral parameter (iOS) or via a Play Install Referrer API value (Android). For v1, a simpler fallback is acceptable: after first install and first Firebase Auth sign-in, the app checks <code>flutter_secure_storage</code> for a value written by a background URL handler. This is only possible if the OS delivers the link before the app is fully initialised — which Universal Links and App Links do when the user taps the link after installation (not a true deferred case). True deferred deep linking (link tapped before installation) without a third-party SDK requires the Play Install Referrer API on Android and has no reliable native equivalent on iOS without asking the user to re-tap the link.</li>
+</ul>
+<p>The practical v1 recommendation: deferred deep linking is supported on Android via the Play Install Referrer API (no paid service needed, the API is free), and best-effort on iOS (Universal Link is delivered if the app is already installed; post-install routing on iOS for genuinely new users is deferred to v2 or resolved via Branch.io if the team later prioritises it). This scopes the work honestly without over-promising.</p>
+<h3 id="flutter-package-addition">Flutter package addition<a class="headerlink" href="#flutter-package-addition" title="Permanent link">&para;</a></h3>
+<p><code>share_plus</code> (pub.dev, BSD-3-Clause, maintained by the Flutter community) must be added to <code>pubspec.yaml</code>. This requires team approval per the project's dependency policy. No other new package is required for the core share flow. The Play Install Referrer API on Android is accessed through the existing Android manifest and intent handling; no additional pub.dev package is needed unless the team adopts <code>app_links</code> for a unified URL handler (also free, open-source — flagged as an option in the spec phase).</p>
 <h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Layer</th>
-<th>Addition</th>
+<th>Artifact</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>domain/entities/Comment</code></td>
-<td>Pure Dart entity: <code>id</code>, <code>authorId</code>, <code>authorName</code>, <code>authorAvatar</code>, <code>body</code>, <code>createdAt</code></td>
+<td><code>domain/entities/</code></td>
+<td>No new entity — <code>Post</code> entity gains no new fields</td>
 </tr>
 <tr>
-<td><code>domain/repositories/PostRepository</code></td>
-<td>New method: <code>Stream&lt;Post&gt; watchPost(String postId)</code></td>
+<td><code>domain/repositories/</code></td>
+<td><code>ShareRepository</code> abstract interface: <code>share(Post post)</code> → <code>Future&lt;void&gt;</code></td>
 </tr>
 <tr>
-<td><code>domain/repositories/CommentRepository</code></td>
-<td>New interface: <code>Stream&lt;List&lt;Comment&gt;&gt; watchComments(String postId)</code>, <code>Future&lt;void&gt; addComment(String postId, String body)</code></td>
+<td><code>domain/usecases/</code></td>
+<td><code>SharePostUseCase</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/WatchPost</code></td>
-<td>Wraps <code>PostRepository.watchPost</code></td>
+<td><code>data/datasources/</code></td>
+<td><code>SharePlusDataSource</code> (wraps <code>share_plus</code> <code>SharePlus.instance.share()</code>)</td>
 </tr>
 <tr>
-<td><code>domain/usecases/WatchComments</code></td>
-<td>Wraps <code>CommentRepository.watchComments</code></td>
+<td><code>data/repositories/</code></td>
+<td><code>ShareRepositoryImpl</code></td>
 </tr>
 <tr>
-<td><code>domain/usecases/AddComment</code></td>
-<td>Validates body non-empty, delegates to <code>CommentRepository</code></td>
+<td><code>presentation/providers/</code></td>
+<td><code>sharePostProvider</code> (simple <code>FutureProvider.family</code> keyed on <code>postId</code>)</td>
 </tr>
 <tr>
-<td><code>domain/usecases/ToggleLike</code></td>
-<td>Writes/removes <code>posts/{postId}/likes/{userId}</code>, server-side <code>likesCount</code> is managed by Cloud Function</td>
-</tr>
-<tr>
-<td><code>data/datasources/PostFirestoreDataSource</code></td>
-<td>Add <code>watchPost(String postId)</code> — <code>snapshots()</code> stream on <code>posts/{postId}</code></td>
-</tr>
-<tr>
-<td><code>data/datasources/CommentFirestoreDataSource</code></td>
-<td>Stream on <code>posts/{postId}/comments</code> ordered by <code>createdAt</code> ascending</td>
-</tr>
-<tr>
-<td><code>data/models/CommentDto</code></td>
-<td>Freezed + <code>fromJson</code>/<code>toJson</code></td>
-</tr>
-<tr>
-<td><code>data/repositories/CommentRepositoryImpl</code></td>
-<td>Maps <code>CommentDto</code> → <code>Comment</code> entity</td>
-</tr>
-<tr>
-<td><code>presentation/providers/postDetailProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;Post&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/providers/commentsProvider</code></td>
-<td><code>@riverpod</code>, accepts <code>postId</code>; exposes <code>AsyncValue&lt;List&lt;Comment&gt;&gt;</code></td>
-</tr>
-<tr>
-<td><code>presentation/screens/PostDetailScreen</code></td>
-<td>Full-screen layout per Figma</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/CommentTile</code></td>
-<td>Single comment row</td>
-</tr>
-<tr>
-<td><code>presentation/widgets/AttachmentCarousel</code></td>
-<td>Horizontal media strip using <code>CachedNetworkImage</code></td>
-</tr>
-<tr>
-<td><code>presentation/widgets/LikeButton</code></td>
-<td>Stateless button; receives <code>isLiked</code> + <code>count</code> + <code>onTap</code></td>
+<td><code>presentation/widgets/</code></td>
+<td>Share icon button added to <code>PostDetailScreen</code> app bar</td>
 </tr>
 </tbody>
 </table>
-<h3 id="data-loading-strategy-hybrid">Data loading strategy (hybrid)<a class="headerlink" href="#data-loading-strategy-hybrid" title="Permanent link">&para;</a></h3>
-<p><code>postDetailProvider</code> is a family provider keyed on <code>postId</code>. On construction:</p>
-<ol>
-<li>If GoRouter <code>extra</code> carries a <code>Post</code> object, the provider emits it immediately as the initial value (zero-latency render).</li>
-<li>Simultaneously, <code>WatchPost(postId)</code> opens a Firestore <code>snapshots()</code> stream. When the first snapshot arrives it supersedes the seed value, and subsequent snapshots update live (e.g., <code>likesCount</code> incremented by Cloud Function).</li>
-</ol>
-<p>For the cold-start / deep-link case, there is no seed from <code>extra</code>, so the provider starts in <code>AsyncValue.loading()</code> and populates once the first Firestore snapshot arrives. The screen shows a skeleton loader during this window.</p>
-<p>This design satisfies both the warm-start (instant render from feed cache) and cold-start (fetch by ID) cases without branching logic in the presentation layer — the provider handles the difference internally.</p>
-<h3 id="comments-subcollection">Comments subcollection<a class="headerlink" href="#comments-subcollection" title="Permanent link">&para;</a></h3>
-<p>Comments are stored in <code>posts/{postId}/comments/{commentId}</code> — a new subcollection not present in PROP-0003's schema. The detail screen opens a real-time stream (<code>watchComments</code>) and appends new comments as they arrive. Adding a comment writes directly to this subcollection; <code>commentsCount</code> denormalization on the post document is deferred (see Open Questions).</p>
-<h3 id="like-interaction">Like interaction<a class="headerlink" href="#like-interaction" title="Permanent link">&para;</a></h3>
-<p><code>ToggleLike</code> checks <code>posts/{postId}/likes/{currentUserId}</code> for existence. If absent, it creates the document; if present, it deletes it. <code>likesCount</code> on the post is maintained exclusively by a Cloud Function — the client never writes it directly. The <code>LikeButton</code> widget performs an optimistic local toggle on tap and reconciles with the live stream when the Cloud Function updates <code>likesCount</code>.</p>
-<h3 id="figma-compliance">Figma compliance<a class="headerlink" href="#figma-compliance" title="Permanent link">&para;</a></h3>
-<p>The implementation must reproduce the Figma layout exactly. Before the flutter-engineer begins, the architect must audit the Figma node (<code>node-id=0-1</code>) and enumerate every UI component on the Post Detail screen. Any component not already present in <code>apps/mobile/lib/shared/widgets/</code> or the design system (<code>packages/</code>) must be listed in the tech spec as a new widget to build. No Material defaults should be used for components that Figma specifies with custom tokens.</p>
+<p>The Domain layer touches no Flutter or Firebase import. <code>share_plus</code> is consumed exclusively in the Data layer datasource.</p>
+<h3 id="firebase-hosting">Firebase Hosting<a class="headerlink" href="#firebase-hosting" title="Permanent link">&para;</a></h3>
+<p><code>firebase.json</code> gains a <code>hosting</code> block pointing to the web build output (<code>apps/mobile/build/web</code>). The rewrite rule serves <code>index.html</code> for all <code>/posts/*</code> paths that are not static assets, supporting both the Flutter web SPA and the deferred deep link landing page. This doubles as the web deployment of the Unishare Flutter web app, which is currently absent.</p>
 <hr />
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-pass-post-via-gorouter-extra-no-firestore-fetch">A — Pass Post via GoRouter <code>extra</code>, no Firestore fetch<a class="headerlink" href="#a-pass-post-via-gorouter-extra-no-firestore-fetch" title="Permanent link">&para;</a></h3>
-<p>The <code>PostCard</code> tap passes the full <code>Post</code> entity in GoRouter <code>extra</code>. The detail screen reads this object and renders it directly — no network call on open. The existing <code>postFeedProvider</code> is the sole data source.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Instant render with zero additional Firestore reads.</li>
-<li>No new domain use case or repository method needed for data loading.</li>
-<li>Simplest possible implementation.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Breaks on cold start. Deep links and push notifications provide only a <code>postId</code> in the URL path — <code>extra</code> is <code>null</code>. The screen has no fallback, so cold-start users see an error or blank screen.</li>
-<li>Data goes stale immediately. <code>likesCount</code>, <code>commentsCount</code> (if added), and <code>body</code> edits are frozen at the moment the feed loaded. A post with 200 likes shows the cached 150 from the feed snapshot.</li>
-<li>Comments are entirely unavailable — there is no <code>comments</code> field on the <code>Post</code> entity; comments live in a subcollection that the feed never fetches.</li>
-<li>Tightly couples the detail screen's data contract to the feed's load order, making the detail screen non-standalone.</li>
-</ul>
-<p><strong>Effort:</strong> XS (implementation) but produces a product that is broken for deep-link users.</p>
-<p><strong>Rejected:</strong> Cannot satisfy the deep-link requirement, which is a hard constraint. Data staleness is also unacceptable for social interaction counts.</p>
-<hr />
-<h3 id="b-always-fetch-post-fresh-from-firestore-by-id">B — Always fetch post fresh from Firestore by ID<a class="headerlink" href="#b-always-fetch-post-fresh-from-firestore-by-id" title="Permanent link">&para;</a></h3>
-<p>Ignore <code>extra</code> entirely. Every time the detail screen opens, <code>postDetailProvider</code> issues a one-shot <code>get()</code> call on <code>posts/{postId}</code>. Comments are fetched separately.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Uniform code path for warm-start and cold-start — no conditional branching on <code>extra</code>.</li>
-<li>Data is fresh at open time regardless of how the screen was reached.</li>
-<li>Simpler provider implementation than the hybrid stream approach.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Visible loading spinner on every tap from the feed, even when the post data is already in memory. On a slow connection this creates a noticeable and unnecessary delay — the user just tapped a card they could already read in the feed.</li>
-<li>A one-shot <code>get()</code> does not update after open. <code>likesCount</code> incremented by a Cloud Function while the user is reading the post is not reflected. The user must leave and re-enter to see updated counts.</li>
-<li>No real-time comments — new comments posted by others while the user reads do not appear without a manual refresh.</li>
-<li>Firestore billing: one extra document read per detail screen open, even for posts already in Firestore's local cache from the feed query.</li>
-</ul>
-<p><strong>Effort:</strong> S. Straightforward <code>FutureProvider.family</code> implementation.</p>
-<p><strong>Rejected:</strong> The unnecessary loading spinner on feed taps degrades UX for the most common path. Lack of live updates makes social interactions (likes, comments) feel unresponsive. The hybrid approach adds only marginal complexity for substantially better UX.</p>
-<hr />
-<h3 id="c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended">C — Hybrid: optimistic display from feed data, then stream live updates (recommended)<a class="headerlink" href="#c-hybrid-optimistic-display-from-feed-data-then-stream-live-updates-recommended" title="Permanent link">&para;</a></h3>
-<p>Described fully in Proposed Solution above.</p>
-<p><strong>Pros:</strong></p>
-<ul>
-<li>Instant render on feed tap (seed from <code>extra</code>) with no spinner for the common path.</li>
-<li>Correct cold-start behavior (falls back to Firestore fetch when <code>extra</code> is absent).</li>
-<li>Live updates via <code>snapshots()</code> stream keep <code>likesCount</code> and post content current throughout the session.</li>
-<li>Real-time comments via subcollection stream — new comments appear without refresh.</li>
-<li>Single provider interface for both cases — presentation layer is unaware of whether data came from <code>extra</code> or Firestore.</li>
-</ul>
-<p><strong>Cons:</strong></p>
-<ul>
-<li>Slightly more complex provider implementation: the provider must accept an optional seed value and merge it with an incoming stream.</li>
-<li>Opens a persistent Firestore listener per active detail screen, which consumes one Firestore connection slot. This is negligible at current scale but worth monitoring.</li>
-<li><code>extra</code> carries a Dart object, which is not serializable by GoRouter's URL-based state restoration. If the OS kills the app and restores it to the detail screen, <code>extra</code> will be null and the screen will fall back to the Firestore fetch path — this is correct behavior but must be documented and tested.</li>
-</ul>
-<p><strong>Effort:</strong> M. The stream-seeding pattern in Riverpod requires a <code>StreamProvider.family</code> with a custom build step or an <code>AsyncNotifier</code> that combines seed + stream.</p>
-<p><strong>Recommended.</strong> The warm-start path is the dominant user flow (tapping from feed), so eliminating its loading spinner is the highest-impact UX win. The cold-start fallback is architecturally clean and correct. Real-time updates are table stakes for a social feature.</p>
+<h3 id="a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended">A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)<a class="headerlink" href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" title="Permanent link">&para;</a></h3>
+<p>A Firebase Hosting domain hosts <code>/.well-known/apple-app-site-association</code> (iOS) and <code>/.well-known/assetlinks.json</code> (Android). <code>share_plus</code> generates the shareable URL and triggers the platform share sheet. GoRouter handles the incoming deep link on devices with the app installed. Deferred deep linking is handled via the Play Install Referrer API on Android; iOS deferred linking is best-effort in v1. Web sharing uses <code>share_plus</code>'s Web Share API wrapper.</p>
+<p><strong>Pros:</strong>
+- Zero additional cost: Firebase Hosting is free tier, <code>share_plus</code> is free open-source.
+- No dependency on any third-party managed service that could change pricing, shut down, or require an account.
+- The team retains full control of the well-known files and the landing page HTML.
+- Universal Links and App Links are the OS-native mechanism — they work inside iMessage, WhatsApp, Telegram, and every browser without any special integration.
+- Web Share API via <code>share_plus</code> handles web platform with a single call.
+- Firebase Hosting deployment is already understood by the team (existing <code>firebase deploy</code> workflow).</p>
+<p><strong>Cons:</strong>
+- True deferred deep linking on iOS (link tapped before app is installed) has no free, first-party solution. This gap affects only brand-new iOS users who have not yet installed the app — an edge case for v1.
+- The team must host and maintain the well-known files, the landing page HTML, and the Firebase Hosting configuration. This is a few hours of setup but ongoing maintenance is minimal.
+- App Links on Android require SHA-256 certificate fingerprint registration, which must be repeated for every signing key variant (debug, release, CI). The spec must document all required fingerprints.
+- OG meta tag pre-population for rich link previews (title, image in iMessage/WhatsApp) requires either a Cloud Function that renders post metadata server-side or a static placeholder. A Cloud Function adds complexity; a static placeholder gives poor preview quality.</p>
+<p><strong>Effort:</strong> Medium. Firebase Hosting setup (~2 hours), well-known file deployment (~1 hour), GoRouter deep link handler (~2 hours), Play Install Referrer integration (~3 hours), <code>share_plus</code> UI integration (~2 hours). Total: ~10 hours.</p>
+<h3 id="b-custom-url-scheme-only-no-universal-links-or-app-links">B — Custom URL scheme only (no Universal Links or App Links)<a class="headerlink" href="#b-custom-url-scheme-only-no-universal-links-or-app-links" title="Permanent link">&para;</a></h3>
+<p>Register a custom URI scheme (<code>unishare://</code>) in the iOS <code>Info.plist</code> and Android <code>AndroidManifest.xml</code>. Share a <code>unishare://posts/&lt;postId&gt;</code> link via <code>share_plus</code>. GoRouter registers a handler for the custom scheme.</p>
+<p><strong>Pros:</strong>
+- Simplest possible implementation: no well-known files, no Firebase Hosting, no OS verification step.
+- Works immediately on devices with the app installed when the user taps the link inside another app that can open custom schemes.
+- No new infrastructure.</p>
+<p><strong>Cons:</strong>
+- Custom scheme links do not open in a browser — they are opaque to web surfaces. If a <code>unishare://</code> link is tapped in a Twitter/X web card, email client, or desktop browser, the OS shows "no application can handle this link" on devices without the app and simply does nothing on the web platform.
+- Deferred deep linking is impossible: there is no web landing page, so a non-user who taps the link cannot be redirected to the store.
+- The Web Share API cannot share a <code>unishare://</code> URI — the browser will refuse to share non-http(s) URLs in most implementations.
+- Rich link previews (OG tags) are impossible with a custom scheme.
+- iOS explicitly discourages custom schemes for user-facing links in App Store guidelines and App Review may flag an app that relies on them as the primary sharing mechanism.</p>
+<p><strong>Effort:</strong> Low (~4 hours). But the resulting feature does not meet the stated constraint of supporting deferred deep links or web sharing.</p>
+<p><strong>Rejected for v1</strong> because it fails the deferred deep link requirement and web sharing requirement stated in the problem constraints. It may be added as a supplementary scheme (for app-to-app internal routing) in a future spec.</p>
+<h3 id="c-third-party-deep-link-service-branchio-free-tier">C — Third-party deep link service (Branch.io free tier)<a class="headerlink" href="#c-third-party-deep-link-service-branchio-free-tier" title="Permanent link">&para;</a></h3>
+<p>Integrate Branch.io, which provides a fully managed deferred deep link pipeline including a dashboard, Universal Links / App Links configuration, link analytics, and true deferred deep linking on both iOS and Android.</p>
+<p><strong>Pros:</strong>
+- True deferred deep linking works on iOS and Android out of the box, including the genuinely new user case (link tapped before app installation).
+- Rich link preview metadata (OG tags, custom images per post) can be configured via the Branch dashboard without a server-side rendering function.
+- Branch's free tier (up to 10,000 monthly active users or 10,000 attributed installs — limits vary by plan) has no monetary cost at low volume.
+- The <code>flutter_branch_sdk</code> pub.dev package wraps the Branch SDK with a Flutter API.
+- Branch handles the <code>/.well-known/</code> file hosting; the team does not need to configure Firebase Hosting for deep links.</p>
+<p><strong>Cons:</strong>
+- Introduces a third-party managed service dependency. If Branch changes its free-tier limits, discontinues the free plan, or shuts down (as Firebase Dynamic Links did in August 2025), the team must migrate on short notice. This is exactly the failure mode that happened with Dynamic Links.
+- The Branch SDK adds ~2–4 MB to the app binary (native SDK for iOS and Android).
+- <code>flutter_branch_sdk</code> is a community-maintained package, not a Flutter/Google-supported package, introducing maintenance risk.
+- Branch's free tier requires creating a Branch account and domain verification — non-trivial onboarding for a team that has not used it before.
+- Any analytics or attribution data generated by Branch links is stored on Branch's servers, raising data governance questions (particularly relevant for a university academic platform).</p>
+<p><strong>Effort:</strong> Medium-high (~12 hours including SDK integration, account setup, domain verification, and testing across both platforms).</p>
+<p><strong>Not recommended</strong> for v1 because the third-party service dependency risk is directly analogous to the Firebase Dynamic Links shutdown that prompted this proposal. Option A achieves the same outcome for the in-app use case without the dependency risk. If true iOS deferred deep linking becomes a hard business requirement, Option C can be revisited at that point — the reversal cost from Option A to Option C is moderate (Branch SDK integration requires adding the SDK, replacing the share URL construction logic, and removing the custom landing page; GoRouter's deep link handler logic is reusable).</p>
+<h3 id="d-firebase-app-distribution-invite-links-not-applicable">D — Firebase App Distribution / Invite Links (not applicable)<a class="headerlink" href="#d-firebase-app-distribution-invite-links-not-applicable" title="Permanent link">&para;</a></h3>
+<p>Firebase App Distribution invite links are for distributing pre-release builds to testers — not for end-user content sharing. Included here only to pre-empt the question; it does not address the problem.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>Figma audit: new components</strong> — The Figma design at <code>node-id=0-1</code> must be inspected before the tech spec is written. Which UI components on the Post Detail screen (comment input bar, attachment carousel, like button, author chip, tag list) are already in the shared design system versus net-new widgets? The tech spec cannot be written without this inventory.</p>
+<p><strong>Firebase Hosting domain and project configuration.</strong> The current <code>firebase.json</code> has no <code>hosting</code> key, which means Firebase Hosting has not been configured for this project. Is the Firebase project already linked to a Hosting domain (e.g., <code>&lt;project-id&gt;.web.app</code>)? Has the team verified ownership of any custom domain (<code>unishare.app</code> or similar) that should be used for the shareable URL? The canonical URL structure in the spec depends on this answer — if a custom domain is in use, the <code>assetlinks.json</code> and <code>apple-app-site-association</code> files must list it specifically, not <code>*.web.app</code>.</p>
 </li>
 <li>
-<p><strong>Comments subcollection schema</strong> — Does the <code>comments</code> subcollection need a <code>likesCount</code> or nested reply structure (threaded comments), or is it a flat list for v1? The answer changes the Firestore schema and domain entity design.</p>
+<p><strong><code>share_plus</code> approval as a new dependency.</strong> <code>share_plus</code> is not currently in <code>pubspec.yaml</code>. Per the project's dependency policy, new packages require team approval. The team should confirm that <code>share_plus</code> (BSD-3-Clause, Flutter Favourite, maintained by the Flutter community) is acceptable before the spec phase begins. If <code>share_plus</code> is not approved, Option B (custom scheme, clipboard fallback) is the only path forward.</p>
 </li>
 <li>
-<p><strong><code>commentsCount</code> denormalization</strong> — Should the <code>posts/{postId}</code> document carry a <code>commentsCount</code> field (updated by Cloud Function) for display on <code>PostCard</code> in the feed, or is the count shown only on the detail screen (where the full subcollection is streamed)? If needed on the feed card, a Cloud Function trigger on <code>comments</code> subcollection writes must be added.</p>
+<p><strong>Deferred deep link scope for v1.</strong> True deferred deep linking on iOS (for users who tap a link before installing the app) requires either a third-party service (Option C) or a non-trivial workaround. The recommended approach (Option A) handles Android deferred deep linking via the Play Install Referrer API and leaves iOS deferred deep linking as best-effort. Is iOS deferred deep linking a hard requirement for v1, or is "link opens the app if installed; opens the store if not installed (no post routing after install on iOS)" acceptable for launch?</p>
 </li>
 <li>
-<p><strong>Like state for the current user</strong> — The <code>LikeButton</code> must know whether the current user has already liked the post. The <code>posts/{postId}/likes/{userId}</code> document must be checked on screen open. Does this happen inside <code>WatchPost</code> (Firestore rules permitting a sub-read from the use case), or does <code>postDetailProvider</code> issue a separate existence check and pass <code>isLiked</code> as a field alongside the <code>Post</code>? A <code>userLikeStatusProvider</code> family keyed on <code>postId</code> may be the cleanest separation.</p>
+<p><strong>OG meta tag strategy for rich link previews.</strong> When a post URL is shared in iMessage, WhatsApp, or Telegram, the messaging app's link preview bot fetches the URL and renders a card using Open Graph meta tags (<code>og:title</code>, <code>og:description</code>, <code>og:image</code>). For this to show post-specific content (title, file type, uploader), the landing page must be rendered server-side with post metadata — either via a Cloud Functions SSR endpoint or via Firebase Hosting's dynamic rewrites. A static fallback (generic "Unishare — Academic Content" title, app icon as image) is simpler but produces low-quality previews. Which approach is required for v1?</p>
 </li>
 <li>
-<p><strong>Deep-link URL scheme</strong> — Push notifications from FCM and shared URLs must resolve to <code>/posts/:postId</code>. Is the path <code>/posts/:postId</code> the canonical deep-link path, or does the backend/notification service use a different scheme (e.g., <code>/p/:postId</code>, <code>unishare://post/:postId</code>)? The GoRouter route must match exactly.</p>
+<p><strong>Android signing key variants and SHA-256 fingerprints.</strong> App Links digital asset verification requires the app's SHA-256 certificate fingerprint in <code>assetlinks.json</code>. The debug keystore fingerprint differs from the release keystore fingerprint, and a CI/CD signing key may be a third variant. The spec must enumerate all fingerprints and define how they are managed without committing private keys to the repository. Does the team have a documented key management process, or does the spec need to define one?</p>
 </li>
 <li>
-<p><strong>Comment input and auth gate</strong> — Can unauthenticated (guest-mode) users view the detail screen read-only, with the comment input and like button disabled? Or does the detail route require authentication (redirect to <code>/welcome</code> if no session)? The current <code>_RouterNotifier</code> must be extended or the detail screen must handle this locally.</p>
-</li>
-<li>
-<p><strong>Attachment rendering</strong> — <code>mediaUrls</code> on the post document is a <code>string[]</code>. Are all entries image URLs, or can they include PDF or video links? The <code>AttachmentCarousel</code> widget design depends on whether it must handle heterogeneous media types or can assume images-only for v1.</p>
+<p><strong>Sharing from the post list screen vs. post detail screen only.</strong> Should the share affordance appear only on the post detail screen (one tap to open the post, then share), or also as a swipe action or context menu on post cards in the feed? The latter reduces friction but is a wider implementation scope. The proposal assumes post detail screen only for v1.</p>
 </li>
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Tapping a <code>PostCard</code> in the feed navigates to <code>/posts/:postId</code> and renders the full post without a loading spinner (warm-start path).</li>
-<li>Cold-starting the app via a deep link to <code>/posts/:postId</code> renders a skeleton loader, then the full post once the Firestore snapshot arrives.</li>
-<li>The detail screen's visual layout matches the Figma design exactly — pixel-level fidelity is required for all components specified in the design.</li>
-<li><code>likesCount</code> displayed on the detail screen updates in real time when the Cloud Function increments it (no manual refresh required).</li>
-<li>The like button reflects the current user's like state on open and toggles correctly; optimistic local toggle is reconciled when the stream updates.</li>
-<li>Comments load from <code>posts/{postId}/comments</code> in ascending <code>createdAt</code> order and new comments from other users appear without refresh while the screen is open.</li>
-<li>Submitting a comment writes to the <code>comments</code> subcollection and appears in the list within one Firestore round-trip.</li>
-<li>The navbar (PROP-0005 shell) is absent from the Post Detail screen — the route is declared outside <code>StatefulShellRoute</code>.</li>
-<li>Android back button and iOS swipe-back return the user to the previous screen (feed or notification inbox) correctly.</li>
-<li>All new domain entities, repository interfaces, and use cases are pure Dart — zero Flutter or Firebase imports.</li>
-<li><code>flutter analyze</code> reports zero issues on all new code.</li>
-<li>Every new screen and widget has a corresponding widget test; the cold-start path has a unit test for <code>postDetailProvider</code> behavior when <code>extra</code> is null.</li>
+<li>A share icon button is present in the <code>PostDetailScreen</code> app bar. Tapping it triggers the platform share sheet on iOS and Android, and the Web Share API (or clipboard fallback) on web.</li>
+<li>The shared payload contains a canonical <code>https://</code> URL of the form <code>https://&lt;hosting-domain&gt;/posts/&lt;postId&gt;</code> and the post title as the share text.</li>
+<li>On a device with the Unishare app installed, tapping the shared URL (in iMessage, WhatsApp, Telegram, or any browser) opens the app directly to the correct post detail screen without navigating through the feed first.</li>
+<li>On an Android device without the app installed, tapping the shared URL opens the browser landing page and redirects to the Google Play Store. After installation and first launch, the app navigates to the shared post (Play Install Referrer deferred deep link).</li>
+<li>On an iOS device without the app installed, tapping the shared URL opens the browser landing page and redirects to the App Store. After installation and first launch, the app makes a best-effort attempt to route to the shared post; if the OS does not deliver the link after install, the user lands on the home feed (acceptable for v1).</li>
+<li>The Firebase Hosting deployment serves <code>/.well-known/apple-app-site-association</code> with correct Team ID, Bundle ID, and <code>/posts/*</code> path association.</li>
+<li>The Firebase Hosting deployment serves <code>/.well-known/assetlinks.json</code> with the correct SHA-256 certificate fingerprints for debug and release builds.</li>
+<li>The <code>ShareRepository</code> interface and <code>SharePostUseCase</code> in the domain layer contain zero Flutter or Firebase imports.</li>
+<li><code>share_plus</code> is consumed only in the data layer datasource (<code>SharePlusDataSource</code>); it does not appear in domain or presentation layer imports.</li>
+<li><code>SharePostUseCase</code> has a unit test against a mock <code>ShareRepository</code> covering the success path.</li>
+<li>The share button widget has a widget test verifying it renders on the post detail screen and invokes the use case when tapped.</li>
+<li><code>flutter analyze</code> reports zero errors or warnings on all new Dart code.</li>
+<li>The feature is accessible: the share button has a <code>Semantics</code> label of "Share post".</li>
 </ul>
 
 

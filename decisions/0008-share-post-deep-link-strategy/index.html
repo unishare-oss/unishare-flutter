@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Self-hosted Universal Links / App Links via Firebase Hosting with share_plus for the OS share sheet, rather than a third-party deep-link SDK or a custom server.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/stencils/tech-spec/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/decisions/0008-share-post-deep-link-strategy/">
       
       
-        <link rel="prev" href="../tech-proposal/">
+        <link rel="prev" href="../0007-save-post-storage-strategy/">
       
       
-        <link rel="next" href="../../tech-proposals/">
+        <link rel="next" href="../0010-achievement-only-xp-and-event-driven-evaluation/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Tech Spec Template - Unishare Engineering Docs</title>
+        <title>0008: Use Firebase Hosting + share_plus for universal deep-link sharing - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tech-spec-template" class="md-skip">
+        <a href="#0008-use-firebase-hosting-share_plus-for-universal-deep-link-sharing" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tech Spec Template
+              0008: Use Firebase Hosting + share_plus for universal deep-link sharing
             
           </span>
         </div>
@@ -242,11 +242,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../decisions/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -262,13 +264,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../adr/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -396,26 +396,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -433,7 +438,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -451,7 +456,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -479,7 +484,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+      <a href="../0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -507,7 +512,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
+      <a href="../0001-notification-delivery-mechanism/" class="md-nav__link">
         
   
   
@@ -535,7 +540,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -570,7 +575,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -605,7 +610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -640,7 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -675,7 +680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -703,7 +708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+      <a href="../0006-post-detail-data-loading-strategy/" class="md-nav__link">
         
   
   
@@ -731,7 +736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
+      <a href="../0007-file-preview-unified-route/" class="md-nav__link">
         
   
   
@@ -759,7 +764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
+      <a href="../0007-save-post-storage-strategy/" class="md-nav__link">
         
   
   
@@ -767,182 +772,6 @@
     
   
     0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0008-share-post-deep-link-strategy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0008: Use Firebase Hosting + share_plus for universal deep-link sharing
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../decisions/0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0010: Achievement-only XP with event-driven badge evaluation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Stencils
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Stencils
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../adr/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR Template
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tech-proposal/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tech Proposal Template
   
 
     
@@ -979,7 +808,7 @@
   <span class="md-ellipsis">
     
   
-    Tech Spec Template
+    0008: Use Firebase Hosting + share_plus for universal deep-link sharing
   
 
     
@@ -997,7 +826,7 @@
   <span class="md-ellipsis">
     
   
-    Tech Spec Template
+    0008: Use Firebase Hosting + share_plus for universal deep-link sharing
   
 
     
@@ -1023,10 +852,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Problem
       
     </span>
   </a>
@@ -1034,10 +863,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -1048,6 +910,177 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievement-only XP with event-driven badge evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stencils
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stencils
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposal Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Spec Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1989,10 +2022,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Problem
       
     </span>
   </a>
@@ -2000,10 +2033,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#options-considered" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
       
     </span>
   </a>
@@ -2027,7 +2093,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/stencils/tech-spec.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0008-share-post-deep-link-strategy.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2035,108 +2101,64 @@
   
 
 
-<h1 id="tech-spec-template">Tech Spec Template<a class="headerlink" href="#tech-spec-template" title="Permanent link">&para;</a></h1>
-<p>Copy the markdown below into <code>tech-specs/NNNN-slug.md</code> on the <code>main</code> branch and fill it in.</p>
-<p><strong>When to write one:</strong> Any change spanning more than 2 files or with a defined test contract. Must be approved before coding begins.</p>
-<hr />
-<h2 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>---
-title: &quot;NNNN: Title&quot;
-<span class="gu">description: &quot;One-line summary of what is being built.&quot;</span>
-<span class="gu">---</span>
-
-<span class="gh"># SPEC-NNNN: Title</span>
-
-<span class="gs">**Status:**</span> DRAFT  
-<span class="gs">**Author:**</span>  
-<span class="gs">**Date:**</span> YYYY-MM-DD  
-<span class="gs">**Proposal:**</span> [<span class="nt">PROP-NNNN</span>](<span class="na">../tech-proposals/nnnn-slug.md</span>)  
-<span class="gs">**Approved by:**</span> (fill in when approved)
-
----
-
-<span class="gu">## Overview</span>
-
-One paragraph: what is being built and why.
-
-<span class="gu">## Architecture</span>
-
-<span class="sb">```mermaid</span>
-<span class="s">flowchart LR</span>
-<span class="s">    A[Presentation] --&gt; B[Domain]</span>
-<span class="s">    B --&gt; C[Data]</span>
-<span class="sb">```</span>
-
-<span class="gu">## File map</span>
-
-| Action | Path | Responsibility |
-|---|---|---|
-| Create | <span class="sb">`lib/features/&lt;name&gt;/domain/entities/foo.dart`</span> | |
-| Create | <span class="sb">`lib/features/&lt;name&gt;/data/models/foo_model.dart`</span> | |
-| Modify | <span class="sb">`lib/main.dart`</span> | |
-
-<span class="gu">## API contracts</span>
-
-<span class="sb">```dart</span>
-<span class="c1">// Public interfaces the implementation must expose</span>
-<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">FooRepository</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">doSomething</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="sb">```</span>
-
-<span class="gu">## Test plan</span>
-
-| Test file | Covers |
-|---|---|
-| <span class="sb">`test/unit/features/&lt;name&gt;/foo_test.dart`</span> | |
-| <span class="sb">`test/widget/features/&lt;name&gt;/foo_screen_test.dart`</span> | |
-
-<span class="gu">## Out of scope</span>
-
-<span class="k">-</span><span class="w"> </span>Explicitly list what this spec does NOT cover.
-
-<span class="gu">## Open questions</span>
-
-<span class="k">- [ ]</span> Must be resolved before status moves to APPROVED.
-</code></pre></div>
-<hr />
-<h2 id="status-values">Status values<a class="headerlink" href="#status-values" title="Permanent link">&para;</a></h2>
+<h1 id="0008-use-firebase-hosting-share_plus-for-universal-deep-link-sharing">0008 — Use Firebase Hosting + share_plus for universal deep-link sharing<a class="headerlink" href="#0008-use-firebase-hosting-share_plus-for-universal-deep-link-sharing" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED
+<strong>Author:</strong> Slade
+<strong>Date:</strong> 2026-05-18</p>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>Users need to share a post with non-users or users on other devices. The share mechanism must produce a URL that re-opens the app to the exact post on iOS and Android, degrades gracefully to a web landing page if the app is not installed, and avoids adding a heavyweight SDK dependency. The team needs to decide where the well-known files are hosted, which package drives the OS share sheet, and how to handle the cold-start unauthenticated case in GoRouter.</p>
+<h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Status</th>
-<th>Meaning</th>
+<th>#</th>
+<th>Option</th>
+<th>Upside</th>
+<th>Downside</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>DRAFT</code></td>
-<td>Work in progress</td>
+<td>1</td>
+<td>Firebase Hosting + <code>share_plus</code> (self-hosted AASA / assetlinks.json)</td>
+<td>No new vendor; Firebase already in the stack; BSD-3-Clause license; full control over well-known files</td>
+<td>Must manage AASA and assetlinks.json manually; iOS deferred deep link is best-effort only</td>
 </tr>
 <tr>
-<td><code>REVIEW</code></td>
-<td>Ready for architect/QA review</td>
+<td>2</td>
+<td>Branch.io SDK</td>
+<td>Robust deferred deep linking on iOS and Android; attribution analytics built-in</td>
+<td>Adds a large closed-source SDK; requires separate Branch dashboard; introduces a new vendor dependency requiring team approval</td>
 </tr>
 <tr>
-<td><code>APPROVED</code></td>
-<td>Implementation can begin</td>
-</tr>
-<tr>
-<td><code>IMPLEMENTED</code></td>
-<td>Done and merged</td>
-</tr>
-<tr>
-<td><code>SUPERSEDED</code></td>
-<td>Replaced by a newer spec</td>
+<td>3</td>
+<td>Dynamic Links (Firebase)</td>
+<td>Already in Firebase ecosystem; handles deferred links on both platforms</td>
+<td>Firebase Dynamic Links was deprecated in August 2025 and is scheduled for shutdown; not a viable long-term choice</td>
 </tr>
 </tbody>
 </table>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Chosen:</strong> Option 1 — Firebase Hosting + <code>share_plus</code></p>
+<p>Firebase Hosting is already deployed for the project and can serve the two well-known files with the correct <code>Content-Type</code> headers at no additional cost. <code>share_plus</code> is a thin, BSD-3-licensed wrapper that delegates directly to the platform share sheet and the Web Share API, adding no background services or analytics. Dynamic Links is deprecated; Branch.io would introduce a vendor dependency and dashboard overhead that the team has not approved for v1.</p>
+<h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
+<p>Medium. Replacing <code>share_plus</code> with Branch.io or another SDK later requires adding the SDK, migrating the <code>SharePlusDataSource</code>, updating AndroidManifest and Info.plist, and moving deferred-link logic into the new SDK — estimated at 2–3 days. The Firebase Hosting well-known files and GoRouter changes are reusable regardless of which share package is chosen.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<ul>
+<li>The <code>/.well-known/apple-app-site-association</code> and <code>/.well-known/assetlinks.json</code> files must be kept in sync with any bundle ID, team ID, or signing-certificate changes.</li>
+<li>iOS deferred deep linking (app not installed, user installs from App Store, then lands on correct post) is best-effort for v1. A follow-up ADR is needed when true deferred linking is prioritised.</li>
+<li>GoRouter's redirect guard is extended to preserve the original URI as a <code>redirect</code> query parameter so post-auth navigation resumes correctly.</li>
+<li><code>share_plus</code> must receive explicit team approval before being added to <code>pubspec.yaml</code> (OQ2).</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
