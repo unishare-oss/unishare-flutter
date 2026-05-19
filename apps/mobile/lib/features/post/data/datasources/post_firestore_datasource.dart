@@ -121,6 +121,7 @@ class PostFirestoreDatasource {
       summarizedAt: (data['summarizedAt'] as Timestamp?)?.toDate(),
       extractedText: data['extractedText'] as String?,
       extractedTextTruncated: data['extractedTextTruncated'] as bool?,
+      aiTags: List<String>.from(data['aiTags'] as List? ?? []),
     );
   }
 
@@ -159,6 +160,7 @@ class PostFirestoreDatasource {
     String summaryStatus, {
     String? extractedText,
     bool? extractedTextTruncated,
+    List<String>? aiTags,
   }) async {
     await _firestore.collection('posts').doc(postId).update({
       'summaryStatus': summaryStatus,
@@ -166,12 +168,13 @@ class PostFirestoreDatasource {
       'summarizedAt': summaryStatus == 'done'
           ? FieldValue.serverTimestamp()
           : FieldValue.delete(),
-      'extractedText':
-          (extractedText != null && extractedText.isNotEmpty)
-              ? extractedText
-              : FieldValue.delete(),
-      'extractedTextTruncated':
-          extractedTextTruncated ?? FieldValue.delete(),
+      'extractedText': (extractedText != null && extractedText.isNotEmpty)
+          ? extractedText
+          : FieldValue.delete(),
+      'extractedTextTruncated': extractedTextTruncated ?? FieldValue.delete(),
+      'aiTags': (aiTags != null && aiTags.isNotEmpty)
+          ? aiTags
+          : FieldValue.delete(),
     });
   }
 

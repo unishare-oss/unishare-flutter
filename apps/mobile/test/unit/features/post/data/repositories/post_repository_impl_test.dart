@@ -42,6 +42,7 @@ class _FakeDatasource extends PostFirestoreDatasource {
   String? lastSummary;
   String? lastExtractedText;
   bool? lastExtractedTextTruncated;
+  List<String>? lastAiTags;
 
   void emit(List<Post> posts) => _ctrl.add(posts);
   void close() => _ctrl.close();
@@ -56,11 +57,13 @@ class _FakeDatasource extends PostFirestoreDatasource {
     String summaryStatus, {
     String? extractedText,
     bool? extractedTextTruncated,
+    List<String>? aiTags,
   }) async {
     lastSummary = summary;
     lastSummaryStatus = summaryStatus;
     lastExtractedText = extractedText;
     lastExtractedTextTruncated = extractedTextTruncated;
+    lastAiTags = aiTags;
   }
 }
 
@@ -219,6 +222,7 @@ void main() {
             'summary': 'Great summary',
             'extractedText': 'The full source text…',
             'extractedTextTruncated': false,
+            'aiTags': ['krebs-cycle', 'atp-synthesis', 'mitochondria'],
           },
         );
         final ds = _FakeDatasource();
@@ -239,6 +243,10 @@ void main() {
         expect(ds.lastSummary, 'Great summary');
         expect(ds.lastExtractedText, 'The full source text…');
         expect(ds.lastExtractedTextTruncated, false);
+        expect(
+          ds.lastAiTags,
+          equals(['krebs-cycle', 'atp-synthesis', 'mitochondria']),
+        );
       },
     );
 

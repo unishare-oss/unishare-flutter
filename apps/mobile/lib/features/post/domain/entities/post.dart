@@ -47,6 +47,7 @@ class Post {
     this.summarizedAt,
     this.extractedText,
     this.extractedTextTruncated,
+    this.aiTags = const [],
   });
 
   final String id;
@@ -88,9 +89,16 @@ class Post {
   // For PDF/DOCX this is the extracted body; for images it is the
   // vision model's transcription. Null until a summary completes.
   final String? extractedText;
+
   /// True when [extractedText] was clipped at the persistence cap.
   /// Surfaces in UI so users can see when the cached text is partial.
   final bool? extractedTextTruncated;
+
+  /// PROP-0011 Phase 2 — AI-derived topic tags (kebab-case). Parallel to the
+  /// user-typed [tags] field but rendered distinctly in the UI so authorship
+  /// is clear. Empty when the post hasn't been summarized yet or when the
+  /// model returned no usable tags.
+  final List<String> aiTags;
 
   // SPEC-0006 alias — PostDetailScreen was authored against this name.
   String get body => description;
@@ -124,6 +132,7 @@ class Post {
     DateTime? summarizedAt,
     String? extractedText,
     bool? extractedTextTruncated,
+    List<String>? aiTags,
   }) {
     return Post(
       id: id ?? this.id,
@@ -155,6 +164,7 @@ class Post {
       extractedText: extractedText ?? this.extractedText,
       extractedTextTruncated:
           extractedTextTruncated ?? this.extractedTextTruncated,
+      aiTags: aiTags ?? this.aiTags,
     );
   }
 }

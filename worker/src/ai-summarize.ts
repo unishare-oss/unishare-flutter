@@ -5,29 +5,47 @@ import { extractText } from './text-extractor'
 import type { Env } from './index'
 import { json, jsonError } from './response'
 
-/// Text-path summary prompt. The text path already feeds plain extracted
-/// content, so we ask for a free-form formatted summary (not JSON).
-const TEXT_SUMMARY_PROMPT = `You are summarizing an academic document for university students.
+/// Shared aiTags rules — a flat list of specific topic strings. Mirrors the
+/// shape of the user-typed `tags` field on the post doc, just labeled as
+/// AI-derived so the UI can render them distinctly and the search backend
+/// can index both. Open-vocabulary in this phase; Phase A will inject a
+/// daily-refreshed whitelist of top tags to encourage reuse and dedup.
+const AI_TAGS_RULES = `aiTags rules:
+- 3 to 7 specific topic strings (no broad subject areas like "biology" alone — use specific concepts like "krebs-cycle", "rsa-encryption", "matrix-multiplication").
+- Lowercase kebab-case (hyphen-separated). Convert "Krebs Cycle" → "krebs-cycle".
+- Each tag should be a concept a student would plausibly search for.`
 
-Respond with EXACTLY this format — no preamble, no markdown headers, no closing line:
+/// Text-path prompt. Input is already-extracted document text. We ask for a
+/// JSON envelope to get summary + aiTags in one round trip.
+const TEXT_SUMMARY_PROMPT = `You are processing an academic document for university students.
+
+Return EXACTLY a JSON object with these fields. No preamble. No markdown code fence. No closing remarks.
+
+{
+  "status": "ok" | "unreadable" | "flagged",
+  "summary": "<see format below; empty string if status is not ok>",
+  "aiTags": ["<topic tag>", ...]
+}
+
+When status is "ok", summary must be EXACTLY:
 
 One sentence describing what this document is.
 • Specific topic or concept
 • Specific topic or concept
 • Specific topic or concept
 
-Rules:
-- Use 3 to 7 bullet points.
+Summary rules:
+- 3 to 7 bullet points.
 - Name actual topics, theorems, formulas, or terms (e.g. "Lagrangian mechanics", "RSA encryption", "Krebs cycle") — avoid generic phrases like "discusses concepts" or "covers material".
-- If the input is mostly equations or a worked problem, identify the specific method or theorem applied, not just the subject area.
-- If the input is unreadable, blank, or contains no academic content, respond with only: UNREADABLE
-- If the input contains harmful or clearly inappropriate content, respond with only: FLAGGED`
+- For math/science documents, identify the specific method or theorem applied, not just the subject area.
 
-/// Image-path prompt. We ask for a structured JSON envelope so the model
-/// returns BOTH a transcription (persisted as extractedText for downstream
-/// search / chat / practice features) and a summary (shown in the post UI).
-/// Encoding status into the JSON keeps UNREADABLE / FLAGGED behaviour
-/// available without needing an extra round-trip when the model bails.
+${AI_TAGS_RULES}
+
+Set status to "unreadable" if the document is blank, gibberish, or contains no academic content (aiTags may be []).
+Set status to "flagged" if the document contains harmful or clearly inappropriate content (aiTags may be []).`
+
+/// Image-path prompt. We additionally ask for verbatim transcription so the
+/// page text is searchable / RAG-able for downstream features.
 const VISION_SUMMARY_PROMPT = `You are processing an academic page (printed, scanned, or handwritten) for university students.
 
 Return EXACTLY a JSON object with these fields. No preamble. No markdown code fence. No closing remarks.
@@ -35,7 +53,8 @@ Return EXACTLY a JSON object with these fields. No preamble. No markdown code fe
 {
   "status": "ok" | "unreadable" | "flagged",
   "transcribedText": "<verbatim text from the page, including equations and labels; empty string if status is not ok>",
-  "summary": "<see format below; empty string if status is not ok>"
+  "summary": "<see format below; empty string if status is not ok>",
+  "aiTags": ["<topic tag>", ...]
 }
 
 When status is "ok", summary must be EXACTLY:
@@ -55,8 +74,10 @@ transcribedText rules:
 - Do NOT add commentary or interpretation. Just the page's text.
 - For partially illegible handwriting, transcribe what you can and mark gaps with [...].
 
-Set status to "unreadable" if the page is blank, unreadable, or contains no academic content.
-Set status to "flagged" if the page contains harmful or clearly inappropriate content.`
+${AI_TAGS_RULES}
+
+Set status to "unreadable" if the page is blank, unreadable, or contains no academic content (aiTags may be []).
+Set status to "flagged" if the page contains harmful or clearly inappropriate content (aiTags may be []).`
 
 const TEXT_MODEL_DEFAULT = 'llama-3.3-70b-versatile'
 const VISION_MODEL_DEFAULT = 'meta-llama/llama-4-scout-17b-16e-instruct'
@@ -77,6 +98,11 @@ const LLM_INPUT_CAP = 6000
 /// spoofed filename can't redirect routing into the wrong summarizer.
 const PHOTON_SUPPORTED_MIME = /^image\/(jpe?g|png|webp)$/i
 
+/// aiTags shape — flat list of topic strings. Caps to keep Firestore writes
+/// bounded and protect against pathological model output.
+const MAX_TAGS = 7
+const MAX_TAG_LEN = 60
+
 interface SummarizeResult {
   /** Summary text, or 'FLAGGED' / 'UNREADABLE' verdict (case-sensitive). */
   summary: string
@@ -84,6 +110,8 @@ interface SummarizeResult {
   extractedText: string
   /** True when the persisted text was clipped at PERSIST_TEXT_CAP. */
   extractedTextTruncated: boolean
+  /** Flat list of AI-derived topic tags. Empty when the model didn't supply any. */
+  aiTags: string[]
 }
 
 export async function handleAiSummarize(request: Request, env: Env): Promise<Response> {
@@ -171,6 +199,7 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
     summary: result.summary,
     extractedText: result.extractedText,
     extractedTextTruncated: result.extractedTextTruncated,
+    aiTags: result.aiTags,
   })
 }
 
@@ -187,6 +216,7 @@ async function summarizeText(
   // for downstream features (search / RAG chat / practice questions).
   const llmInput = text.slice(0, LLM_INPUT_CAP)
   const model = env.GROQ_MODEL ?? TEXT_MODEL_DEFAULT
+  let raw: string
   try {
     const response = await groq.chat.completions.create({
       model,
@@ -194,13 +224,28 @@ async function summarizeText(
         { role: 'system', content: TEXT_SUMMARY_PROMPT },
         { role: 'user', content: llmInput },
       ],
-      max_tokens: 300,
+      // 600 tokens covers summary + aiTags JSON envelope with margin.
+      response_format: { type: 'json_object' },
+      max_tokens: 600,
       temperature: 0,
     })
-    const summary = response.choices[0]?.message?.content?.trim() ?? ''
-    return { summary, extractedText: text, extractedTextTruncated: truncated }
+    raw = response.choices[0]?.message?.content?.trim() ?? '{}'
   } catch {
     throw new Error('llm_failed')
+  }
+
+  const parsed = parseSummarizeResponse(raw)
+  if (parsed.status === 'flagged') {
+    return { summary: 'FLAGGED', extractedText: '', extractedTextTruncated: false, aiTags: [] }
+  }
+  if (parsed.status === 'unreadable') {
+    return { summary: 'UNREADABLE', extractedText: '', extractedTextTruncated: false, aiTags: [] }
+  }
+  return {
+    summary: parsed.summary,
+    extractedText: text,
+    extractedTextTruncated: truncated,
+    aiTags: parsed.aiTags,
   }
 }
 
@@ -261,9 +306,9 @@ async function summarizeImage(
         },
       ],
       // Headroom for transcription: a dense handwritten page rarely exceeds
-      // ~2000 chars (~600 tokens). 4096 covers transcription + summary + JSON
-      // overhead with margin, while staying well below Llama 4 Scout's output
-      // cap on Groq's free tier.
+      // ~2000 chars (~600 tokens). 4096 covers transcription + summary +
+      // aiTags + JSON overhead with margin, while staying well below Llama 4
+      // Scout's output cap on Groq's free tier.
       response_format: { type: 'json_object' },
       max_tokens: 4096,
       temperature: 0,
@@ -273,12 +318,12 @@ async function summarizeImage(
     throw new Error('llm_failed')
   }
 
-  const parsed = parseVisionResponse(raw)
+  const parsed = parseSummarizeResponse(raw)
   if (parsed.status === 'flagged') {
-    return { summary: 'FLAGGED', extractedText: '', extractedTextTruncated: false }
+    return { summary: 'FLAGGED', extractedText: '', extractedTextTruncated: false, aiTags: [] }
   }
   if (parsed.status === 'unreadable') {
-    return { summary: 'UNREADABLE', extractedText: '', extractedTextTruncated: false }
+    return { summary: 'UNREADABLE', extractedText: '', extractedTextTruncated: false, aiTags: [] }
   }
   const truncated = parsed.transcribedText.length > PERSIST_TEXT_CAP
   const extractedText = truncated
@@ -288,17 +333,19 @@ async function summarizeImage(
     summary: parsed.summary,
     extractedText,
     extractedTextTruncated: truncated,
+    aiTags: parsed.aiTags,
   }
 }
 
-/// Safe parse of the vision model's JSON envelope. The model occasionally
-/// ignores `response_format` and emits a plain string or a JSON-wrapped-in-
-/// markdown-fence reply; we treat any of those as a non-fatal "use the raw
-/// text as summary, no transcription".
-function parseVisionResponse(raw: string): {
+/// Safe parse of the model's JSON envelope (shared by both paths). The model
+/// occasionally ignores `response_format` and emits a plain string or
+/// JSON-wrapped-in-markdown-fence; we treat any of those as a non-fatal
+/// fallback to "use the raw text as summary, no transcription, no aiTags".
+function parseSummarizeResponse(raw: string): {
   status: 'ok' | 'unreadable' | 'flagged'
   summary: string
   transcribedText: string
+  aiTags: string[]
 } {
   try {
     const obj = JSON.parse(raw) as Record<string, unknown>
@@ -308,8 +355,33 @@ function parseVisionResponse(raw: string): {
       summary: typeof obj.summary === 'string' ? obj.summary : '',
       transcribedText:
         typeof obj.transcribedText === 'string' ? obj.transcribedText : '',
+      aiTags: sanitizeAiTags(obj.aiTags),
     }
   } catch {
-    return { status: 'ok', summary: raw.trim(), transcribedText: '' }
+    return { status: 'ok', summary: raw.trim(), transcribedText: '', aiTags: [] }
   }
+}
+
+/// Validate + clean the model's aiTags list before returning to clients.
+/// Normalizes to lowercase kebab-case, dedups, enforces length caps.
+function sanitizeAiTags(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  const seen = new Set<string>()
+  const out: string[] = []
+  for (const raw of value) {
+    if (typeof raw !== 'string') continue
+    const cleaned = raw
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, MAX_TAG_LEN)
+    if (cleaned.length === 0 || seen.has(cleaned)) continue
+    seen.add(cleaned)
+    out.push(cleaned)
+    if (out.length >= MAX_TAGS) break
+  }
+  return out
 }

@@ -225,12 +225,14 @@ class PostRepositoryImpl implements PostRepository {
             final extractedText = data['extractedText'] as String?;
             final extractedTextTruncated =
                 data['extractedTextTruncated'] as bool?;
+            final aiTags = (data['aiTags'] as List?)?.cast<String>();
             await firestoreDatasource.updatePostSummary(
               postId,
               summary,
               summaryStatus,
               extractedText: extractedText,
               extractedTextTruncated: extractedTextTruncated,
+              aiTags: aiTags,
             );
           },
           onError: (_) async {

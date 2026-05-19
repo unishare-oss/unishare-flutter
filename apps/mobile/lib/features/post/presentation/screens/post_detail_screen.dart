@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
@@ -611,6 +612,16 @@ class _PostHeader extends ConsumerWidget {
             const SizedBox(height: 10),
           ],
 
+          // ── AI-derived tags (PROP-0011) ──────────────────────────────────
+          if (post.aiTags.isNotEmpty) ...[
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: post.aiTags.map((t) => _AiTopicChip(label: t)).toList(),
+            ),
+            const SizedBox(height: 12),
+          ],
+
           // ── Author ────────────────────────────────────────────────────────
           _AuthorChip(post: post),
           const SizedBox(height: 12),
@@ -786,6 +797,45 @@ class _TopicChip extends StatelessWidget {
           color: scheme.onSurface,
           fontWeight: FontWeight.w500,
         ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// AI-derived topic chip — amber-subtle background + sparkle prefix so users
+// can tell at a glance which tags the author wrote vs which the model added.
+// PROP-0011 Phase 2.
+// ---------------------------------------------------------------------------
+
+class _AiTopicChip extends StatelessWidget {
+  const _AiTopicChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: ac.amberSubtle,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: ac.amber.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(LucideIcons.sparkles, size: 12, color: ac.amber),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: ac.amber,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
