@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Self-hosted Universal Links / App Links via Firebase Hosting with share_plus for the OS share sheet, rather than a third-party deep-link SDK or a custom server.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/decisions/0003-post-integration-packages/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/decisions/0008-share-post-deep-link-strategy/">
       
       
-        <link rel="prev" href="../0002-border-in-colorscheme-not-appcolors/">
+        <link rel="prev" href="../0007-save-post-storage-strategy/">
       
       
-        <link rel="next" href="../0004-shell-scroll-to-top-pattern/">
+        <link rel="next" href="../0010-achievement-only-xp-and-event-driven-evaluation/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0003: Use connectivity_plus and file_picker for post integration - Unishare Engineering Docs</title>
+        <title>0008: Use Firebase Hosting + share_plus for universal deep-link sharing - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0003-use-connectivity_plus-and-file_picker-for-post-integration" class="md-skip">
+        <a href="#0008-use-firebase-hosting-share_plus-for-universal-deep-link-sharing" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0003: Use connectivity_plus and file_picker for post integration
+              0008: Use Firebase Hosting + share_plus for universal deep-link sharing
             
           </span>
         </div>
@@ -607,44 +607,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0003: Use connectivity_plus and file_picker for post integration
-  
-
-    
-  </span>
-  
-  
-    
-  
-  
-    <span class="md-status md-status--ACCEPTED"></span>
-  
-
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -667,81 +633,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#options-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Options Considered
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reversal-cost" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reversal Cost
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -898,10 +789,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0008-share-post-deep-link-strategy/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Use Firebase Hosting + share_plus for universal deep-link sharing
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -917,6 +835,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reversal-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reversal Cost
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2100,7 +2093,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0003-post-integration-packages.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/decisions/0008-share-post-deep-link-strategy.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2108,12 +2101,12 @@
   
 
 
-<h1 id="0003-use-connectivity_plus-and-file_picker-for-post-integration">0003 — Use connectivity_plus and file_picker for post integration<a class="headerlink" href="#0003-use-connectivity_plus-and-file_picker-for-post-integration" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-05-03
-<strong>Status:</strong> ACCEPTED
-<strong>Author:</strong> architect / Slade (CTO)</p>
+<h1 id="0008-use-firebase-hosting-share_plus-for-universal-deep-link-sharing">0008 — Use Firebase Hosting + share_plus for universal deep-link sharing<a class="headerlink" href="#0008-use-firebase-hosting-share_plus-for-universal-deep-link-sharing" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED
+<strong>Author:</strong> Slade
+<strong>Date:</strong> 2026-05-18</p>
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>SPEC-0004 (Post Integration) requires two new platform capabilities not yet in <code>pubspec.yaml</code>: (1) a real-time stream of network connectivity changes to trigger offline draft queue sync on reconnect, and (2) a file picker that supports all four media types the feature allows — JPEG, PNG, WebP, and PDF. Two candidate packages exist for each concern and a decision was needed before implementation could begin.</p>
+<p>Users need to share a post with non-users or users on other devices. The share mechanism must produce a URL that re-opens the app to the exact post on iOS and Android, degrades gracefully to a web landing page if the app is not installed, and avoids adding a heavyweight SDK dependency. The team needs to decide where the well-known files are hosted, which package drives the OS share sheet, and how to handle the cold-start unauthenticated case in GoRouter.</p>
 <h2 id="options-considered">Options Considered<a class="headerlink" href="#options-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2127,40 +2120,35 @@
 <tbody>
 <tr>
 <td>1</td>
-<td><code>connectivity_plus</code> (connectivity)</td>
-<td>Flutter Community standard; exposes <code>Stream&lt;ConnectivityResult&gt;</code> needed for reactive draft queue sync; supports iOS, Android, and Web</td>
-<td>Adds a dependency</td>
+<td>Firebase Hosting + <code>share_plus</code> (self-hosted AASA / assetlinks.json)</td>
+<td>No new vendor; Firebase already in the stack; BSD-3-Clause license; full control over well-known files</td>
+<td>Must manage AASA and assetlinks.json manually; iOS deferred deep link is best-effort only</td>
 </tr>
 <tr>
 <td>2</td>
-<td><code>dart:io</code> / <code>InternetAddress.lookup</code> (connectivity)</td>
-<td>No new dependency</td>
-<td>One-shot check only — cannot stream connectivity changes; requires polling workaround for draft queue trigger</td>
+<td>Branch.io SDK</td>
+<td>Robust deferred deep linking on iOS and Android; attribution analytics built-in</td>
+<td>Adds a large closed-source SDK; requires separate Branch dashboard; introduces a new vendor dependency requiring team approval</td>
 </tr>
 <tr>
 <td>3</td>
-<td><code>file_picker</code> (media selection)</td>
-<td>Picks files of any type from device storage — covers JPEG, PNG, WebP, and PDF in one package; single dependency</td>
-<td>Requires <code>NSPhotoLibraryUsageDescription</code> (iOS) and <code>READ_EXTERNAL_STORAGE</code> (Android) permission entries</td>
-</tr>
-<tr>
-<td>4</td>
-<td><code>image_picker</code> (media selection)</td>
-<td>Well-known; camera and gallery access</td>
-<td>Images only — cannot pick PDF files; would require a second package alongside for document support</td>
+<td>Dynamic Links (Firebase)</td>
+<td>Already in Firebase ecosystem; handles deferred links on both platforms</td>
+<td>Firebase Dynamic Links was deprecated in August 2025 and is scheduled for shutdown; not a viable long-term choice</td>
 </tr>
 </tbody>
 </table>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Chosen:</strong> Option 1 (<code>connectivity_plus</code>) and Option 3 (<code>file_picker</code>).</p>
-<p><code>connectivity_plus</code> is the only option that delivers a live stream of connectivity state, which <code>DraftQueueNotifier</code> requires to automatically trigger <code>SyncDraftQueue</code> without polling. <code>file_picker</code> is the only single-package solution covering all four MIME types in scope (JPEG, PNG, WebP, PDF); using <code>image_picker</code> alone would leave PDF support unimplemented, and pairing it with a second package adds more dependency surface than <code>file_picker</code> alone. Both choices rely on the assumption that the app will continue to target iOS, Android, and Web — if Web support were dropped, native alternatives could be reconsidered.</p>
+<p><strong>Chosen:</strong> Option 1 — Firebase Hosting + <code>share_plus</code></p>
+<p>Firebase Hosting is already deployed for the project and can serve the two well-known files with the correct <code>Content-Type</code> headers at no additional cost. <code>share_plus</code> is a thin, BSD-3-licensed wrapper that delegates directly to the platform share sheet and the Web Share API, adding no background services or analytics. Dynamic Links is deprecated; Branch.io would introduce a vendor dependency and dashboard overhead that the team has not approved for v1.</p>
 <h2 id="reversal-cost">Reversal Cost<a class="headerlink" href="#reversal-cost" title="Permanent link">&para;</a></h2>
-<p>Medium — both packages touch platform permission configuration (<code>Info.plist</code>, <code>AndroidManifest.xml</code>). Swapping either package would require updating permission entries, adjusting the datasource abstraction, and re-testing on both platforms.</p>
+<p>Medium. Replacing <code>share_plus</code> with Branch.io or another SDK later requires adding the SDK, migrating the <code>SharePlusDataSource</code>, updating AndroidManifest and Info.plist, and moving deferred-link logic into the new SDK — estimated at 2–3 days. The Firebase Hosting well-known files and GoRouter changes are reusable regardless of which share package is chosen.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Easier:</strong> <code>DraftQueueNotifier</code> can subscribe to <code>connectivity_plus</code> stream directly with no polling timer; <code>MediaAttachmentPicker</code> handles all four MIME types with a single <code>FilePicker.platform.pickFiles</code> call.</li>
-<li><strong>Harder:</strong> Two platform permission strings must be added and localised if the app ever ships in languages other than English.</li>
-<li><strong>Follow-up required:</strong> Add <code>connectivity_plus</code> and <code>file_picker</code> to <code>pubspec.yaml</code>; add <code>NSPhotoLibraryUsageDescription</code> to <code>ios/Runner/Info.plist</code>; add <code>READ_EXTERNAL_STORAGE</code> permission to <code>android/app/src/main/AndroidManifest.xml</code>.</li>
+<li>The <code>/.well-known/apple-app-site-association</code> and <code>/.well-known/assetlinks.json</code> files must be kept in sync with any bundle ID, team ID, or signing-certificate changes.</li>
+<li>iOS deferred deep linking (app not installed, user installs from App Store, then lands on correct post) is best-effort for v1. A follow-up ADR is needed when true deferred linking is prioritised.</li>
+<li>GoRouter's redirect guard is extended to preserve the original URI as a <code>redirect</code> query parameter so post-auth navigation resumes correctly.</li>
+<li><code>share_plus</code> must receive explicit team approval before being added to <code>pubspec.yaml</code> (OQ2).</li>
 </ul>
 
 

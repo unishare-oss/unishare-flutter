@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Persistent 4-tab bottom navigation bar for authenticated users, integrated with GoRouter and matching the Figma design exactly.">
+        <meta name="description" content="Allow users to share academic posts outside the app via platform share sheets, with deferred deep links so recipients who do not yet have the app are routed to the correct post on first launch.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-proposals/0005-main-navbar/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/post-detail/tech-proposals/0010-share-post/">
       
       
-        <link rel="prev" href="../0005-feed-filtering-tags/">
+        <link rel="prev" href="../0010-achievements/">
       
       
-        <link rel="next" href="../0006-post-detail-page/">
+        <link rel="next" href="../../tech-specs/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0005: Main Navigation Bar - Unishare Engineering Docs</title>
+        <title>0010: Share Post - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0005-main-navigation-bar" class="md-skip">
+        <a href="#prop-0010-share-post" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0005: Main Navigation Bar
+              0010: Share Post
             
           </span>
         </div>
@@ -1187,37 +1187,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0005: Main Navigation Bar
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1233,214 +1206,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#non-goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Non-goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Proposed Solution
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Proposed Solution">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#router-integration-statefulshellroute" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Router integration — StatefulShellRoute
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bottom-bar-widget" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Bottom bar widget
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#auth-awareness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Auth-awareness
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#more-tab" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MORE tab
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#active-tab-highlight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Active-tab highlight
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-material-3-navigationbar-inside-statefulshellroute" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Material 3 NavigationBar inside StatefulShellRoute
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-custom-painted-bottom-bar-proposed-solution-above" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Custom-painted bottom bar (proposed solution above)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-material-2-bottomnavigationbar" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — Material 2 BottomNavigationBar
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        D — IndexedStack with manual tab state (no StatefulShellRoute)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1618,10 +1383,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0010-share-post/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1637,6 +1429,247 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-url-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical URL structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ios-universal-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iOS: Universal Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#android-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Android: App Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-platform-web-share-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web platform: Web Share API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-landing-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: landing page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-first-launch-handling-in-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: first-launch handling in Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-package-addition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter package addition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firebase-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firebase Hosting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-custom-url-scheme-only-no-universal-links-or-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Custom URL scheme only (no Universal Links or App Links)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-third-party-deep-link-service-branchio-free-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Third-party deep link service (Branch.io free tier)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-firebase-app-distribution-invite-links-not-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Firebase App Distribution / Invite Links (not applicable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2166,28 +2199,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#non-goals" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Non-goals
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2200,10 +2211,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#router-integration-statefulshellroute" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Router integration — StatefulShellRoute
+        Overview
       
     </span>
   </a>
@@ -2211,10 +2222,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#bottom-bar-widget" class="md-nav__link">
+  <a href="#canonical-url-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Bottom bar widget
+        Canonical URL structure
       
     </span>
   </a>
@@ -2222,10 +2233,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#auth-awareness" class="md-nav__link">
+  <a href="#ios-universal-links" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Auth-awareness
+        iOS: Universal Links
       
     </span>
   </a>
@@ -2233,10 +2244,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#more-tab" class="md-nav__link">
+  <a href="#android-app-links" class="md-nav__link">
     <span class="md-ellipsis">
       
-        MORE tab
+        Android: App Links
       
     </span>
   </a>
@@ -2244,10 +2255,65 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#active-tab-highlight" class="md-nav__link">
+  <a href="#web-platform-web-share-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Active-tab highlight
+        Web platform: Web Share API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-landing-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: landing page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-first-launch-handling-in-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: first-launch handling in Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-package-addition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter package addition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firebase-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firebase Hosting
       
     </span>
   </a>
@@ -2272,10 +2338,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-material-3-navigationbar-inside-statefulshellroute" class="md-nav__link">
+  <a href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Material 3 NavigationBar inside StatefulShellRoute
+        A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)
       
     </span>
   </a>
@@ -2283,10 +2349,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-custom-painted-bottom-bar-proposed-solution-above" class="md-nav__link">
+  <a href="#b-custom-url-scheme-only-no-universal-links-or-app-links" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Custom-painted bottom bar (proposed solution above)
+        B — Custom URL scheme only (no Universal Links or App Links)
       
     </span>
   </a>
@@ -2294,10 +2360,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-material-2-bottomnavigationbar" class="md-nav__link">
+  <a href="#c-third-party-deep-link-service-branchio-free-tier" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Material 2 BottomNavigationBar
+        C — Third-party deep link service (Branch.io free tier)
       
     </span>
   </a>
@@ -2305,10 +2371,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" class="md-nav__link">
+  <a href="#d-firebase-app-distribution-invite-links-not-applicable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        D — IndexedStack with manual tab state (no StatefulShellRoute)
+        D — Firebase App Distribution / Invite Links (not applicable)
       
     </span>
   </a>
@@ -2359,7 +2425,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0005-main-navbar.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0010-share-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2367,181 +2433,191 @@
   
 
 
-<h1 id="prop-0005-main-navigation-bar">PROP-0005: Main Navigation Bar<a class="headerlink" href="#prop-0005-main-navigation-bar" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> APPROVED<br />
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-05-05<br />
-<strong>Spec:</strong> <a href="../../tech-specs/0005-main-navbar/">SPEC-0005</a><br />
-<strong>Approved by:</strong> Pyae Sone Shin Thant</p>
+<h1 id="prop-0010-share-post">PROP-0010: Share Post<a class="headerlink" href="#prop-0010-share-post" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> Slade<br />
+<strong>Date:</strong> 2026-05-17<br />
+<strong>Spec:</strong> (pending)<br />
+<strong>Approved by:</strong> Slade</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>The app currently has no persistent navigation surface for authenticated users. After sign-in, users land on a placeholder home screen with no mechanism to reach any core destination — Feed, My Posts, or Notifications are unreachable without manually typing deep-link URLs. The router serves three routes (<code>/welcome</code>, <code>/</code>, <code>/posts/create</code>) but nothing ties them into a navigable shell that persists across tab switches.</p>
-<p>All authenticated users are affected immediately upon sign-in. Until a main navbar exists, the app cannot be exercised as a product: the feed is reachable only because <code>/</code> happens to be the default redirect, and every other first-class destination is effectively hidden. Navigation is the prerequisite for every other feature; this is the highest-priority UX gap in the codebase.</p>
-<p>The Figma design specifies a <strong>4-tab bottom bar</strong>: FEED, POSTS, NOTIFS, MORE. The bar must be present on all authenticated, non-modal screens and absent from the auth flow (Welcome, Sign In, Sign Up) and from full-screen creation and detail flows (New Post steps 1–3, Post Details, Terms of Service, Privacy Policy).</p>
-<hr />
-<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Render a persistent 4-tab bottom bar on all authenticated shell screens.</li>
-<li>Match the Figma design tokens exactly: background <code>#f7f3ee</code>, active accent <code>#d97706</code>, Space Grotesk labels, border <code>#e2dad0</code>.</li>
-<li>Integrate cleanly with GoRouter so that deep links resolve to the correct tab and tab state is preserved across switches.</li>
-<li>Suppress the navbar entirely on auth screens and creation/detail flows — no conditional visibility hacks inside individual screens.</li>
-<li>Keep the Domain layer untouched — this is a Presentation-layer concern.</li>
-</ul>
-<hr />
-<h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Navigation within a tab (sub-routes under FEED, POSTS, etc.) — that belongs to each feature's own spec.</li>
-<li>The content of the MORE tab destinations (Profile, Saved, Departments, Requests) — each destination is a separate feature spec.</li>
-<li>Push notification badge wiring — badge count on NOTIFS is deferred to a separate proposal (see Open Questions).</li>
-<li>Guest-mode partial access — treated as out-of-scope for v1 (see Open Questions).</li>
-</ul>
+<p>Unishare has no affordance for sharing a post outside the application. A student who finds a relevant lecture summary, past exam paper, or course note cannot forward it to a classmate through WhatsApp, Telegram, iMessage, or any other channel — they can only describe it verbally or copy-paste the post title and hope the recipient finds it independently. An educator cannot promote newly uploaded material on a department group chat.</p>
+<p>This matters at two levels. First, there is no share button anywhere on the post detail screen, so the action is entirely invisible to users. Second, even if a raw URL were shared manually, there is no URL structure in the app to open a specific post, and no infrastructure to route a non-user who taps the link to the App Store or Play Store and then onward to the correct post after installation (deferred deep link). Links shared without deferred deep linking are dead ends for recipients who have not yet installed the app — the group most important to grow the user base.</p>
+<p>The absence of sharing also limits organic growth. Academic content communities depend heavily on peer recommendation; without a low-friction share mechanism, posts circulate only within the existing in-app audience.</p>
+<p>From a technical standpoint the app currently has no:
+- Share trigger in the presentation layer (no "share" button or action sheet entry on post detail).
+- Canonical URL structure for individual posts.
+- Firebase Hosting configuration for web serving (the <code>firebase.json</code> does not contain a <code>hosting</code> key).
+- Universal Links (<code>/.well-known/apple-app-site-association</code>) or App Links (<code>/.well-known/assetlinks.json</code>) configuration.
+- <code>share_plus</code> dependency in <code>pubspec.yaml</code>.
+- Deferred deep link landing page or launch-state handling in GoRouter.</p>
+<p>All of these gaps must be addressed together for end-to-end sharing to work.</p>
 <hr />
 <h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>Use Flutter's <strong><code>StatefulShellRoute</code></strong> (part of <code>go_router</code> 7+) with a <strong>custom-painted bottom bar widget</strong> that mirrors the Figma spec pixel-accurately.</p>
-<h3 id="router-integration-statefulshellroute">Router integration — <code>StatefulShellRoute</code><a class="headerlink" href="#router-integration-statefulshellroute" title="Permanent link">&para;</a></h3>
-<p><code>StatefulShellRoute</code> was introduced specifically to solve the tab-bar navigation problem in GoRouter. It wraps a set of branches, each backed by its own <code>Navigator</code> stack, and preserves scroll position and navigation state independently per branch when the user switches tabs. This matches standard mobile tab-bar expectations.</p>
-<p>The shell route sits at the root of the authenticated route tree. The <code>_RouterNotifier</code> continues to redirect unauthenticated users to <code>/welcome</code> before they can reach the shell. Because the shell is a named parent route, any deep link under <code>/feed</code>, <code>/posts</code>, <code>/notifications</code>, or <code>/more</code> resolves inside the correct branch automatically — no manual tab-index synchronization is needed.</p>
-<p>The four branches map to:</p>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>The recommended approach is <strong>self-hosted Universal Links and App Links via Firebase Hosting</strong> (Option A below). A share button on the post detail screen invokes <code>share_plus</code> to trigger the platform share sheet (iOS, Android) or the Web Share API (web). The shared URL points to a Firebase Hosting domain under the team's control. On a device with the app installed, the OS intercepts the link and opens the app directly to the correct post. On a device without the app, the browser lands on a minimal Firebase Hosting HTML redirect page that stores the target post ID (in <code>sessionStorage</code> or a URL fragment) and redirects the user to the App Store or Play Store. When the user subsequently installs and opens the app, a first-launch routine reads a stored post ID and navigates GoRouter to that post detail screen.</p>
+<p>This approach uses only Firebase Hosting (already part of the Firebase project, free tier) and <code>share_plus</code> (free, open-source). No paid service is required.</p>
+<h3 id="canonical-url-structure">Canonical URL structure<a class="headerlink" href="#canonical-url-structure" title="Permanent link">&para;</a></h3>
+<p>Every post gets a shareable URL of the form:</p>
+<div class="highlight"><pre><span></span><code>https://&lt;firebase-hosting-domain&gt;/posts/&lt;postId&gt;
+</code></pre></div>
+<p>Example: <code>https://unishare-app.web.app/posts/abc123</code></p>
+<p>The <code>postId</code> is the Firestore document ID already assigned at upload time — no new identifier is introduced.</p>
+<h3 id="ios-universal-links">iOS: Universal Links<a class="headerlink" href="#ios-universal-links" title="Permanent link">&para;</a></h3>
+<p>A JSON file is deployed to Firebase Hosting at:</p>
+<div class="highlight"><pre><span></span><code>/.well-known/apple-app-site-association
+</code></pre></div>
+<p>It lists the app's Team ID and Bundle ID and associates the <code>/posts/*</code> path pattern with the app. When an iOS device with the app installed receives a tap on a <code>https://unishare-app.web.app/posts/&lt;id&gt;</code> URL (in iMessage, WhatsApp, Safari, etc.), iOS intercepts the link and calls <code>AppDelegate.application(_:continue:restorationHandler:)</code> without opening the browser. The app's GoRouter deep-link handler (already in place for push notification routing) parses the incoming URL and navigates to the post detail screen for the given <code>postId</code>.</p>
+<h3 id="android-app-links">Android: App Links<a class="headerlink" href="#android-app-links" title="Permanent link">&para;</a></h3>
+<p>A JSON file is deployed to Firebase Hosting at:</p>
+<div class="highlight"><pre><span></span><code>/.well-known/assetlinks.json
+</code></pre></div>
+<p>It lists the app's SHA-256 certificate fingerprint and package name. Android verifies this file at install time and on OS startup (Digital Asset Links verification). When the app is installed and a matching URL is tapped, Android routes it directly to the app via an intent filter with <code>android:autoVerify="true"</code>.</p>
+<h3 id="web-platform-web-share-api">Web platform: Web Share API<a class="headerlink" href="#web-platform-web-share-api" title="Permanent link">&para;</a></h3>
+<p>On web, <code>share_plus</code> 10.x wraps the browser's <code>navigator.share()</code> API. When <code>navigator.share()</code> is available (Chrome for Android, Safari on iOS/macOS, Edge), the native system share sheet opens with the post title and URL pre-populated. When <code>navigator.share()</code> is unavailable (desktop Chrome, Firefox), <code>share_plus</code> falls back to copying the URL to the clipboard and showing a snackbar.</p>
+<h3 id="deferred-deep-link-landing-page">Deferred deep link: landing page<a class="headerlink" href="#deferred-deep-link-landing-page" title="Permanent link">&para;</a></h3>
+<p>Firebase Hosting serves an <code>index.html</code> at <code>/posts/&lt;postId&gt;</code> via a rewrite rule (catch-all SPA rewrite, same pattern used for web app hosting). This page contains:</p>
+<ol>
+<li>Open Graph and Twitter Card meta tags (<code>og:title</code>, <code>og:description</code>, <code>og:image</code>) populated via a Cloud Function that renders the page server-side, or — for v1 — static meta tags with a generic title and the post URL. (OG tag strategy is an open question below.)</li>
+<li>A small JavaScript snippet that detects the platform (iOS / Android / other) and redirects to the App Store, Play Store, or a web fallback. Before redirecting, it writes the <code>postId</code> to <code>localStorage</code> under a key such as <code>unishare_pending_post</code>.</li>
+</ol>
+<h3 id="deferred-deep-link-first-launch-handling-in-flutter">Deferred deep link: first-launch handling in Flutter<a class="headerlink" href="#deferred-deep-link-first-launch-handling-in-flutter" title="Permanent link">&para;</a></h3>
+<p>On app cold start, a Riverpod provider (e.g., <code>pendingShareProvider</code>) checks whether a stored post ID exists. On native platforms the mechanism differs:</p>
+<ul>
+<li><strong>iOS/Android:</strong> The landing page cannot write to the app's <code>localStorage</code>, so deferred state must be passed through the store install flow. The standard approach without a third-party SDK is a Firebase Hosting redirect that appends the post ID to the App Store URL as a referral parameter (iOS) or via a Play Install Referrer API value (Android). For v1, a simpler fallback is acceptable: after first install and first Firebase Auth sign-in, the app checks <code>flutter_secure_storage</code> for a value written by a background URL handler. This is only possible if the OS delivers the link before the app is fully initialised — which Universal Links and App Links do when the user taps the link after installation (not a true deferred case). True deferred deep linking (link tapped before installation) without a third-party SDK requires the Play Install Referrer API on Android and has no reliable native equivalent on iOS without asking the user to re-tap the link.</li>
+</ul>
+<p>The practical v1 recommendation: deferred deep linking is supported on Android via the Play Install Referrer API (no paid service needed, the API is free), and best-effort on iOS (Universal Link is delivered if the app is already installed; post-install routing on iOS for genuinely new users is deferred to v2 or resolved via Branch.io if the team later prioritises it). This scopes the work honestly without over-promising.</p>
+<h3 id="flutter-package-addition">Flutter package addition<a class="headerlink" href="#flutter-package-addition" title="Permanent link">&para;</a></h3>
+<p><code>share_plus</code> (pub.dev, BSD-3-Clause, maintained by the Flutter community) must be added to <code>pubspec.yaml</code>. This requires team approval per the project's dependency policy. No other new package is required for the core share flow. The Play Install Referrer API on Android is accessed through the existing Android manifest and intent handling; no additional pub.dev package is needed unless the team adopts <code>app_links</code> for a unified URL handler (also free, open-source — flagged as an option in the spec phase).</p>
+<h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Tab</th>
-<th>Branch root path</th>
-<th>Initial screen</th>
+<th>Layer</th>
+<th>Artifact</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>FEED</td>
-<td><code>/feed</code></td>
-<td>Feed screen (from PROP-0003)</td>
+<td><code>domain/entities/</code></td>
+<td>No new entity — <code>Post</code> entity gains no new fields</td>
 </tr>
 <tr>
-<td>POSTS</td>
-<td><code>/posts</code></td>
-<td>My Posts screen</td>
+<td><code>domain/repositories/</code></td>
+<td><code>ShareRepository</code> abstract interface: <code>share(Post post)</code> → <code>Future&lt;void&gt;</code></td>
 </tr>
 <tr>
-<td>NOTIFS</td>
-<td><code>/notifications</code></td>
-<td>Notifications screen</td>
+<td><code>domain/usecases/</code></td>
+<td><code>SharePostUseCase</code></td>
 </tr>
 <tr>
-<td>MORE</td>
-<td><code>/more</code></td>
-<td>More menu (see below)</td>
+<td><code>data/datasources/</code></td>
+<td><code>SharePlusDataSource</code> (wraps <code>share_plus</code> <code>SharePlus.instance.share()</code>)</td>
+</tr>
+<tr>
+<td><code>data/repositories/</code></td>
+<td><code>ShareRepositoryImpl</code></td>
+</tr>
+<tr>
+<td><code>presentation/providers/</code></td>
+<td><code>sharePostProvider</code> (simple <code>FutureProvider.family</code> keyed on <code>postId</code>)</td>
+</tr>
+<tr>
+<td><code>presentation/widgets/</code></td>
+<td>Share icon button added to <code>PostDetailScreen</code> app bar</td>
 </tr>
 </tbody>
 </table>
-<p>The existing <code>/</code> route is aliased to <code>/feed</code> via a redirect so existing deep links and the post-login redirect continue to work without breakage.</p>
-<p>Routes that must not show the navbar — Post Details, New Post steps 1–3, Terms of Service, Privacy Policy — are declared <strong>outside</strong> the <code>StatefulShellRoute</code> as top-level routes. They push modally or via standard navigation, which means the shell (and its bottom bar) is not in their widget tree at all. No per-screen <code>bottomNavigationBar: null</code> override is needed.</p>
-<p>Secondary destinations reachable from the MORE tab use paths nested under <code>/more</code> (e.g., <code>/more/profile</code>, <code>/more/saved</code>, <code>/more/departments</code>, <code>/more/requests</code>). They are registered as child routes on the MORE branch of the <code>StatefulShellRoute</code>, so the navbar remains visible when navigating into them and back-button behavior is handled by the branch's own <code>Navigator</code>.</p>
-<h3 id="bottom-bar-widget">Bottom bar widget<a class="headerlink" href="#bottom-bar-widget" title="Permanent link">&para;</a></h3>
-<p>Rather than using <code>NavigationBar</code> (Material 3) or <code>BottomNavigationBar</code> (Material 2), a <strong>custom widget</strong> is used. The Figma design does not follow Material Design conventions closely enough for either stock widget to reproduce it without fighting the theme. Specifically:</p>
-<ul>
-<li>The background color (<code>#f7f3ee</code>) is a warm off-white, not a Material surface.</li>
-<li>The top border (<code>#e2dad0</code>, 1 px) is a design-system token with no direct Material equivalent.</li>
-<li>Labels are uppercase, Space Grotesk, 11 px (Fira Code style, matching the project's tag convention) — not the default <code>NavigationBar</code> label style.</li>
-<li>The active indicator is an amber underline or tint, not Material's pill indicator.</li>
-</ul>
-<p>A custom widget avoids theme-fighting and guarantees pixel parity with Figma. The widget is a <code>Row</code> of four <code>InkWell</code>-wrapped tab items, each composed of a small icon and a label. The active tab receives the <code>#d97706</code> amber accent on both icon and label; inactive tabs use a muted foreground. The widget is stateless — it receives the current tab index and an <code>onTap</code> callback from the shell, which drives GoRouter navigation.</p>
-<h3 id="auth-awareness">Auth-awareness<a class="headerlink" href="#auth-awareness" title="Permanent link">&para;</a></h3>
-<p>The <code>_RouterNotifier</code> already redirects unauthenticated users away from <code>/</code> to <code>/welcome</code>. Because the <code>StatefulShellRoute</code> is declared inside the authenticated route tree, an unauthenticated user never reaches the shell and never sees the navbar. No additional auth check is needed inside the bar widget itself — the router is the single source of truth.</p>
-<h3 id="more-tab">MORE tab<a class="headerlink" href="#more-tab" title="Permanent link">&para;</a></h3>
-<p>The MORE tab navigates to a lightweight <strong>More screen</strong> (<code>/more</code>) that renders a scrollable list of secondary destinations: User Profile (<code>/more/profile</code>), Saved (<code>/more/saved</code>), Departments (<code>/more/departments</code>), Requests (<code>/more/requests</code>). This is preferred over a bottom sheet because:</p>
-<ol>
-<li>A dedicated route is deep-linkable — <code>/more/profile</code> can be reached from a push notification without opening a sheet first.</li>
-<li>It composes cleanly with the <code>StatefulShellRoute</code> branch — the More branch has its own <code>Navigator</code> stack, so tapping into Profile and pressing Back returns to the More list without resetting other tabs.</li>
-<li>A bottom sheet would need to be dismissed and re-opened on every entry, breaking the "persistent shell" mental model.</li>
-</ol>
-<p>Secondary destinations use <code>/more/</code>-prefixed paths so they remain within the MORE branch navigator and the navbar stays visible.</p>
-<p>The More screen itself is minimal — it is a styled list of <code>ListTile</code>s. Its content is out of scope for this proposal.</p>
-<h3 id="active-tab-highlight">Active-tab highlight<a class="headerlink" href="#active-tab-highlight" title="Permanent link">&para;</a></h3>
-<p>GoRouter exposes the current location via <code>GoRouterState</code>. The shell's <code>builder</code> receives a <code>navigationShell</code> parameter that includes the current branch index. The custom bar widget receives this index as <code>activeIndex</code> and applies the amber accent (<code>#d97706</code>) to the corresponding tab's icon and label. No external state management (Riverpod provider) is needed for the tab index — GoRouter owns that state.</p>
+<p>The Domain layer touches no Flutter or Firebase import. <code>share_plus</code> is consumed exclusively in the Data layer datasource.</p>
+<h3 id="firebase-hosting">Firebase Hosting<a class="headerlink" href="#firebase-hosting" title="Permanent link">&para;</a></h3>
+<p><code>firebase.json</code> gains a <code>hosting</code> block pointing to the web build output (<code>apps/mobile/build/web</code>). The rewrite rule serves <code>index.html</code> for all <code>/posts/*</code> paths that are not static assets, supporting both the Flutter web SPA and the deferred deep link landing page. This doubles as the web deployment of the Unishare Flutter web app, which is currently absent.</p>
 <hr />
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-material-3-navigationbar-inside-statefulshellroute">A — Material 3 <code>NavigationBar</code> inside <code>StatefulShellRoute</code><a class="headerlink" href="#a-material-3-navigationbar-inside-statefulshellroute" title="Permanent link">&para;</a></h3>
-<p>Flutter's <code>NavigationBar</code> widget (Material 3) provides built-in semantics, animated indicators, badge support, and keyboard navigation out of the box. Paired with <code>StatefulShellRoute</code> it handles the GoRouter integration correctly.</p>
+<h3 id="a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended">A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)<a class="headerlink" href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" title="Permanent link">&para;</a></h3>
+<p>A Firebase Hosting domain hosts <code>/.well-known/apple-app-site-association</code> (iOS) and <code>/.well-known/assetlinks.json</code> (Android). <code>share_plus</code> generates the shareable URL and triggers the platform share sheet. GoRouter handles the incoming deep link on devices with the app installed. Deferred deep linking is handled via the Play Install Referrer API on Android; iOS deferred linking is best-effort in v1. Web sharing uses <code>share_plus</code>'s Web Share API wrapper.</p>
 <p><strong>Pros:</strong>
-- Zero custom painting — widget is maintained by the Flutter team.
-- Built-in <code>Badge</code> support for notification counts.
-- Accessibility labels and semantics are correct by default.
-- Significantly less code than a custom widget.</p>
+- Zero additional cost: Firebase Hosting is free tier, <code>share_plus</code> is free open-source.
+- No dependency on any third-party managed service that could change pricing, shut down, or require an account.
+- The team retains full control of the well-known files and the landing page HTML.
+- Universal Links and App Links are the OS-native mechanism — they work inside iMessage, WhatsApp, Telegram, and every browser without any special integration.
+- Web Share API via <code>share_plus</code> handles web platform with a single call.
+- Firebase Hosting deployment is already understood by the team (existing <code>firebase deploy</code> workflow).</p>
 <p><strong>Cons:</strong>
-- Reproducing the Figma design requires overriding nearly every <code>NavigationBarThemeData</code> token: indicator color, background color, label style, icon size, height. The cumulative theme override is fragile and harder to maintain than a bespoke widget.
-- The animated pill indicator is a Material 3 affordance that does not exist in the Figma design; suppressing it cleanly requires a transparent <code>indicatorColor</code>, which can cause rendering artifacts in some Flutter versions.
-- Uppercase 11 px Space Grotesk labels conflict with <code>NavigationBar</code>'s default label treatment; forcing this through <code>labelTextStyle</code> is possible but adds theme complexity.</p>
-<p><strong>Effort:</strong> S (widget) + M (theme fight) = M overall. Risk of pixel drift against Figma over future Flutter upgrades.</p>
-<p><strong>Verdict:</strong> Not recommended. The theme-override surface is large enough that a custom widget would be cleaner in the long run.</p>
-<hr />
-<h3 id="b-custom-painted-bottom-bar-proposed-solution-above">B — Custom-painted bottom bar (proposed solution above)<a class="headerlink" href="#b-custom-painted-bottom-bar-proposed-solution-above" title="Permanent link">&para;</a></h3>
-<p>Fully hand-crafted <code>Row</code> of tab items built from <code>InkWell</code>, <code>Icon</code>, and <code>Text</code>. No dependency on Material <code>NavigationBar</code> or <code>BottomNavigationBar</code>.</p>
+- True deferred deep linking on iOS (link tapped before app is installed) has no free, first-party solution. This gap affects only brand-new iOS users who have not yet installed the app — an edge case for v1.
+- The team must host and maintain the well-known files, the landing page HTML, and the Firebase Hosting configuration. This is a few hours of setup but ongoing maintenance is minimal.
+- App Links on Android require SHA-256 certificate fingerprint registration, which must be repeated for every signing key variant (debug, release, CI). The spec must document all required fingerprints.
+- OG meta tag pre-population for rich link previews (title, image in iMessage/WhatsApp) requires either a Cloud Function that renders post metadata server-side or a static placeholder. A Cloud Function adds complexity; a static placeholder gives poor preview quality.</p>
+<p><strong>Effort:</strong> Medium. Firebase Hosting setup (~2 hours), well-known file deployment (~1 hour), GoRouter deep link handler (~2 hours), Play Install Referrer integration (~3 hours), <code>share_plus</code> UI integration (~2 hours). Total: ~10 hours.</p>
+<h3 id="b-custom-url-scheme-only-no-universal-links-or-app-links">B — Custom URL scheme only (no Universal Links or App Links)<a class="headerlink" href="#b-custom-url-scheme-only-no-universal-links-or-app-links" title="Permanent link">&para;</a></h3>
+<p>Register a custom URI scheme (<code>unishare://</code>) in the iOS <code>Info.plist</code> and Android <code>AndroidManifest.xml</code>. Share a <code>unishare://posts/&lt;postId&gt;</code> link via <code>share_plus</code>. GoRouter registers a handler for the custom scheme.</p>
 <p><strong>Pros:</strong>
-- Exact pixel control — every color, spacing, and typography token comes directly from the project's design system with no theme override indirection.
-- Isolated from Material widget changes in future Flutter upgrades — the widget's appearance is determined entirely by the project's token constants.
-- Easy to extend with custom affordances (e.g., animated underline, pulse on new notification) without working against a widget's internal state machine.</p>
+- Simplest possible implementation: no well-known files, no Firebase Hosting, no OS verification step.
+- Works immediately on devices with the app installed when the user taps the link inside another app that can open custom schemes.
+- No new infrastructure.</p>
 <p><strong>Cons:</strong>
-- No built-in accessibility semantics — <code>Semantics</code> wrappers must be added manually.
-- Badge support must be implemented from scratch.
-- More initial code than Option A.</p>
-<p><strong>Effort:</strong> M. Most of the code is mechanical; the design tokens are already defined.</p>
-<p><strong>Verdict:</strong> Recommended. The extra upfront code is justified by long-term fidelity and freedom from theme-fighting.</p>
-<hr />
-<h3 id="c-material-2-bottomnavigationbar">C — Material 2 <code>BottomNavigationBar</code><a class="headerlink" href="#c-material-2-bottomnavigationbar" title="Permanent link">&para;</a></h3>
-<p>The older Material 2 widget, available without enabling <code>useMaterial3: true</code>. Some teams use it because it is well-understood and has stable behavior across Flutter versions.</p>
+- Custom scheme links do not open in a browser — they are opaque to web surfaces. If a <code>unishare://</code> link is tapped in a Twitter/X web card, email client, or desktop browser, the OS shows "no application can handle this link" on devices without the app and simply does nothing on the web platform.
+- Deferred deep linking is impossible: there is no web landing page, so a non-user who taps the link cannot be redirected to the store.
+- The Web Share API cannot share a <code>unishare://</code> URI — the browser will refuse to share non-http(s) URLs in most implementations.
+- Rich link previews (OG tags) are impossible with a custom scheme.
+- iOS explicitly discourages custom schemes for user-facing links in App Store guidelines and App Review may flag an app that relies on them as the primary sharing mechanism.</p>
+<p><strong>Effort:</strong> Low (~4 hours). But the resulting feature does not meet the stated constraint of supporting deferred deep links or web sharing.</p>
+<p><strong>Rejected for v1</strong> because it fails the deferred deep link requirement and web sharing requirement stated in the problem constraints. It may be added as a supplementary scheme (for app-to-app internal routing) in a future spec.</p>
+<h3 id="c-third-party-deep-link-service-branchio-free-tier">C — Third-party deep link service (Branch.io free tier)<a class="headerlink" href="#c-third-party-deep-link-service-branchio-free-tier" title="Permanent link">&para;</a></h3>
+<p>Integrate Branch.io, which provides a fully managed deferred deep link pipeline including a dashboard, Universal Links / App Links configuration, link analytics, and true deferred deep linking on both iOS and Android.</p>
 <p><strong>Pros:</strong>
-- Familiar API — most Flutter developers know it.
-- Stable, no active churn in the Flutter framework.</p>
+- True deferred deep linking works on iOS and Android out of the box, including the genuinely new user case (link tapped before app installation).
+- Rich link preview metadata (OG tags, custom images per post) can be configured via the Branch dashboard without a server-side rendering function.
+- Branch's free tier (up to 10,000 monthly active users or 10,000 attributed installs — limits vary by plan) has no monetary cost at low volume.
+- The <code>flutter_branch_sdk</code> pub.dev package wraps the Branch SDK with a Flutter API.
+- Branch handles the <code>/.well-known/</code> file hosting; the team does not need to configure Firebase Hosting for deep links.</p>
 <p><strong>Cons:</strong>
-- Material 2 is in maintenance mode; the Flutter team recommends migrating to Material 3 <code>NavigationBar</code>.
-- The Figma design clearly does not follow Material 2 conventions (background color, label treatment, no ripple, amber accent) — the same theme-fighting problem as Option A applies here, arguably more so because M2's theming is less granular.
-- No <code>StatefulShellRoute</code>-specific drawbacks, but the widget itself is the wrong starting point for this design.</p>
-<p><strong>Effort:</strong> S (widget) + L (theme fight) = L overall.</p>
-<p><strong>Verdict:</strong> Ruled out. Deprecated direction and the heaviest customization burden of the three options.</p>
-<hr />
-<h3 id="d-indexedstack-with-manual-tab-state-no-statefulshellroute">D — <code>IndexedStack</code> with manual tab state (no <code>StatefulShellRoute</code>)<a class="headerlink" href="#d-indexedstack-with-manual-tab-state-no-statefulshellroute" title="Permanent link">&para;</a></h3>
-<p>Manage tab state inside a single <code>Scaffold</code> using an <code>IndexedStack</code> of four subtrees, with a manually maintained <code>currentIndex</code> Riverpod provider. GoRouter would treat the entire shell as a single route.</p>
-<p><strong>Pros:</strong>
-- Conceptually simple — no need to understand <code>StatefulShellRoute</code>.
-- Tab state is in a Riverpod provider, which is easy to test and observe.</p>
-<p><strong>Cons:</strong>
-- Deep-link compatibility is severely degraded. If a push notification deep-links to <code>/notifications/123</code>, GoRouter has no mechanism to set the active tab index — the app lands on the wrong tab or the home route. Workarounds require listening to <code>GoRouter.routeInformationProvider</code> and manually syncing with the index provider, which is exactly the problem <code>StatefulShellRoute</code> was designed to solve.
-- <code>IndexedStack</code> keeps all four tab subtrees in the widget tree simultaneously, increasing memory overhead regardless of which tabs have been visited.
-- Tab-level <code>Navigator</code> stacks are not isolated — navigating within one tab and then switching tabs resets back-stack state unexpectedly.</p>
-<p><strong>Effort:</strong> M (but produces an inferior result).</p>
-<p><strong>Verdict:</strong> Ruled out. Deep-link compatibility is a hard requirement, and this approach cannot satisfy it without significant fragile workarounds.</p>
+- Introduces a third-party managed service dependency. If Branch changes its free-tier limits, discontinues the free plan, or shuts down (as Firebase Dynamic Links did in August 2025), the team must migrate on short notice. This is exactly the failure mode that happened with Dynamic Links.
+- The Branch SDK adds ~2–4 MB to the app binary (native SDK for iOS and Android).
+- <code>flutter_branch_sdk</code> is a community-maintained package, not a Flutter/Google-supported package, introducing maintenance risk.
+- Branch's free tier requires creating a Branch account and domain verification — non-trivial onboarding for a team that has not used it before.
+- Any analytics or attribution data generated by Branch links is stored on Branch's servers, raising data governance questions (particularly relevant for a university academic platform).</p>
+<p><strong>Effort:</strong> Medium-high (~12 hours including SDK integration, account setup, domain verification, and testing across both platforms).</p>
+<p><strong>Not recommended</strong> for v1 because the third-party service dependency risk is directly analogous to the Firebase Dynamic Links shutdown that prompted this proposal. Option A achieves the same outcome for the in-app use case without the dependency risk. If true iOS deferred deep linking becomes a hard business requirement, Option C can be revisited at that point — the reversal cost from Option A to Option C is moderate (Branch SDK integration requires adding the SDK, replacing the share URL construction logic, and removing the custom landing page; GoRouter's deep link handler logic is reusable).</p>
+<h3 id="d-firebase-app-distribution-invite-links-not-applicable">D — Firebase App Distribution / Invite Links (not applicable)<a class="headerlink" href="#d-firebase-app-distribution-invite-links-not-applicable" title="Permanent link">&para;</a></h3>
+<p>Firebase App Distribution invite links are for distributing pre-release builds to testers — not for end-user content sharing. Included here only to pre-empt the question; it does not address the problem.</p>
 <hr />
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p><strong>MORE tab: bottom sheet vs dedicated screen</strong> — The proposed solution recommends a dedicated <code>/more</code> route with secondary destinations at <code>/more/profile</code>, <code>/more/saved</code>, etc. A bottom sheet alternative would be lighter but not deep-linkable. <strong>Resolved: dedicated <code>/more</code> screen with <code>/more/*</code> child paths.</strong> No team decision needed.</p>
+<p><strong>Firebase Hosting domain and project configuration.</strong> The current <code>firebase.json</code> has no <code>hosting</code> key, which means Firebase Hosting has not been configured for this project. Is the Firebase project already linked to a Hosting domain (e.g., <code>&lt;project-id&gt;.web.app</code>)? Has the team verified ownership of any custom domain (<code>unishare.app</code> or similar) that should be used for the shareable URL? The canonical URL structure in the spec depends on this answer — if a custom domain is in use, the <code>assetlinks.json</code> and <code>apple-app-site-association</code> files must list it specifically, not <code>*.web.app</code>.</p>
 </li>
 <li>
-<p><strong>Guest-mode navbar</strong> — The <code>_RouterNotifier</code> currently tracks <code>guestModeProvider</code>. Should a guest-mode user see the navbar with certain tabs disabled (e.g., POSTS and NOTIFS are authentication-gated), or should guest mode always redirect to <code>/welcome</code>? v1 scope and behavior must be agreed before implementation.</p>
+<p><strong><code>share_plus</code> approval as a new dependency.</strong> <code>share_plus</code> is not currently in <code>pubspec.yaml</code>. Per the project's dependency policy, new packages require team approval. The team should confirm that <code>share_plus</code> (BSD-3-Clause, Flutter Favourite, maintained by the Flutter community) is acceptable before the spec phase begins. If <code>share_plus</code> is not approved, Option B (custom scheme, clipboard fallback) is the only path forward.</p>
 </li>
 <li>
-<p><strong>NOTIFS badge count</strong> — The Figma design implies a badge on the NOTIFS tab when unread notifications exist. Should this count come from a Firestore real-time listener (accurate but adds a persistent listener per session) or from a client-side counter incremented locally (cheap but drifts)? This likely warrants its own proposal but the answer affects whether the navbar widget needs to accept a <code>badgeCount</code> parameter from day one.</p>
+<p><strong>Deferred deep link scope for v1.</strong> True deferred deep linking on iOS (for users who tap a link before installing the app) requires either a third-party service (Option C) or a non-trivial workaround. The recommended approach (Option A) handles Android deferred deep linking via the Play Install Referrer API and leaves iOS deferred deep linking as best-effort. Is iOS deferred deep linking a hard requirement for v1, or is "link opens the app if installed; opens the store if not installed (no post routing after install on iOS)" acceptable for launch?</p>
 </li>
 <li>
-<p><strong>Tab-switch animation</strong> — The Figma file does not specify a transition between tabs. Should switching tabs use Flutter's default (instant swap with no animation), a fade, or a slide? An explicit decision prevents inconsistency across platform (iOS vs. Android).</p>
+<p><strong>OG meta tag strategy for rich link previews.</strong> When a post URL is shared in iMessage, WhatsApp, or Telegram, the messaging app's link preview bot fetches the URL and renders a card using Open Graph meta tags (<code>og:title</code>, <code>og:description</code>, <code>og:image</code>). For this to show post-specific content (title, file type, uploader), the landing page must be rendered server-side with post metadata — either via a Cloud Functions SSR endpoint or via Firebase Hosting's dynamic rewrites. A static fallback (generic "Unishare — Academic Content" title, app icon as image) is simpler but produces low-quality previews. Which approach is required for v1?</p>
 </li>
 <li>
-<p><strong>Back-gesture behavior on Android</strong> — When the user is on a non-FEED tab and presses the Android back button, should the app navigate to the FEED tab or exit the app? GoRouter's <code>StatefulShellRoute</code> does not standardize this — the behavior must be specified and implemented explicitly.</p>
+<p><strong>Android signing key variants and SHA-256 fingerprints.</strong> App Links digital asset verification requires the app's SHA-256 certificate fingerprint in <code>assetlinks.json</code>. The debug keystore fingerprint differs from the release keystore fingerprint, and a CI/CD signing key may be a third variant. The spec must enumerate all fingerprints and define how they are managed without committing private keys to the repository. Does the team have a documented key management process, or does the spec need to define one?</p>
+</li>
+<li>
+<p><strong>Sharing from the post list screen vs. post detail screen only.</strong> Should the share affordance appear only on the post detail screen (one tap to open the post, then share), or also as a swipe action or context menu on post cards in the feed? The latter reduces friction but is a wider implementation scope. The proposal assumes post detail screen only for v1.</p>
 </li>
 </ol>
 <hr />
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Authenticated users see a persistent 4-tab bottom bar (FEED, POSTS, NOTIFS, MORE) on all shell screens after sign-in.</li>
-<li>The navbar is completely absent from: Welcome, Sign In, Sign Up, New Post (all steps), Post Details, Terms of Service, and Privacy Policy screens.</li>
-<li>Tapping each tab navigates to the correct branch root; tapping an already-active tab scrolls the branch's content to the top (standard mobile convention).</li>
-<li>Deep-linking to any route under <code>/feed</code>, <code>/posts</code>, <code>/notifications</code>, or <code>/more</code> resolves in the correct tab with the bar reflecting the correct active state.</li>
-<li>Tab navigation state is preserved independently per branch: navigating into a sub-screen on POSTS and switching to FEED, then switching back to POSTS, returns the user to the same sub-screen (not the branch root).</li>
-<li>The bottom bar's visual output matches the Figma design tokens: background <code>#f7f3ee</code>, active accent <code>#d97706</code>, inactive foreground muted, top border <code>#e2dad0</code> 1 px, Space Grotesk labels uppercase 11 px.</li>
-<li><code>flutter analyze</code> reports zero errors or warnings on all new code.</li>
-<li>Every new screen introduced under the shell has a corresponding widget test asserting the navbar is present and the correct tab is active.</li>
-<li>Auth-flow screens have a widget test asserting the navbar is absent.</li>
-<li>The implementation introduces no new pub.dev dependencies beyond the packages already in <code>pubspec.yaml</code>.</li>
+<li>A share icon button is present in the <code>PostDetailScreen</code> app bar. Tapping it triggers the platform share sheet on iOS and Android, and the Web Share API (or clipboard fallback) on web.</li>
+<li>The shared payload contains a canonical <code>https://</code> URL of the form <code>https://&lt;hosting-domain&gt;/posts/&lt;postId&gt;</code> and the post title as the share text.</li>
+<li>On a device with the Unishare app installed, tapping the shared URL (in iMessage, WhatsApp, Telegram, or any browser) opens the app directly to the correct post detail screen without navigating through the feed first.</li>
+<li>On an Android device without the app installed, tapping the shared URL opens the browser landing page and redirects to the Google Play Store. After installation and first launch, the app navigates to the shared post (Play Install Referrer deferred deep link).</li>
+<li>On an iOS device without the app installed, tapping the shared URL opens the browser landing page and redirects to the App Store. After installation and first launch, the app makes a best-effort attempt to route to the shared post; if the OS does not deliver the link after install, the user lands on the home feed (acceptable for v1).</li>
+<li>The Firebase Hosting deployment serves <code>/.well-known/apple-app-site-association</code> with correct Team ID, Bundle ID, and <code>/posts/*</code> path association.</li>
+<li>The Firebase Hosting deployment serves <code>/.well-known/assetlinks.json</code> with the correct SHA-256 certificate fingerprints for debug and release builds.</li>
+<li>The <code>ShareRepository</code> interface and <code>SharePostUseCase</code> in the domain layer contain zero Flutter or Firebase imports.</li>
+<li><code>share_plus</code> is consumed only in the data layer datasource (<code>SharePlusDataSource</code>); it does not appear in domain or presentation layer imports.</li>
+<li><code>SharePostUseCase</code> has a unit test against a mock <code>ShareRepository</code> covering the success path.</li>
+<li>The share button widget has a widget test verifying it renders on the post detail screen and invokes the use case when tapped.</li>
+<li><code>flutter analyze</code> reports zero errors or warnings on all new Dart code.</li>
+<li>The feature is accessible: the share button has a <code>Semantics</code> label of "Share post".</li>
 </ul>
 
 
