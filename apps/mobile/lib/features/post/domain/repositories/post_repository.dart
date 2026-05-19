@@ -29,4 +29,17 @@ abstract interface class PostRepository {
     Map<String, Uint8List>? fileDataOverride,
     CancellationToken? cancellationToken,
   });
+
+  // SPEC-0011
+  Future<void> deletePost(String postId);
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
+  });
 }

@@ -168,12 +168,24 @@ service cloud.firestore {
                       request.resource.data.diff(resource.data).affectedKeys()
                         .hasOnly(['likesCount'])
                       || (
-                        request.resource.data.diff(resource.data).affectedKeys()
-                          .hasOnly(['summaryStatus', 'summary', 'summarizedAt'])
-                        && resource.data.authorId == request.auth.uid
+                        request.auth.uid == resource.data.authorId
+                        && request.resource.data.diff(resource.data).affectedKeys()
+                             .hasOnly([
+                               'title', 'description', 'tags', 'externalUrl',
+                               'moduleNumber', 'updatedAt',
+                               'summary', 'summaryStatus', 'summarizedAt'
+                             ])
+                        && request.resource.data.title is string
+                        && request.resource.data.title.size() > 0
+                      )
+                      || (
+                        request.auth.uid == resource.data.authorId
+                        && request.resource.data.diff(resource.data).affectedKeys()
+                             .hasOnly(['summaryStatus', 'summary', 'summarizedAt'])
                       )
                     );
-      allow delete: if false;
+      allow delete: if request.auth != null
+                    && request.auth.uid == resource.data.authorId;
 
       match /comments/{commentId} {
         allow read: if true;

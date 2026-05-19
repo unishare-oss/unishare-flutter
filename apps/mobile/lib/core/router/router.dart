@@ -17,6 +17,7 @@ import 'package:unishare_mobile/features/post/presentation/screens/create_post_s
 import 'package:unishare_mobile/features/post/presentation/screens/upload_progress_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/my_posts_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/edit_post_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/public_profile_screen.dart';
@@ -207,6 +208,14 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/upload-progress',
         builder: (context, state) => const UploadProgressScreen(),
+      ),
+      GoRoute(
+        path: '/posts/:postId/edit',
+        builder: (context, state) {
+          final postId = state.pathParameters['postId']!;
+          final post = state.extra as Post?;
+          return EditPostScreen(postId: postId, post: post);
+        },
       ),
       GoRoute(
         path: '/posts/:postId',

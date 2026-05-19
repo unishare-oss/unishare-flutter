@@ -19,8 +19,10 @@ import 'package:unishare_mobile/features/post/domain/repositories/post_repositor
 import 'package:unishare_mobile/features/post/domain/repositories/share_repository.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/add_comment.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/delete_comment.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/delete_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/create_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/share_post.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/update_post.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/sync_draft_queue.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/increment_view_count.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
@@ -135,3 +137,17 @@ ShareRepository shareRepository(Ref ref) =>
 @Riverpod(keepAlive: true)
 SharePostUseCase sharePostUseCase(Ref ref) =>
     SharePostUseCase(ref.watch(shareRepositoryProvider));
+
+// ---------------------------------------------------------------------------
+// SPEC-0011 — Edit / Delete post providers
+// ---------------------------------------------------------------------------
+
+@Riverpod(keepAlive: true)
+DeletePost deletePostUseCase(Ref ref) {
+  return DeletePost(ref.watch(postRepositoryProvider));
+}
+
+@Riverpod(keepAlive: true)
+UpdatePost updatePostUseCase(Ref ref) {
+  return UpdatePost(ref.watch(postRepositoryProvider));
+}

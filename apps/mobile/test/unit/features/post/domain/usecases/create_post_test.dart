@@ -59,6 +59,21 @@ class _FakeRepo implements PostRepository {
     publishCalled = true;
     if (shouldThrowOnPublish) throw Exception('network error');
   }
+
+  @override
+  Future<void> deletePost(String postId) => throw UnimplementedError();
+
+  @override
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
+  }) => throw UnimplementedError();
 }
 
 // ---------------------------------------------------------------------------
