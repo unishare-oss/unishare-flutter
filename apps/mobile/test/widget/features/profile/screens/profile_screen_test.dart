@@ -34,6 +34,7 @@ class _FakeAuthRepository implements AuthRepository {
   int? lastEnrollmentYear;
   int saveCallCount = 0;
   bool throwOnSignOut = false;
+  int signOutCallCount = 0;
   Exception? throwOnUpdate;
 
   @override
@@ -58,6 +59,7 @@ class _FakeAuthRepository implements AuthRepository {
 
   @override
   Future<void> signOut() async {
+    signOutCallCount++;
     if (throwOnSignOut) throw Exception('network error');
   }
 
@@ -233,6 +235,57 @@ void main() {
       expect(find.text('Profile saved'), findsOneWidget);
     });
 
+    testWidgets('tapping Sign out shows confirmation dialog', (tester) async {
+      await _useTallSurface(tester);
+      await tester.pumpWidget(_buildSubject());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Sign out'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sign out?'), findsOneWidget);
+      expect(
+        find.text("You'll need to sign in again to access your account."),
+        findsOneWidget,
+      );
+      expect(find.widgetWithText(TextButton, 'Cancel'), findsOneWidget);
+    });
+
+    testWidgets('cancelling sign-out dialog does not call signOut', (
+      tester,
+    ) async {
+      await _useTallSurface(tester);
+      final auth = _FakeAuthRepository();
+      await tester.pumpWidget(_buildSubject(authRepository: auth));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Sign out'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+      await tester.pumpAndSettle();
+
+      expect(auth.signOutCallCount, 0);
+      expect(find.text('Sign out?'), findsNothing);
+    });
+
+    testWidgets('confirming sign-out dialog calls signOut', (tester) async {
+      await _useTallSurface(tester);
+      final auth = _FakeAuthRepository();
+      await tester.pumpWidget(_buildSubject(authRepository: auth));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Sign out'));
+      await tester.pumpAndSettle();
+
+      // There are two 'Sign out' TextButtons: the AppBar one and the dialog
+      // confirm button. Tap the last one (inside the dialog).
+      await tester.tap(find.widgetWithText(TextButton, 'Sign out').last);
+      await tester.pumpAndSettle();
+
+      expect(auth.signOutCallCount, 1);
+    });
+
     testWidgets('sign-out failure shows error snackbar', (tester) async {
       await _useTallSurface(tester);
       final auth = _FakeAuthRepository()..throwOnSignOut = true;
@@ -240,6 +293,10 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.widgetWithText(TextButton, 'Sign out'));
+      await tester.pumpAndSettle();
+
+      // Confirm the dialog to trigger the actual sign-out call.
+      await tester.tap(find.widgetWithText(TextButton, 'Sign out').last);
       await tester.pumpAndSettle();
 
       expect(find.text('Sign out failed. Please try again.'), findsOneWidget);

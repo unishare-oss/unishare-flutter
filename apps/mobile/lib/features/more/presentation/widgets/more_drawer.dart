@@ -9,6 +9,7 @@ import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_
 import 'package:unishare_mobile/features/auth/presentation/widgets/unishare_logo.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_grid.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_user_row.dart';
+import 'package:unishare_mobile/shared/widgets/confirm_sign_out_dialog.dart';
 
 /// Shows the More drawer as a modal bottom sheet. Auth-only.
 Future<void> showMoreDrawer(BuildContext context) {
@@ -154,26 +155,7 @@ class MoreDrawerSheet extends ConsumerWidget {
     // in the widget tree and remains valid after the sheet is dismissed.
     final messenger = ScaffoldMessenger.of(context);
 
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Sign out?'),
-        content: const Text(
-          "You'll need to sign in again to access your account.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Sign out'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true) return;
+    if (!await confirmSignOut(context)) return;
 
     // Capture providers before popping — the modal's ConsumerWidget is torn
     // down by the pop, after which `ref` reads can warn.

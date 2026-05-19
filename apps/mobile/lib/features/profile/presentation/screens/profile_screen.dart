@@ -15,6 +15,7 @@ import 'package:unishare_mobile/features/profile/presentation/widgets/danger_zon
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_card.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/profile_form_card.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/confirm_sign_out_dialog.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 /// ProfileScreen still holds [TextEditingController]s (they have their own
@@ -125,6 +126,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _signOut() async {
+    if (!await confirmSignOut(context)) return;
+
     try {
       await ref.read(signOutUseCaseProvider).call();
       ref.read(guestModeProvider.notifier).exit();
