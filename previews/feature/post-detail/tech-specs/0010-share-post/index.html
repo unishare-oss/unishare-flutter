@@ -2608,30 +2608,24 @@
 <div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart</span>
 
 <span class="kd">class</span><span class="w"> </span><span class="nc">SharePlusDataSource</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">SharePlusDataSource</span><span class="p">({</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">SharePlus</span><span class="w"> </span><span class="n">sharePlus</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">Clipboard</span><span class="w"> </span><span class="n">clipboard</span><span class="p">,</span>
-<span class="w">  </span><span class="p">})</span><span class="w">  </span><span class="o">:</span><span class="w"> </span><span class="n">_sharePlus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sharePlus</span><span class="p">,</span>
-<span class="w">        </span><span class="n">_clipboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clipboard</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">SharePlusDataSource</span><span class="p">();</span>
 
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">SharePlus</span><span class="w"> </span><span class="n">_sharePlus</span><span class="p">;</span>
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">Clipboard</span><span class="w"> </span><span class="n">_clipboard</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">_baseUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://share.psstee.dev&#39;</span><span class="p">;</span>
 
-<span class="w">  </span><span class="c1">/// Builds the share text and triggers the OS share sheet.</span>
+<span class="w">  </span><span class="c1">/// Builds the share text and triggers the OS share sheet via [Share.share].</span>
 <span class="w">  </span><span class="c1">///</span>
-<span class="w">  </span><span class="c1">/// Falls back to [_clipboard] if [SharePlatformException] is thrown</span>
-<span class="w">  </span><span class="c1">/// or if the platform signals Web Share API is unavailable.</span>
-<span class="w">  </span><span class="c1">/// Returns [ShareFallbackResult] to indicate whether the fallback was used.</span>
+<span class="w">  </span><span class="c1">/// Falls back to [Clipboard.setData] on [PlatformException] or any other</span>
+<span class="w">  </span><span class="c1">/// error. Returns [ShareFallbackResult] to indicate whether the fallback</span>
+<span class="w">  </span><span class="c1">/// was used.</span>
 <span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="n">ShareFallbackResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">share</span><span class="p">({</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postTitle</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">baseUrl</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">}</span>
 
 <span class="n">enum</span><span class="w"> </span><span class="n">ShareFallbackResult</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">shared</span><span class="p">,</span><span class="w"> </span><span class="n">copiedToClipboard</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p>The share text format is: <code>"&lt;postTitle&gt; — &lt;baseUrl&gt;/posts/&lt;postId&gt;"</code></p>
+<p>The share text format is: <code>"&lt;postTitle&gt; — https://share.psstee.dev/posts/&lt;postId&gt;"</code>. The base URL is an internal constant; no <code>baseUrl</code> parameter is exposed.</p>
 <h3 id="presentation-layer">Presentation layer<a class="headerlink" href="#presentation-layer" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart</span>
 
@@ -2648,7 +2642,7 @@
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>The provider is a family-less <code>AsyncNotifier&lt;void&gt;</code>. One instance lives for the lifetime of <code>PostDetailScreen</code>. The screen observes <code>ref.listen&lt;AsyncValue&lt;void&gt;&gt;(sharePostProvider, ...)</code> to show the clipboard fallback SnackBar when <code>ShareRepositoryImpl</code> signals a fallback was used. The transport of the fallback signal is via a custom exception type <code>ShareFallbackException</code> caught by the screen's listener, not by propagating to <code>AsyncError</code>.</p>
+<p>The provider is a family-less <code>AsyncNotifier&lt;void&gt;</code>. One instance lives for the lifetime of <code>PostDetailScreen</code>. The screen observes <code>ref.listen&lt;AsyncValue&lt;void&gt;&gt;(sharePostProvider, ...)</code> to show the clipboard fallback SnackBar when <code>ShareRepositoryImpl</code> signals a fallback was used. The transport of the fallback signal is <code>ShareFallbackException</code> (defined in the domain layer at <code>features/post/domain/repositories/share_exceptions.dart</code>). Because <code>AsyncValue.guard</code> wraps all thrown exceptions, <code>ShareFallbackException</code> arrives in the listener as <code>AsyncError</code> — the screen checks <code>next.error is ShareFallbackException</code> to distinguish the "clipboard copy" path from a real error.</p>
 <hr />
 <h2 id="firestore-schema">Firestore schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h2>
 <p>No Firestore changes. This feature reads from the existing <code>posts/{postId}</code> document only via the already-loaded <code>Post</code> entity on <code>PostDetailScreen</code>. No new collections, no new fields, no new indexes.</p>
