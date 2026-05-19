@@ -181,7 +181,7 @@ class PostFirestoreDatasource {
       'title': title,
       'description': description,
       'tags': tags,
-      'externalUrl': externalUrl,
+      'externalUrl': externalUrl ?? FieldValue.delete(),
       'moduleNumber': moduleNumber,
       'updatedAt': FieldValue.serverTimestamp(),
     };

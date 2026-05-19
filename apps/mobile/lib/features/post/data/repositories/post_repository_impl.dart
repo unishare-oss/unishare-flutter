@@ -242,6 +242,7 @@ class PostRepositoryImpl implements PostRepository {
     }
     await storageDatasource.deleteFile(post.codeSnippetUrl);
     await firestoreDatasource.deletePost(postId);
+    feedCache.invalidate();
   }
 
   @override

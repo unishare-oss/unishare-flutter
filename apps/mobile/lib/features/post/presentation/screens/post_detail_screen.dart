@@ -27,6 +27,7 @@ import 'package:unishare_mobile/features/saved/domain/usecases/save_post.dart';
 import 'package:unishare_mobile/features/saved/domain/usecases/unsave_post.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/is_post_saved_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
+import 'package:unishare_mobile/features/feed/presentation/providers/feed_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
 
 final _coursePostsProvider = StreamProvider.autoDispose
@@ -157,7 +158,10 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     if (confirmed != true || !mounted) return;
     try {
       await ref.read(deletePostUseCaseProvider).call(postId);
-      if (mounted) context.go('/feed');
+      if (mounted) {
+        ref.invalidate(feedProvider);
+        context.go('/feed');
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
