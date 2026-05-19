@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer'
 import Groq from 'groq-sdk'
 import { PhotonImage, resize, SamplingFilter } from '@cf-wasm/photon'
 import { extractText } from './text-extractor'
@@ -27,7 +28,12 @@ const TEXT_MODEL_DEFAULT = 'llama-3.3-70b-versatile'
 const VISION_MODEL_DEFAULT = 'meta-llama/llama-4-scout-17b-16e-instruct'
 const MAX_IMAGE_DIM = 1600
 const JPEG_QUALITY = 80
-const IMAGE_EXT = /\.(jpe?g|png|webp)$/i
+
+/// Photon-supported image MIME types. We branch on the R2 response's
+/// Content-Type (server-controlled, set when the file was uploaded through
+/// our presigned-URL flow) rather than the client-supplied filename — a
+/// spoofed filename can't redirect routing into the wrong summarizer.
+const PHOTON_SUPPORTED_MIME = /^image\/(jpe?g|png|webp)$/i
 
 export async function handleAiSummarize(request: Request, env: Env): Promise<Response> {
   let body: { fileUrl: string; filename: string }
@@ -79,7 +85,8 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
   if (buffer.byteLength > MAX_BYTES) return jsonError('File too large', 413)
 
   const groq = new Groq({ apiKey: env.GROQ_API_KEY })
-  const isImage = IMAGE_EXT.test(filename)
+  const contentType = fileRes.headers.get('content-type')?.toLowerCase() ?? ''
+  const isImage = PHOTON_SUPPORTED_MIME.test(contentType)
 
   let summary: string
   try {
@@ -140,6 +147,9 @@ async function summarizeText(
 async function summarizeImage(groq: Groq, env: Env, buffer: ArrayBuffer): Promise<string> {
   // Resize + re-encode the upload so Groq stays under its 5 MB image cap and
   // we don't pay to upload a 12 MP camera shot for handwriting summarization.
+  // Photon throws on corrupt bytes, non-image content, or unsupported codec
+  // variants — we surface those as `unsupported_format` so the API contract
+  // stays stable instead of leaking 500s for bad uploads.
   let inputImg: PhotonImage | null = null
   let outputImg: PhotonImage | null = null
   let jpegBytes: Uint8Array
@@ -158,12 +168,14 @@ async function summarizeImage(groq: Groq, env: Env, buffer: ArrayBuffer): Promis
       // Still re-encode to JPEG so PNG/WebP uploads aren't sent at original size.
       jpegBytes = inputImg.get_bytes_jpeg(JPEG_QUALITY)
     }
+  } catch {
+    throw new Error('unsupported_format')
   } finally {
     inputImg?.free()
     outputImg?.free()
   }
 
-  const dataUrl = `data:image/jpeg;base64,${uint8ArrayToBase64(jpegBytes)}`
+  const dataUrl = `data:image/jpeg;base64,${Buffer.from(jpegBytes).toString('base64')}`
   const model = env.GROQ_VISION_MODEL ?? VISION_MODEL_DEFAULT
 
   try {
@@ -188,14 +200,3 @@ async function summarizeImage(groq: Groq, env: Env, buffer: ArrayBuffer): Promis
   }
 }
 
-/// btoa is single-string only and String.fromCharCode(...big) blows the stack,
-/// so chunk through 32 KB windows to base64-encode the JPEG bytes.
-function uint8ArrayToBase64(bytes: Uint8Array): string {
-  const CHUNK = 0x8000
-  let binary = ''
-  for (let i = 0; i < bytes.length; i += CHUNK) {
-    const chunk = bytes.subarray(i, i + CHUNK) as unknown as number[]
-    binary += String.fromCharCode.apply(null, chunk)
-  }
-  return btoa(binary)
-}
