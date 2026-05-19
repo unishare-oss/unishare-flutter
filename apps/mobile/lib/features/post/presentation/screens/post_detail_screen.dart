@@ -136,6 +136,37 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     }
   }
 
+  Future<void> _deletePost(String postId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete post?'),
+        content: const Text('This cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    try {
+      await ref.read(deletePostUseCaseProvider).call(postId);
+      if (mounted) context.go('/feed');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to delete post: $e')));
+      }
+    }
+  }
+
   Future<void> _toggleLike() async {
     try {
       await ref.read(toggleLikeUseCaseProvider).call(widget.postId);
@@ -186,6 +217,32 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
         titleSpacing: 0,
         title: _BreadcrumbBar(post: postAsync.whenOrNull(data: (p) => p)),
         actions: [
+          if (postAsync.asData?.value != null &&
+              postAsync.asData!.value.authorId == currentUid)
+            PopupMenuButton<_PostAction>(
+              icon: Icon(
+                Icons.more_vert,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              onSelected: (action) {
+                final post = postAsync.asData!.value;
+                if (action == _PostAction.edit) {
+                  context.push('/posts/${post.id}/edit', extra: post);
+                } else if (action == _PostAction.delete) {
+                  _deletePost(post.id);
+                }
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(
+                  value: _PostAction.edit,
+                  child: Text('Edit'),
+                ),
+                PopupMenuItem(
+                  value: _PostAction.delete,
+                  child: Text('Delete'),
+                ),
+              ],
+            ),
           Semantics(
             label: 'Share post',
             child: IconButton(
@@ -857,6 +914,12 @@ class _EmptyComments extends StatelessWidget {
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Post action enum — overflow menu options for the post owner
+// ---------------------------------------------------------------------------
+
+enum _PostAction { edit, delete }
 
 // ---------------------------------------------------------------------------
 // Comment input bar

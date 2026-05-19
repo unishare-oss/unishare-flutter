@@ -234,6 +234,37 @@ class PostRepositoryImpl implements PostRepository {
         );
   }
 
+  @override
+  Future<void> deletePost(String postId) async {
+    final post = await firestoreDatasource.watchPost(postId).first;
+    for (final url in post.mediaUrls) {
+      await storageDatasource.deleteFile(url);
+    }
+    await storageDatasource.deleteFile(post.codeSnippetUrl);
+    await firestoreDatasource.deletePost(postId);
+  }
+
+  @override
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
+  }) => firestoreDatasource.updatePost(
+        postId: postId,
+        title: title,
+        description: description,
+        tags: tags,
+        externalUrl: externalUrl,
+        moduleNumber: moduleNumber,
+        descriptionChanged: descriptionChanged,
+        currentSummaryStatus: currentSummaryStatus,
+      );
+
   static String _mediaTypeFromPath(String path) {
     final ext = path.split('.').last.toLowerCase();
     switch (ext) {

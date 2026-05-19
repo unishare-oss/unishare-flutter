@@ -162,4 +162,34 @@ class PostFirestoreDatasource {
           : FieldValue.delete(),
     });
   }
+
+  Future<void> deletePost(String postId) async {
+    await _firestore.collection('posts').doc(postId).delete();
+  }
+
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
+  }) async {
+    final data = <String, dynamic>{
+      'title': title,
+      'description': description,
+      'tags': tags,
+      'externalUrl': externalUrl,
+      'moduleNumber': moduleNumber,
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+    if (descriptionChanged && currentSummaryStatus == SummaryStatus.done) {
+      data['summaryStatus'] = 'pending';
+      data['summary'] = FieldValue.delete();
+      data['summarizedAt'] = FieldValue.delete();
+    }
+    await _firestore.collection('posts').doc(postId).update(data);
+  }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:unishare_mobile/features/post/data/datasources/upload_file_stub.dart'
     if (dart.library.io) 'upload_file_io.dart';
@@ -108,5 +109,14 @@ class PostStorageDatasource {
       'pdf' => 'application/pdf',
       _ => 'application/octet-stream',
     };
+  }
+
+  Future<void> deleteFile(String? downloadUrl) async {
+    if (downloadUrl == null || downloadUrl.isEmpty) return;
+    try {
+      await FirebaseStorage.instance.refFromURL(downloadUrl).delete();
+    } catch (_) {
+      // Best-effort — swallow errors so a missing file doesn't abort deletion.
+    }
   }
 }
