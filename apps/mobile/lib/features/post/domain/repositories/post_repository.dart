@@ -16,6 +16,8 @@ abstract interface class PostRepository {
   /// `watchPostsByAuthor(...).length` which is capped by the page limit.
   Future<int> countPostsByAuthor(String authorId);
 
+  Future<void> incrementViewCount(String postId);
+
   Future<void> saveDraft(PostDraft draft);
   Future<void> removeDraft(String draftId);
   Future<List<PostDraft>> loadDraftQueue();

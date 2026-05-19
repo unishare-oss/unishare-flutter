@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,10 +9,12 @@ import 'package:unishare_mobile/shared/theme/app_typography.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/comments_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_detail_provider.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/share_exceptions.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/post_repository_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/reaction_providers.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/share_post_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/user_like_status_provider.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/ai_summary_panel.dart';
@@ -19,13 +22,18 @@ import 'package:unishare_mobile/features/post/presentation/widgets/ask_ai_sectio
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_list.dart';
 import 'package:unishare_mobile/features/post/domain/entities/comment.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/comment_tile.dart';
-import 'package:unishare_mobile/features/post/presentation/widgets/like_button.dart';
 import 'package:unishare_mobile/features/saved/domain/entities/saved_post_snapshot.dart';
 import 'package:unishare_mobile/features/saved/domain/usecases/save_post.dart';
 import 'package:unishare_mobile/features/saved/domain/usecases/unsave_post.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/is_post_saved_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_post_repository_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/save_button.dart';
+
+final _coursePostsProvider = StreamProvider.autoDispose
+    .family<List<Post>, ({String courseId, String excludeId})>((ref, args) {
+      final ds = ref.watch(postFirestoreDatasourceProvider);
+      return ds.watchPostsByCourse(args.courseId, excludeId: args.excludeId);
+    });
 
 class PostDetailScreen extends ConsumerStatefulWidget {
   const PostDetailScreen({super.key, required this.postId, this.seed});
@@ -41,6 +49,12 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   final _commentController = TextEditingController();
   bool _isSubmitting = false;
   bool _commentsVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(incrementViewCountUseCaseProvider).call(widget.postId).ignore();
+  }
 
   @override
   void dispose() {
@@ -482,7 +496,6 @@ class _PostHeader extends ConsumerWidget {
     final appColors = Theme.of(context).extension<AppColors>()!;
     final scheme = Theme.of(context).colorScheme;
 
-    // tags[0] → teal course badge alongside NOTE; tags[1:] → dark topic chips
     final courseTag = post.tags.isNotEmpty ? post.tags.first : null;
     final topicTags = post.tags.length > 1 ? post.tags.sublist(1) : <String>[];
 
@@ -491,17 +504,26 @@ class _PostHeader extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── NOTE + course badges ──────────────────────────────────────────
+          // ── Type badge + course code ──────────────────────────────────────
           Row(
             children: [
-              const _TealBadge(label: 'NOTE'),
+              _PostTypeBadge(type: post.postType),
               if (courseTag != null) ...[
-                const SizedBox(width: 6),
-                _TealBadge(label: courseTag.toUpperCase()),
+                const SizedBox(width: 8),
+                Text(
+                  courseTag.toUpperCase(),
+                  style: AppTypography.mono(
+                    base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: appColors.amber,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.4,
+                    ),
+                  ),
+                ),
               ],
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
 
           // ── Title ─────────────────────────────────────────────────────────
           Text(
@@ -512,40 +534,57 @@ class _PostHeader extends ConsumerWidget {
               height: 1.2,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
 
-          // ── Topic chips (tags[1:]) ─────────────────────────────────────────
+          // ── Year · Semester · Module ──────────────────────────────────────
+          Text(
+            'Year ${post.year} · Semester ${post.semester} · Module ${post.moduleNumber}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: appColors.textMuted,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // ── Topic chips (tags[1:]) ────────────────────────────────────────
           if (topicTags.isNotEmpty) ...[
             Wrap(
               spacing: 6,
               runSpacing: 6,
               children: topicTags.map((t) => _TopicChip(label: t)).toList(),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
           ],
 
           // ── Author ────────────────────────────────────────────────────────
           _AuthorChip(post: post),
           const SizedBox(height: 12),
 
-          // ── Stats: likes + comments + save ───────────────────────────────
+          // ── Stats: views · comments | save + copy link ────────────────────
           Row(
             children: [
-              LikeButton(
-                isLiked: isLiked,
-                count: post.likesCount,
-                onTap: onToggleLike,
-                enabled: !isGuest,
-              ),
-              const SizedBox(width: 16),
               Icon(
-                Icons.chat_bubble_outline,
-                size: 16,
+                Icons.visibility_outlined,
+                size: 15,
                 color: appColors.textMuted,
               ),
               const SizedBox(width: 4),
               Text(
-                '$commentCount',
+                '${post.viewsCount} ${post.viewsCount == 1 ? 'view' : 'views'}',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: appColors.textMuted,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Icon(
+                Icons.chat_bubble_outline,
+                size: 15,
+                color: appColors.textMuted,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                '$commentCount ${commentCount == 1 ? 'comment' : 'comments'}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: appColors.textMuted,
                   fontWeight: FontWeight.w500,
@@ -556,6 +595,23 @@ class _PostHeader extends ConsumerWidget {
                 isSaved: isSaved,
                 onTap: () => _toggleSave(context, ref, isSaved),
                 size: 22,
+              ),
+              const SizedBox(width: 14),
+              GestureDetector(
+                onTap: () {
+                  Clipboard.setData(
+                    ClipboardData(
+                      text: 'https://unishare.app/posts/${post.id}',
+                    ),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Link copied to clipboard'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: Icon(Icons.link, size: 22, color: appColors.textMuted),
               ),
             ],
           ),
@@ -594,6 +650,25 @@ class _PostHeader extends ConsumerWidget {
 
           const SizedBox(height: 20),
           Divider(color: Theme.of(context).dividerColor, height: 1),
+          const SizedBox(height: 16),
+
+          // ── Reaction bar ──────────────────────────────────────────────────
+          _ReactionBar(
+            postId: post.id,
+            isLiked: isLiked,
+            likeCount: post.likesCount,
+            reactionCounts: post.reactionCounts,
+            isGuest: isGuest,
+            onToggleLike: isGuest ? null : onToggleLike,
+          ),
+          const SizedBox(height: 20),
+          Divider(color: Theme.of(context).dividerColor, height: 1),
+          const SizedBox(height: 16),
+
+          // ── More from this course ─────────────────────────────────────────
+          _MoreFromCourse(courseId: post.courseId, excludeId: post.id),
+          const SizedBox(height: 20),
+          Divider(color: Theme.of(context).dividerColor, height: 1),
           const SizedBox(height: 12),
 
           // ── Comments heading (tap to collapse/expand) ─────────────────────
@@ -626,39 +701,6 @@ class _PostHeader extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Teal badge — NOTE, CSC233 (info color, Fira Code)
-// ---------------------------------------------------------------------------
-
-class _TealBadge extends StatelessWidget {
-  const _TealBadge({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final appColors = Theme.of(context).extension<AppColors>()!;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(
-        color: appColors.info.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: appColors.info.withValues(alpha: 0.35)),
-      ),
-      child: Text(
-        label,
-        style: AppTypography.mono(
-          base: Theme.of(context).textTheme.labelSmall?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: appColors.info,
-            letterSpacing: 0.4,
-          ),
-        ),
       ),
     );
   }
@@ -775,7 +817,12 @@ class _AuthorChip extends StatelessWidget {
                 ),
               ),
               Text(
-                _relativeTime(post.createdAt),
+                [
+                  if (post.departmentId != null &&
+                      post.departmentId!.isNotEmpty)
+                    post.departmentId!,
+                  _relativeTime(post.createdAt),
+                ].join(' · '),
                 style: Theme.of(
                   context,
                 ).textTheme.labelSmall?.copyWith(color: appColors.textMuted),
@@ -949,6 +996,342 @@ class _CommentInputBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Post type badge — NOTE (info/teal) or EXERCISE (amber)
+// ---------------------------------------------------------------------------
+
+class _PostTypeBadge extends StatelessWidget {
+  const _PostTypeBadge({required this.type});
+
+  final PostType type;
+
+  @override
+  Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final isNote = type == PostType.lectureNote;
+    final label = isNote ? 'NOTE' : 'EXERCISE';
+    final color = isNote ? appColors.info : appColors.amber;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color.withValues(alpha: 0.35)),
+      ),
+      child: Text(
+        label,
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: color,
+            letterSpacing: 0.4,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Reaction bar — 6 interactive reaction buttons + total count
+// ---------------------------------------------------------------------------
+
+class _ReactionBar extends ConsumerWidget {
+  const _ReactionBar({
+    required this.postId,
+    required this.isLiked,
+    required this.likeCount,
+    required this.reactionCounts,
+    required this.isGuest,
+    this.onToggleLike,
+  });
+
+  final String postId;
+  final bool isLiked;
+  final int likeCount;
+  final Map<String, int> reactionCounts;
+  final bool isGuest;
+  final VoidCallback? onToggleLike;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userReactions =
+        ref.watch(userReactionsProvider(postId)).asData?.value ?? {};
+    final scheme = Theme.of(context).colorScheme;
+    final appColors = Theme.of(context).extension<AppColors>()!;
+
+    Future<void> handleReaction(String type) async {
+      if (isGuest) return;
+      try {
+        await ref.read(reactionRepositoryProvider).toggleReaction(postId, type);
+      } catch (_) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to update reaction')),
+          );
+        }
+      }
+    }
+
+    final total =
+        likeCount + reactionCounts.values.fold(0, (sum, c) => sum + c);
+
+    return Row(
+      children: [
+        _ReactionBtn(
+          icon: Icons.thumb_up_alt_outlined,
+          count: reactionCounts['thumbsUp'] ?? 0,
+          isActive: userReactions.contains('thumbsUp'),
+          activeColor: appColors.amber,
+          onTap: isGuest ? null : () => handleReaction('thumbsUp'),
+        ),
+        const SizedBox(width: 6),
+        _ReactionBtn(
+          icon: isLiked ? Icons.favorite : Icons.favorite_border,
+          count: likeCount,
+          isActive: isLiked,
+          activeColor: scheme.error,
+          onTap: onToggleLike,
+        ),
+        const SizedBox(width: 6),
+        _ReactionBtn(
+          icon: Icons.local_fire_department,
+          count: reactionCounts['fire'] ?? 0,
+          isActive: userReactions.contains('fire'),
+          activeColor: appColors.amber,
+          onTap: isGuest ? null : () => handleReaction('fire'),
+        ),
+        const SizedBox(width: 6),
+        _ReactionBtn(
+          icon: Icons.bolt,
+          count: reactionCounts['bolt'] ?? 0,
+          isActive: userReactions.contains('bolt'),
+          activeColor: appColors.amber,
+          onTap: isGuest ? null : () => handleReaction('bolt'),
+        ),
+        const SizedBox(width: 6),
+        _ReactionBtn(
+          icon: Icons.star_border,
+          count: reactionCounts['star'] ?? 0,
+          isActive: userReactions.contains('star'),
+          activeColor: appColors.amber,
+          onTap: isGuest ? null : () => handleReaction('star'),
+        ),
+        const SizedBox(width: 6),
+        _ReactionBtn(
+          icon: Icons.dangerous_outlined,
+          count: reactionCounts['skull'] ?? 0,
+          isActive: userReactions.contains('skull'),
+          activeColor: appColors.amber,
+          onTap: isGuest ? null : () => handleReaction('skull'),
+        ),
+        const SizedBox(width: 12),
+        Text(
+          '$total ${total == 1 ? 'reaction' : 'reactions'}',
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: appColors.textMuted,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ReactionBtn extends StatelessWidget {
+  const _ReactionBtn({
+    required this.icon,
+    this.count = 0,
+    this.isActive = false,
+    this.activeColor,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final int count;
+  final bool isActive;
+  final Color? activeColor;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final color = isActive
+        ? (activeColor ?? appColors.amber)
+        : appColors.textMuted;
+    final hasCnt = count > 0;
+
+    final iconWidget = Icon(icon, size: 16, color: color);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 36,
+        width: hasCnt ? null : 36,
+        padding: EdgeInsets.symmetric(horizontal: hasCnt ? 10 : 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: isActive
+                ? color.withValues(alpha: 0.5)
+                : Theme.of(context).dividerColor,
+          ),
+        ),
+        child: hasCnt
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  iconWidget,
+                  const SizedBox(width: 4),
+                  Text(
+                    '$count',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              )
+            : Center(child: iconWidget),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// More from this course
+// ---------------------------------------------------------------------------
+
+class _MoreFromCourse extends ConsumerWidget {
+  const _MoreFromCourse({required this.courseId, required this.excludeId});
+
+  final String courseId;
+  final String excludeId;
+
+  static String _timeAgo(DateTime dt) {
+    final diff = DateTime.now().difference(dt);
+    if (diff.inDays >= 365) return '${diff.inDays ~/ 365}y ago';
+    if (diff.inDays >= 30) return '${diff.inDays ~/ 30}mo ago';
+    if (diff.inDays >= 7) return '${diff.inDays ~/ 7}w ago';
+    if (diff.inDays >= 1) return '${diff.inDays}d ago';
+    if (diff.inHours >= 1) return '${diff.inHours}h ago';
+    if (diff.inMinutes >= 1) return '${diff.inMinutes}m ago';
+    return 'just now';
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final postsAsync = ref.watch(
+      _coursePostsProvider((courseId: courseId, excludeId: excludeId)),
+    );
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final scheme = Theme.of(context).colorScheme;
+    final posts = postsAsync.asData?.value ?? [];
+
+    if (posts.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'MORE FROM THIS COURSE',
+          style: AppTypography.mono(
+            base: Theme.of(context).textTheme.labelSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: appColors.textMuted,
+              letterSpacing: 0.9,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Theme.of(context).dividerColor),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            children: List.generate(posts.length, (i) {
+              final p = posts[i];
+              final isNote = p.postType == PostType.lectureNote;
+              final dotColor = isNote ? appColors.info : appColors.amber;
+              final typeLabel = isNote ? 'NOTE' : 'EXERCISE';
+              final displayName = p.postingIdentity == PostingIdentity.anonymous
+                  ? 'Anonymous'
+                  : p.authorName;
+              final isLast = i == posts.length - 1;
+              return Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => context.push('/posts/${p.id}', extra: p),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 12,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: dotColor,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  p.title,
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: scheme.onSurface,
+                                      ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '$displayName · ${_timeAgo(p.createdAt)}',
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(color: appColors.textMuted),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            typeLabel,
+                            style: AppTypography.mono(
+                              base: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: appColors.textMuted,
+                                    letterSpacing: 0.4,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (!isLast)
+                    Divider(color: Theme.of(context).dividerColor, height: 1),
+                ],
+              );
+            }),
+          ),
+        ),
+      ],
     );
   }
 }
