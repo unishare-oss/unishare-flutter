@@ -19,6 +19,7 @@ import 'package:unishare_mobile/features/post/domain/usecases/add_comment.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/delete_comment.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/toggle_like.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_comments.dart';
+import 'package:unishare_mobile/features/post/domain/usecases/increment_view_count.dart';
 import 'package:unishare_mobile/features/post/domain/usecases/watch_post.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/reaction_repository.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/share_exceptions.dart';
@@ -186,6 +187,7 @@ Widget _buildSubject({
       reactionRepositoryProvider.overrideWithValue(r),
       shareRepositoryProvider.overrideWithValue(s),
       sharePostUseCaseProvider.overrideWithValue(SharePostUseCase(s)),
+      incrementViewCountUseCaseProvider.overrideWithValue(IncrementViewCount(p)),
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
