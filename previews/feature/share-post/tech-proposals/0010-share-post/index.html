@@ -1,0 +1,2575 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Allow users to share academic posts outside the app via platform share sheets, with deferred deep links so recipients who do not yet have the app are routed to the correct post on first launch.">
+      
+      
+      
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/share-post/tech-proposals/0010-share-post/">
+      
+      
+        <link rel="prev" href="../0009-ai-post-summary/">
+      
+      
+        <link rel="next" href="../../tech-specs/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>0010: Share Post - Unishare Engineering Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prop-0010-share-post" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Unishare Engineering Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              0010: Share Post
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unishare-oss/unishare-flutter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unishare-oss/unishare-flutter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Unishare Engineering Docs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../decisions/" class="md-tabs__link">
+          
+  
+  
+  Decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
+          
+  
+  
+  Stencils
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Tech proposals
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tech-specs/" class="md-tabs__link">
+          
+  
+  
+  Tech specs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Unishare Engineering Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unishare-oss/unishare-flutter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unishare-oss/unishare-flutter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unishare Engineering Docs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Decision Records
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Use Firestore array-contains-any for feed tag filtering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Single-slot theming for 12-theme design system
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: border token lives in ColorScheme.outline, not AppColors
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Use connectivity_plus and file_picker for post integration
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: GlobalKey mixin pattern for shell-triggered scroll-to-top
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: GlobalKey<State> with runtime cast replaces GlobalKey<ScrollToTopTarget>
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail screen uses hybrid seed-then-stream data loading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Unified /preview GoRoute with FilePreviewArgs extra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0008-share-post-deep-link-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Use Firebase Hosting + share_plus for universal deep-link sharing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stencils
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stencils
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposal Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Spec Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech proposals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech proposals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-notification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Notification System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-post-feed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Post Feed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Feed Filtering by Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-main-navbar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-file-preview-screen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-save-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0008-request-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0009-ai-post-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-url-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical URL structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ios-universal-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iOS: Universal Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#android-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Android: App Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-platform-web-share-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web platform: Web Share API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-landing-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: landing page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-first-launch-handling-in-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: first-launch handling in Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-package-addition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter package addition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firebase-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firebase Hosting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-custom-url-scheme-only-no-universal-links-or-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Custom URL scheme only (no Universal Links or App Links)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-third-party-deep-link-service-branchio-free-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Third-party deep link service (Branch.io free tier)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-firebase-app-distribution-invite-links-not-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Firebase App Distribution / Invite Links (not applicable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Auth Feature Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0001-notification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Notification System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: Navigation Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0005-feed-filtering-tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Feed Filtering by Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0005-main-navbar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0007-file-preview-screen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0007-save-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0008-request-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0009-ai-post-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0010-share-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#canonical-url-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Canonical URL structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ios-universal-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iOS: Universal Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#android-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Android: App Links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-platform-web-share-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web platform: Web Share API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-landing-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: landing page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deferred-deep-link-first-launch-handling-in-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deferred deep link: first-launch handling in Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-package-addition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter package addition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firebase-hosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firebase Hosting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-custom-url-scheme-only-no-universal-links-or-app-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Custom URL scheme only (no Universal Links or App Links)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-third-party-deep-link-service-branchio-free-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Third-party deep link service (Branch.io free tier)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-firebase-app-distribution-invite-links-not-applicable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Firebase App Distribution / Invite Links (not applicable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0010-share-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="prop-0010-share-post">PROP-0010: Share Post<a class="headerlink" href="#prop-0010-share-post" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> Slade<br />
+<strong>Date:</strong> 2026-05-17<br />
+<strong>Spec:</strong> (pending)<br />
+<strong>Approved by:</strong> Slade</p>
+<hr />
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>Unishare has no affordance for sharing a post outside the application. A student who finds a relevant lecture summary, past exam paper, or course note cannot forward it to a classmate through WhatsApp, Telegram, iMessage, or any other channel — they can only describe it verbally or copy-paste the post title and hope the recipient finds it independently. An educator cannot promote newly uploaded material on a department group chat.</p>
+<p>This matters at two levels. First, there is no share button anywhere on the post detail screen, so the action is entirely invisible to users. Second, even if a raw URL were shared manually, there is no URL structure in the app to open a specific post, and no infrastructure to route a non-user who taps the link to the App Store or Play Store and then onward to the correct post after installation (deferred deep link). Links shared without deferred deep linking are dead ends for recipients who have not yet installed the app — the group most important to grow the user base.</p>
+<p>The absence of sharing also limits organic growth. Academic content communities depend heavily on peer recommendation; without a low-friction share mechanism, posts circulate only within the existing in-app audience.</p>
+<p>From a technical standpoint the app currently has no:
+- Share trigger in the presentation layer (no "share" button or action sheet entry on post detail).
+- Canonical URL structure for individual posts.
+- Firebase Hosting configuration for web serving (the <code>firebase.json</code> does not contain a <code>hosting</code> key).
+- Universal Links (<code>/.well-known/apple-app-site-association</code>) or App Links (<code>/.well-known/assetlinks.json</code>) configuration.
+- <code>share_plus</code> dependency in <code>pubspec.yaml</code>.
+- Deferred deep link landing page or launch-state handling in GoRouter.</p>
+<p>All of these gaps must be addressed together for end-to-end sharing to work.</p>
+<hr />
+<h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>The recommended approach is <strong>self-hosted Universal Links and App Links via Firebase Hosting</strong> (Option A below). A share button on the post detail screen invokes <code>share_plus</code> to trigger the platform share sheet (iOS, Android) or the Web Share API (web). The shared URL points to a Firebase Hosting domain under the team's control. On a device with the app installed, the OS intercepts the link and opens the app directly to the correct post. On a device without the app, the browser lands on a minimal Firebase Hosting HTML redirect page that stores the target post ID (in <code>sessionStorage</code> or a URL fragment) and redirects the user to the App Store or Play Store. When the user subsequently installs and opens the app, a first-launch routine reads a stored post ID and navigates GoRouter to that post detail screen.</p>
+<p>This approach uses only Firebase Hosting (already part of the Firebase project, free tier) and <code>share_plus</code> (free, open-source). No paid service is required.</p>
+<h3 id="canonical-url-structure">Canonical URL structure<a class="headerlink" href="#canonical-url-structure" title="Permanent link">&para;</a></h3>
+<p>Every post gets a shareable URL of the form:</p>
+<div class="highlight"><pre><span></span><code>https://&lt;firebase-hosting-domain&gt;/posts/&lt;postId&gt;
+</code></pre></div>
+<p>Example: <code>https://unishare-app.web.app/posts/abc123</code></p>
+<p>The <code>postId</code> is the Firestore document ID already assigned at upload time — no new identifier is introduced.</p>
+<h3 id="ios-universal-links">iOS: Universal Links<a class="headerlink" href="#ios-universal-links" title="Permanent link">&para;</a></h3>
+<p>A JSON file is deployed to Firebase Hosting at:</p>
+<div class="highlight"><pre><span></span><code>/.well-known/apple-app-site-association
+</code></pre></div>
+<p>It lists the app's Team ID and Bundle ID and associates the <code>/posts/*</code> path pattern with the app. When an iOS device with the app installed receives a tap on a <code>https://unishare-app.web.app/posts/&lt;id&gt;</code> URL (in iMessage, WhatsApp, Safari, etc.), iOS intercepts the link and calls <code>AppDelegate.application(_:continue:restorationHandler:)</code> without opening the browser. The app's GoRouter deep-link handler (already in place for push notification routing) parses the incoming URL and navigates to the post detail screen for the given <code>postId</code>.</p>
+<h3 id="android-app-links">Android: App Links<a class="headerlink" href="#android-app-links" title="Permanent link">&para;</a></h3>
+<p>A JSON file is deployed to Firebase Hosting at:</p>
+<div class="highlight"><pre><span></span><code>/.well-known/assetlinks.json
+</code></pre></div>
+<p>It lists the app's SHA-256 certificate fingerprint and package name. Android verifies this file at install time and on OS startup (Digital Asset Links verification). When the app is installed and a matching URL is tapped, Android routes it directly to the app via an intent filter with <code>android:autoVerify="true"</code>.</p>
+<h3 id="web-platform-web-share-api">Web platform: Web Share API<a class="headerlink" href="#web-platform-web-share-api" title="Permanent link">&para;</a></h3>
+<p>On web, <code>share_plus</code> 10.x wraps the browser's <code>navigator.share()</code> API. When <code>navigator.share()</code> is available (Chrome for Android, Safari on iOS/macOS, Edge), the native system share sheet opens with the post title and URL pre-populated. When <code>navigator.share()</code> is unavailable (desktop Chrome, Firefox), <code>share_plus</code> falls back to copying the URL to the clipboard and showing a snackbar.</p>
+<h3 id="deferred-deep-link-landing-page">Deferred deep link: landing page<a class="headerlink" href="#deferred-deep-link-landing-page" title="Permanent link">&para;</a></h3>
+<p>Firebase Hosting serves an <code>index.html</code> at <code>/posts/&lt;postId&gt;</code> via a rewrite rule (catch-all SPA rewrite, same pattern used for web app hosting). This page contains:</p>
+<ol>
+<li>Open Graph and Twitter Card meta tags (<code>og:title</code>, <code>og:description</code>, <code>og:image</code>) populated via a Cloud Function that renders the page server-side, or — for v1 — static meta tags with a generic title and the post URL. (OG tag strategy is an open question below.)</li>
+<li>A small JavaScript snippet that detects the platform (iOS / Android / other) and redirects to the App Store, Play Store, or a web fallback. Before redirecting, it writes the <code>postId</code> to <code>localStorage</code> under a key such as <code>unishare_pending_post</code>.</li>
+</ol>
+<h3 id="deferred-deep-link-first-launch-handling-in-flutter">Deferred deep link: first-launch handling in Flutter<a class="headerlink" href="#deferred-deep-link-first-launch-handling-in-flutter" title="Permanent link">&para;</a></h3>
+<p>On app cold start, a Riverpod provider (e.g., <code>pendingShareProvider</code>) checks whether a stored post ID exists. On native platforms the mechanism differs:</p>
+<ul>
+<li><strong>iOS/Android:</strong> The landing page cannot write to the app's <code>localStorage</code>, so deferred state must be passed through the store install flow. The standard approach without a third-party SDK is a Firebase Hosting redirect that appends the post ID to the App Store URL as a referral parameter (iOS) or via a Play Install Referrer API value (Android). For v1, a simpler fallback is acceptable: after first install and first Firebase Auth sign-in, the app checks <code>flutter_secure_storage</code> for a value written by a background URL handler. This is only possible if the OS delivers the link before the app is fully initialised — which Universal Links and App Links do when the user taps the link after installation (not a true deferred case). True deferred deep linking (link tapped before installation) without a third-party SDK requires the Play Install Referrer API on Android and has no reliable native equivalent on iOS without asking the user to re-tap the link.</li>
+</ul>
+<p>The practical v1 recommendation: deferred deep linking is supported on Android via the Play Install Referrer API (no paid service needed, the API is free), and best-effort on iOS (Universal Link is delivered if the app is already installed; post-install routing on iOS for genuinely new users is deferred to v2 or resolved via Branch.io if the team later prioritises it). This scopes the work honestly without over-promising.</p>
+<h3 id="flutter-package-addition">Flutter package addition<a class="headerlink" href="#flutter-package-addition" title="Permanent link">&para;</a></h3>
+<p><code>share_plus</code> (pub.dev, BSD-3-Clause, maintained by the Flutter community) must be added to <code>pubspec.yaml</code>. This requires team approval per the project's dependency policy. No other new package is required for the core share flow. The Play Install Referrer API on Android is accessed through the existing Android manifest and intent handling; no additional pub.dev package is needed unless the team adopts <code>app_links</code> for a unified URL handler (also free, open-source — flagged as an option in the spec phase).</p>
+<h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Artifact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>domain/entities/</code></td>
+<td>No new entity — <code>Post</code> entity gains no new fields</td>
+</tr>
+<tr>
+<td><code>domain/repositories/</code></td>
+<td><code>ShareRepository</code> abstract interface: <code>share(Post post)</code> → <code>Future&lt;void&gt;</code></td>
+</tr>
+<tr>
+<td><code>domain/usecases/</code></td>
+<td><code>SharePostUseCase</code></td>
+</tr>
+<tr>
+<td><code>data/datasources/</code></td>
+<td><code>SharePlusDataSource</code> (wraps <code>share_plus</code> <code>SharePlus.instance.share()</code>)</td>
+</tr>
+<tr>
+<td><code>data/repositories/</code></td>
+<td><code>ShareRepositoryImpl</code></td>
+</tr>
+<tr>
+<td><code>presentation/providers/</code></td>
+<td><code>sharePostProvider</code> (simple <code>FutureProvider.family</code> keyed on <code>postId</code>)</td>
+</tr>
+<tr>
+<td><code>presentation/widgets/</code></td>
+<td>Share icon button added to <code>PostDetailScreen</code> app bar</td>
+</tr>
+</tbody>
+</table>
+<p>The Domain layer touches no Flutter or Firebase import. <code>share_plus</code> is consumed exclusively in the Data layer datasource.</p>
+<h3 id="firebase-hosting">Firebase Hosting<a class="headerlink" href="#firebase-hosting" title="Permanent link">&para;</a></h3>
+<p><code>firebase.json</code> gains a <code>hosting</code> block pointing to the web build output (<code>apps/mobile/build/web</code>). The rewrite rule serves <code>index.html</code> for all <code>/posts/*</code> paths that are not static assets, supporting both the Flutter web SPA and the deferred deep link landing page. This doubles as the web deployment of the Unishare Flutter web app, which is currently absent.</p>
+<hr />
+<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<h3 id="a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended">A — Self-hosted Universal Links + App Links via Firebase Hosting (recommended)<a class="headerlink" href="#a-self-hosted-universal-links-app-links-via-firebase-hosting-recommended" title="Permanent link">&para;</a></h3>
+<p>A Firebase Hosting domain hosts <code>/.well-known/apple-app-site-association</code> (iOS) and <code>/.well-known/assetlinks.json</code> (Android). <code>share_plus</code> generates the shareable URL and triggers the platform share sheet. GoRouter handles the incoming deep link on devices with the app installed. Deferred deep linking is handled via the Play Install Referrer API on Android; iOS deferred linking is best-effort in v1. Web sharing uses <code>share_plus</code>'s Web Share API wrapper.</p>
+<p><strong>Pros:</strong>
+- Zero additional cost: Firebase Hosting is free tier, <code>share_plus</code> is free open-source.
+- No dependency on any third-party managed service that could change pricing, shut down, or require an account.
+- The team retains full control of the well-known files and the landing page HTML.
+- Universal Links and App Links are the OS-native mechanism — they work inside iMessage, WhatsApp, Telegram, and every browser without any special integration.
+- Web Share API via <code>share_plus</code> handles web platform with a single call.
+- Firebase Hosting deployment is already understood by the team (existing <code>firebase deploy</code> workflow).</p>
+<p><strong>Cons:</strong>
+- True deferred deep linking on iOS (link tapped before app is installed) has no free, first-party solution. This gap affects only brand-new iOS users who have not yet installed the app — an edge case for v1.
+- The team must host and maintain the well-known files, the landing page HTML, and the Firebase Hosting configuration. This is a few hours of setup but ongoing maintenance is minimal.
+- App Links on Android require SHA-256 certificate fingerprint registration, which must be repeated for every signing key variant (debug, release, CI). The spec must document all required fingerprints.
+- OG meta tag pre-population for rich link previews (title, image in iMessage/WhatsApp) requires either a Cloud Function that renders post metadata server-side or a static placeholder. A Cloud Function adds complexity; a static placeholder gives poor preview quality.</p>
+<p><strong>Effort:</strong> Medium. Firebase Hosting setup (~2 hours), well-known file deployment (~1 hour), GoRouter deep link handler (~2 hours), Play Install Referrer integration (~3 hours), <code>share_plus</code> UI integration (~2 hours). Total: ~10 hours.</p>
+<h3 id="b-custom-url-scheme-only-no-universal-links-or-app-links">B — Custom URL scheme only (no Universal Links or App Links)<a class="headerlink" href="#b-custom-url-scheme-only-no-universal-links-or-app-links" title="Permanent link">&para;</a></h3>
+<p>Register a custom URI scheme (<code>unishare://</code>) in the iOS <code>Info.plist</code> and Android <code>AndroidManifest.xml</code>. Share a <code>unishare://posts/&lt;postId&gt;</code> link via <code>share_plus</code>. GoRouter registers a handler for the custom scheme.</p>
+<p><strong>Pros:</strong>
+- Simplest possible implementation: no well-known files, no Firebase Hosting, no OS verification step.
+- Works immediately on devices with the app installed when the user taps the link inside another app that can open custom schemes.
+- No new infrastructure.</p>
+<p><strong>Cons:</strong>
+- Custom scheme links do not open in a browser — they are opaque to web surfaces. If a <code>unishare://</code> link is tapped in a Twitter/X web card, email client, or desktop browser, the OS shows "no application can handle this link" on devices without the app and simply does nothing on the web platform.
+- Deferred deep linking is impossible: there is no web landing page, so a non-user who taps the link cannot be redirected to the store.
+- The Web Share API cannot share a <code>unishare://</code> URI — the browser will refuse to share non-http(s) URLs in most implementations.
+- Rich link previews (OG tags) are impossible with a custom scheme.
+- iOS explicitly discourages custom schemes for user-facing links in App Store guidelines and App Review may flag an app that relies on them as the primary sharing mechanism.</p>
+<p><strong>Effort:</strong> Low (~4 hours). But the resulting feature does not meet the stated constraint of supporting deferred deep links or web sharing.</p>
+<p><strong>Rejected for v1</strong> because it fails the deferred deep link requirement and web sharing requirement stated in the problem constraints. It may be added as a supplementary scheme (for app-to-app internal routing) in a future spec.</p>
+<h3 id="c-third-party-deep-link-service-branchio-free-tier">C — Third-party deep link service (Branch.io free tier)<a class="headerlink" href="#c-third-party-deep-link-service-branchio-free-tier" title="Permanent link">&para;</a></h3>
+<p>Integrate Branch.io, which provides a fully managed deferred deep link pipeline including a dashboard, Universal Links / App Links configuration, link analytics, and true deferred deep linking on both iOS and Android.</p>
+<p><strong>Pros:</strong>
+- True deferred deep linking works on iOS and Android out of the box, including the genuinely new user case (link tapped before app installation).
+- Rich link preview metadata (OG tags, custom images per post) can be configured via the Branch dashboard without a server-side rendering function.
+- Branch's free tier (up to 10,000 monthly active users or 10,000 attributed installs — limits vary by plan) has no monetary cost at low volume.
+- The <code>flutter_branch_sdk</code> pub.dev package wraps the Branch SDK with a Flutter API.
+- Branch handles the <code>/.well-known/</code> file hosting; the team does not need to configure Firebase Hosting for deep links.</p>
+<p><strong>Cons:</strong>
+- Introduces a third-party managed service dependency. If Branch changes its free-tier limits, discontinues the free plan, or shuts down (as Firebase Dynamic Links did in August 2025), the team must migrate on short notice. This is exactly the failure mode that happened with Dynamic Links.
+- The Branch SDK adds ~2–4 MB to the app binary (native SDK for iOS and Android).
+- <code>flutter_branch_sdk</code> is a community-maintained package, not a Flutter/Google-supported package, introducing maintenance risk.
+- Branch's free tier requires creating a Branch account and domain verification — non-trivial onboarding for a team that has not used it before.
+- Any analytics or attribution data generated by Branch links is stored on Branch's servers, raising data governance questions (particularly relevant for a university academic platform).</p>
+<p><strong>Effort:</strong> Medium-high (~12 hours including SDK integration, account setup, domain verification, and testing across both platforms).</p>
+<p><strong>Not recommended</strong> for v1 because the third-party service dependency risk is directly analogous to the Firebase Dynamic Links shutdown that prompted this proposal. Option A achieves the same outcome for the in-app use case without the dependency risk. If true iOS deferred deep linking becomes a hard business requirement, Option C can be revisited at that point — the reversal cost from Option A to Option C is moderate (Branch SDK integration requires adding the SDK, replacing the share URL construction logic, and removing the custom landing page; GoRouter's deep link handler logic is reusable).</p>
+<h3 id="d-firebase-app-distribution-invite-links-not-applicable">D — Firebase App Distribution / Invite Links (not applicable)<a class="headerlink" href="#d-firebase-app-distribution-invite-links-not-applicable" title="Permanent link">&para;</a></h3>
+<p>Firebase App Distribution invite links are for distributing pre-release builds to testers — not for end-user content sharing. Included here only to pre-empt the question; it does not address the problem.</p>
+<hr />
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Firebase Hosting domain and project configuration.</strong> The current <code>firebase.json</code> has no <code>hosting</code> key, which means Firebase Hosting has not been configured for this project. Is the Firebase project already linked to a Hosting domain (e.g., <code>&lt;project-id&gt;.web.app</code>)? Has the team verified ownership of any custom domain (<code>unishare.app</code> or similar) that should be used for the shareable URL? The canonical URL structure in the spec depends on this answer — if a custom domain is in use, the <code>assetlinks.json</code> and <code>apple-app-site-association</code> files must list it specifically, not <code>*.web.app</code>.</p>
+</li>
+<li>
+<p><strong><code>share_plus</code> approval as a new dependency.</strong> <code>share_plus</code> is not currently in <code>pubspec.yaml</code>. Per the project's dependency policy, new packages require team approval. The team should confirm that <code>share_plus</code> (BSD-3-Clause, Flutter Favourite, maintained by the Flutter community) is acceptable before the spec phase begins. If <code>share_plus</code> is not approved, Option B (custom scheme, clipboard fallback) is the only path forward.</p>
+</li>
+<li>
+<p><strong>Deferred deep link scope for v1.</strong> True deferred deep linking on iOS (for users who tap a link before installing the app) requires either a third-party service (Option C) or a non-trivial workaround. The recommended approach (Option A) handles Android deferred deep linking via the Play Install Referrer API and leaves iOS deferred deep linking as best-effort. Is iOS deferred deep linking a hard requirement for v1, or is "link opens the app if installed; opens the store if not installed (no post routing after install on iOS)" acceptable for launch?</p>
+</li>
+<li>
+<p><strong>OG meta tag strategy for rich link previews.</strong> When a post URL is shared in iMessage, WhatsApp, or Telegram, the messaging app's link preview bot fetches the URL and renders a card using Open Graph meta tags (<code>og:title</code>, <code>og:description</code>, <code>og:image</code>). For this to show post-specific content (title, file type, uploader), the landing page must be rendered server-side with post metadata — either via a Cloud Functions SSR endpoint or via Firebase Hosting's dynamic rewrites. A static fallback (generic "Unishare — Academic Content" title, app icon as image) is simpler but produces low-quality previews. Which approach is required for v1?</p>
+</li>
+<li>
+<p><strong>Android signing key variants and SHA-256 fingerprints.</strong> App Links digital asset verification requires the app's SHA-256 certificate fingerprint in <code>assetlinks.json</code>. The debug keystore fingerprint differs from the release keystore fingerprint, and a CI/CD signing key may be a third variant. The spec must enumerate all fingerprints and define how they are managed without committing private keys to the repository. Does the team have a documented key management process, or does the spec need to define one?</p>
+</li>
+<li>
+<p><strong>Sharing from the post list screen vs. post detail screen only.</strong> Should the share affordance appear only on the post detail screen (one tap to open the post, then share), or also as a swipe action or context menu on post cards in the feed? The latter reduces friction but is a wider implementation scope. The proposal assumes post detail screen only for v1.</p>
+</li>
+</ol>
+<hr />
+<h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A share icon button is present in the <code>PostDetailScreen</code> app bar. Tapping it triggers the platform share sheet on iOS and Android, and the Web Share API (or clipboard fallback) on web.</li>
+<li>The shared payload contains a canonical <code>https://</code> URL of the form <code>https://&lt;hosting-domain&gt;/posts/&lt;postId&gt;</code> and the post title as the share text.</li>
+<li>On a device with the Unishare app installed, tapping the shared URL (in iMessage, WhatsApp, Telegram, or any browser) opens the app directly to the correct post detail screen without navigating through the feed first.</li>
+<li>On an Android device without the app installed, tapping the shared URL opens the browser landing page and redirects to the Google Play Store. After installation and first launch, the app navigates to the shared post (Play Install Referrer deferred deep link).</li>
+<li>On an iOS device without the app installed, tapping the shared URL opens the browser landing page and redirects to the App Store. After installation and first launch, the app makes a best-effort attempt to route to the shared post; if the OS does not deliver the link after install, the user lands on the home feed (acceptable for v1).</li>
+<li>The Firebase Hosting deployment serves <code>/.well-known/apple-app-site-association</code> with correct Team ID, Bundle ID, and <code>/posts/*</code> path association.</li>
+<li>The Firebase Hosting deployment serves <code>/.well-known/assetlinks.json</code> with the correct SHA-256 certificate fingerprints for debug and release builds.</li>
+<li>The <code>ShareRepository</code> interface and <code>SharePostUseCase</code> in the domain layer contain zero Flutter or Firebase imports.</li>
+<li><code>share_plus</code> is consumed only in the data layer datasource (<code>SharePlusDataSource</code>); it does not appear in domain or presentation layer imports.</li>
+<li><code>SharePostUseCase</code> has a unit test against a mock <code>ShareRepository</code> covering the success path.</li>
+<li>The share button widget has a widget test verifying it renders on the post detail screen and invokes the use case when tapped.</li>
+<li><code>flutter analyze</code> reports zero errors or warnings on all new Dart code.</li>
+<li>The feature is accessible: the share button has a <code>Semantics</code> label of "Share post".</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
