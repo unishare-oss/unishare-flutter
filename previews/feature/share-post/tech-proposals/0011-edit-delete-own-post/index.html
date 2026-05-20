@@ -6,35 +6,35 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Allow post authors to correct or remove their own posts via a contextual action menu.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/share-post/tech-proposals/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/share-post/tech-proposals/0011-edit-delete-own-post/">
       
       
-        <link rel="prev" href="../stencils/tech-spec/">
+        <link rel="prev" href="../0010-share-post/">
       
       
-        <link rel="next" href="0001-notification/">
+        <link rel="next" href="../../tech-specs/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Tech Proposals - Unishare Engineering Docs</title>
+        <title>0011: Edit and Delete Own Post - Unishare Engineering Docs</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tech-proposals" class="md-skip">
+        <a href="#prop-0011-edit-and-delete-own-post" class="md-skip">
           Skip to content
         </a>
       
@@ -92,7 +92,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+    <a href="../.." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tech Proposals
+              0011: Edit and Delete Own Post
             
           </span>
         </div>
@@ -225,7 +225,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -246,7 +246,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../decisions/" class="md-tabs__link">
+        <a href="../../decisions/" class="md-tabs__link">
           
   
   
@@ -266,7 +266,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../stencils/adr/" class="md-tabs__link">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -288,7 +288,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -308,7 +308,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../tech-specs/" class="md-tabs__link">
+        <a href="../../tech-specs/" class="md-tabs__link">
           
   
   
@@ -342,7 +342,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+    <a href="../.." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -372,7 +372,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -451,7 +451,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/" class="md-nav__link">
+      <a href="../../decisions/" class="md-nav__link">
         
   
   
@@ -479,7 +479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
         
   
   
@@ -507,7 +507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
+      <a href="../../decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
         
   
   
@@ -535,7 +535,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0001-single-slot-theming/" class="md-nav__link">
+      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
         
   
   
@@ -570,7 +570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
         
   
   
@@ -605,7 +605,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0003-post-integration-packages/" class="md-nav__link">
+      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
         
   
   
@@ -640,7 +640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
         
   
   
@@ -675,7 +675,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
         
   
   
@@ -703,7 +703,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
         
   
   
@@ -731,7 +731,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0007-file-preview-unified-route/" class="md-nav__link">
+      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
         
   
   
@@ -759,7 +759,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
+      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
         
   
   
@@ -787,7 +787,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0008-share-post-deep-link-strategy/" class="md-nav__link">
+      <a href="../../decisions/0008-share-post-deep-link-strategy/" class="md-nav__link">
         
   
   
@@ -815,7 +815,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
+      <a href="../../decisions/0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
         
   
   
@@ -843,7 +843,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decisions/0011-edit-delete-own-post-action-surface/" class="md-nav__link">
+      <a href="../../decisions/0011-edit-delete-own-post-action-surface/" class="md-nav__link">
         
   
   
@@ -930,7 +930,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/adr/" class="md-nav__link">
+      <a href="../../stencils/adr/" class="md-nav__link">
         
   
   
@@ -958,7 +958,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/tech-proposal/" class="md-nav__link">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
         
   
   
@@ -986,7 +986,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stencils/tech-spec/" class="md-nav__link">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
         
   
   
@@ -1075,37 +1075,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tech Proposals
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -1121,48 +1094,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Index
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1175,7 +1106,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0001-notification/" class="md-nav__link">
+      <a href="../0001-notification/" class="md-nav__link">
         
   
   
@@ -1203,7 +1134,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0003-post-feed/" class="md-nav__link">
+      <a href="../0003-post-feed/" class="md-nav__link">
         
   
   
@@ -1231,7 +1162,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0004-post-integration/" class="md-nav__link">
+      <a href="../0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1259,7 +1190,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0005-feed-filtering-tags/" class="md-nav__link">
+      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
         
   
   
@@ -1287,7 +1218,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0005-main-navbar/" class="md-nav__link">
+      <a href="../0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1315,7 +1246,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0006-post-detail-page/" class="md-nav__link">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1343,7 +1274,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0007-file-preview-screen/" class="md-nav__link">
+      <a href="../0007-file-preview-screen/" class="md-nav__link">
         
   
   
@@ -1371,7 +1302,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0007-save-post/" class="md-nav__link">
+      <a href="../0007-save-post/" class="md-nav__link">
         
   
   
@@ -1399,7 +1330,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0008-request-post/" class="md-nav__link">
+      <a href="../0008-request-post/" class="md-nav__link">
         
   
   
@@ -1427,7 +1358,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0009-ai-post-summary/" class="md-nav__link">
+      <a href="../0009-ai-post-summary/" class="md-nav__link">
         
   
   
@@ -1455,7 +1386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0010-achievements/" class="md-nav__link">
+      <a href="../0010-achievements/" class="md-nav__link">
         
   
   
@@ -1483,7 +1414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0010-share-post/" class="md-nav__link">
+      <a href="../0010-share-post/" class="md-nav__link">
         
   
   
@@ -1508,10 +1439,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="0011-edit-delete-own-post/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: Edit and Delete Own Post
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1527,6 +1485,142 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-overflow-menu-on-postdetailscreen-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — Overflow menu on PostDetailScreen only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-contextual-menu-on-postcard-feed-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — Contextual menu on PostCard (feed + detail)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-actions-on-mypostsscreen-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C — Actions on MyPostsScreen only
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1598,7 +1692,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/" class="md-nav__link">
+      <a href="../../tech-specs/" class="md-nav__link">
         
   
   
@@ -1626,7 +1720,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0001-auth-design/" class="md-nav__link">
+      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
         
   
   
@@ -1654,7 +1748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0001-notification/" class="md-nav__link">
+      <a href="../../tech-specs/0001-notification/" class="md-nav__link">
         
   
   
@@ -1682,7 +1776,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0002-navigation-design/" class="md-nav__link">
+      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
         
   
   
@@ -1710,7 +1804,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0004-post-integration/" class="md-nav__link">
+      <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
         
   
   
@@ -1738,7 +1832,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0005-feed-filtering-tags/" class="md-nav__link">
+      <a href="../../tech-specs/0005-feed-filtering-tags/" class="md-nav__link">
         
   
   
@@ -1766,7 +1860,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0005-main-navbar/" class="md-nav__link">
+      <a href="../../tech-specs/0005-main-navbar/" class="md-nav__link">
         
   
   
@@ -1794,7 +1888,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0006-post-detail-page/" class="md-nav__link">
+      <a href="../../tech-specs/0006-post-detail-page/" class="md-nav__link">
         
   
   
@@ -1822,7 +1916,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0007-file-preview-screen/" class="md-nav__link">
+      <a href="../../tech-specs/0007-file-preview-screen/" class="md-nav__link">
         
   
   
@@ -1850,7 +1944,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0007-save-post/" class="md-nav__link">
+      <a href="../../tech-specs/0007-save-post/" class="md-nav__link">
         
   
   
@@ -1878,7 +1972,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0008-request-post/" class="md-nav__link">
+      <a href="../../tech-specs/0008-request-post/" class="md-nav__link">
         
   
   
@@ -1906,7 +2000,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0009-ai-post-summary/" class="md-nav__link">
+      <a href="../../tech-specs/0009-ai-post-summary/" class="md-nav__link">
         
   
   
@@ -1934,7 +2028,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0010-achievements/" class="md-nav__link">
+      <a href="../../tech-specs/0010-achievements/" class="md-nav__link">
         
   
   
@@ -1962,7 +2056,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0010-share-post/" class="md-nav__link">
+      <a href="../../tech-specs/0010-share-post/" class="md-nav__link">
         
   
   
@@ -1990,7 +2084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0011-edit-delete-own-post/" class="md-nav__link">
+      <a href="../../tech-specs/0011-edit-delete-own-post/" class="md-nav__link">
         
   
   
@@ -2018,7 +2112,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-specs/0011-users-public-and-discoverability/" class="md-nav__link">
+      <a href="../../tech-specs/0011-users-public-and-discoverability/" class="md-nav__link">
         
   
   
@@ -2073,10 +2167,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Workflow
+        Problem
       
     </span>
   </a>
@@ -2084,10 +2178,104 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#index" class="md-nav__link">
+  <a href="#goals" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Index
+        Goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Non-goals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-overflow-menu-on-postdetailscreen-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — Overflow menu on PostDetailScreen only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-contextual-menu-on-postcard-feed-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — Contextual menu on PostCard (feed + detail)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-actions-on-mypostsscreen-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C — Actions on MyPostsScreen only
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommendation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
       
     </span>
   </a>
@@ -2111,7 +2299,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0011-edit-delete-own-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2119,110 +2307,128 @@
   
 
 
-<h1 id="tech-proposals">Tech Proposals<a class="headerlink" href="#tech-proposals" title="Permanent link">&para;</a></h1>
-<p>A Tech Proposal defines the <strong>problem, proposed solution, and alternatives</strong> for a non-trivial feature. It must be approved before a Tech Spec is written.</p>
-<p>Use the <a href="../stencils/tech-proposal/">Tech Proposal stencil</a> to start a new one. Save proposals to <code>tech-proposals/</code> at the repo root on the <code>main</code> branch as <code>NNNN-slug.md</code> (e.g. <code>0001-auth-flow.md</code>).</p>
-<h2 id="workflow">Workflow<a class="headerlink" href="#workflow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>Proposal (this page) → approved → Spec → approved → Implementation → Review
-</code></pre></div>
-<p>Skip proposals only for changes touching ≤ 2 files with no architectural impact.</p>
-<h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Title</th>
-<th>Status</th>
-<th>Date</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="0001-notification/">0001</a></td>
-<td>'0001: Notification System'</td>
-<td>APPROVED</td>
-<td>2026-05-14</td>
-</tr>
-<tr>
-<td><a href="0003-post-feed/">0003</a></td>
-<td>Post Feed</td>
-<td>APPROVED</td>
-<td>2026-04-30</td>
-</tr>
-<tr>
-<td><a href="0004-post-integration/">0004</a></td>
-<td>Post Integration</td>
-<td>APPROVED</td>
-<td>2026-05-03</td>
-</tr>
-<tr>
-<td><a href="0005-feed-filtering-tags/">0005</a></td>
-<td>Feed Filtering by Tags</td>
-<td>APPROVED</td>
-<td>2026-05-05</td>
-</tr>
-<tr>
-<td><a href="0005-main-navbar/">0005</a></td>
-<td>Main Navigation Bar</td>
-<td>APPROVED</td>
-<td>2026-05-05</td>
-</tr>
-<tr>
-<td><a href="0006-post-detail-page/">0006</a></td>
-<td>Post Detail Page</td>
-<td>ACCEPTED</td>
-<td>2026-05-06</td>
-</tr>
-<tr>
-<td><a href="0007-file-preview-screen/">0007</a></td>
-<td>File Preview Screen</td>
-<td>ACCEPTED</td>
-<td>2026-05-07</td>
-</tr>
-<tr>
-<td><a href="0007-save-post/">0007</a></td>
-<td>'0007: Save Post'</td>
-<td>APPROVED</td>
-<td>2026-05-07</td>
-</tr>
-<tr>
-<td><a href="0008-request-post/">0008</a></td>
-<td>'0008: Request Post'</td>
-<td>APPROVED</td>
-<td>2026-05-09</td>
-</tr>
-<tr>
-<td><a href="0009-ai-post-summary/">0009</a></td>
-<td>'0009: AI Post Summary'</td>
-<td>PROPOSED</td>
-<td>2026-05-14</td>
-</tr>
-<tr>
-<td><a href="0010-achievements/">0010</a></td>
-<td>Achievements System</td>
-<td>PROPOSED</td>
-<td>2026-05-18</td>
-</tr>
-<tr>
-<td><a href="0010-share-post/">0010</a></td>
-<td>Share Post</td>
-<td>ACCEPTED</td>
-<td>2026-05-17</td>
-</tr>
-<tr>
-<td><a href="0011-edit-delete-own-post/">0011</a></td>
-<td>Edit and Delete Own Post</td>
-<td>ACCEPTED</td>
-<td>2026-05-19</td>
-</tr>
-</tbody>
-</table>
+<h1 id="prop-0011-edit-and-delete-own-post">PROP-0011: Edit and Delete Own Post<a class="headerlink" href="#prop-0011-edit-and-delete-own-post" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED
+<strong>Author:</strong> architect
+<strong>Date:</strong> 2026-05-19
+<strong>Spec:</strong> <a href="../../tech-specs/0011-edit-delete-own-post/">SPEC-0011</a>
+<strong>Approved by:</strong> Slade</p>
+<hr />
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>Once a post is published, its author has no mechanism to fix errors in the title or description, update metadata, or remove the post entirely. The only recourse is to leave incorrect or unwanted content visible to all users indefinitely. This affects two groups: the author, who cannot exercise basic ownership over their content, and all readers, who encounter stale or erroneous material with no path to correction.</p>
+<p>The analogous feature already exists for comments — <code>CommentTile</code> exposes <code>onEdit</code> and <code>onDelete</code> callbacks gated on <code>comment.authorId == currentUser.uid</code>, and a <code>DeleteComment</code> use case handles the deletion side. The post layer lacks equivalent domain and presentation support: <code>PostRepository</code> has no <code>deletePost()</code> or <code>updatePost()</code> method, <code>PostFirestoreDatasource</code> has no delete or update path, and <code>PostDetailScreen</code>'s AppBar contains only a share button.</p>
+<p>The constraint from the product owner is a hard delete only (no soft-delete / recycle bin needed) with a standard online-only flow (no offline queue for mutations).</p>
+<hr />
+<h2 id="goals">Goals<a class="headerlink" href="#goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Authors can delete any post they own; the Firestore document and all associated Storage files are removed permanently.</li>
+<li>Authors can edit the mutable text fields of a post they own (title, description, tags, external URL, module number) and the change is reflected immediately for all readers via the existing <code>watchPost</code> stream.</li>
+<li>The action surface is visible only to the post's owner; other users never see it.</li>
+<li>Ownership check is enforced in both the client UI and Firestore security rules.</li>
+<li>The domain layer remains pure Dart — no Firebase imports leak into use cases or repository interfaces.</li>
+<li>No new third-party packages are required.</li>
+</ul>
+<h2 id="non-goals">Non-goals<a class="headerlink" href="#non-goals" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Soft delete, archiving, or a recycle bin — hard delete only per product-owner constraint.</li>
+<li>Offline queuing for edit or delete operations — online-only per product-owner constraint.</li>
+<li>Admin / moderator delete of other users' posts — out of scope for this proposal.</li>
+<li>Editing media attachments (adding, reordering, or removing uploaded files) — file management is significantly more complex and is deferred to a separate proposal.</li>
+<li>Bulk delete from <code>MyPostsScreen</code>.</li>
+<li>Analytics or audit logging of mutations.</li>
+</ul>
+<hr />
+<h2 id="options">Options<a class="headerlink" href="#options" title="Permanent link">&para;</a></h2>
+<h3 id="option-a-overflow-menu-on-postdetailscreen-only">Option A — Overflow menu on PostDetailScreen only<a class="headerlink" href="#option-a-overflow-menu-on-postdetailscreen-only" title="Permanent link">&para;</a></h3>
+<p>A 3-dot <code>PopupMenuButton</code> is added to the AppBar of <code>PostDetailScreen</code>, visible only when <code>post.authorId == currentUser.uid</code>. The menu exposes two items: <strong>Edit</strong> and <strong>Delete</strong>. Edit navigates to a new <code>EditPostScreen</code> pre-populated with existing values; Delete shows a confirmation <code>AlertDialog</code> (matching the pattern used by <code>_deleteComment</code> in the same file) then hard-deletes the Firestore document and all Storage files before navigating back to the feed.</p>
+<p><strong>Pros:</strong>
+- The detail screen is the single place where all post content is visible, so the full edit form is contextually appropriate there.
+- Follows the established comment-deletion pattern in the same screen; reviewers see a familiar structure.
+- The AppBar already has an <code>actions</code> list — adding a <code>PopupMenuButton</code> is additive with no layout disruption.
+- Does not require any changes to <code>PostCard</code> or the feed layer.
+- Accidental taps are rare since the detail screen requires intentional navigation to reach.</p>
+<p><strong>Cons:</strong>
+- Authors must navigate into the detail view of a post to delete it; they cannot act directly from the <code>MyPostsScreen</code> list.
+- <code>EditPostScreen</code> is a net-new screen with its own route, provider, and widget test.</p>
+<p><strong>Effort:</strong> M — two use cases, repository/datasource additions, one new screen, two tests.</p>
+<hr />
+<h3 id="option-b-contextual-menu-on-postcard-feed-detail">Option B — Contextual menu on PostCard (feed + detail)<a class="headerlink" href="#option-b-contextual-menu-on-postcard-feed-detail" title="Permanent link">&para;</a></h3>
+<p>The same 3-dot <code>PopupMenuButton</code> is surfaced directly on <code>PostCard</code> (shown in the card's top-right area, visible to the author only) in addition to <code>PostDetailScreen</code>. This gives faster access: the author can delete or edit from the feed or from <code>MyPostsScreen</code> without entering the detail view.</p>
+<p><strong>Pros:</strong>
+- Faster path to delete — one tap from any list that shows the card.
+- Consistent action surface wherever the post appears.</p>
+<p><strong>Cons:</strong>
+- <code>PostCard</code> is a shared feed widget used across the main feed, <code>MyPostsScreen</code>, and public profile pages. Adding ownership-awareness means the card must receive <code>currentUid</code> as a parameter or read it from a Riverpod provider, increasing coupling.
+- The card layout is compact; the 3-dot icon competes with the existing <code>SaveButton</code> for top-right space.
+- Edit from a card in the feed jumps straight to <code>EditPostScreen</code> without context — the author cannot review the full post first.
+- Accidental taps are more likely in a scrollable feed where cards are dense.
+- Higher surface area for bugs — two call sites for the same action logic.</p>
+<p><strong>Effort:</strong> L — same domain work as A plus PostCard modifications across three call sites and corresponding widget tests.</p>
+<hr />
+<h3 id="option-c-actions-on-mypostsscreen-only">Option C — Actions on MyPostsScreen only<a class="headerlink" href="#option-c-actions-on-mypostsscreen-only" title="Permanent link">&para;</a></h3>
+<p>Edit and delete are accessible exclusively from <code>MyPostsScreen</code> via long-press or a swipe-to-reveal action on each row. The feature is completely absent from the main feed and from <code>PostDetailScreen</code>.</p>
+<p><strong>Pros:</strong>
+- <code>MyPostsScreen</code> is already the author's management hub, so the mental model is coherent.
+- Zero changes to <code>PostCard</code> or <code>PostDetailScreen</code>.
+- Swipe-to-delete is a recognised mobile pattern.</p>
+<p><strong>Cons:</strong>
+- <code>MyPostsScreen</code> currently renders <code>PostCard</code> widgets inside <code>ListView.separated</code> — a swipe-to-reveal or long-press gesture interceptor would require replacing <code>PostCard</code> with a wrapper (e.g. <code>Dismissible</code>) or adding <code>GestureDetector</code> layering, either of which leaks management-mode concerns into the card.
+- If a user navigates to a post's detail screen via a deep link or from another user's profile, they have no route back to manage it without leaving the screen and opening <code>MyPostsScreen</code>.
+- Edit is hidden from the place where the author is reading their own post and most likely to notice the error they want to fix.
+- Long-press and swipe-to-reveal are less discoverable than a visible icon and require documentation or onboarding hints.</p>
+<p><strong>Effort:</strong> M — same domain work as A, but swipe/long-press gesture work replaces the EditPostScreen navigation concern.</p>
+<hr />
+<h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
+<p><strong>Option A — Overflow menu on PostDetailScreen only.</strong></p>
+<p>The detail screen is where an author is most likely to notice content that needs correction — they are reading it. Placing the action there creates a direct cause-effect loop with the lowest accidental-action risk. Option B gives marginally faster delete access from the feed but adds fragile coupling to the shared <code>PostCard</code> widget and increases the likelihood of accidental taps in dense scroll lists; the one-navigation-step cost of Option A does not justify those tradeoffs. Option C hides the edit action from the most natural discovery point and introduces gesture interceptors that complicate the card layer without meaningful benefit over A.</p>
+<p>The pattern established by <code>_deleteComment</code> in <code>PostDetailScreen</code> — confirmation dialog, use case call, error snackbar — maps directly onto the delete flow, keeping the implementation predictable and reviewable.</p>
+<p><strong>Reversal cost if the team changes its mind:</strong> Low-to-medium. Moving from A to B requires extending <code>PostCard</code> to accept ownership context and adding a second call site; the domain and data layers do not change. Moving from A to C requires rerouting the navigation trigger but the same use cases, repository methods, and datasource calls remain.</p>
+<hr />
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Storage file deletion:</strong> When a post is deleted, its associated media files must also be removed from Firebase Storage. The Storage paths are derivable from the <code>mediaUrls</code> field on the <code>Post</code> entity. Should the client delete Storage files directly via <code>firebase_storage</code>, or should a Cloud Function trigger handle cascading file cleanup on <code>posts/{postId}</code> document deletion? The choice affects whether the client ever writes to Storage outside the upload flow, and has security rule and error-handling implications.</p>
+</li>
+<li>
+<p><strong>Edit scope — which fields are mutable?</strong> Text fields (title, description, tags, external URL, module number, posting identity) are straightforward. Changing <code>courseId</code> or <code>year</code> would invalidate the feed query ordering index. Changing <code>postingIdentity</code> from anonymous to named would retroactively reveal the author. The spec must define an explicit allowlist before implementation begins.</p>
+</li>
+<li>
+<p><strong>AI summary invalidation:</strong> If a user edits the description of a post whose <code>summaryStatus == done</code>, should the existing summary be cleared and re-queued for summarization? Clearing it silently and setting <code>summaryStatus</code> back to <code>pending</code> is the simplest path, but it depends on whether the summarization pipeline re-triggers on document update or only on create.</p>
+</li>
+<li>
+<p><strong>Firestore security rules:</strong> Existing write rules allow creation when <code>authorId == request.auth.uid</code>. Update rules must be added that restrict which fields an owner may mutate and must prevent changes to <code>authorId</code>, <code>likesCount</code>, <code>createdAt</code>, and <code>summaryStatus</code>. The spec must enumerate the permitted field set for the update rule.</p>
+</li>
+<li>
+<p><strong><code>updatedAt</code> field:</strong> On edit, <code>updatedAt</code> should be set to <code>FieldValue.serverTimestamp()</code>. Is it acceptable to surface an "edited" indicator in <code>PostDetailScreen</code> (comparing <code>updatedAt != createdAt</code>), or should edits be silent? The product owner has not specified this.</p>
+</li>
+</ol>
+<hr />
+<h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A post owner navigating to <code>PostDetailScreen</code> sees a 3-dot overflow menu in the AppBar; no other user sees this menu.</li>
+<li>Tapping <strong>Delete</strong> from the overflow menu presents a confirmation dialog with a "Delete" and "Cancel" action.</li>
+<li>Confirming delete removes the Firestore document and all associated Storage files, then navigates the user back to the feed.</li>
+<li>Cancelling the confirmation dialog leaves the post unchanged and dismisses the dialog.</li>
+<li>Tapping <strong>Edit</strong> from the overflow menu opens an <code>EditPostScreen</code> pre-populated with the current values of all mutable fields.</li>
+<li>Saving an edit updates the Firestore document; the <code>watchPost</code> stream on <code>PostDetailScreen</code> reflects the changes immediately.</li>
+<li>Saving an edit with an empty title or empty description is rejected with an inline error message — the save action does not fire.</li>
+<li>The domain <code>DeletePost</code> use case and <code>UpdatePost</code> use case contain zero Flutter or Firebase imports.</li>
+<li><code>PostRepository</code> interface declares <code>deletePost(String postId)</code> and <code>updatePost(...)</code> as abstract methods.</li>
+<li>Ownership enforcement is present in both the client (<code>post.authorId == currentUser.uid</code>) and Firestore security rules (the update/delete rules reject requests from non-owners).</li>
+<li>A widget test for <code>PostDetailScreen</code> asserts the overflow menu is present when the current user is the author and absent otherwise.</li>
+<li>A widget test for <code>EditPostScreen</code> asserts that submitting with a blank title shows a validation error and does not trigger the save use case.</li>
+<li>A unit test for <code>DeletePost</code> verifies it delegates to <code>PostRepository.deletePost</code> and propagates errors.</li>
+<li>A unit test for <code>UpdatePost</code> verifies it validates required fields before delegating to <code>PostRepository.updatePost</code>.</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -2272,10 +2478,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

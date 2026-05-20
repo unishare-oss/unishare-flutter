@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Share a post's canonical URL via the OS share sheet (iOS/Android) or Web Share API (web), with Firebase Hosting serving Universal Links / App Links well-known files for reliable deep linking.">
+        <meta name="description" content="Post authors can edit mutable fields (title, description, tags, externalUrl, moduleNumber) and hard-delete their own posts from the PostDetailScreen AppBar overflow menu.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/share-post/tech-specs/0010-share-post/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/share-post/tech-specs/0011-edit-delete-own-post/">
       
       
-        <link rel="prev" href="../0010-achievements/">
+        <link rel="prev" href="../0010-share-post/">
       
       
-        <link rel="next" href="../0011-edit-delete-own-post/">
+        <link rel="next" href="../0011-users-public-and-discoverability/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0010: Share Post - Unishare Engineering Docs</title>
+        <title>0011: Edit and Delete Own Post - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#spec-0010-share-post" class="md-skip">
+        <a href="#spec-0011-edit-and-delete-own-post" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0010: Share Post
+              0011: Edit and Delete Own Post
             
           </span>
         </div>
@@ -1890,6 +1890,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-share-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1909,7 +1937,7 @@
   <span class="md-ellipsis">
     
   
-    0010: Share Post
+    0011: Edit and Delete Own Post
   
 
     
@@ -1927,7 +1955,7 @@
   <span class="md-ellipsis">
     
   
-    0010: Share Post
+    0011: Edit and Delete Own Post
   
 
     
@@ -1998,10 +2026,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#domain-layer-pure-dart-no-framework-imports" class="md-nav__link">
+  <a href="#domain-layer-pure-dart-no-flutter-or-firebase-imports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domain layer — pure Dart, no framework imports
+        Domain layer — pure Dart, no Flutter or Firebase imports
       
     </span>
   </a>
@@ -2009,10 +2037,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-layer" class="md-nav__link">
+  <a href="#data-layer-additions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data layer
+        Data layer additions
       
     </span>
   </a>
@@ -2030,39 +2058,11 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#firestore-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore schema
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#firebase-hosting-and-native-config" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firebase Hosting and native config
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Firebase Hosting and native config">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
-  <a href="#firebasejson-additions" class="md-nav__link">
+  <a href="#provider-additions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        firebase.json additions
+        Provider additions
       
     </span>
   </a>
@@ -2070,65 +2070,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hostingpublicwell-knownapple-app-site-association" class="md-nav__link">
+  <a href="#router-addition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        hosting/public/.well-known/apple-app-site-association
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hostingpublicwell-knownassetlinksjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        hosting/public/.well-known/assetlinks.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hostingpublicpostsindexhtml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        hosting/public/posts/index.html
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#appsmobileandroidappsrcmainandroidmanifestxml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        apps/mobile/android/app/src/main/AndroidManifest.xml
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#appsmobileiosrunnerrunnerentitlements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        apps/mobile/ios/Runner/Runner.entitlements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gorouter-cold-start-redirect-preservation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GoRouter cold-start / redirect preservation
+        Router addition
       
     </span>
   </a>
@@ -2137,6 +2082,39 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firestore-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deletion-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deletion sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#editpostscreen-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EditPostScreen behaviour
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2177,34 +2155,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0011-edit-delete-own-post/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0011: Edit and Delete Own Post
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -2317,10 +2267,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#domain-layer-pure-dart-no-framework-imports" class="md-nav__link">
+  <a href="#domain-layer-pure-dart-no-flutter-or-firebase-imports" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domain layer — pure Dart, no framework imports
+        Domain layer — pure Dart, no Flutter or Firebase imports
       
     </span>
   </a>
@@ -2328,10 +2278,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data-layer" class="md-nav__link">
+  <a href="#data-layer-additions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data layer
+        Data layer additions
       
     </span>
   </a>
@@ -2349,39 +2299,11 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#firestore-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firestore schema
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#firebase-hosting-and-native-config" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firebase Hosting and native config
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Firebase Hosting and native config">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
-  <a href="#firebasejson-additions" class="md-nav__link">
+  <a href="#provider-additions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        firebase.json additions
+        Provider additions
       
     </span>
   </a>
@@ -2389,65 +2311,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#hostingpublicwell-knownapple-app-site-association" class="md-nav__link">
+  <a href="#router-addition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        hosting/public/.well-known/apple-app-site-association
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hostingpublicwell-knownassetlinksjson" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        hosting/public/.well-known/assetlinks.json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hostingpublicpostsindexhtml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        hosting/public/posts/index.html
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#appsmobileandroidappsrcmainandroidmanifestxml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        apps/mobile/android/app/src/main/AndroidManifest.xml
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#appsmobileiosrunnerrunnerentitlements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        apps/mobile/ios/Runner/Runner.entitlements
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#gorouter-cold-start-redirect-preservation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GoRouter cold-start / redirect preservation
+        Router addition
       
     </span>
   </a>
@@ -2456,6 +2323,39 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firestore-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deletion-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deletion sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#editpostscreen-behaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EditPostScreen behaviour
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2509,7 +2409,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0010-share-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0011-edit-delete-own-post.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2517,53 +2417,55 @@
   
 
 
-<h1 id="spec-0010-share-post">SPEC-0010: Share Post<a class="headerlink" href="#spec-0010-share-post" title="Permanent link">&para;</a></h1>
+<h1 id="spec-0011-edit-and-delete-own-post">SPEC-0011: Edit and Delete Own Post<a class="headerlink" href="#spec-0011-edit-and-delete-own-post" title="Permanent link">&para;</a></h1>
 <p><strong>Status:</strong> APPROVED
-<strong>Author:</strong> Slade
-<strong>Date:</strong> 2026-05-18
-<strong>Proposal:</strong> <a href="../../tech-proposals/0010-share-post/">PROP-0010</a>
+<strong>Author:</strong> architect
+<strong>Date:</strong> 2026-05-19
+<strong>Proposal:</strong> <a href="../../tech-proposals/0011-edit-delete-own-post/">PROP-0011</a>
 <strong>Approved by:</strong> Slade</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>When a viewer taps a share icon button on <code>PostDetailScreen</code>, the app builds a canonical URL (<code>https://share.psstee.dev/posts/&lt;postId&gt;</code>), invokes <code>share_plus</code> to surface the OS share sheet (iOS/Android) or the Web Share API (web), and the recipient's device re-opens the Unishare app directly to that post. Firebase Hosting serves the two well-known files required by Universal Links (iOS) and App Links (Android). GoRouter's existing redirect guard preserves the intended <code>/posts/:postId</code> path as a redirect destination when the deep link arrives on an unauthenticated device, resuming navigation after sign-in. If the share sheet is dismissed, no action is taken. If the platform rejects the share call, the URL is copied to the clipboard and a SnackBar confirms this. If the target post is not found when the link is opened, <code>PostDetailScreen</code> renders an inline "Post not found" error state.</p>
+<p>Post authors need a way to correct mistakes and remove their own content. This spec adds a <code>PopupMenuButton</code> to the <code>PostDetailScreen</code> AppBar that is visible only when <code>post.authorId == currentUser.uid</code>. From that menu, the author can either navigate to an <code>EditPostScreen</code> (allowing changes to <code>title</code>, <code>description</code>, <code>tags</code>, <code>externalUrl</code>, and <code>moduleNumber</code>) or trigger a hard delete that removes the Firestore document and all associated Storage files listed in <code>post.mediaUrls</code> and <code>post.codeSnippetUrl</code>. The AI summary fields are automatically reset to <code>pending</code> when <code>description</code> changes so the worker can re-trigger. All other post fields — <code>authorId</code>, <code>courseId</code>, <code>year</code>, <code>semester</code>, <code>postingIdentity</code>, <code>mediaUrls</code>, <code>mediaTypes</code>, <code>likesCount</code>, <code>createdAt</code>, <code>summaryStatus</code> source-of-truth in Storage, <code>summarizedAt</code> — remain immutable from the client.</p>
 <hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TB
     subgraph Presentation
-        PDS[PostDetailScreen\nshare IconButton]
-        SPP[sharePostProvider\nAsyncNotifier]
+        PDS[PostDetailScreen\nPopupMenuButton in AppBar]
+        EPS[EditPostScreen\nform with mutable fields]
+        EPP[editPostProvider\nAsyncNotifier]
     end
 
     subgraph Domain
-        UC[SharePostUseCase]
-        REPO_I[ShareRepository\nabstract interface]
+        DP[DeletePost\nusecase]
+        UP[UpdatePost\nusecase]
+        PRI[PostRepository\nabstract interface\n+ deletePost + updatePost]
     end
 
     subgraph Data
-        REPO_IMPL[ShareRepositoryImpl]
-        DS[SharePlusDataSource]
+        IMPL[PostRepositoryImpl\nimplements new methods]
+        FDS[PostFirestoreDatasource\n+ deletePost + updatePost]
+        SDS[PostStorageDatasource\n+ deleteFile via firebase_storage]
     end
 
-    subgraph Infrastructure
-        SP[share_plus]
-        CB[Clipboard API\nfallback]
-        FH[Firebase Hosting\nwell-known files]
-        AM[AndroidManifest\nApp Links intent-filter]
-        ENT[Runner.entitlements\nassociated-domains]
+    subgraph Firebase
+        FS[Firestore\nposts/{postId}]
+        ST[Firebase Storage\nmediaUrls + codeSnippetUrl]
     end
 
-    PDS --&gt; SPP
-    SPP --&gt; UC
-    UC --&gt; REPO_I
-    REPO_I -.implements.- REPO_IMPL
-    REPO_IMPL --&gt; DS
-    DS --&gt; SP
-    DS --&gt; CB
-    FH --&gt; AM
-    FH --&gt; ENT</code></pre>
+    PDS --&gt;|"context.go('/posts/:id/edit')"| EPS
+    PDS --&gt;|"_deletePost()"| DP
+    EPS --&gt; EPP
+    EPP --&gt; UP
+    DP --&gt; PRI
+    UP --&gt; PRI
+    PRI -.implements.- IMPL
+    IMPL --&gt; FDS
+    IMPL --&gt; SDS
+    FDS --&gt; FS
+    SDS --&gt; ST</code></pre>
 <hr />
 <h2 id="file-map">File map<a class="headerlink" href="#file-map" title="Permanent link">&para;</a></h2>
-<p>All paths are relative to the repo root unless prefixed with <code>apps/mobile/</code>.</p>
+<p>All paths are relative to the repo root.</p>
 <table>
 <thead>
 <tr>
@@ -2580,13 +2482,18 @@
 </tr>
 <tr>
 <td>Create</td>
-<td><code>apps/mobile/lib/features/post/domain/repositories/share_repository.dart</code></td>
-<td>Abstract <code>ShareRepository</code> interface</td>
+<td><code>apps/mobile/lib/features/post/domain/usecases/delete_post.dart</code></td>
+<td><code>DeletePost</code> use case — thin wrapper that delegates to <code>PostRepository.deletePost</code></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>apps/mobile/lib/features/post/domain/usecases/share_post.dart</code></td>
-<td><code>SharePostUseCase</code> — delegates to <code>ShareRepository.share</code></td>
+<td><code>apps/mobile/lib/features/post/domain/usecases/update_post.dart</code></td>
+<td><code>UpdatePost</code> use case — validates non-empty title/description, then delegates to <code>PostRepository.updatePost</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/lib/features/post/domain/repositories/post_repository.dart</code></td>
+<td>Add <code>deletePost(String postId)</code> and <code>updatePost({...})</code> abstract methods</td>
 </tr>
 <tr>
 <td><strong>Data</strong></td>
@@ -2594,14 +2501,19 @@
 <td></td>
 </tr>
 <tr>
-<td>Create</td>
-<td><code>apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart</code></td>
-<td>Calls <code>share_plus</code>; clipboard fallback on <code>ShareException</code> or Web Share unavailable</td>
+<td>Modify</td>
+<td><code>apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart</code></td>
+<td>Add <code>deletePost(String postId)</code> (deletes Firestore document) and <code>updatePost({...})</code> (partial update with summary-reset logic)</td>
 </tr>
 <tr>
-<td>Create</td>
-<td><code>apps/mobile/lib/features/post/data/repositories/share_repository_impl.dart</code></td>
-<td>Implements <code>ShareRepository</code>; injects <code>SharePlusDataSource</code></td>
+<td>Modify</td>
+<td><code>apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart</code></td>
+<td>Add <code>deleteFile(String downloadUrl)</code> using <code>firebase_storage</code> SDK; extracts the Storage path from the download URL and calls <code>ref.delete()</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart</code></td>
+<td>Implement <code>deletePost</code> (calls <code>storageDatasource.deleteFile</code> for each URL in <code>mediaUrls</code> + <code>codeSnippetUrl</code>, then <code>firestoreDatasource.deletePost</code>) and <code>updatePost</code> (delegates to <code>firestoreDatasource.updatePost</code>)</td>
 </tr>
 <tr>
 <td><strong>Presentation</strong></td>
@@ -2610,222 +2522,274 @@
 </tr>
 <tr>
 <td>Create</td>
-<td><code>apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart</code></td>
-<td><code>sharePostProvider</code> — <code>AsyncNotifier&lt;void&gt;</code> scoped to <code>postId</code>; exposes <code>share(Post)</code></td>
+<td><code>apps/mobile/lib/features/post/presentation/screens/edit_post_screen.dart</code></td>
+<td>Full-page form screen — pre-populates mutable fields from the <code>Post</code> entity passed via route extra; shows validation errors inline; on save calls <code>updatePostUseCaseProvider</code> and pops on success</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/post/presentation/providers/edit_post_provider.dart</code></td>
+<td><code>editPostProvider</code> — <code>AsyncNotifier&lt;void&gt;</code>; exposes <code>save({...})</code> method; <code>.g.dart</code> generated by <code>build_runner</code></td>
 </tr>
 <tr>
 <td>Modify</td>
 <td><code>apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart</code></td>
-<td>Add share <code>IconButton</code> to <code>AppBar.actions</code>; add "Post not found" inline error state for document-missing errors</td>
-</tr>
-<tr>
-<td><strong>Infrastructure</strong></td>
-<td></td>
-<td></td>
+<td>Add <code>PopupMenuButton</code> to <code>AppBar.actions</code> (visible only when <code>post.authorId == currentUid</code>); add <code>_deletePost()</code> method mirroring the <code>_deleteComment()</code> confirmation-dialog pattern; navigate to <code>/posts/:postId/edit</code> on Edit tap</td>
 </tr>
 <tr>
 <td>Modify</td>
-<td><code>apps/mobile/android/app/src/main/AndroidManifest.xml</code></td>
-<td>Add <code>&lt;intent-filter&gt;</code> for App Links on <code>https://&lt;domain&gt;/posts/*</code></td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/ios/Runner/Runner.entitlements</code></td>
-<td>Add <code>com.apple.developer.associated-domains</code> for <code>applinks:&lt;domain&gt;</code></td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>firebase.json</code></td>
-<td>Add <code>hosting</code> block: rewrites, <code>/.well-known/</code> headers, <code>posts/**</code> → <code>posts/index.html</code></td>
-</tr>
-<tr>
-<td>Modify</td>
-<td><code>apps/mobile/pubspec.yaml</code></td>
-<td>Add <code>share_plus: ^10.x</code> (pending team approval — OQ2)</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>hosting/public/.well-known/apple-app-site-association</code></td>
-<td>iOS AASA JSON — <code>applinks</code> component for <code>/posts/*</code></td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>hosting/public/.well-known/assetlinks.json</code></td>
-<td>Android digital asset links JSON — SHA-256 fingerprints (pending OQ5)</td>
-</tr>
-<tr>
-<td>Create</td>
-<td><code>hosting/public/posts/index.html</code></td>
-<td>Deferred deep-link landing page — JS redirect to App/Play Store when app not installed</td>
+<td><code>apps/mobile/lib/features/post/presentation/providers/post_repository_provider.dart</code></td>
+<td>Add <code>deletePostUseCaseProvider</code> and <code>updatePostUseCaseProvider</code> following the <code>deleteCommentUseCaseProvider</code> pattern</td>
 </tr>
 <tr>
 <td>Modify</td>
 <td><code>apps/mobile/lib/core/router/router.dart</code></td>
-<td>Preserve deep-link path through auth redirect using <code>state.uri.toString()</code> as <code>extra</code> on the <code>/welcome</code> redirect</td>
+<td>Add <code>GoRoute(path: '/posts/:postId/edit', ...)</code> above the existing <code>/posts/:postId</code> route; passes <code>Post</code> entity from <code>state.extra</code> to <code>EditPostScreen</code></td>
+</tr>
+<tr>
+<td><strong>Config</strong></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>firestore.rules</code></td>
+<td>Add <code>allow delete</code> and owner <code>allow update</code> rules for <code>posts/{postId}</code> (see Firestore rules section)</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/pubspec.yaml</code></td>
+<td>Add <code>firebase_storage</code> (requires team approval — see note below)</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>New dependency flag:</strong> <code>firebase_storage</code> is not currently in <code>pubspec.yaml</code>. The <code>PostStorageDatasource.deleteFile</code> implementation requires it to call <code>FirebaseStorage.instance.refFromURL(url).delete()</code>. This must be approved before implementation begins. <code>firebase_storage</code> is an official FlutterFire plugin with no known licence conflicts; the only risk is a minor increase in app binary size.</p>
+</blockquote>
 <hr />
 <h2 id="api-contracts">API contracts<a class="headerlink" href="#api-contracts" title="Permanent link">&para;</a></h2>
-<h3 id="domain-layer-pure-dart-no-framework-imports">Domain layer — pure Dart, no framework imports<a class="headerlink" href="#domain-layer-pure-dart-no-framework-imports" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/domain/repositories/share_repository.dart</span>
+<h3 id="domain-layer-pure-dart-no-flutter-or-firebase-imports">Domain layer — pure Dart, no Flutter or Firebase imports<a class="headerlink" href="#domain-layer-pure-dart-no-flutter-or-firebase-imports" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/domain/repositories/post_repository.dart</span>
 
-<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">ShareRepository</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="c1">/// Shares the canonical URL for [post] via the platform share mechanism.</span>
-<span class="w">  </span><span class="c1">///</span>
-<span class="w">  </span><span class="c1">/// Throws [ShareException] only for hard platform errors.</span>
-<span class="w">  </span><span class="c1">/// A user dismissal (share-sheet cancelled) resolves normally.</span>
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">share</span><span class="p">(</span><span class="n">Post</span><span class="w"> </span><span class="n">post</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/domain/usecases/share_post.dart</span>
+<span class="kd">abstract</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">PostRepository</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// ... existing methods unchanged ...</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">watchFeed</span><span class="p">({</span><span class="kt">int</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">20</span><span class="p">});</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;</span><span class="w"> </span><span class="n">watchPost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Post</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">watchPostsByAuthor</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">authorId</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="kt">int</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">50</span><span class="p">});</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">countPostsByAuthor</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">authorId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">saveDraft</span><span class="p">(</span><span class="n">PostDraft</span><span class="w"> </span><span class="n">draft</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">removeDraft</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">draftId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">PostDraft</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">loadDraftQueue</span><span class="p">();</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">publishDraft</span><span class="p">(</span>
+<span class="w">    </span><span class="n">PostDraft</span><span class="w"> </span><span class="n">draft</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="kt">Function</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">progress</span><span class="p">)</span><span class="o">?</span><span class="w"> </span><span class="n">onProgress</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="kt">Function</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">fileIndex</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">fileProgress</span><span class="p">)</span><span class="o">?</span><span class="w"> </span><span class="n">onFileProgress</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="kt">Function</span><span class="p">(</span><span class="n">PostDraft</span><span class="p">)</span><span class="o">?</span><span class="w"> </span><span class="n">onDraftUpdated</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="w"> </span><span class="n">Uint8List</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">fileDataOverride</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CancellationToken</span><span class="o">?</span><span class="w"> </span><span class="n">cancellationToken</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
 
-<span class="kd">class</span><span class="w"> </span><span class="nc">SharePostUseCase</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">SharePostUseCase</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">_repo</span><span class="p">);</span>
-
-<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">ShareRepository</span><span class="w"> </span><span class="n">_repo</span><span class="p">;</span>
-
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">call</span><span class="p">(</span><span class="n">Post</span><span class="w"> </span><span class="n">post</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_repo</span><span class="p">.</span><span class="n">share</span><span class="p">(</span><span class="n">post</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="data-layer">Data layer<a class="headerlink" href="#data-layer" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/data/datasources/share_plus_datasource.dart</span>
-
-<span class="kd">class</span><span class="w"> </span><span class="nc">SharePlusDataSource</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">SharePlusDataSource</span><span class="p">();</span>
-
-<span class="w">  </span><span class="kd">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">_baseUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://share.psstee.dev&#39;</span><span class="p">;</span>
-
-<span class="w">  </span><span class="c1">/// Builds the share text and triggers the OS share sheet via [Share.share].</span>
-<span class="w">  </span><span class="c1">///</span>
-<span class="w">  </span><span class="c1">/// Falls back to [Clipboard.setData] on [PlatformException] or any other</span>
-<span class="w">  </span><span class="c1">/// error. Returns [ShareFallbackResult] to indicate whether the fallback</span>
-<span class="w">  </span><span class="c1">/// was used.</span>
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="n">ShareFallbackResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">share</span><span class="p">({</span>
+<span class="w">  </span><span class="c1">// SPEC-0011 additions</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deletePost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">updatePost</span><span class="p">({</span>
 <span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span>
-<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postTitle</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">externalUrl</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">moduleNumber</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">descriptionChanged</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">SummaryStatus</span><span class="o">?</span><span class="w"> </span><span class="n">currentSummaryStatus</span><span class="p">,</span>
 <span class="w">  </span><span class="p">});</span>
 <span class="p">}</span>
-
-<span class="n">enum</span><span class="w"> </span><span class="n">ShareFallbackResult</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">shared</span><span class="p">,</span><span class="w"> </span><span class="n">copiedToClipboard</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
-<p>The share text format is: <code>"&lt;postTitle&gt; — https://share.psstee.dev/posts/&lt;postId&gt;"</code>. The base URL is an internal constant; no <code>baseUrl</code> parameter is exposed.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/domain/usecases/delete_post.dart</span>
+<span class="c1">// Pure Dart — zero Flutter or Firebase imports.</span>
+
+<span class="k">import</span><span class="w"> </span><span class="s1">&#39;package:unishare_mobile/features/post/domain/repositories/post_repository.dart&#39;</span><span class="p">;</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">DeletePost</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">DeletePost</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">_repository</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">PostRepository</span><span class="w"> </span><span class="n">_repository</span><span class="p">;</span>
+
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">call</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_repository</span><span class="p">.</span><span class="n">deletePost</span><span class="p">(</span><span class="n">postId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/domain/usecases/update_post.dart</span>
+<span class="c1">// Pure Dart — zero Flutter or Firebase imports.</span>
+
+<span class="k">import</span><span class="w"> </span><span class="s1">&#39;package:unishare_mobile/features/post/domain/entities/post.dart&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="s1">&#39;package:unishare_mobile/features/post/domain/repositories/post_repository.dart&#39;</span><span class="p">;</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">UpdatePost</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">UpdatePost</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">_repository</span><span class="p">);</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">PostRepository</span><span class="w"> </span><span class="n">_repository</span><span class="p">;</span>
+
+<span class="w">  </span><span class="c1">/// Validates [title] and [description] are non-empty before delegating.</span>
+<span class="w">  </span><span class="c1">/// Throws [ArgumentError] with key &#39;title_required&#39; or &#39;description_required&#39;</span>
+<span class="w">  </span><span class="c1">/// if either is blank after trimming.</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">call</span><span class="p">({</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">externalUrl</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">moduleNumber</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">descriptionChanged</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">SummaryStatus</span><span class="o">?</span><span class="w"> </span><span class="n">currentSummaryStatus</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="data-layer-additions">Data layer additions<a class="headerlink" href="#data-layer-additions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart (additions only)</span>
+
+<span class="c1">/// Hard-deletes the Firestore document. Storage file deletion is handled</span>
+<span class="c1">/// by [PostRepositoryImpl.deletePost] before this is called.</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deletePost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">);</span>
+
+<span class="c1">/// Partial update of mutable post fields.</span>
+<span class="c1">///</span>
+<span class="c1">/// When [descriptionChanged] is true and [currentSummaryStatus] == done,</span>
+<span class="c1">/// also writes summaryStatus=&#39;pending&#39;, summary=FieldValue.delete(),</span>
+<span class="c1">/// summarizedAt=FieldValue.delete() in the same atomic update.</span>
+<span class="c1">/// Always writes updatedAt=FieldValue.serverTimestamp().</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">updatePost</span><span class="p">({</span>
+<span class="w">  </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span>
+<span class="w">  </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">,</span>
+<span class="w">  </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">,</span>
+<span class="w">  </span><span class="kd">required</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">,</span>
+<span class="w">  </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">externalUrl</span><span class="p">,</span>
+<span class="w">  </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">moduleNumber</span><span class="p">,</span>
+<span class="w">  </span><span class="kd">required</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">descriptionChanged</span><span class="p">,</span>
+<span class="w">  </span><span class="kd">required</span><span class="w"> </span><span class="n">SummaryStatus</span><span class="o">?</span><span class="w"> </span><span class="n">currentSummaryStatus</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/data/datasources/post_storage_datasource.dart (addition only)</span>
+
+<span class="c1">/// Deletes the file at [downloadUrl] from Firebase Storage.</span>
+<span class="c1">///</span>
+<span class="c1">/// Silently no-ops if [downloadUrl] is null or empty.</span>
+<span class="c1">/// Silently no-ops if the object no longer exists (idempotent delete).</span>
+<span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deleteFile</span><span class="p">(</span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">downloadUrl</span><span class="p">);</span>
+</code></pre></div>
 <h3 id="presentation-layer">Presentation layer<a class="headerlink" href="#presentation-layer" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/presentation/providers/share_post_provider.dart</span>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/presentation/providers/edit_post_provider.dart</span>
 
 <span class="nd">@riverpod</span>
-<span class="kd">class</span><span class="w"> </span><span class="nc">SharePost</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">_$SharePost</span><span class="w"> </span><span class="p">{</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">EditPost</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">_$EditPost</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="nd">@override</span>
 <span class="w">  </span><span class="n">FutureOr</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">build</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span>
 
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">share</span><span class="p">(</span><span class="n">Post</span><span class="w"> </span><span class="n">post</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">save</span><span class="p">({</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">externalUrl</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">moduleNumber</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">descriptionChanged</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="n">SummaryStatus</span><span class="o">?</span><span class="w"> </span><span class="n">currentSummaryStatus</span><span class="p">,</span>
+<span class="w">  </span><span class="p">})</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">AsyncLoading</span><span class="p">();</span>
 <span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">await</span><span class="w"> </span><span class="n">AsyncValue</span><span class="p">.</span><span class="n">guard</span><span class="p">(</span>
-<span class="w">      </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">sharePostUseCaseProvider</span><span class="p">).</span><span class="n">call</span><span class="p">(</span><span class="n">post</span><span class="p">),</span>
+<span class="w">      </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">updatePostUseCaseProvider</span><span class="p">).</span><span class="n">call</span><span class="p">(</span>
+<span class="w">            </span><span class="nl">postId:</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span>
+<span class="w">            </span><span class="nl">title:</span><span class="w"> </span><span class="n">title</span><span class="p">,</span>
+<span class="w">            </span><span class="nl">description:</span><span class="w"> </span><span class="n">description</span><span class="p">,</span>
+<span class="w">            </span><span class="nl">tags:</span><span class="w"> </span><span class="n">tags</span><span class="p">,</span>
+<span class="w">            </span><span class="nl">externalUrl:</span><span class="w"> </span><span class="n">externalUrl</span><span class="p">,</span>
+<span class="w">            </span><span class="nl">moduleNumber:</span><span class="w"> </span><span class="n">moduleNumber</span><span class="p">,</span>
+<span class="w">            </span><span class="nl">descriptionChanged:</span><span class="w"> </span><span class="n">descriptionChanged</span><span class="p">,</span>
+<span class="w">            </span><span class="nl">currentSummaryStatus:</span><span class="w"> </span><span class="n">currentSummaryStatus</span><span class="p">,</span>
+<span class="w">          </span><span class="p">),</span>
 <span class="w">    </span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>The provider is a family-less <code>AsyncNotifier&lt;void&gt;</code>. One instance lives for the lifetime of <code>PostDetailScreen</code>. The screen observes <code>ref.listen&lt;AsyncValue&lt;void&gt;&gt;(sharePostProvider, ...)</code> to show the clipboard fallback SnackBar when <code>ShareRepositoryImpl</code> signals a fallback was used. The transport of the fallback signal is <code>ShareFallbackException</code> (defined in the domain layer at <code>features/post/domain/repositories/share_exceptions.dart</code>). Because <code>AsyncValue.guard</code> wraps all thrown exceptions, <code>ShareFallbackException</code> arrives in the listener as <code>AsyncError</code> — the screen checks <code>next.error is ShareFallbackException</code> to distinguish the "clipboard copy" path from a real error.</p>
+<h3 id="provider-additions">Provider additions<a class="headerlink" href="#provider-additions" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/features/post/presentation/providers/post_repository_provider.dart (additions only)</span>
+
+<span class="nd">@Riverpod</span><span class="p">(</span><span class="nl">keepAlive:</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="n">DeletePost</span><span class="w"> </span><span class="n">deletePostUseCase</span><span class="p">(</span><span class="n">Ref</span><span class="w"> </span><span class="n">ref</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">DeletePost</span><span class="p">(</span><span class="n">ref</span><span class="p">.</span><span class="n">watch</span><span class="p">(</span><span class="n">postRepositoryProvider</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="nd">@Riverpod</span><span class="p">(</span><span class="nl">keepAlive:</span><span class="w"> </span><span class="kc">true</span><span class="p">)</span>
+<span class="n">UpdatePost</span><span class="w"> </span><span class="n">updatePostUseCase</span><span class="p">(</span><span class="n">Ref</span><span class="w"> </span><span class="n">ref</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">UpdatePost</span><span class="p">(</span><span class="n">ref</span><span class="p">.</span><span class="n">watch</span><span class="p">(</span><span class="n">postRepositoryProvider</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="router-addition">Router addition<a class="headerlink" href="#router-addition" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// apps/mobile/lib/core/router/router.dart — add before the existing &#39;/posts/:postId&#39; GoRoute</span>
+
+<span class="n">GoRoute</span><span class="p">(</span>
+<span class="w">  </span><span class="nl">path:</span><span class="w"> </span><span class="s1">&#39;/posts/:postId/edit&#39;</span><span class="p">,</span>
+<span class="w">  </span><span class="nl">builder:</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">postId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">pathParameters</span><span class="p">[</span><span class="s1">&#39;postId&#39;</span><span class="p">]</span><span class="o">!</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">post</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">extra</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Post</span><span class="o">?</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">EditPostScreen</span><span class="p">(</span><span class="nl">postId:</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span><span class="w"> </span><span class="nl">post:</span><span class="w"> </span><span class="n">post</span><span class="p">);</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="p">),</span>
+</code></pre></div>
+<p>The <code>/posts/:postId/edit</code> entry must appear <strong>above</strong> <code>/posts/:postId</code> in the routes list to avoid the shorter path matching first. GoRouter evaluates routes in declaration order.</p>
 <hr />
-<h2 id="firestore-schema">Firestore schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h2>
-<p>No Firestore changes. This feature reads from the existing <code>posts/{postId}</code> document only via the already-loaded <code>Post</code> entity on <code>PostDetailScreen</code>. No new collections, no new fields, no new indexes.</p>
+<h2 id="firestore-rules">Firestore rules<a class="headerlink" href="#firestore-rules" title="Permanent link">&para;</a></h2>
+<p>The existing <code>posts/{postId}</code> block currently has:
+- <code>allow read: if true;</code>
+- <code>allow create</code> guarded by <code>authorId == uid</code> and title non-empty.
+- <code>allow update</code> limited to <code>likesCount</code> (any auth user) and <code>summaryStatus/summary/summarizedAt</code> (author only, via partial-update path).
+- <code>allow delete: if false;</code></p>
+<p>Replace the <code>allow update</code> and <code>allow delete</code> clauses inside <code>match /posts/{postId}</code> with the following:</p>
+<div class="highlight"><pre><span></span><code>allow delete: if request.auth != null
+              &amp;&amp; request.auth.uid == resource.data.authorId;
+
+allow update: if request.auth != null
+              &amp;&amp; (
+                // Any authenticated user may increment/decrement likesCount.
+                request.resource.data.diff(resource.data).affectedKeys()
+                  .hasOnly([&#39;likesCount&#39;])
+                ||
+                // Owner may edit mutable content fields.
+                (
+                  request.auth.uid == resource.data.authorId
+                  &amp;&amp; request.resource.data.diff(resource.data).affectedKeys()
+                       .hasOnly([
+                         &#39;title&#39;, &#39;description&#39;, &#39;tags&#39;, &#39;externalUrl&#39;,
+                         &#39;moduleNumber&#39;, &#39;updatedAt&#39;,
+                         &#39;summary&#39;, &#39;summaryStatus&#39;, &#39;summarizedAt&#39;
+                       ])
+                  &amp;&amp; request.resource.data.title is string
+                  &amp;&amp; request.resource.data.title.size() &gt; 0
+                )
+                ||
+                // Worker-only summary update path (same as before — author owns doc).
+                (
+                  request.auth.uid == resource.data.authorId
+                  &amp;&amp; request.resource.data.diff(resource.data).affectedKeys()
+                       .hasOnly([&#39;summaryStatus&#39;, &#39;summary&#39;, &#39;summarizedAt&#39;])
+                )
+              );
+</code></pre></div>
+<p><strong>Why the allowlist matters:</strong> Firestore's <code>hasOnly</code> constraint prevents a malicious client from sneaking in writes to immutable fields (<code>authorId</code>, <code>courseId</code>, <code>year</code>, <code>semester</code>, <code>postingIdentity</code>, <code>mediaUrls</code>, <code>mediaTypes</code>, <code>likesCount</code>, <code>createdAt</code>) inside an otherwise valid edit request. The summary fields (<code>summary</code>, <code>summaryStatus</code>, <code>summarizedAt</code>) are included in the owner-edit allowlist because <code>UpdatePost</code> must be able to reset them to <code>pending</code> atomically in the same write when description changes.</p>
 <hr />
-<h2 id="firebase-hosting-and-native-config">Firebase Hosting and native config<a class="headerlink" href="#firebase-hosting-and-native-config" title="Permanent link">&para;</a></h2>
-<h3 id="firebasejson-additions"><code>firebase.json</code> additions<a class="headerlink" href="#firebasejson-additions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">&quot;hosting&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;public&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hosting/public&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;ignore&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;firebase.json&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;**/.*&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;**/node_modules/**&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/.well-known/apple-app-site-association&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">}]</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/.well-known/assetlinks.json&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Content-Type&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="w"> </span><span class="p">}]</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;rewrites&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/posts/**&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;destination&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/posts/index.html&quot;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="hostingpublicwell-knownapple-app-site-association"><code>hosting/public/.well-known/apple-app-site-association</code><a class="headerlink" href="#hostingpublicwell-knownapple-app-site-association" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;applinks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;apps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;appID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;TEAM_ID&gt;.&lt;BUNDLE_ID&gt;&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/posts/*&quot;</span><span class="p">]</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p><code>TEAM_ID</code> and <code>BUNDLE_ID</code> must be confirmed before this file is deployed (related to OQ1 and OQ5).</p>
-<h3 id="hostingpublicwell-knownassetlinksjson"><code>hosting/public/.well-known/assetlinks.json</code><a class="headerlink" href="#hostingpublicwell-knownassetlinksjson" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;relation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;delegate_permission/common.handle_all_urls&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;namespace&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;android_app&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;package_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;ANDROID_PACKAGE_NAME&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;sha256_cert_fingerprints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;&lt;SHA256_FINGERPRINT&gt;&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">]</span>
-</code></pre></div>
-<p>SHA-256 fingerprints for debug, release, and Play App Signing certificate are required (OQ5).</p>
-<h3 id="hostingpublicpostsindexhtml"><code>hosting/public/posts/index.html</code><a class="headerlink" href="#hostingpublicpostsindexhtml" title="Permanent link">&para;</a></h3>
-<p>A minimal HTML page with a <code>&lt;script&gt;</code> block that:
-1. Reads <code>window.location.pathname</code> to extract <code>postId</code>.
-2. Attempts to open the custom scheme deep link (<code>unishare://posts/&lt;postId&gt;</code>) for a brief timeout.
-3. Falls back to the Play Store / App Store URL if the app is not installed.</p>
-<p>This page is intentionally static — no server-side rendering or OG tags for v1 (OQ4).</p>
-<h3 id="appsmobileandroidappsrcmainandroidmanifestxml"><code>apps/mobile/android/app/src/main/AndroidManifest.xml</code><a class="headerlink" href="#appsmobileandroidappsrcmainandroidmanifestxml" title="Permanent link">&para;</a></h3>
-<p>Add inside the <code>&lt;activity&gt;</code> element that hosts the Flutter content:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;intent-filter</span><span class="w"> </span><span class="na">android:autoVerify=</span><span class="s">&quot;true&quot;</span><span class="nt">&gt;</span>
-<span class="w">  </span><span class="nt">&lt;action</span><span class="w"> </span><span class="na">android:name=</span><span class="s">&quot;android.intent.action.VIEW&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">  </span><span class="nt">&lt;category</span><span class="w"> </span><span class="na">android:name=</span><span class="s">&quot;android.intent.category.DEFAULT&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">  </span><span class="nt">&lt;category</span><span class="w"> </span><span class="na">android:name=</span><span class="s">&quot;android.intent.category.BROWSABLE&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="w">  </span><span class="nt">&lt;data</span>
-<span class="w">    </span><span class="na">android:scheme=</span><span class="s">&quot;https&quot;</span>
-<span class="w">    </span><span class="na">android:host=</span><span class="s">&quot;share.psstee.dev&quot;</span>
-<span class="w">    </span><span class="na">android:pathPrefix=</span><span class="s">&quot;/posts/&quot;</span><span class="w"> </span><span class="nt">/&gt;</span>
-<span class="nt">&lt;/intent-filter&gt;</span>
-</code></pre></div>
-<h3 id="appsmobileiosrunnerrunnerentitlements"><code>apps/mobile/ios/Runner/Runner.entitlements</code><a class="headerlink" href="#appsmobileiosrunnerrunnerentitlements" title="Permanent link">&para;</a></h3>
-<p>Add to the existing entitlements dict:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;key&gt;</span>com.apple.developer.associated-domains<span class="nt">&lt;/key&gt;</span>
-<span class="nt">&lt;array&gt;</span>
-<span class="w">  </span><span class="nt">&lt;string&gt;</span>applinks:share.psstee.dev<span class="nt">&lt;/string&gt;</span>
-<span class="nt">&lt;/array&gt;</span>
-</code></pre></div>
-<h3 id="gorouter-cold-start-redirect-preservation">GoRouter cold-start / redirect preservation<a class="headerlink" href="#gorouter-cold-start-redirect-preservation" title="Permanent link">&para;</a></h3>
-<p>The existing redirect guard in <code>router.dart</code> already blocks unauthenticated paths to <code>/welcome</code>. The current guard at line 118–122 redirects without preserving the intended URL:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Current behaviour — destination is lost:</span>
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isAuthenticated</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">isGuest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">authRoutes</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">currentPath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/welcome&#39;</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>The flutter-engineer must extend this redirect to encode the original URI as a query parameter:</p>
-<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isAuthenticated</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">isGuest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">authRoutes</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">currentPath</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">encoded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Uri</span><span class="p">.</span><span class="n">encodeComponent</span><span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">uri</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s1">&#39;/welcome?redirect=</span><span class="si">$</span><span class="n">encoded</span><span class="s1">&#39;</span><span class="p">;</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>The <code>/welcome</code> screen (or its post-auth success handler) must read <code>state.uri.queryParameters['redirect']</code>, decode it, and call <code>context.go(decoded)</code> after successful sign-in. This is consistent with standard GoRouter redirect patterns and does not require any new package.</p>
+<h2 id="deletion-sequence">Deletion sequence<a class="headerlink" href="#deletion-sequence" title="Permanent link">&para;</a></h2>
+<p><code>PostRepositoryImpl.deletePost</code> must follow this order to avoid orphaning Storage objects if the Firestore delete fails:</p>
+<ol>
+<li>For each URL in <code>post.mediaUrls</code>: call <code>storageDatasource.deleteFile(url)</code>. Errors are swallowed individually (best-effort) so a single missing file does not abort the whole operation.</li>
+<li>Call <code>storageDatasource.deleteFile(post.codeSnippetUrl)</code> (no-op if null).</li>
+<li>Call <code>firestoreDatasource.deletePost(postId)</code>.</li>
+</ol>
+<p>The Firestore delete is last because <code>watchPost</code> drives the UI. Once the document is deleted, <code>PostDetailScreen</code> receives a <code>StateError('post_not_found')</code>, renders the inline not-found state, and the user is unblocked. Storage orphan risk is lower than a Firestore document existing with broken media references — hence Storage first, Firestore last.</p>
+<hr />
+<h2 id="editpostscreen-behaviour">EditPostScreen behaviour<a class="headerlink" href="#editpostscreen-behaviour" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Accepts <code>postId: String</code> and <code>post: Post?</code> (nullable seed from route extra).</li>
+<li>If <code>post</code> is null (direct deep-link entry), the screen calls <code>watchPost(postId)</code> to hydrate — renders a loading indicator until the stream emits.</li>
+<li>Pre-populates <code>title</code>, <code>description</code>, <code>tags</code>, <code>moduleNumber</code>, <code>externalUrl</code> from the <code>Post</code> entity.</li>
+<li>Computes <code>descriptionChanged</code> by comparing the submitted description to the original at the time of submission.</li>
+<li>On save: calls <code>editPostProvider.save(...)</code>. On <code>AsyncData</code>, calls <code>context.pop()</code>. On <code>AsyncError</code>, shows a <code>SnackBar</code> with the error message.</li>
+<li>Blocked fields (<code>courseId</code>, <code>year</code>, <code>semester</code>, <code>postingIdentity</code>, <code>mediaUrls</code>) are displayed read-only for context but excluded from the submitted payload.</li>
+<li>Tag editing: the existing <code>TagInputField</code> widget (or equivalent chip-input pattern) from <code>CreatePostScreen</code> must be reused — no new tag input widget.</li>
+</ul>
 <hr />
 <h2 id="test-plan">Test plan<a class="headerlink" href="#test-plan" title="Permanent link">&para;</a></h2>
 <table>
@@ -2838,48 +2802,42 @@
 </thead>
 <tbody>
 <tr>
-<td><code>apps/mobile/test/unit/features/post/domain/usecases/share_post_test.dart</code></td>
+<td><code>apps/mobile/test/unit/features/post/domain/usecases/delete_post_test.dart</code></td>
 <td>Unit</td>
-<td><code>SharePostUseCase.call</code> delegates to <code>ShareRepository.share</code>; verifies mock is called with correct <code>Post</code> argument</td>
+<td><code>DeletePost.call</code> delegates to <code>PostRepository.deletePost</code> with the correct <code>postId</code>; propagates errors thrown by the repository</td>
 </tr>
 <tr>
-<td><code>apps/mobile/test/unit/features/post/data/datasources/share_plus_datasource_test.dart</code></td>
+<td><code>apps/mobile/test/unit/features/post/domain/usecases/update_post_test.dart</code></td>
 <td>Unit</td>
-<td>Share text format is <code>"&lt;title&gt; — &lt;baseUrl&gt;/posts/&lt;postId&gt;"</code>; <code>ShareFallbackResult.shared</code> returned on success; <code>ShareFallbackResult.copiedToClipboard</code> returned when <code>SharePlatformException</code> is thrown; clipboard receives the canonical URL on fallback</td>
+<td><code>UpdatePost.call</code> throws <code>ArgumentError('title_required')</code> when title is blank after trim; throws <code>ArgumentError('description_required')</code> when description is blank after trim; delegates to <code>PostRepository.updatePost</code> with correct arguments on valid input; passes <code>descriptionChanged: true</code> through to the repository; passes <code>descriptionChanged: false</code> through to the repository</td>
 </tr>
 <tr>
-<td><code>apps/mobile/test/unit/features/post/data/repositories/share_repository_impl_test.dart</code></td>
-<td>Unit</td>
-<td><code>ShareRepositoryImpl.share</code> calls <code>SharePlusDataSource.share</code> with correct <code>postId</code>, <code>postTitle</code>, <code>baseUrl</code>; propagates <code>ShareFallbackException</code> when datasource returns <code>copiedToClipboard</code></td>
-</tr>
-<tr>
-<td><code>apps/mobile/test/widget/features/post/presentation/screens/post_detail_screen_test.dart</code></td>
+<td><code>apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart</code></td>
 <td>Widget</td>
-<td>Share <code>IconButton</code> is present in the <code>AppBar</code>; tapping it calls <code>sharePostProvider</code>; when post document returns null/not-found error, the inline "Post not found" error widget is rendered (not a crash); SnackBar "Link copied to clipboard" is shown when <code>ShareFallbackException</code> is received</td>
+<td><code>PopupMenuButton</code> is present in the <code>AppBar</code> when <code>post.authorId == currentUid</code>; <code>PopupMenuButton</code> is absent when <code>post.authorId != currentUid</code>; tapping Delete shows an <code>AlertDialog</code> confirmation; tapping Cancel in the dialog does not call <code>deletePostUseCaseProvider</code>; tapping Delete in the dialog calls <code>deletePostUseCaseProvider.call(postId)</code></td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/post/screens/edit_post_screen_test.dart</code></td>
+<td>Widget</td>
+<td>All mutable fields are pre-populated with the values from the seed <code>Post</code>; submitting with a blank title shows an inline validation error and does not call <code>updatePostUseCaseProvider</code>; submitting with a blank description shows an inline validation error and does not call <code>updatePostUseCaseProvider</code>; submitting with valid data calls <code>updatePostUseCaseProvider</code> and triggers <code>context.pop()</code> on success</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="out-of-scope">Out of scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
 <ul>
-<li>iOS Universal Links — <code>apple-app-site-association</code> and <code>Runner.entitlements</code> (post-v1; Team ID not yet available). On iOS, tapping a shared link opens the browser landing page which redirects to the App Store. The share button and share sheet work normally on iOS.</li>
-<li>iOS true deferred deep linking via Pasteboard URL / SKAdNetwork (post-v1)</li>
-<li>OG meta tags with post-specific <code>og:title</code>, <code>og:description</code>, <code>og:image</code> (post-v1; current <code>posts/index.html</code> uses static placeholder content only)</li>
-<li>Share analytics and share count tracking (no new Firestore fields in this spec)</li>
-<li>Share affordance in feed cards (OQ6 resolved: post detail only)</li>
-<li>Branch.io or any third-party deep-link SDK integration</li>
-<li>Android Play Install Referrer API deferred deep linking (descoped to post-v1)</li>
+<li>Editing <code>mediaUrls</code> or <code>mediaTypes</code> — file re-upload is a separate, higher-complexity feature.</li>
+<li>Editing <code>codeSnippetUrl</code> — same rationale as media files.</li>
+<li>Editing <code>courseId</code>, <code>year</code>, <code>semester</code>, or <code>postingIdentity</code> — these are structural classification fields; changing them would require re-indexing and feed cache invalidation beyond the scope of a simple edit.</li>
+<li>An "Edited" indicator in <code>PostDetailScreen</code> (e.g. showing "edited" when <code>updatedAt != createdAt</code>) — deferred to a follow-up spec.</li>
+<li>Soft delete or recycle-bin behaviour — post deletion is permanent and immediate.</li>
+<li>Admin or moderator delete of other users' posts — out of scope for this feature; moderation is a separate concern.</li>
+<li>Bulk delete from <code>MyPostsScreen</code>.</li>
+<li>Undo delete.</li>
 </ul>
 <hr />
 <h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
-<ul>
-<li>[x] <strong>OQ1</strong> — Firebase Hosting domain confirmed: <code>share.psstee.dev</code>. Replace all <code>share.psstee.dev</code> placeholders with this value.</li>
-<li>[x] <strong>OQ2</strong> — <code>share_plus: ^10.0.0</code> approved and added to <code>pubspec.yaml</code>.</li>
-<li>[ ] <strong>OQ4</strong> — OG meta tag strategy for v1 not confirmed. This spec assumes a static placeholder <code>posts/index.html</code> (no post title/description in the page head). A follow-up spec is needed if the team wants per-post social previews.</li>
-<li>[ ] <strong>OQ5</strong> — Android SHA-256 certificate fingerprints not yet enumerated. Three fingerprints are required: debug keystore, release keystore, and Play App Signing certificate. <code>assetlinks.json</code> cannot be finalised until all three are provided.</li>
-<li>[x] <strong>OQ3</strong> — iOS deferred deep linking: resolved as best-effort for v1 (descoped; see Out of scope).</li>
-<li>[x] <strong>OQ6</strong> — Share affordance placement: resolved as post detail screen only (no feed card share).</li>
-</ul>
+<p>None — all open questions from PROP-0011 have been resolved in this spec.</p>
 
 
 
