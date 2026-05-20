@@ -5,6 +5,7 @@ import { extractText } from './text-extractor'
 import type { Env } from './index'
 import { json, jsonError } from './response'
 import { embedText, embedTextBatch } from './embeddings'
+import { chunkText, CHUNK_THRESHOLD } from './chunking'
 
 /// Shared aiTags rules — a flat list of specific topic strings. Mirrors the
 /// shape of the user-typed `tags` field on the post doc, just labeled as
@@ -259,6 +260,18 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
     } catch (e) {
       console.error('vectorize upsert failed', e)
     }
+
+    // Best-effort chunk indexing for RAG chat on long docs (PROP-0011 follow-up).
+    // Wrapped separately so a chunk-pipeline failure can't reach back and
+    // un-do the post-level index above.
+    try {
+      await indexPostChunks(env, {
+        postId,
+        extractedText: result.extractedText,
+      })
+    } catch (e) {
+      console.error('chunk upsert failed', e)
+    }
   }
 
   return json({
@@ -376,6 +389,40 @@ async function indexPostForSearch(
       // type-faceted search, freshness boosting via timestamp).
     },
   ])
+}
+
+/// PROP-0011 follow-up — per-chunk vectors for RAG chat on long documents.
+/// Skips short docs (those that fit in the chat handler's context budget).
+/// Failure is logged and swallowed: the summarize response still succeeds
+/// without chunks; chat will fall back to the slice path.
+async function indexPostChunks(
+  env: Env,
+  params: { postId: string; extractedText: string },
+): Promise<void> {
+  if (params.extractedText.length < CHUNK_THRESHOLD) return
+
+  const chunks = chunkText(params.extractedText)
+  if (chunks.length === 0) return
+
+  let vectors: number[][]
+  try {
+    vectors = await embedTextBatch(env, chunks)
+  } catch (e) {
+    console.error('indexPostChunks: embed batch failed', e)
+    return
+  }
+
+  try {
+    await env.POST_CHUNK_INDEX.upsert(
+      chunks.map((text, i) => ({
+        id: `${params.postId}#${i}`,
+        values: vectors[i],
+        metadata: { postId: params.postId, chunkText: text },
+      })),
+    )
+  } catch (e) {
+    console.error('indexPostChunks: upsert failed', e)
+  }
 }
 
 async function summarizeText(
