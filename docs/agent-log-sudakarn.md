@@ -93,3 +93,45 @@ Outcome: Implemented all feed UI to match Figma designs. (1) Fixed PostCardWidge
 Decisions: Used local mock state (_activeTagFilters list on FeedScreen) for tag filtering instead of wiring the unimplemented Firestore providers — the spec's data layer is still in draft/stub status. FilterPickerWidget accepts availableTags/selectedTags params and an onConfirm callback so it is easy to swap in real providers later. Guest mode detection checks both authStateProvider (for authenticated users) and guestModeProvider (for explicit guest browsing) so the loading state defaults to the logged-in nav.
 Handoff: All 23 widget tests pass. The FilterPickerWidget, FeedEmptyStateWidget, and guest bottom nav are complete. Next step: wire FeedNotifier and FilterPreferencesNotifier to real Firestore (once the curated tags collection name is confirmed from the seed script — open question in SPEC-0005). Pre-existing unused-import analyzer warnings in the stub providers are unaffected.
 Review: PENDING
+
+2026-05-20
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/entities/moderation_verdict.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/entities/pending_post.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/repositories/moderation_repository.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/usecases/get_pending_posts.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/usecases/approve_post.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/usecases/reject_post.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/data/models/moderation_verdict_model.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/data/repositories/moderation_repository_impl.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/presentation/providers/moderation_repository_provider.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/presentation/providers/moderation_queue_provider.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/presentation/providers/moderation_action_provider.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [18:06] Write: apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Write: apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart
+  [18:06] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [18:06] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [18:07] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [18:07] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [18:07] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [18:08] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [18:08] Edit: apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart
+  [18:08] Edit: apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart
+
+---
+Date: 2026-05-20 18:05
+Member: Sudakarn
+Agent: flutter-engineer
+Task: Implement AI admin moderation feature (pending queue, approve/reject, moderator-only route guard)
+Prompt: Implement the AI admin moderation feature for the Unishare Flutter app. All files go under apps/mobile/lib/. Clean Architecture domain→data→presentation. Posts submitted with status:"pending", Cloud Function AI-screens them and writes aiVerdict back. Admins with role=="moderator" see Moderation screen listing pending posts with AI hint. They can approve or reject each post.
+Outcome: Created 12 new files across domain/data/presentation layers for features/moderation. Modified router.dart (DrawerDestination enum, fromPath, knownPrefixes, moderator-only redirect guard, GoRoute), more_drawer_grid.dart (isModerator + onModerationTap params), more_drawer.dart (reads authStateProvider for isModerator, passes to grid).
+Decisions: Used manual fromFirestore/toEntity pattern (no Freezed) as specified. ModerationVerdictModel handles both Timestamp and int epoch for processedAt. _AiVerdictSection uses local non-null variable v = verdict after null guard for sound null-safety. Route guard placed before knownPrefixes check so unauthenticated+non-moderator always bounce to /feed. MoreDrawerGrid renders MODERATION tile only when isModerator==true and onModerationTap!=null.
+Handoff: build_runner must be run to generate the three .g.dart files: moderation_repository_provider.g.dart, moderation_queue_provider.g.dart, moderation_action_provider.g.dart. No widget tests written yet — QA engineer should add tests for ModerationScreen and PendingPostCard.
+Review: PENDING

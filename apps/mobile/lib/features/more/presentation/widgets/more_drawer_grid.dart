@@ -9,12 +9,16 @@ class MoreDrawerGrid extends StatelessWidget {
     required this.onDepartmentsTap,
     required this.onRequestsTap,
     required this.onAchievementsTap,
+    this.isModerator = false,
+    this.onModerationTap,
   });
 
   final VoidCallback onSavedTap;
   final VoidCallback onDepartmentsTap;
   final VoidCallback onRequestsTap;
   final VoidCallback onAchievementsTap;
+  final bool isModerator;
+  final VoidCallback? onModerationTap;
 
   // Tiles per row. Profile no longer lives in this grid — the user-row
   // at the top of the drawer is now tappable and serves as the profile
@@ -65,7 +69,17 @@ class MoreDrawerGrid extends StatelessWidget {
                   onTap: onAchievementsTap,
                 ),
               ),
-              for (var i = 1; i < _columnsPerRow; i++)
+              if (isModerator && onModerationTap != null)
+                Expanded(
+                  child: MoreDrawerTile(
+                    label: 'MODERATION',
+                    icon: Icons.shield_outlined,
+                    onTap: onModerationTap!,
+                  ),
+                )
+              else
+                const Expanded(child: SizedBox.shrink()),
+              for (var i = 2; i < _columnsPerRow; i++)
                 const Expanded(child: SizedBox.shrink()),
             ],
           ),
