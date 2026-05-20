@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -5,7 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
+import 'package:unishare_mobile/core/logging/app_logger.dart';
 
+import 'package:unishare_mobile/features/post/data/datasources/ai_reindex_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/ai_summarize_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/data/datasources/tag_whitelist_service.dart';
@@ -25,9 +28,11 @@ class PostRepositoryImpl implements PostRepository {
     this.cacheTtl = const Duration(minutes: 5),
     AiSummarizeDatasource? aiSummarizeDatasource,
     TagWhitelistService? tagWhitelistService,
+    AiReindexDatasource? aiReindexDatasource,
   }) : _aiSummarizeDatasource =
            aiSummarizeDatasource ?? AiSummarizeDatasource(),
-       _tagWhitelistService = tagWhitelistService;
+       _tagWhitelistService = tagWhitelistService,
+       _aiReindexDatasource = aiReindexDatasource ?? AiReindexDatasource();
 
   final PostFirestoreDatasource firestoreDatasource;
   final PostStorageDatasource storageDatasource;
@@ -40,6 +45,8 @@ class PostRepositoryImpl implements PostRepository {
   /// When set, [triggerSummarize] passes the cached top-tags list to the
   /// worker so the model prefers reusing existing tag vocabulary.
   final TagWhitelistService? _tagWhitelistService;
+
+  final AiReindexDatasource _aiReindexDatasource;
 
   @override
   Stream<List<Post>> watchFeed({int limit = 20}) async* {
@@ -301,17 +308,38 @@ class PostRepositoryImpl implements PostRepository {
     String? externalUrl,
     required String moduleNumber,
     required bool descriptionChanged,
+    required bool titleChanged,
     required SummaryStatus? currentSummaryStatus,
-  }) => firestoreDatasource.updatePost(
-    postId: postId,
-    title: title,
-    description: description,
-    tags: tags,
-    externalUrl: externalUrl,
-    moduleNumber: moduleNumber,
-    descriptionChanged: descriptionChanged,
-    currentSummaryStatus: currentSummaryStatus,
-  );
+  }) async {
+    await firestoreDatasource.updatePost(
+      postId: postId,
+      title: title,
+      description: description,
+      tags: tags,
+      externalUrl: externalUrl,
+      moduleNumber: moduleNumber,
+      descriptionChanged: descriptionChanged,
+      currentSummaryStatus: currentSummaryStatus,
+    );
+
+    // PROP-0011 follow-up — fire-and-forget reindex when fields that feed the
+    // semantic-search blob have changed. Failure is logged; the edit already
+    // succeeded in Firestore so we never block the UI on a search-drift issue.
+    if (titleChanged || descriptionChanged) {
+      unawaited(
+        _aiReindexDatasource
+            .call(postId: postId, title: title, description: description)
+            .catchError((Object e, StackTrace st) {
+          AppLogger.error(
+            'reindex_failed: postId=$postId',
+            error: e,
+            stackTrace: st,
+          );
+          return false;
+        }),
+      );
+    }
+  }
 
   static String _mediaTypeFromPath(String path) {
     final ext = path.split('.').last.toLowerCase();

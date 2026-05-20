@@ -18,6 +18,7 @@ class EditPostNotifier extends _$EditPostNotifier {
     String? externalUrl,
     required String moduleNumber,
     required bool descriptionChanged,
+    required bool titleChanged,
     required SummaryStatus? currentSummaryStatus,
   }) async {
     state = const AsyncLoading();
@@ -32,6 +33,7 @@ class EditPostNotifier extends _$EditPostNotifier {
             externalUrl: externalUrl,
             moduleNumber: moduleNumber,
             descriptionChanged: descriptionChanged,
+            titleChanged: titleChanged,
             currentSummaryStatus: currentSummaryStatus,
           ),
     );
