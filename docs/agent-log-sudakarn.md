@@ -136,3 +136,6 @@ Outcome: Implemented all feed UI to match Figma designs. (1) Fixed PostCardWidge
 Decisions: Used local mock state (_activeTagFilters list on FeedScreen) for tag filtering instead of wiring the unimplemented Firestore providers — the spec's data layer is still in draft/stub status. FilterPickerWidget accepts availableTags/selectedTags params and an onConfirm callback so it is easy to swap in real providers later. Guest mode detection checks both authStateProvider (for authenticated users) and guestModeProvider (for explicit guest browsing) so the loading state defaults to the logged-in nav.
 Handoff: All 23 widget tests pass. The FilterPickerWidget, FeedEmptyStateWidget, and guest bottom nav are complete. Next step: wire FeedNotifier and FilterPreferencesNotifier to real Firestore (once the curated tags collection name is confirmed from the seed script — open question in SPEC-0005). Pre-existing unused-import analyzer warnings in the stub providers are unaffected.
 Review: PENDING
+
+2026-05-20
+  [15:21] Edit: apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart
