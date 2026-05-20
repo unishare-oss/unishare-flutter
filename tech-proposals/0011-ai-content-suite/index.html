@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Technical proposals, specs, and architecture decisions for Unishare Flutter">
+        <meta name="description" content="Layer auto-tagging, semantic search, and full-document chat on top of a single cached-extracted-text foundation.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/stencils/tech-spec/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0011-ai-content-suite/">
       
       
-        <link rel="prev" href="../tech-proposal/">
+        <link rel="prev" href="../0010-share-post/">
       
       
-        <link rel="next" href="../../tech-proposals/">
+        <link rel="next" href="../0011-edit-delete-own-post/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Tech Spec Template - Unishare Engineering Docs</title>
+        <title>0011: AI content suite — auto-tags, semantic search, full-RAG chat - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tech-spec-template" class="md-skip">
+        <a href="#prop-0011-ai-content-suite-auto-tags-semantic-search-full-rag-chat" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tech Spec Template
+              0011: AI content suite — auto-tags, semantic search, full-RAG chat
             
           </span>
         </div>
@@ -262,13 +262,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../adr/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
           
   
   
@@ -284,11 +282,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../tech-proposals/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -875,31 +875,26 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -917,7 +912,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -935,7 +930,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adr/" class="md-nav__link">
+      <a href="../../stencils/adr/" class="md-nav__link">
         
   
   
@@ -963,7 +958,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tech-proposal/" class="md-nav__link">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
         
   
   
@@ -971,6 +966,462 @@
     
   
     Tech Proposal Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Spec Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech proposals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech proposals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-notification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Notification System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-post-feed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Post Feed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Feed Filtering by Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-main-navbar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-file-preview-screen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-save-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0008-request-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0009-ai-post-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-achievements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievements System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-share-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
   
 
     
@@ -1007,7 +1458,7 @@
   <span class="md-ellipsis">
     
   
-    Tech Spec Template
+    0011: AI content suite — auto-tags, semantic search, full-RAG chat
   
 
     
@@ -1025,7 +1476,7 @@
   <span class="md-ellipsis">
     
   
-    Tech Spec Template
+    0011: AI content suite — auto-tags, semantic search, full-RAG chat
   
 
     
@@ -1051,10 +1502,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Problem
       
     </span>
   </a>
@@ -1062,10 +1513,182 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundation-extractedtext-on-post-doc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation — extractedText on post doc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-1-auto-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature 1 — Auto-tags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature 1 — Auto-tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tag-vocabulary-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag vocabulary control
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-2-full-rag-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature 2 — Full-RAG chat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-3-semantic-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature 3 — Semantic search
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shipping-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipping order
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-extracted-text-in-r2-instead-of-firestore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Extracted text in R2 instead of Firestore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-merge-ai-tags-into-user-tags-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Merge AI tags into user tags field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-semantic-search-as-a-separate-smart-search-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Semantic search as a separate "Smart search" tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-skip-image-ocr-images-stay-summary-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Skip image OCR (images stay summary-only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-pinecone-supabase-pgvector-for-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E — Pinecone / Supabase pgvector for embeddings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
       
     </span>
   </a>
@@ -1081,65 +1704,6 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tech proposals
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Tech proposals
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
               
                 
   
@@ -1147,399 +1711,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tech-proposals/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tech Proposals
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0001-notification/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0001: Notification System
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0003: Post Feed
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0004: Post Integration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0005-feed-filtering-tags/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0005: Feed Filtering by Tags
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0005-main-navbar/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0005: Main Navigation Bar
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0006-post-detail-page/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0006: Post Detail Page
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0007-file-preview-screen/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0007: File Preview Screen
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0007-save-post/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0007: Save Post
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0008-request-post/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0008: Request Post
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0009-ai-post-summary/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0009: AI Post Summary
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0010-achievements/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0010: Achievements System
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0010-share-post/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0010: Share Post
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0011-ai-content-suite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0011: AI content suite — auto-tags, semantic search, full-RAG chat
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../tech-proposals/0011-edit-delete-own-post/" class="md-nav__link">
+      <a href="../0011-edit-delete-own-post/" class="md-nav__link">
         
   
   
@@ -2101,10 +2273,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#template" class="md-nav__link">
+  <a href="#problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Template
+        Problem
       
     </span>
   </a>
@@ -2112,10 +2284,182 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-values" class="md-nav__link">
+  <a href="#proposed-solution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status values
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#foundation-extractedtext-on-post-doc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation — extractedText on post doc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-1-auto-tags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature 1 — Auto-tags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature 1 — Auto-tags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tag-vocabulary-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag vocabulary control
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-2-full-rag-chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature 2 — Full-RAG chat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-3-semantic-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature 3 — Semantic search
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shipping-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipping order
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-extracted-text-in-r2-instead-of-firestore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Extracted text in R2 instead of Firestore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-merge-ai-tags-into-user-tags-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Merge AI tags into user tags field
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-semantic-search-as-a-separate-smart-search-tab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Semantic search as a separate "Smart search" tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-skip-image-ocr-images-stay-summary-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D — Skip image OCR (images stay summary-only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-pinecone-supabase-pgvector-for-embeddings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E — Pinecone / Supabase pgvector for embeddings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
       
     </span>
   </a>
@@ -2139,7 +2483,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/stencils/tech-spec.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0011-ai-content-suite.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2147,108 +2491,112 @@
   
 
 
-<h1 id="tech-spec-template">Tech Spec Template<a class="headerlink" href="#tech-spec-template" title="Permanent link">&para;</a></h1>
-<p>Copy the markdown below into <code>tech-specs/NNNN-slug.md</code> on the <code>main</code> branch and fill it in.</p>
-<p><strong>When to write one:</strong> Any change spanning more than 2 files or with a defined test contract. Must be approved before coding begins.</p>
+<h1 id="prop-0011-ai-content-suite-auto-tags-semantic-search-full-rag-chat">PROP-0011: AI content suite — auto-tags, semantic search, full-RAG chat<a class="headerlink" href="#prop-0011-ai-content-suite-auto-tags-semantic-search-full-rag-chat" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED
+<strong>Author:</strong> Pyae Sone Shin Thant
+<strong>Date:</strong> 2026-05-19
+<strong>Spec:</strong> (intentionally omitted — implemented directly per author/reviewer agreement)
+<strong>Approved by:</strong> Pyae Sone Shin Thant (2026-05-20)</p>
 <hr />
-<h2 id="template">Template<a class="headerlink" href="#template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>---
-title: &quot;NNNN: Title&quot;
-<span class="gu">description: &quot;One-line summary of what is being built.&quot;</span>
-<span class="gu">---</span>
-
-<span class="gh"># SPEC-NNNN: Title</span>
-
-<span class="gs">**Status:**</span> DRAFT  
-<span class="gs">**Author:**</span>  
-<span class="gs">**Date:**</span> YYYY-MM-DD  
-<span class="gs">**Proposal:**</span> [<span class="nt">PROP-NNNN</span>](<span class="na">../tech-proposals/nnnn-slug.md</span>)  
-<span class="gs">**Approved by:**</span> (fill in when approved)
-
----
-
-<span class="gu">## Overview</span>
-
-One paragraph: what is being built and why.
-
-<span class="gu">## Architecture</span>
-
-<span class="sb">```mermaid</span>
-<span class="s">flowchart LR</span>
-<span class="s">    A[Presentation] --&gt; B[Domain]</span>
-<span class="s">    B --&gt; C[Data]</span>
-<span class="sb">```</span>
-
-<span class="gu">## File map</span>
-
-| Action | Path | Responsibility |
-|---|---|---|
-| Create | <span class="sb">`lib/features/&lt;name&gt;/domain/entities/foo.dart`</span> | |
-| Create | <span class="sb">`lib/features/&lt;name&gt;/data/models/foo_model.dart`</span> | |
-| Modify | <span class="sb">`lib/main.dart`</span> | |
-
-<span class="gu">## API contracts</span>
-
-<span class="sb">```dart</span>
-<span class="c1">// Public interfaces the implementation must expose</span>
-<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">FooRepository</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">doSomething</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">);</span>
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>Three gaps in the current AI surface limit how useful uploaded content is to other students:</p>
+<ol>
+<li><strong>Tags are user-typed only.</strong> Posts uploaded with empty <code>tags</code> get no auto-classification, so feed filtering and discovery miss them. Two students searching for the same topic with different vocabulary won't find each other's notes.</li>
+<li><strong>Chat-with-note is summary-grounded, not RAG.</strong> <code>ai-chat.ts</code> sends only the 3-7 bullet summary as context, so questions like "what enzyme is mentioned on page 2" can't be answered. Users perceive the feature as shallow.</li>
+<li><strong>No semantic search.</strong> A student searching "Newton's second law examples" only matches posts whose title/tags/description contain those exact words. Notes that cover the topic with different phrasing are invisible.</li>
+</ol>
+<p>Image posts (handwritten notes, scans) — first-class today for summary thanks to PROP-0010's vision work — are second-class for every downstream feature because we never extract their text.</p>
+<h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
+<p>Introduce a <strong>shared foundation</strong> of cached extracted text on each post, then layer three features on top.</p>
+<h3 id="foundation-extractedtext-on-post-doc">Foundation — <code>extractedText</code> on post doc<a class="headerlink" href="#foundation-extractedtext-on-post-doc" title="Permanent link">&para;</a></h3>
+<p>Add an <code>extractedText: string</code> field to the Firestore post document, populated during the existing summarize flow:</p>
+<ul>
+<li><strong>Text path</strong> (PDF/DOCX): already extracted by <code>text-extractor.ts</code>. Persist the truncated extraction (currently 6000 chars) to Firestore alongside the summary write.</li>
+<li><strong>Image path</strong> (PROP-0010): extend the Llama 4 Scout call to return a JSON object with both a <code>transcribedText</code> and <code>summary</code> field, rather than just a summary string. Persist <code>transcribedText</code> to <code>extractedText</code>.</li>
+</ul>
+<p>Size cap: 60 000 chars (~80 KB), well under Firestore's 1 MB doc limit even with all other post fields. Truncate on overflow with a <code>extractedTextTruncated: true</code> flag.</p>
+<h3 id="feature-1-auto-tags">Feature 1 — Auto-tags<a class="headerlink" href="#feature-1-auto-tags" title="Permanent link">&para;</a></h3>
+<p>During summarization, return a structured response containing AI-derived classification:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;transcribedText&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;aiTags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Biology&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;undergraduate&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lecture-notes&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;topics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Krebs cycle&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ATP synthesis&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mitochondria&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>
-<span class="sb">```</span>
-
-<span class="gu">## Test plan</span>
-
-| Test file | Covers |
-|---|---|
-| <span class="sb">`test/unit/features/&lt;name&gt;/foo_test.dart`</span> | |
-| <span class="sb">`test/widget/features/&lt;name&gt;/foo_screen_test.dart`</span> | |
-
-<span class="gu">## Out of scope</span>
-
-<span class="k">-</span><span class="w"> </span>Explicitly list what this spec does NOT cover.
-
-<span class="gu">## Open questions</span>
-
-<span class="k">- [ ]</span> Must be resolved before status moves to APPROVED.
 </code></pre></div>
-<hr />
-<h2 id="status-values">Status values<a class="headerlink" href="#status-values" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Status</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>DRAFT</code></td>
-<td>Work in progress</td>
-</tr>
-<tr>
-<td><code>REVIEW</code></td>
-<td>Ready for architect/QA review</td>
-</tr>
-<tr>
-<td><code>APPROVED</code></td>
-<td>Implementation can begin</td>
-</tr>
-<tr>
-<td><code>IMPLEMENTED</code></td>
-<td>Done and merged</td>
-</tr>
-<tr>
-<td><code>SUPERSEDED</code></td>
-<td>Replaced by a newer spec</td>
-</tr>
-</tbody>
-</table>
+<p><code>aiTags</code> lives in its own Firestore field (not merged into user <code>tags</code>) so provenance is preserved. UI shows AI tags with a visual distinction (e.g. dimmed background, sparkle icon) and includes both in filter/search indexing.</p>
+<h4 id="tag-vocabulary-control">Tag vocabulary control<a class="headerlink" href="#tag-vocabulary-control" title="Permanent link">&para;</a></h4>
+<p>Without control, the same concept will appear under many surface forms ("Krebs Cycle", "krebs cycle", "TCA cycle", "citric acid cycle"), fragmenting filters and search. Two-stage approach:</p>
+<ol>
+<li>
+<p><strong>Phase A — Whitelist-in-prompt (ships with auto-tags).</strong> Query Firestore for the top 50-100 most-used <code>aiTags.topics</code> (cached, refreshed daily via a scheduled worker). Inject into the summarize prompt as "Prefer these tags when applicable; only invent new ones for genuinely new topics: [list]". Cheap, works well, the model naturally gravitates to reuse.</p>
+</li>
+<li>
+<p><strong>Phase B — Embedding dedup (ships with semantic search).</strong> Once Vectorize is live, embed every distinct AI tag once and persist the embedding alongside the tag. Before persisting a newly-proposed tag, embed it and snap to the nearest existing tag if cosine similarity exceeds a threshold (start at 0.85, tune from there). Re-uses the same embedding infrastructure as semantic search — no new pipeline.</p>
+</li>
+</ol>
+<p><strong>Cold start:</strong> Bootstrap the vocabulary from real uploads rather than pre-seeding with a curated subject/topic list. Rationale: a pre-seeded list inevitably reflects one author's view of "what subjects exist" and gets stuck; letting real student uploads shape the taxonomy means it self-corrects to what students actually study and call things. The first ~50 posts will have looser tags; that's an acceptable warmup cost.</p>
+<h3 id="feature-2-full-rag-chat">Feature 2 — Full-RAG chat<a class="headerlink" href="#feature-2-full-rag-chat" title="Permanent link">&para;</a></h3>
+<p>Upgrade <code>ai-chat.ts</code> to send <code>extractedText</code> instead of (or in addition to) the summary. Backfill strategy for posts created before this proposal: re-extract on first chat request (one-shot cost).</p>
+<p>For very long content where <code>extractedText</code> plus chat history exceeds the model's effective context budget, chunk + retrieve the top-k chunks by embedding similarity (the same embeddings used by Feature 3 — no second pipeline).</p>
+<h3 id="feature-3-semantic-search">Feature 3 — Semantic search<a class="headerlink" href="#feature-3-semantic-search" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Embedding model:</strong> Cloudflare Workers AI <code>@cf/baai/bge-base-en-v1.5</code> (768-dim, free on Workers).</li>
+<li><strong>Vector store:</strong> Cloudflare Vectorize, with a <code>posts</code> index scoped per <code>universityId</code> via metadata filter.</li>
+<li><strong>Write path:</strong> When <code>extractedText</code> is persisted, the worker also generates an embedding and upserts to Vectorize keyed by <code>postId</code>.</li>
+<li><strong>Read path:</strong> New <code>/ai/search</code> endpoint accepts <code>{ query, universityId, limit }</code>. Embeds the query, runs <code>topK</code> on Vectorize, returns post IDs ordered by similarity.</li>
+<li><strong>UX (hybrid):</strong> Existing search bar stays. Backend blends keyword + vector: keyword matches always shown first; vector matches fill remaining slots up to the limit and rerank empty keyword result sets. Single search experience, no toggle.</li>
+</ul>
+<h3 id="shipping-order">Shipping order<a class="headerlink" href="#shipping-order" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Foundation</strong> — add <code>extractedText</code> field + image transcription. No new user-facing feature; unblocks the rest.</li>
+<li><strong>Auto-tags</strong> — extend summarize response with <code>aiTags</code>. UI displays both tag types. Includes Phase A vocabulary control (daily-cached whitelist of top tags injected into prompt).</li>
+<li><strong>Full-RAG chat</strong> — swap <code>summary</code> for <code>extractedText</code> in <code>ai-chat.ts</code>. Chunking deferred until Feature 3's embeddings exist.</li>
+<li><strong>Semantic search + tag dedup</strong> — Vectorize index, embedding worker, hybrid search endpoint, mobile search blend. Also enables Phase B tag dedup (embed-and-snap-to-canonical) which reuses the same embedding pipeline.</li>
+</ol>
+<p>Each phase is its own tech spec + PR.</p>
+<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<h3 id="a-extracted-text-in-r2-instead-of-firestore">A — Extracted text in R2 instead of Firestore<a class="headerlink" href="#a-extracted-text-in-r2-instead-of-firestore" title="Permanent link">&para;</a></h3>
+<p>Store <code>extractedText</code> as <code>extracted/{postId}.txt</code> in R2. No size limit, but every chat/search/embed call needs an extra fetch hop, and the post lifecycle no longer atomically owns its derived text. <strong>Rejected:</strong> 60 KB cap covers ~95% of academic uploads; the simpler model wins until we see real overflow.</p>
+<h3 id="b-merge-ai-tags-into-user-tags-field">B — Merge AI tags into user <code>tags</code> field<a class="headerlink" href="#b-merge-ai-tags-into-user-tags-field" title="Permanent link">&para;</a></h3>
+<p>Cleaner data model but loses provenance — a future moderation decision ("remove auto-generated tag X") becomes impossible because the system doesn't know which tags it owns. <strong>Rejected:</strong> separate field is one extra Firestore property and unlocks future UI affordances (e.g. "let me reject this AI tag").</p>
+<h3 id="c-semantic-search-as-a-separate-smart-search-tab">C — Semantic search as a separate "Smart search" tab<a class="headerlink" href="#c-semantic-search-as-a-separate-smart-search-tab" title="Permanent link">&para;</a></h3>
+<p>Easier to ship (no ranking blend), but bifurcates user attention and most users never discover the second tab. <strong>Rejected:</strong> unified search bar with hybrid blend respects existing user habit.</p>
+<h3 id="d-skip-image-ocr-images-stay-summary-only">D — Skip image OCR (images stay summary-only)<a class="headerlink" href="#d-skip-image-ocr-images-stay-summary-only" title="Permanent link">&para;</a></h3>
+<p>Cheaper per-summary call, but contradicts PROP-0010's investment in vision — handwritten notes would be searchable only by their summary bullets. <strong>Rejected:</strong> the use case we built vision for <em>is</em> handwritten notes; making them searchable is the payoff.</p>
+<h3 id="e-pinecone-supabase-pgvector-for-embeddings">E — Pinecone / Supabase pgvector for embeddings<a class="headerlink" href="#e-pinecone-supabase-pgvector-for-embeddings" title="Permanent link">&para;</a></h3>
+<p>Both work; both add a non-Cloudflare dependency and a paid tier we don't need at this scale. <strong>Rejected:</strong> Vectorize is native to the worker stack, free tier covers planned scale (5M vectors).</p>
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Image transcription accuracy threshold.</strong> Llama 4 Scout will sometimes produce garbled text on cursive handwriting. Do we still persist low-confidence transcriptions (and accept poor downstream search), or gate on a confidence signal (e.g. drop if transcription &lt; N tokens or contains &gt; K consecutive non-alpha runs)?</li>
+<li><strong>Embedding re-write triggers.</strong> Embed once on summarize. Do we also re-embed on <code>post.description</code> edit, on <code>aiTags</code> change, or only on full source-file replacement?</li>
+<li><strong>Hybrid search ranking weights.</strong> Concretely: when keyword returns 3 results and vector returns 20, how many vector results fill the page, and what similarity floor cuts off bad matches? Needs an evaluation set.</li>
+<li><strong>Vectorize per-university partitioning.</strong> Single index with metadata filter vs one index per university. Filter is simpler; per-uni index has stricter isolation but management overhead.</li>
+<li><strong>Cost ceiling.</strong> Free tiers cover dev. At what monthly active user count do we hit paid (Groq paid tier ~$0.05/M tokens for vision, Vectorize paid after 5M vectors, Workers AI free for now)? Worth budgeting before launch.</li>
+<li><strong>Backfill for existing posts.</strong> Re-summarize all existing posts to populate <code>extractedText</code> + <code>aiTags</code> + embedding, or backfill lazily (on next chat/search hit)? Lazy is cheaper; eager makes search complete on day one.</li>
+<li><strong>Tag whitelist refresh cadence.</strong> Daily scheduled worker is the proposal default. Alternatives: refresh on tag-change Firestore trigger (always-fresh, more reads), or on cache miss (eventual consistency, simplest). Daily likely fine but worth pinning in the spec.</li>
+<li><strong>Tag dedup similarity threshold.</strong> Phase B uses cosine ≥ 0.85 as the "snap to canonical" cutoff. Needs validation against a held-out set of known synonyms (e.g. "Krebs cycle" vs "TCA cycle" — are they 0.85+ apart in BGE space?). The spec should include a small calibration exercise.</li>
+</ol>
+<h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A new image or PDF post completes the full pipeline (extract → summarize → tag → embed) in a single worker call, with all derived fields written atomically with the post doc.</li>
+<li><code>extractedText</code> is present on every new post (text or image) and bounded to ≤ 60 000 chars.</li>
+<li><code>aiTags</code> are displayed in the post UI visually distinct from user <code>tags</code>, and both contribute to feed filtering.</li>
+<li>AI-generated tags reuse existing canonical tags when applicable: Phase A (whitelist prompt) demonstrates measurable tag reuse on a held-out test set; Phase B (embedding dedup) collapses near-synonyms to a single canonical form above the chosen threshold.</li>
+<li>Chat-with-note answers questions whose answer exists in the document body but not in the summary.</li>
+<li>Semantic search returns relevant posts for queries whose terms don't appear verbatim in any post's title/tags/description.</li>
+<li>Hybrid search blends keyword and vector results in one ranked list, with documented ranking logic.</li>
+<li>Free-tier service limits are respected at the proposal's projected scale (documented in the spec).</li>
+<li>Existing posts continue to function (no breaking schema changes); backfill strategy is documented and reversible.</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
