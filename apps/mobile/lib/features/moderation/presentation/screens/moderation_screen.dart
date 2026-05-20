@@ -18,13 +18,8 @@ class ModerationScreen extends ConsumerWidget {
       body: queueAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
-          child: Text(
-            'Error: $error',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.error,
-            ),
-            textAlign: TextAlign.center,
-          ),
+          key: const Key('moderation-error'),
+          child: Text('Error: $error', textAlign: TextAlign.center),
         ),
         data: (posts) {
           if (posts.isEmpty) {

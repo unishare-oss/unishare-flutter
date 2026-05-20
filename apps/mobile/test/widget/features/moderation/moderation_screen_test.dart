@@ -100,8 +100,9 @@ void main() {
       await tester.pump(); // Riverpod subscribes to the stream
       controller.addError(Exception('Firestore error')); // sync delivery
       await tester.pump(); // state → AsyncError, rebuild queued
-      await tester.pump(); // widget rebuilds, error text rendered
-      expect(find.textContaining('Error'), findsOneWidget);
+      await tester.pump(); // widget rebuilds
+      // Find the error Center by key — avoids dependency on text rendering.
+      expect(find.byKey(const Key('moderation-error')), findsOneWidget);
     });
   });
 }
