@@ -135,3 +135,6 @@ Outcome: Created 12 new files across domain/data/presentation layers for feature
 Decisions: Used manual fromFirestore/toEntity pattern (no Freezed) as specified. ModerationVerdictModel handles both Timestamp and int epoch for processedAt. _AiVerdictSection uses local non-null variable v = verdict after null guard for sound null-safety. Route guard placed before knownPrefixes check so unauthenticated+non-moderator always bounce to /feed. MoreDrawerGrid renders MODERATION tile only when isModerator==true and onModerationTap!=null.
 Handoff: build_runner must be run to generate the three .g.dart files: moderation_repository_provider.g.dart, moderation_queue_provider.g.dart, moderation_action_provider.g.dart. No widget tests written yet — QA engineer should add tests for ModerationScreen and PendingPostCard.
 Review: PENDING
+  [18:47] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+  [20:33] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+  [20:33] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
