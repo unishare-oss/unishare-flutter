@@ -4,6 +4,7 @@ import { PhotonImage, resize, SamplingFilter } from '@cf-wasm/photon'
 import { extractText } from './text-extractor'
 import type { Env } from './index'
 import { json, jsonError } from './response'
+import { embedText, embedTextBatch } from './embeddings'
 
 /// Shared aiTags rules — a flat list of specific topic strings. Mirrors the
 /// shape of the user-typed `tags` field on the post doc, just labeled as
@@ -274,7 +275,6 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
 /// title (high) → summary (medium) → aiTags (keywords) → leading extracted
 /// content (covers what the summary leaves out). Hard cap on whole blob.
 const SEARCH_BLOB_CHAR_CAP = 2000
-const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5'
 
 function buildSearchBlob(p: {
   title: string
@@ -304,12 +304,11 @@ async function dedupAndInsertTags(
 
   // Batch-embed all proposed tags in one model call to save round trips.
   // BGE accepts string[] and returns one vector per input.
-  const embedResult = (await env.AI.run(EMBEDDING_MODEL, {
-    text: proposed,
-  })) as { data: number[][] }
-  const embeddings = embedResult.data
-  if (!Array.isArray(embeddings) || embeddings.length !== proposed.length) {
-    // Embedding shape isn't what we expected — bail to "no dedup".
+  let embeddings: number[][]
+  try {
+    embeddings = await embedTextBatch(env, proposed)
+  } catch (e) {
+    console.error('tag embed batch failed', e)
     return proposed
   }
 
@@ -320,14 +319,6 @@ async function dedupAndInsertTags(
   for (let i = 0; i < proposed.length; i++) {
     const tag = proposed[i]
     const vec = embeddings[i]
-    if (!Array.isArray(vec) || vec.length !== 768) {
-      // Skip this tag's dedup but keep it as-is.
-      if (!seen.has(tag)) {
-        seen.add(tag)
-        canonical.push(tag)
-      }
-      continue
-    }
 
     let pickedTag = tag
     try {
@@ -375,13 +366,7 @@ async function indexPostForSearch(
   const text = buildSearchBlob(params)
   if (!text.trim()) return // nothing useful to embed
 
-  const embedResult = (await env.AI.run(EMBEDDING_MODEL, { text })) as {
-    data: number[][]
-  }
-  const vector = embedResult.data?.[0]
-  if (!Array.isArray(vector) || vector.length !== 768) {
-    throw new Error(`embed returned wrong shape: ${vector?.length ?? 'null'}`)
-  }
+  const vector = await embedText(env, text)
 
   await env.VECTORIZE.upsert([
     {
