@@ -201,38 +201,68 @@ universities/{id} / departments/{id} / courses/{id}
 
 ## AI Features (Summarize + Ask AI)
 
-Powered by a Cloudflare Worker that calls the Groq LLM API. The worker is auth-gated — every request must carry a valid Firebase ID token.
+Powered by a Cloudflare Worker that calls the Groq LLM API. The worker is auth-gated — every request must carry a valid Firebase ID token. Originally shipped as SPEC-0009 (text-only PDF/DOCX). Extended by [PROP-0011](../tech-proposals/0011-ai-content-suite.md) to support image uploads and to cache extracted text for downstream features (semantic search, full-RAG chat, practice questions).
 
 ### Post Summary
 
-Triggered automatically after a PDF or DOCX file is published. Runs fire-and-forget — the UI reacts via the existing Firestore real-time stream.
+Triggered automatically after a PDF, DOCX, or image file is published. Runs fire-and-forget — the UI reacts via the existing Firestore real-time stream.
 
 ```
 PostRepository.publishDraft()
-    ↓ (after Firestore write succeeds, for PDF/DOCX only)
+    ↓ (after Firestore write succeeds, for pdf | docx | image media types)
 triggerSummarize(postId, fileUrl, filename)  [fire-and-forget]
     ↓
 AiSummarizeDatasource  →  POST /ai/summarize
     Authorization: Bearer <Firebase ID token>
-    { fileUrl, filename }
+    {
+      fileUrl, filename,
+      postId, title,              // PROP-0011 Phase 4a: keys the Vectorize upsert
+      existingTags?: string[],    // PROP-0011 Phase 2b: corpus top-tag whitelist
+    }
         ↓
-    Worker: verifies token
-        → fetch file from R2 (max 20 MB, 10 s timeout)
-        → extract text via unpdf (PDF) or mammoth (DOCX) — up to 6 000 chars
-        → Groq: llama-3.3-70b-versatile
-              system prompt: "summarise into intro + bullet points"
-        → returns { summaryStatus: 'done'|'error'|'flagged'|'unsupported_type', summary? }
+    Worker: verifies token, fetches file from R2 (max 20 MB, 10 s timeout)
+        Routes by R2 Content-Type (server-controlled, not client filename):
+
+        ┌─ TEXT PATH (application/pdf, application/vnd.openxmlformats…wordprocessingml.document)
+        │    extract text via unpdf (PDF) or mammoth (DOCX) — clip to 60 000 chars
+        │    send leading 6 000 chars to Groq: llama-3.3-70b-versatile
+        │    returns: summary (3–7 bullet points), full clipped text, truncated flag
+        │
+        └─ IMAGE PATH (image/jpeg, image/png, image/webp)
+             compress with @cf-wasm/photon (≤1600 px, JPEG quality 80) → base64 data URL
+             send to Groq: meta-llama/llama-4-scout-17b-16e-instruct
+                 response_format: { type: 'json_object' }
+                 model returns: { status, transcribedText, summary }
+             clip transcription to 60 000 chars
+
+        After a successful 'done' summary, the worker also (best-effort):
+          • dedups aiTags via the unishare-tags Vectorize index (snap when cosine ≥ 0.85)
+          • embeds title+summary+aiTags+leading body into unishare-posts (keyed by postId)
+        Failures here log + degrade; they never fail the summarize response.
+
+        Final response: {
+          summaryStatus: 'done'|'error'|'flagged'|'unsupported_type',
+          summary?,
+          extractedText?,            // PROP-0011 Phase 1: source text for downstream AI
+          extractedTextTruncated?,   // true when clipped at 60 000 chars
+          aiTags?: string[],         // PROP-0011 Phase 2: kebab-case topic tags
+        }
     ↓
 PostFirestoreDatasource.updatePostSummary()
-    → Firestore: posts/{postId}.update({ summaryStatus, summary, summarizedAt })
+    → Firestore: posts/{postId}.update({
+        summaryStatus, summary, summarizedAt,
+        extractedText, extractedTextTruncated, aiTags,
+      })
 
 Firestore stream (watchPost) fires  →  postDetailProvider rebuilds
     → AiSummaryPanel shows shimmer while pending, then renders summary
 ```
 
+The vision branch was added in PR #73 (PROP-0010) and extended to return `transcribedText` as part of PROP-0011 Phase 1 — handwritten notes are now first-class for both summarization and future search/RAG/practice features.
+
 ### Ask AI (streaming)
 
-Scoped to the document summary — the LLM never sees the raw file. Conversation history is managed client-side.
+Grounded by the document's cached extracted text when available (PROP-0011 Phase 3) — answers can reference details beyond the 3-7 bullet summary. Falls back to `summary` for pre-Phase-1 posts that never cached `extractedText`. Conversation history is managed client-side.
 
 ```
 User sends question  →  AskAiNotifier.sendMessage()
@@ -241,11 +271,16 @@ User sends question  →  AskAiNotifier.sendMessage()
 AskAiUseCase  →  AskAiRepositoryImpl  →  AskAiDatasource
     client.send()  →  POST /ai/chat
         Authorization: Bearer <Firebase ID token>
-        { summary, question, history[] }
+        {
+          summary, question, history[],
+          extractedText?,   // PROP-0011 Phase 3: preferred grounding context
+        }
             ↓
         Worker: verifies token
+            → Picks extractedText (capped at 30 000 chars) when non-empty;
+              otherwise falls back to summary as the grounding context
             → Groq stream: true
-                  system prompt: answer only from the document summary;
+                  system prompt: answer only from the document content;
                                  reply OFF_TOPIC if unrelated
             → pipes tokens as SSE:
                   data: {"t":"<token>"}\n\n   (one per chunk)
@@ -259,9 +294,12 @@ Flutter reads SSE line by line  →  yield AiMessage(content: accumulated)
 ### Firestore schema additions (posts/{postId})
 
 ```
-summaryStatus   'pending' | 'done' | 'error' | 'flagged' | 'unsupported_type'
-summary         string (present only when status = done)
-summarizedAt    Timestamp (present only when status = done)
+summaryStatus            'pending' | 'done' | 'error' | 'flagged' | 'unsupported_type'
+summary                  string     (present only when status = done)
+summarizedAt             Timestamp  (present only when status = done)
+extractedText            string     (PROP-0011, ≤ 60 000 chars; PDF/DOCX body or image transcription)
+extractedTextTruncated   bool       (PROP-0011, true when extractedText was clipped at the cap)
+aiTags                   string[]   (PROP-0011 Phase 2, kebab-case AI-derived topic tags, deduped via embeddings)
 ```
 
 ---

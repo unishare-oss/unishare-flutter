@@ -35,8 +35,7 @@ class PostFirestoreDatasource {
       'externalUrl': draft.externalUrl,
       'mediaUrls': mediaUrls,
       'mediaTypes': mediaTypes,
-      if (mediaTypes.contains('pdf') || mediaTypes.contains('docx'))
-        'summaryStatus': 'pending',
+      if (_isSummarizable(mediaTypes)) 'summaryStatus': 'pending',
       'codeSnippetUrl': codeSnippetUrl,
       'tags': draft.tags,
       'likesCount': 0,
@@ -81,6 +80,25 @@ class PostFirestoreDatasource {
     });
   }
 
+  /// One-shot fetch of multiple posts by ID, preserving the input order.
+  /// Used by semantic search to materialize Post entities from the
+  /// postIds returned by the worker. Firestore's `whereIn` caps at 30 IDs
+  /// per query — callers that need more should chunk.
+  Future<List<Post>> getPostsByIds(List<String> ids) async {
+    if (ids.isEmpty) return const [];
+    final snapshot = await _firestore
+        .collection('posts')
+        .where(FieldPath.documentId, whereIn: ids)
+        .get();
+    final byId = <String, Post>{};
+    for (final doc in snapshot.docs) {
+      byId[doc.id] = _docToPost(doc);
+    }
+    // whereIn doesn't guarantee result order; re-order by request to keep
+    // the similarity ranking the worker provided.
+    return ids.map((id) => byId[id]).whereType<Post>().toList(growable: false);
+  }
+
   Post _docToPost(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data()!;
     return Post(
@@ -120,6 +138,9 @@ class PostFirestoreDatasource {
         data['summaryStatus'] as String?,
       ),
       summarizedAt: (data['summarizedAt'] as Timestamp?)?.toDate(),
+      extractedText: data['extractedText'] as String?,
+      extractedTextTruncated: data['extractedTextTruncated'] as bool?,
+      aiTags: List<String>.from(data['aiTags'] as List? ?? []),
     );
   }
 
@@ -149,16 +170,29 @@ class PostFirestoreDatasource {
     });
   }
 
+  /// Persists the worker's summarize response onto the post doc. `summary`
+  /// and `extractedText` are deleted from the doc when null so we don't
+  /// leave stale partials behind on retried calls.
   Future<void> updatePostSummary(
     String postId,
     String? summary,
-    String summaryStatus,
-  ) async {
+    String summaryStatus, {
+    String? extractedText,
+    bool? extractedTextTruncated,
+    List<String>? aiTags,
+  }) async {
     await _firestore.collection('posts').doc(postId).update({
       'summaryStatus': summaryStatus,
       'summary': summary ?? FieldValue.delete(),
       'summarizedAt': summaryStatus == 'done'
           ? FieldValue.serverTimestamp()
+          : FieldValue.delete(),
+      'extractedText': (extractedText != null && extractedText.isNotEmpty)
+          ? extractedText
+          : FieldValue.delete(),
+      'extractedTextTruncated': extractedTextTruncated ?? FieldValue.delete(),
+      'aiTags': (aiTags != null && aiTags.isNotEmpty)
+          ? aiTags
           : FieldValue.delete(),
     });
   }
@@ -192,4 +226,15 @@ class PostFirestoreDatasource {
     }
     await _firestore.collection('posts').doc(postId).update(data);
   }
+}
+
+/// Media types we send to the AI summarize worker. Kept in sync with the
+/// worker's accepted file types (PDF/DOCX via text extraction, images via
+/// vision model). Defined here so createPost can pre-set
+/// `summaryStatus: 'pending'` for the same set the repository will trigger.
+bool _isSummarizable(List<String> mediaTypes) {
+  for (final t in mediaTypes) {
+    if (t == 'pdf' || t == 'docx' || t == 'image') return true;
+  }
+  return false;
 }

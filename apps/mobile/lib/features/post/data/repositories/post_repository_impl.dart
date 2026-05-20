@@ -8,6 +8,7 @@ import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 
 import 'package:unishare_mobile/features/post/data/datasources/ai_summarize_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
+import 'package:unishare_mobile/features/post/data/datasources/tag_whitelist_service.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
@@ -23,8 +24,10 @@ class PostRepositoryImpl implements PostRepository {
     required this.feedCache,
     this.cacheTtl = const Duration(minutes: 5),
     AiSummarizeDatasource? aiSummarizeDatasource,
+    TagWhitelistService? tagWhitelistService,
   }) : _aiSummarizeDatasource =
-           aiSummarizeDatasource ?? AiSummarizeDatasource();
+           aiSummarizeDatasource ?? AiSummarizeDatasource(),
+       _tagWhitelistService = tagWhitelistService;
 
   final PostFirestoreDatasource firestoreDatasource;
   final PostStorageDatasource storageDatasource;
@@ -32,6 +35,11 @@ class PostRepositoryImpl implements PostRepository {
   final FeedCache feedCache;
   final Duration cacheTtl;
   final AiSummarizeDatasource _aiSummarizeDatasource;
+
+  /// Optional — null in unit tests that don't exercise vocabulary control.
+  /// When set, [triggerSummarize] passes the cached top-tags list to the
+  /// worker so the model prefers reusing existing tag vocabulary.
+  final TagWhitelistService? _tagWhitelistService;
 
   @override
   Stream<List<Post>> watchFeed({int limit = 20}) async* {
@@ -196,12 +204,12 @@ class PostRepositoryImpl implements PostRepository {
       await removeDraft(draft.id);
 
       final supportedIndex = mediaTypes.indexWhere(
-        (t) => t == 'pdf' || t == 'docx',
+        (t) => t == 'pdf' || t == 'docx' || t == 'image',
       );
       if (supportedIndex != -1) {
         final fileUrl = mediaUrls[supportedIndex];
         final filename = fileUrl.split('/').last;
-        triggerSummarize(current.id, fileUrl, filename);
+        triggerSummarize(current.id, fileUrl, filename, title: current.title);
       }
     } catch (e) {
       await saveDraft(
@@ -215,23 +223,62 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @visibleForTesting
-  void triggerSummarize(String postId, String fileUrl, String filename) {
-    _aiSummarizeDatasource
-        .call(fileUrl: fileUrl, filename: filename)
-        .then(
-          (data) async {
-            final summaryStatus = data['summaryStatus'] as String? ?? 'error';
-            final summary = data['summary'] as String?;
-            await firestoreDatasource.updatePostSummary(
-              postId,
-              summary,
-              summaryStatus,
-            );
-          },
-          onError: (_) async {
-            await firestoreDatasource.updatePostSummary(postId, null, 'error');
-          },
+  void triggerSummarize(
+    String postId,
+    String fileUrl,
+    String filename, {
+    String title = '',
+  }) {
+    // Fire-and-forget: fetch the Phase A whitelist (advisory; failures
+    // degrade to an empty list), then dispatch summarize and write back
+    // whatever the worker returns. [title] is passed to the worker so it
+    // can include it in the Vectorize search blob (PROP-0011 Phase 4a).
+    Future<void> runSummarize() async {
+      final existingTags = await _tagWhitelistService?.topTags() ?? const [];
+      try {
+        final data = await _aiSummarizeDatasource.call(
+          fileUrl: fileUrl,
+          filename: filename,
+          existingTags: existingTags,
+          postId: postId,
+          title: title,
         );
+        final summaryStatus = data['summaryStatus'] as String? ?? 'error';
+        final summary = data['summary'] as String?;
+        final extractedText = data['extractedText'] as String?;
+        final extractedTextTruncated = data['extractedTextTruncated'] as bool?;
+        // Defensive parse: aiTags crosses a network boundary, so don't trust
+        // the runtime shape. Drop any non-string entries instead of throwing
+        // on a malformed worker response (Copilot review #4).
+        final aiTagsRaw = data['aiTags'];
+        final aiTags = aiTagsRaw is List
+            ? aiTagsRaw.whereType<String>().toList(growable: false)
+            : const <String>[];
+        await firestoreDatasource.updatePostSummary(
+          postId,
+          summary,
+          summaryStatus,
+          extractedText: extractedText,
+          extractedTextTruncated: extractedTextTruncated,
+          aiTags: aiTags,
+        );
+      } catch (_) {
+        // Explicitly clear derived fields on retry-failure so a previously
+        // successful summary's data doesn't survive next to an `error` status
+        // (Copilot review #3).
+        await firestoreDatasource.updatePostSummary(
+          postId,
+          null,
+          'error',
+          extractedText: null,
+          extractedTextTruncated: null,
+          aiTags: const [],
+        );
+      }
+    }
+
+    // ignore: unawaited_futures
+    runSummarize();
   }
 
   @override

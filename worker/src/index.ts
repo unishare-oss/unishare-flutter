@@ -3,6 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { verifyFirebaseJwt } from './jwt';
 import { handleAiSummarize } from './ai-summarize';
 import { handleAiChat } from './ai-chat';
+import { handleAiSearch } from './ai-search';
 import { CORS_HEADERS, json } from './response';
 
 export interface Env {
@@ -15,6 +16,11 @@ export interface Env {
   GROQ_API_KEY: string;
   GROQ_MODEL?: string;
   GROQ_VISION_MODEL?: string;
+  // PROP-0011 Phase 4 — semantic search bindings. Provided by wrangler.toml.
+  VECTORIZE: VectorizeIndex;
+  // PROP-0011 Phase 4c — canonical-tag index for embedding-based tag dedup.
+  TAG_INDEX: VectorizeIndex;
+  AI: Ai;
 }
 
 const MIME_TO_EXT: Record<string, string> = {
@@ -85,6 +91,12 @@ export default {
       const uid = await requireAuth(request, env);
       if (uid instanceof Response) return uid;
       return handleAiChat(request, env);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/ai/search') {
+      const uid = await requireAuth(request, env);
+      if (uid instanceof Response) return uid;
+      return handleAiSearch(request, env);
     }
 
     if (request.method !== 'POST') {

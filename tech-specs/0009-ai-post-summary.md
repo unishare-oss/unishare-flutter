@@ -11,6 +11,8 @@ description: "AI-generated document summaries and an in-context Q&A interface fo
 **Proposal:** [PROP-0009](../tech-proposals/0009-ai-post-summary.md)
 **Approved by:** (fill in when approved)
 
+> **Extended by [PROP-0011: AI Content Suite](../tech-proposals/0011-ai-content-suite.md).** This spec describes the v1 text-only flow (PDF/DOCX → summary). PROP-0011 adds image-file summarization (Llama 4 Scout vision), caches extracted text on the post doc for downstream features, and lays groundwork for auto-tags, semantic search, and full-RAG chat. Refer to PROP-0011 for the current Firestore field set and worker response shape.
+
 ---
 
 ## Overview

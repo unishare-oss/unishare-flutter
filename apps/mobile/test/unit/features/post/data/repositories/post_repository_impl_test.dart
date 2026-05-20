@@ -20,6 +20,7 @@ class _FakeAiSummarizeDatasource extends AiSummarizeDatasource {
   Map<String, dynamic>? result;
   Object? error;
   String? capturedFileUrl;
+  List<String>? capturedExistingTags;
 
   _FakeAiSummarizeDatasource({this.result, this.error});
 
@@ -27,8 +28,12 @@ class _FakeAiSummarizeDatasource extends AiSummarizeDatasource {
   Future<Map<String, dynamic>> call({
     required String fileUrl,
     required String filename,
+    List<String> existingTags = const [],
+    String? postId,
+    String? title,
   }) async {
     capturedFileUrl = fileUrl;
+    capturedExistingTags = existingTags;
     if (error != null) throw error!;
     return result ?? {'summaryStatus': 'done', 'summary': 'Test summary'};
   }
@@ -40,6 +45,9 @@ class _FakeDatasource extends PostFirestoreDatasource {
 
   String? lastSummaryStatus;
   String? lastSummary;
+  String? lastExtractedText;
+  bool? lastExtractedTextTruncated;
+  List<String>? lastAiTags;
 
   void emit(List<Post> posts) => _ctrl.add(posts);
   void close() => _ctrl.close();
@@ -51,10 +59,16 @@ class _FakeDatasource extends PostFirestoreDatasource {
   Future<void> updatePostSummary(
     String postId,
     String? summary,
-    String summaryStatus,
-  ) async {
+    String summaryStatus, {
+    String? extractedText,
+    bool? extractedTextTruncated,
+    List<String>? aiTags,
+  }) async {
     lastSummary = summary;
     lastSummaryStatus = summaryStatus;
+    lastExtractedText = extractedText;
+    lastExtractedTextTruncated = extractedTextTruncated;
+    lastAiTags = aiTags;
   }
 }
 
@@ -208,7 +222,13 @@ void main() {
       'success path — updatePostSummary called with worker response',
       () async {
         final ai = _FakeAiSummarizeDatasource(
-          result: {'summaryStatus': 'done', 'summary': 'Great summary'},
+          result: {
+            'summaryStatus': 'done',
+            'summary': 'Great summary',
+            'extractedText': 'The full source text…',
+            'extractedTextTruncated': false,
+            'aiTags': ['krebs-cycle', 'atp-synthesis', 'mitochondria'],
+          },
         );
         final ds = _FakeDatasource();
         final repo = makeRepo(
@@ -226,6 +246,43 @@ void main() {
 
         expect(ds.lastSummaryStatus, 'done');
         expect(ds.lastSummary, 'Great summary');
+        expect(ds.lastExtractedText, 'The full source text…');
+        expect(ds.lastExtractedTextTruncated, false);
+        expect(
+          ds.lastAiTags,
+          equals(['krebs-cycle', 'atp-synthesis', 'mitochondria']),
+        );
+      },
+    );
+
+    test(
+      'image response — extractedText from transcription persisted with truncated flag',
+      () async {
+        final ai = _FakeAiSummarizeDatasource(
+          result: {
+            'summaryStatus': 'done',
+            'summary': 'Handwritten notes on Krebs cycle',
+            'extractedText': 'Step 1: Acetyl-CoA + Oxaloacetate → Citrate…',
+            'extractedTextTruncated': true,
+          },
+        );
+        final ds = _FakeDatasource();
+        final repo = makeRepo(
+          feedCache: FeedCache(),
+          datasource: ds,
+          aiDatasource: ai,
+        );
+
+        repo.triggerSummarize(
+          'post-image',
+          'https://cdn.example.com/posts/notes.jpg',
+          'notes.jpg',
+        );
+        await Future<void>.delayed(const Duration(milliseconds: 50));
+
+        expect(ds.lastSummaryStatus, 'done');
+        expect(ds.lastExtractedText, startsWith('Step 1: Acetyl-CoA'));
+        expect(ds.lastExtractedTextTruncated, true);
       },
     );
 

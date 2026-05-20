@@ -3,11 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:unishare_mobile/core/storage/tag_whitelist_box.dart';
 import 'package:unishare_mobile/features/post/data/datasources/comment_firestore_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_firestore_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_storage_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/share_plus_datasource.dart';
+import 'package:unishare_mobile/features/post/data/datasources/tag_whitelist_service.dart';
 import 'package:unishare_mobile/features/post/data/models/post_draft_model.dart';
 import 'package:unishare_mobile/features/post/data/repositories/comment_repository_impl.dart';
 import 'package:unishare_mobile/features/post/data/repositories/like_repository_impl.dart';
@@ -46,12 +48,18 @@ PostStorageDatasource postStorageDatasource(Ref ref) {
 FeedCache feedCache(Ref ref) => FeedCache();
 
 @Riverpod(keepAlive: true)
+TagWhitelistService tagWhitelistService(Ref ref) {
+  return TagWhitelistService(cacheBox: Hive.box<dynamic>(tagWhitelistBoxName));
+}
+
+@Riverpod(keepAlive: true)
 PostRepository postRepository(Ref ref) {
   return PostRepositoryImpl(
     firestoreDatasource: ref.watch(postFirestoreDatasourceProvider),
     storageDatasource: ref.watch(postStorageDatasourceProvider),
     draftBox: Hive.box<PostDraftModel>('draft_queue'),
     feedCache: ref.watch(feedCacheProvider),
+    tagWhitelistService: ref.watch(tagWhitelistServiceProvider),
   );
 }
 
