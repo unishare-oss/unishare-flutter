@@ -432,6 +432,10 @@ async function summarizeText(
   if (parsed.status === 'unreadable') {
     return { summary: 'UNREADABLE', extractedText: '', extractedTextTruncated: false, aiTags: [] }
   }
+  // Guard against the model emitting `{status: "ok"}` with no summary body —
+  // we'd otherwise persist `summaryStatus: 'done'` with an empty string and
+  // confuse the post UI. Treat as a transient LLM failure (retryable).
+  if (!parsed.summary.trim()) throw new Error('llm_failed')
   return {
     summary: parsed.summary,
     extractedText: text,
@@ -517,6 +521,9 @@ async function summarizeImage(
   if (parsed.status === 'unreadable') {
     return { summary: 'UNREADABLE', extractedText: '', extractedTextTruncated: false, aiTags: [] }
   }
+  // Same empty-summary guard as the text path — don't persist an empty
+  // `done` summary if the vision model returned a malformed JSON envelope.
+  if (!parsed.summary.trim()) throw new Error('llm_failed')
   const truncated = parsed.transcribedText.length > PERSIST_TEXT_CAP
   const extractedText = truncated
     ? parsed.transcribedText.slice(0, PERSIST_TEXT_CAP)

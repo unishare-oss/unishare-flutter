@@ -5,11 +5,11 @@ description: "Layer auto-tagging, semantic search, and full-document chat on top
 
 # PROP-0011: AI content suite — auto-tags, semantic search, full-RAG chat
 
-**Status:** DRAFT
+**Status:** ACCEPTED
 **Author:** Pyae Sone Shin Thant
 **Date:** 2026-05-19
-**Spec:** (pending approval)
-**Approved by:** (fill in when accepted)
+**Spec:** (intentionally omitted — implemented directly per author/reviewer agreement)
+**Approved by:** Pyae Sone Shin Thant (2026-05-20)
 
 ---
 

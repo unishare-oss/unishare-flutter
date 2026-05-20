@@ -247,7 +247,13 @@ class PostRepositoryImpl implements PostRepository {
         final summary = data['summary'] as String?;
         final extractedText = data['extractedText'] as String?;
         final extractedTextTruncated = data['extractedTextTruncated'] as bool?;
-        final aiTags = (data['aiTags'] as List?)?.cast<String>();
+        // Defensive parse: aiTags crosses a network boundary, so don't trust
+        // the runtime shape. Drop any non-string entries instead of throwing
+        // on a malformed worker response (Copilot review #4).
+        final aiTagsRaw = data['aiTags'];
+        final aiTags = aiTagsRaw is List
+            ? aiTagsRaw.whereType<String>().toList(growable: false)
+            : const <String>[];
         await firestoreDatasource.updatePostSummary(
           postId,
           summary,
@@ -257,7 +263,17 @@ class PostRepositoryImpl implements PostRepository {
           aiTags: aiTags,
         );
       } catch (_) {
-        await firestoreDatasource.updatePostSummary(postId, null, 'error');
+        // Explicitly clear derived fields on retry-failure so a previously
+        // successful summary's data doesn't survive next to an `error` status
+        // (Copilot review #3).
+        await firestoreDatasource.updatePostSummary(
+          postId,
+          null,
+          'error',
+          extractedText: null,
+          extractedTextTruncated: null,
+          aiTags: const [],
+        );
       }
     }
 

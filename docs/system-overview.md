@@ -214,7 +214,11 @@ triggerSummarize(postId, fileUrl, filename)  [fire-and-forget]
     ↓
 AiSummarizeDatasource  →  POST /ai/summarize
     Authorization: Bearer <Firebase ID token>
-    { fileUrl, filename }
+    {
+      fileUrl, filename,
+      postId, title,              // PROP-0011 Phase 4a: keys the Vectorize upsert
+      existingTags?: string[],    // PROP-0011 Phase 2b: corpus top-tag whitelist
+    }
         ↓
     Worker: verifies token, fetches file from R2 (max 20 MB, 10 s timeout)
         Routes by R2 Content-Type (server-controlled, not client filename):
@@ -231,17 +235,23 @@ AiSummarizeDatasource  →  POST /ai/summarize
                  model returns: { status, transcribedText, summary }
              clip transcription to 60 000 chars
 
+        After a successful 'done' summary, the worker also (best-effort):
+          • dedups aiTags via the unishare-tags Vectorize index (snap when cosine ≥ 0.85)
+          • embeds title+summary+aiTags+leading body into unishare-posts (keyed by postId)
+        Failures here log + degrade; they never fail the summarize response.
+
         Final response: {
           summaryStatus: 'done'|'error'|'flagged'|'unsupported_type',
           summary?,
-          extractedText?,            // PROP-0011: source text for downstream AI
+          extractedText?,            // PROP-0011 Phase 1: source text for downstream AI
           extractedTextTruncated?,   // true when clipped at 60 000 chars
+          aiTags?: string[],         // PROP-0011 Phase 2: kebab-case topic tags
         }
     ↓
 PostFirestoreDatasource.updatePostSummary()
     → Firestore: posts/{postId}.update({
         summaryStatus, summary, summarizedAt,
-        extractedText, extractedTextTruncated,
+        extractedText, extractedTextTruncated, aiTags,
       })
 
 Firestore stream (watchPost) fires  →  postDetailProvider rebuilds
@@ -252,7 +262,7 @@ The vision branch was added in PR #73 (PROP-0010) and extended to return `transc
 
 ### Ask AI (streaming)
 
-Scoped to the document summary — the LLM never sees the raw file. Conversation history is managed client-side.
+Grounded by the document's cached extracted text when available (PROP-0011 Phase 3) — answers can reference details beyond the 3-7 bullet summary. Falls back to `summary` for pre-Phase-1 posts that never cached `extractedText`. Conversation history is managed client-side.
 
 ```
 User sends question  →  AskAiNotifier.sendMessage()
@@ -261,11 +271,16 @@ User sends question  →  AskAiNotifier.sendMessage()
 AskAiUseCase  →  AskAiRepositoryImpl  →  AskAiDatasource
     client.send()  →  POST /ai/chat
         Authorization: Bearer <Firebase ID token>
-        { summary, question, history[] }
+        {
+          summary, question, history[],
+          extractedText?,   // PROP-0011 Phase 3: preferred grounding context
+        }
             ↓
         Worker: verifies token
+            → Picks extractedText (capped at 30 000 chars) when non-empty;
+              otherwise falls back to summary as the grounding context
             → Groq stream: true
-                  system prompt: answer only from the document summary;
+                  system prompt: answer only from the document content;
                                  reply OFF_TOPIC if unrelated
             → pipes tokens as SSE:
                   data: {"t":"<token>"}\n\n   (one per chunk)
@@ -284,6 +299,7 @@ summary                  string     (present only when status = done)
 summarizedAt             Timestamp  (present only when status = done)
 extractedText            string     (PROP-0011, ≤ 60 000 chars; PDF/DOCX body or image transcription)
 extractedTextTruncated   bool       (PROP-0011, true when extractedText was clipped at the cap)
+aiTags                   string[]   (PROP-0011 Phase 2, kebab-case AI-derived topic tags, deduped via embeddings)
 ```
 
 ---
