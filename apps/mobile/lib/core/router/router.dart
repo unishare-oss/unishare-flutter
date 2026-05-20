@@ -103,13 +103,6 @@ enum DrawerDestination {
 class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(this._ref) {
     _ref.listen<AsyncValue<Object?>>(authStateProvider, (prev, next) {
-      // When the user transitions from unauthenticated → authenticated while
-      // in guest mode, clear the guest flag so the auth shell is shown.
-      final wasAuthenticated = prev?.asData?.value != null;
-      final isNowAuthenticated = next.asData?.value != null;
-      if (!wasAuthenticated && isNowAuthenticated) {
-        _ref.read(guestModeProvider.notifier).exit();
-      }
       notifyListeners();
     });
     _ref.listen<bool>(guestModeProvider, (prev, next) => notifyListeners());
@@ -140,8 +133,8 @@ class _RouterNotifier extends ChangeNotifier {
       return null;
     }
 
-    // 2. Authenticated on an auth route → honour redirect param or go to /feed
-    if (isAuthenticated && authRoutes.contains(currentPath)) {
+    // 2. Authenticated or guest on an auth route → honour redirect param or go to /feed
+    if ((isAuthenticated || isGuest) && authRoutes.contains(currentPath)) {
       final redirectParam = state.uri.queryParameters['redirect'];
       if (redirectParam != null && redirectParam.isNotEmpty) {
         final decoded = Uri.decodeComponent(redirectParam);
@@ -309,7 +302,9 @@ GoRouter router(Ref ref) {
               ),
               GoRoute(
                 path: '/departments',
-                builder: (context, state) => const DepartmentsScreen(),
+                builder: (context, state) => DepartmentsScreen(
+                  scrollKey: ShellScaffold.guestDepartmentsScrollKey,
+                ),
                 routes: [
                   GoRoute(
                     path: ':deptId',

@@ -72,10 +72,13 @@ class FakeFirebaseAuthDatasource extends FirebaseAuthDatasource {
 // ---------------------------------------------------------------------------
 
 class FakeFirebaseUser extends Fake implements User {
-  FakeFirebaseUser({required this.uid});
+  FakeFirebaseUser({required this.uid, this.isAnonymous = false});
 
   @override
   final String uid;
+
+  @override
+  final bool isAnonymous;
 
   @override
   String? get displayName => null;

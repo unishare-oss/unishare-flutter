@@ -6,7 +6,6 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
-import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/unishare_logo.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_grid.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_user_row.dart';
@@ -165,11 +164,9 @@ class MoreDrawerSheet extends ConsumerWidget {
     // Capture providers before popping — the modal's ConsumerWidget is torn
     // down by the pop, after which `ref` reads can warn.
     final signOut = ref.read(signOutUseCaseProvider);
-    final guestMode = ref.read(guestModeProvider.notifier);
     if (context.mounted) Navigator.of(context).pop();
     try {
       await signOut.call();
-      guestMode.exit();
     } catch (e) {
       messenger.showSnackBar(
         const SnackBar(content: Text('Sign out failed. Please try again.')),

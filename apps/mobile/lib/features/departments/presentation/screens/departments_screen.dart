@@ -5,19 +5,46 @@ import 'package:go_router/go_router.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/departments_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
+import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
-class DepartmentsScreen extends ConsumerWidget {
-  const DepartmentsScreen({super.key});
+class DepartmentsScreen extends ConsumerStatefulWidget {
+  const DepartmentsScreen({
+    required GlobalKey<State> scrollKey,
+    this.routeBase = '/departments',
+  }) : super(key: scrollKey);
+
+  final String routeBase;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DepartmentsScreen> createState() => _DepartmentsScreenState();
+}
+
+class _DepartmentsScreenState extends ConsumerState<DepartmentsScreen>
+    with ScrollToTopTarget {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  ScrollController get scrollController => _scrollController;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final ac = Theme.of(context).extension<AppColors>()!;
 
     final departmentsAsync = ref.watch(departmentsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Departments')),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: const Text('Departments'),
+        automaticallyImplyLeading: false,
+      ),
       body: departmentsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(
@@ -38,6 +65,7 @@ class DepartmentsScreen extends ConsumerWidget {
             );
           }
           return ListView.separated(
+            controller: _scrollController,
             padding: const EdgeInsets.fromLTRB(
               16,
               16,
@@ -50,7 +78,7 @@ class DepartmentsScreen extends ConsumerWidget {
               final dept = departments[index];
               return GestureDetector(
                 onTap: () => context.push(
-                  '/departments/${dept.id}'
+                  '${widget.routeBase}/${dept.id}'
                   '?name=${Uri.encodeComponent(dept.name)}',
                 ),
                 child: _DepartmentTile(name: dept.name),

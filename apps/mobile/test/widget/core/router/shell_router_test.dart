@@ -33,7 +33,7 @@ Widget _buildApp({bool authenticated = true}) {
       authStateProvider.overrideWith(
         (_) => authenticated ? Stream.value(_fakeUser) : const Stream.empty(),
       ),
-      guestModeProvider.overrideWith(GuestMode.new),
+      guestModeProvider.overrideWithValue(false),
       // Stub out Hive-backed draft queue so CreatePostScreen renders without
       // requiring Hive.openBox() in tests.
       draftQueueProvider.overrideWithValue(<PostDraft>[]),

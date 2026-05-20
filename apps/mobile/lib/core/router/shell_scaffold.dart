@@ -23,6 +23,8 @@ class ShellScaffold extends ConsumerWidget {
     (_) => GlobalKey<State>(),
   );
 
+  static final GlobalKey<State> guestDepartmentsScrollKey = GlobalKey<State>();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final activeIndex = navigationShell.currentIndex;

@@ -7,6 +7,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
@@ -535,6 +536,9 @@ class _PostHeader extends ConsumerWidget {
             commentsCount: 0,
           ),
         );
+        if (context.mounted && isGuest) {
+          _showGuestSaveBanner(context, ref);
+        }
       }
     } catch (_) {
       if (context.mounted) {
@@ -543,6 +547,49 @@ class _PostHeader extends ConsumerWidget {
         );
       }
     }
+  }
+
+  void _showGuestSaveBanner(BuildContext context, WidgetRef ref) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentMaterialBanner()
+      ..showMaterialBanner(
+        MaterialBanner(
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+          content: Text(
+            'Sign up to sync your saves across devices',
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+          ),
+          leading: Icon(Icons.bookmark, color: ac.amber, size: 18),
+          backgroundColor: Theme.of(context).cardColor,
+          dividerColor: Colors.transparent,
+          actions: [
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                ref.read(authRepositoryProvider).signOut();
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: ac.amber,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+              ),
+              child: const Text('Sign up'),
+            ),
+            TextButton(
+              onPressed: () =>
+                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner(),
+              style: TextButton.styleFrom(
+                foregroundColor: ac.mutedForeground,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+              ),
+              child: const Text('Dismiss'),
+            ),
+          ],
+        ),
+      );
   }
 
   @override

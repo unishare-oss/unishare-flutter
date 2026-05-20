@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/providers/saved_posts_provider.dart';
 import 'package:unishare_mobile/features/saved/presentation/widgets/saved_post_card.dart';
@@ -48,11 +49,11 @@ class SavedScreen extends ConsumerWidget {
   }
 }
 
-class _GuestBanner extends StatelessWidget {
+class _GuestBanner extends ConsumerWidget {
   const _GuestBanner();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -67,7 +68,7 @@ class _GuestBanner extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () => context.go('/welcome'),
+            onPressed: () => ref.read(authRepositoryProvider).signOut(),
             child: const Text('→ Sign in to sync'),
           ),
         ],

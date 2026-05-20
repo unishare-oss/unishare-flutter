@@ -16,6 +16,8 @@ class GuestShellScaffold extends StatelessWidget {
     final path = GoRouterState.of(context).uri.path;
     final isOnFeed = path == '/feed' || path.startsWith('/feed/');
     final isOnSaved = path == '/saved';
+    final isOnDepartments =
+        path == '/departments' || path.startsWith('/departments/');
     return PopScope(
       canPop: isOnFeed || context.canPop(),
       onPopInvokedWithResult: (didPop, _) {
@@ -32,6 +34,7 @@ class GuestShellScaffold extends StatelessWidget {
         bottomNavigationBar: GuestNavBar(
           isOnFeed: isOnFeed,
           isOnSaved: isOnSaved,
+          isOnDepartments: isOnDepartments,
           onFeedTap: () {
             if (isOnFeed) {
               final state = ShellScaffold
@@ -45,6 +48,17 @@ class GuestShellScaffold extends StatelessWidget {
             context.go('/feed');
           },
           onSavedTap: () => context.go('/saved'),
+          onDepartmentsTap: () {
+            if (isOnDepartments) {
+              final state =
+                  ShellScaffold.guestDepartmentsScrollKey.currentState;
+              if (state is ScrollToTopTarget) {
+                (state as ScrollToTopTarget).scrollToTop();
+              }
+              return;
+            }
+            context.go('/departments');
+          },
         ),
       ),
     );
