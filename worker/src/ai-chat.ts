@@ -1,6 +1,7 @@
 import Groq from 'groq-sdk'
 import type { Env } from './index'
 import { CORS_HEADERS, jsonError } from './response'
+import { retrieveChunks, CHUNK_THRESHOLD } from './chunking'
 
 /// PROP-0011 Phase 3 — grounding context switched from the 3-7 bullet summary
 /// to the full extracted text. Clients pass `extractedText` (PDF/DOCX body or
@@ -29,6 +30,7 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
   let body: {
     summary?: string
     extractedText?: string
+    postId?: string
     question: string
     history?: Array<{ role: 'user' | 'assistant'; content: string }>
   }
@@ -38,18 +40,35 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
     return jsonError('Invalid JSON body', 400)
   }
 
-  const { summary, extractedText, question, history = [] } = body
+  const { summary, extractedText, postId, question, history = [] } = body
 
   // Prefer extractedText (full document content, PROP-0011 Phase 3) when the
   // client supplies it; fall back to summary for backward compat with posts
   // created before extractedText was cached.
   const summaryClean =
     typeof summary === 'string' && summary.trim() ? summary.trim() : ''
-  const extractedClean =
+  const extractedRaw =
     typeof extractedText === 'string' && extractedText.trim()
-      ? extractedText.trim().slice(0, CONTEXT_CHAR_CAP)
+      ? extractedText.trim()
       : ''
-  const context = extractedClean || summaryClean
+  const postIdClean = typeof postId === 'string' && postId.length > 0 ? postId : ''
+
+  let context: string
+  if (extractedRaw.length > CHUNK_THRESHOLD && postIdClean) {
+    const trimmedQ = typeof question === 'string' ? question.trim() : ''
+    const chunks = await retrieveChunks(env, postIdClean, trimmedQ, 5)
+    if (chunks.length > 0) {
+      context = chunks.join('\n\n---\n\n')
+    } else {
+      // Retrieval returned nothing (either failed or no chunks indexed —
+      // common for pre-PROP-0011-followup posts). Fall back to the slice path.
+      context = extractedRaw.slice(0, CONTEXT_CHAR_CAP)
+    }
+  } else if (extractedRaw.length > 0) {
+    context = extractedRaw.slice(0, CONTEXT_CHAR_CAP)
+  } else {
+    context = summaryClean
+  }
   if (!context) return jsonError('summary or extractedText required', 400)
 
   const trimmedQuestion = typeof question === 'string' ? question.trim() : ''
