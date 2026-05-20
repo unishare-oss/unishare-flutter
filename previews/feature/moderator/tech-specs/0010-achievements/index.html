@@ -1,0 +1,4076 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Implementation spec for the achievement-only XP system with tiered badges, level rollup, and four v1 surfaces.">
+      
+      
+      
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/moderator/tech-specs/0010-achievements/">
+      
+      
+        <link rel="prev" href="../0009-ai-post-summary/">
+      
+      
+        <link rel="next" href="../0010-share-post/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>0010: Achievements System - Unishare Engineering Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spec-0010-achievements-system" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Unishare Engineering Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              0010: Achievements System
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unishare-oss/unishare-flutter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unishare-oss/unishare-flutter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Unishare Engineering Docs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../decisions/" class="md-tabs__link">
+          
+  
+  
+  Decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
+          
+  
+  
+  Stencils
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tech-proposals/" class="md-tabs__link">
+          
+  
+  
+  Tech proposals
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Tech specs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Unishare Engineering Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unishare-oss/unishare-flutter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unishare-oss/unishare-flutter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unishare Engineering Docs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Decision Records
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Use Firestore array-contains-any for feed tag filtering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Single-slot theming for 12-theme design system
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: border token lives in ColorScheme.outline, not AppColors
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Use connectivity_plus and file_picker for post integration
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: GlobalKey mixin pattern for shell-triggered scroll-to-top
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: GlobalKey<State> with runtime cast replaces GlobalKey<ScrollToTopTarget>
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail screen uses hybrid seed-then-stream data loading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Unified /preview GoRoute with FilePreviewArgs extra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0008-share-post-deep-link-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Use Firebase Hosting + share_plus for universal deep-link sharing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievement-only XP with event-driven badge evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0011-edit-delete-own-post-action-surface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: Edit and delete own post — action surface on PostDetailScreen only
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stencils
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stencils
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposal Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Spec Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech proposals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech proposals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0001-notification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Notification System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0003-post-feed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Post Feed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0005-feed-filtering-tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Feed Filtering by Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0005-main-navbar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0007-file-preview-screen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0007-save-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0008-request-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0009-ai-post-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0010-achievements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievements System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0010-share-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0011-ai-content-suite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: AI content suite — auto-tags, semantic search, full-RAG chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0011-edit-delete-own-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: Edit and Delete Own Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-proposals/0012-ai-admin-moderation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0012: AI Admin Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-auth-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Auth Feature Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-notification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Notification System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0002-navigation-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: Navigation Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Feed Filtering by Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-main-navbar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-file-preview-screen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-save-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0008-request-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0009-ai-post-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievements System
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievements System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#firestore-badgesbadgeid-catalog-20-docs-at-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — badges/{badgeId} (catalog, ~20 docs at v1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-usersuid-extended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — users/{uid} (extended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-usersuidearnedbadgesbadgeid-append-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — users/{uid}/earnedBadges/{badgeId} (append-only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-usersuiduniquesaverssaveruid-presence-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — users/{uid}/uniqueSavers/{saverUid} (presence set)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-app_configlevels-tunable-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — app_config/levels (tunable lookup)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File map
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File map">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flutter-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-rules-indexes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore rules + indexes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Seeds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domain-layer-pure-dart-zero-flutter-firebase-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain layer (pure Dart, zero Flutter / Firebase imports)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-evaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function evaluator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-rules-key-clauses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore rules — key clauses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#riverpod-provider-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Riverpod provider signatures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-badge-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v1 Badge Catalog
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ux-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UX Contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UX Contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profile-card-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile card layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#badge-frame-visual-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Badge frame visual variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#earn-moment-dispatcher-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Earn-moment dispatcher rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notification-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notification entries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theme compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-anti-abuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security &amp; Anti-Abuse
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security &amp; Anti-Abuse">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#firestore-rules-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore rules summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#counter-abuse-defences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Counter-abuse defences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#revocation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revocation policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrity-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrity sweep
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coverage-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-share-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-edit-delete-own-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: Edit and Delete Own Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-users-public-and-discoverability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: users_public mirror + achievements discoverability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0012-ai-admin-moderation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0012: AI Admin Moderation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#firestore-badgesbadgeid-catalog-20-docs-at-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — badges/{badgeId} (catalog, ~20 docs at v1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-usersuid-extended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — users/{uid} (extended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-usersuidearnedbadgesbadgeid-append-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — users/{uid}/earnedBadges/{badgeId} (append-only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-usersuiduniquesaverssaveruid-presence-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — users/{uid}/uniqueSavers/{saverUid} (presence set)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-app_configlevels-tunable-lookup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore — app_config/levels (tunable lookup)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File map
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="File map">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flutter-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-rules-indexes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore rules + indexes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seeds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Seeds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domain-layer-pure-dart-zero-flutter-firebase-imports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain layer (pure Dart, zero Flutter / Firebase imports)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-evaluator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function evaluator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-rules-key-clauses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore rules — key clauses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#riverpod-provider-signatures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Riverpod provider signatures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v1-badge-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v1 Badge Catalog
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ux-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UX Contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UX Contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#profile-card-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile card layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#badge-frame-visual-variants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Badge frame visual variants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#earn-moment-dispatcher-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Earn-moment dispatcher rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notification-entries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notification entries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theme compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-anti-abuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security &amp; Anti-Abuse
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security &amp; Anti-Abuse">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#firestore-rules-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore rules summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#counter-abuse-defences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Counter-abuse defences
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#revocation-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revocation policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrity-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrity sweep
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Test plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#coverage-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage targets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0010-achievements.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="spec-0010-achievements-system">SPEC-0010: Achievements System<a class="headerlink" href="#spec-0010-achievements-system" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> DRAFT
+<strong>Author:</strong> Pyae Sone Shin Thant
+<strong>Date:</strong> 2026-05-18
+<strong>Proposal:</strong> <a href="../../tech-proposals/0010-achievements/">PROP-0010</a>
+<strong>Approved by:</strong> (pending)</p>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>A Firebase-native achievement system where points are only awarded by unlocking milestone badges. Cloud Function triggers maintain denormalised counters on the user document and atomically grant badges + points when thresholds are crossed. The Flutter app streams unlock events and surfaces them via the profile card, a dedicated achievements screen, in-app earn moments, and the existing notification feed. The v1 catalog ships 20 badges across onboarding, progression, and prestige tiers. Leaderboards, faculty (ajarn) recognition, and cosmetic profile accents are explicitly v1.1.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Client[Flutter App]
+        P[Presentation&lt;br/&gt;Riverpod + Screens]
+        D[Domain&lt;br/&gt;Entities, UseCases]
+        DT[Data&lt;br/&gt;Datasources, Repos]
+        P --&gt; D
+        D --&gt; DT
+    end
+
+    subgraph Server[Firebase]
+        FS[(Firestore)]
+        CF[Cloud Functions]
+    end
+
+    subgraph Triggers[Cloud Function Triggers]
+        T1[onPostCreated / Deleted]
+        T2[onPostSaved / Unsaved]
+        T3[onCommentAdded / Removed]
+        T4[onRequestFulfilled]
+        T5[onProfileUpdated]
+        SW[scheduledIntegritySweep]
+    end
+
+    DT -- streams --&gt; FS
+    DT -- writes\nselectedTitle\ndisplayedBadges --&gt; FS
+    FS -- emits writes --&gt; Triggers
+    Triggers -- increment stats --&gt; FS
+    Triggers --&gt; EV[evaluateBadges]
+    EV -- writes earnedBadges +\npoints + level --&gt; FS
+    EV -- writes notification --&gt; FS
+    SW -- recompute stats,\nrerun EV --&gt; FS</code></pre>
+<p><strong>Trust boundary:</strong> All counter updates and badge grants flow through Cloud Functions. The client streams results but cannot write to <code>stats</code>, <code>earnedBadges</code>, or the protected fields of <code>gamification</code>.</p>
+<p><strong>Data freshness:</strong> Earn-moment UX requires real-time client awareness of badge grants, achieved via Firestore document streams on <code>users/{uid}/earnedBadges</code> ordered by <code>earnedAt desc</code>.</p>
+<h2 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">&para;</a></h2>
+<h3 id="firestore-badgesbadgeid-catalog-20-docs-at-v1">Firestore — <code>badges/{badgeId}</code> (catalog, ~20 docs at v1)<a class="headerlink" href="#firestore-badgesbadgeid-catalog-20-docs-at-v1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;first_post&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;First Steps&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Share your first post with the community.&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;glyph&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paper-plane-tilt&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;points&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;onboarding&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;content&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;postsCreated&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;order&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;active&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><code>tier</code>: <code>onboarding</code> | <code>progression</code> | <code>prestige</code></li>
+<li><code>category</code>: <code>content</code> | <code>community</code> | <code>profile</code> | <code>recognition</code></li>
+<li><code>condition.type</code>: must match a key in <code>users/{uid}.stats</code></li>
+<li><code>glyph</code>: a valid Phosphor icon name</li>
+</ul>
+<h3 id="firestore-usersuid-extended">Firestore — <code>users/{uid}</code> (extended)<a class="headerlink" href="#firestore-usersuid-extended" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="c1">// ...existing fields preserved</span>
+<span class="w">  </span><span class="nt">&quot;gamification&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;totalPoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;selectedTitle&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;First Wave&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;displayedBadges&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;first_post&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;first_save_given&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;helpful_hand&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;stats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;postsCreated&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;savesReceived&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;postsWithAtLeastOneSave&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;uniqueSaversCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;requestsFulfilled&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;requestsCreated&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;commentsWritten&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;savesGiven&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;uniqueDepartmentsContributed&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;cs&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;math&quot;</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">&quot;profileCompleted&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;moderationFlags&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;ts&gt;&quot;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="firestore-usersuidearnedbadgesbadgeid-append-only">Firestore — <code>users/{uid}/earnedBadges/{badgeId}</code> (append-only)<a class="headerlink" href="#firestore-usersuidearnedbadgesbadgeid-append-only" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;badgeId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;first_post&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;earnedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;ts&gt;&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;pointsAwarded&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;snapshot&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;threshold&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="firestore-usersuiduniquesaverssaveruid-presence-set">Firestore — <code>users/{uid}/uniqueSavers/{saverUid}</code> (presence set)<a class="headerlink" href="#firestore-usersuiduniquesaverssaveruid-presence-set" title="Permanent link">&para;</a></h3>
+<p>Empty docs keyed by saver uid. Maintained by <code>onPostSaved</code> / <code>onPostUnsaved</code>. Used by aggregation to derive <code>stats.uniqueSaversCount</code>.</p>
+<h3 id="firestore-app_configlevels-tunable-lookup">Firestore — <code>app_config/levels</code> (tunable lookup)<a class="headerlink" href="#firestore-app_configlevels-tunable-lookup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;thresholds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">900</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1300</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cumulative&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1800</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;perLevelAbove10&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="file-map">File map<a class="headerlink" href="#file-map" title="Permanent link">&para;</a></h2>
+<h3 id="flutter-app">Flutter app<a class="headerlink" href="#flutter-app" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Path</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/entities/badge.dart</code></td>
+<td>Pure <code>Badge</code> entity (id, name, description, glyph, points, tier, category, condition, order).</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/entities/earned_badge.dart</code></td>
+<td>Pure <code>EarnedBadge</code> entity (badgeId, earnedAt, pointsAwarded).</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/entities/user_gamification.dart</code></td>
+<td>Pure entity (totalPoints, level, selectedTitle, displayedBadges).</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/entities/user_stats.dart</code></td>
+<td>Pure entity mirroring <code>users/{uid}.stats</code> map.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/entities/level_tier.dart</code></td>
+<td>Level threshold table + <code>LevelProgress</code> value object.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/repositories/badge_repository.dart</code></td>
+<td>Abstract: catalog read, earned-badges stream.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/repositories/gamification_repository.dart</code></td>
+<td>Abstract: gamification + stats stream, setDisplayedBadges, setSelectedTitle.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/usecases/watch_earned_badges.dart</code></td>
+<td>Returns <code>Stream&lt;List&lt;EarnedBadge&gt;&gt;</code>.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/usecases/get_badge_catalog.dart</code></td>
+<td>One-shot fetch of active badges.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/usecases/set_displayed_badges.dart</code></td>
+<td>Validates against earned + cap of 3, calls repo.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/usecases/set_selected_title.dart</code></td>
+<td>Validates ownership, calls repo.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/domain/usecases/compute_level_progress.dart</code></td>
+<td>Pure: points + lookup → <code>LevelProgress(level, pointsIntoLevel, pointsToNext)</code>.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/data/models/badge_dto.dart</code></td>
+<td>Freezed + json_serializable.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/data/models/earned_badge_dto.dart</code></td>
+<td>Freezed.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/data/models/user_gamification_dto.dart</code></td>
+<td>Freezed.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/data/models/user_stats_dto.dart</code></td>
+<td>Freezed.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/data/datasources/badge_firestore_datasource.dart</code></td>
+<td>Streams <code>badges/</code>, streams <code>users/{uid}.gamification</code>, streams <code>users/{uid}.stats</code>.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/data/datasources/earned_badges_firestore_datasource.dart</code></td>
+<td>Streams <code>users/{uid}/earnedBadges</code> ordered by <code>earnedAt desc</code>.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/data/repositories/badge_repository_impl.dart</code></td>
+<td>Implements <code>BadgeRepository</code>.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/data/repositories/gamification_repository_impl.dart</code></td>
+<td>Implements <code>GamificationRepository</code>.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/providers/badge_catalog_provider.dart</code></td>
+<td><code>@riverpod</code> stream of active badges.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/providers/earned_badges_provider.dart</code></td>
+<td><code>@riverpod</code> stream per uid.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/providers/user_gamification_provider.dart</code></td>
+<td><code>@riverpod</code> stream of gamification map.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/providers/level_progress_provider.dart</code></td>
+<td>Derived: gamification + levels lookup → <code>LevelProgress</code>.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/providers/new_badge_alert_provider.dart</code></td>
+<td>Watches earnedBadges + Hive <code>lastSeenAt</code>, emits unread unlocks; drains on rest surfaces only.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/screens/achievements_screen.dart</code></td>
+<td>Grid of earned + locked badges. Route <code>/achievements</code> and <code>/achievements/:uid</code>.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/badge_frame.dart</code></td>
+<td>Onboarding/progression/prestige/locked frame variants — pure <code>Container</code> + <code>BoxDecoration</code>, no assets.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/badge_icon.dart</code></td>
+<td>Composes <code>BadgeFrame</code> + Phosphor glyph.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/profile_achievements_section.dart</code></td>
+<td>Used by <code>ProfileCard</code>: header row, 3 badges (or muted placeholders), progress bar.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/level_chip.dart</code></td>
+<td>Small "Lv N" chip with <code>ac.amberSubtle</code> bg + <code>ac.amber</code> text.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/title_chip.dart</code></td>
+<td>Selected title display under name.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/level_progress_bar.dart</code></td>
+<td>Bar + "120 / 250 pts to Lv 6" Fira Code label.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/badge_detail_sheet.dart</code></td>
+<td>Bottom sheet: full badge info + when earned.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/badge_picker_sheet.dart</code></td>
+<td>Pick up to 3 displayed badges.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/title_picker_sheet.dart</code></td>
+<td>Pick one earned title (or clear).</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/earn_moment_modal.dart</code></td>
+<td>Celebratory bottom sheet for onboarding/prestige/level-up unlocks.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/achievements/presentation/widgets/earn_moment_toast.dart</code></td>
+<td>Subtle snackbar for progression unlocks.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/lib/features/profile/presentation/widgets/profile_card.dart</code></td>
+<td>Add level chip to name row, selected title under name, compose <code>ProfileAchievementsSection</code>.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/lib/app.dart</code> (or wherever routes live)</td>
+<td>Register <code>/achievements</code> and <code>/achievements/:uid</code> GoRoutes; mount the earn-moment dispatcher observer.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/pubspec.yaml</code></td>
+<td>Add <code>phosphor_flutter</code> dependency (thin variant).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cloud-functions">Cloud Functions<a class="headerlink" href="#cloud-functions" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Path</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create</td>
+<td><code>functions/src/badges/evaluateBadges.ts</code></td>
+<td>Targeted evaluator: given <code>uid</code> + changed stat keys, finds newly-earned badges, writes them + bumps points/level in one transaction, queues notification.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/badges/levelForPoints.ts</code></td>
+<td>Pure lookup against <code>app_config/levels</code> (cached in memory).</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/badges/grantNotification.ts</code></td>
+<td>Writes a notification doc for an unlock, using the existing notification schema.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/triggers/onPostCreated.ts</code></td>
+<td>Increments <code>postsCreated</code>, appends to <code>uniqueDepartmentsContributed</code>, calls evaluator.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/triggers/onPostDeleted.ts</code></td>
+<td>Decrements counters. Does not revoke earned badges.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/triggers/onPostSaved.ts</code></td>
+<td>Author's <code>savesReceived++</code>, presence in <code>uniqueSavers/{saverUid}</code> → recompute <code>uniqueSaversCount</code>; first-save-on-this-post → <code>postsWithAtLeastOneSave++</code>. Saver's <code>savesGiven++</code>. Self-saves rejected. Calls evaluator for author and saver.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/triggers/onPostUnsaved.ts</code></td>
+<td>Mirror of above, decrement-only.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>functions/src/triggers/onCommentAdded.ts</code></td>
+<td>After existing logic, <code>commentsWritten++</code>, call evaluator.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/triggers/onCommentRemoved.ts</code></td>
+<td>Decrement.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>functions/src/triggers/onRequestFulfilled.ts</code></td>
+<td>After existing logic, fulfiller's <code>requestsFulfilled++</code>, call evaluator.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/triggers/onRequestCreated.ts</code></td>
+<td>Requester's <code>requestsCreated++</code>, call evaluator.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/triggers/onProfileUpdated.ts</code></td>
+<td>Debounced: recompute <code>profileCompleted</code>, call evaluator if it flipped to true.</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>functions/src/scheduled/integritySweep.ts</code></td>
+<td>Daily at 03:00 ICT, for users active in last 24h: recompute stats from source-of-truth queries, write corrections, rerun evaluator. Logs drift &gt; 1 to Crashlytics.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>functions/src/index.ts</code></td>
+<td>Export new triggers + scheduled function.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>functions/src/triggers/onUserDeleted.ts</code> (or wherever account-deletion cascade lives)</td>
+<td>Add cascade delete for <code>earnedBadges</code> and <code>uniqueSavers</code> subcollections.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="firestore-rules-indexes">Firestore rules + indexes<a class="headerlink" href="#firestore-rules-indexes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Path</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Modify</td>
+<td><code>firestore.rules</code></td>
+<td>Add rules for <code>badges/</code>, <code>users/{uid}/earnedBadges/</code>, <code>users/{uid}/uniqueSavers/</code>, <code>users/{uid}.gamification</code> field-level checks (<code>displayedBadges</code> ≤ 3 and ownership-validated, <code>selectedTitle</code> ownership-validated, <code>totalPoints</code> + <code>level</code> server-only), <code>users/{uid}.stats</code> server-only.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>firestore.indexes.json</code></td>
+<td>Add index on <code>badges</code> <code>where active == true &amp;&amp; condition.type IN ...</code> (single-field, auto). Add index on <code>users/{uid}/earnedBadges</code> ordered by <code>earnedAt desc</code> (auto).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="seeds">Seeds<a class="headerlink" href="#seeds" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Path</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create</td>
+<td><code>tools/seeds/badges.js</code></td>
+<td>Exports array of 20 v1 badges (see catalog below).</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>tools/seeds/app_config_levels.js</code></td>
+<td>Exports the level threshold table.</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>tools/seed_firestore.js</code></td>
+<td>Add <code>seedBadges()</code> and <code>seedAppConfig()</code> steps using <code>set({ merge: true })</code> for idempotency.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="api-contracts">API contracts<a class="headerlink" href="#api-contracts" title="Permanent link">&para;</a></h2>
+<h3 id="domain-layer-pure-dart-zero-flutter-firebase-imports">Domain layer (pure Dart, zero Flutter / Firebase imports)<a class="headerlink" href="#domain-layer-pure-dart-zero-flutter-firebase-imports" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// domain/entities/badge.dart</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">Badge</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">glyph</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">points</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">BadgeTier</span><span class="w"> </span><span class="n">tier</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">BadgeCategory</span><span class="w"> </span><span class="n">category</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">BadgeCondition</span><span class="w"> </span><span class="n">condition</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">order</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">Badge</span><span class="p">({...});</span>
+<span class="p">}</span>
+
+<span class="n">enum</span><span class="w"> </span><span class="n">BadgeTier</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">onboarding</span><span class="p">,</span><span class="w"> </span><span class="n">progression</span><span class="p">,</span><span class="w"> </span><span class="n">prestige</span><span class="w"> </span><span class="p">}</span>
+<span class="n">enum</span><span class="w"> </span><span class="n">BadgeCategory</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">community</span><span class="p">,</span><span class="w"> </span><span class="n">profile</span><span class="p">,</span><span class="w"> </span><span class="n">recognition</span><span class="w"> </span><span class="p">}</span>
+
+<span class="kd">class</span><span class="w"> </span><span class="nc">BadgeCondition</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">statKey</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">threshold</span><span class="p">;</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">BadgeCondition</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">statKey</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">threshold</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// domain/entities/level_tier.dart</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">LevelProgress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">currentLevel</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pointsIntoLevel</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">pointsToNextLevel</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">fractionToNext</span><span class="p">;</span><span class="w"> </span><span class="c1">// 0.0–1.0</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">LevelProgress</span><span class="p">({...});</span>
+<span class="p">}</span>
+
+<span class="c1">// domain/repositories/badge_repository.dart</span>
+<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">BadgeRepository</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Badge</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">watchCatalog</span><span class="p">();</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">EarnedBadge</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">watchEarnedBadges</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// domain/repositories/gamification_repository.dart</span>
+<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">GamificationRepository</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">UserGamification</span><span class="o">&gt;</span><span class="w"> </span><span class="n">watchGamification</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">UserStats</span><span class="o">&gt;</span><span class="w"> </span><span class="n">watchStats</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">setDisplayedBadges</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">badgeIds</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">setSelectedTitle</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">badgeId</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// domain/usecases/compute_level_progress.dart</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">ComputeLevelProgress</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">LevelThreshold</span><span class="o">&gt;</span><span class="w"> </span><span class="n">thresholds</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">perLevelAbove10</span><span class="p">;</span>
+<span class="w">  </span><span class="n">LevelProgress</span><span class="w"> </span><span class="n">call</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">totalPoints</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* table lookup */</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="cloud-function-evaluator">Cloud Function evaluator<a class="headerlink" href="#cloud-function-evaluator" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// functions/src/badges/evaluateBadges.ts</span>
+<span class="k">export</span><span class="w"> </span><span class="kr">type</span><span class="w"> </span><span class="nx">StatKey</span><span class="w"> </span><span class="o">=</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;postsCreated&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;savesReceived&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;postsWithAtLeastOneSave&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;uniqueSaversCount&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;requestsFulfilled&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;requestsCreated&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;commentsWritten&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;savesGiven&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;uniqueDepartmentsContributed&#39;</span>
+<span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s1">&#39;profileCompleted&#39;</span><span class="p">;</span>
+
+<span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">evaluateBadges</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">uid</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">changedStatKeys</span><span class="o">:</span><span class="w"> </span><span class="kt">StatKey</span><span class="p">[],</span>
+<span class="p">)</span><span class="o">:</span><span class="w"> </span><span class="nb">Promise</span><span class="o">&lt;</span><span class="p">{</span><span class="w"> </span><span class="nx">newlyEarnedIds</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">[];</span><span class="w"> </span><span class="nx">pointsAdded</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span><span class="w"> </span><span class="nx">newLevel</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="p">}</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div>
+<p>Behaviour contract:
+- Reads the user doc, candidate badges (filtered by <code>condition.type IN changedStatKeys</code> and <code>active == true</code>), and the existing earnedBadges subcollection — in parallel.
+- Filters out already-earned badges.
+- For each remaining candidate, compares the stat value to its threshold; collects newly-earned.
+- If empty, returns early with <code>{ newlyEarnedIds: [], pointsAdded: 0, newLevel: &lt;current&gt; }</code>.
+- Otherwise, runs one Firestore transaction that: writes each <code>earnedBadges/{badgeId}</code> doc (idempotent on re-run because the doc ID is the badge id), sums <code>pointsAdded</code>, updates <code>gamification.totalPoints</code> and <code>gamification.level</code>.
+- After the transaction, writes one notification doc per newly-earned badge via <code>grantNotification</code>. (Outside the transaction because the notification doc is a separate collection and a failure here should not roll back the grant — but the notification path itself must be retry-safe.)</p>
+<h3 id="firestore-rules-key-clauses">Firestore rules — key clauses<a class="headerlink" href="#firestore-rules-key-clauses" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>function earnedBadgeIds(uid) {
+  return get(/databases/$(database)/documents/users/$(uid)).data
+    .gamification.displayedBadges; // updated atomically by evaluator? NO —
+  // displayedBadges is user-curated. Use this helper for read-side only.
+}
+
+// Validates that every id in `proposed` is present as a doc id under
+// users/{uid}/earnedBadges. Implemented via per-id `exists()` checks in the rule.
+function allEarned(uid, proposed) {
+  return proposed.size() &lt;= 3
+    &amp;&amp; proposed.size() == proposed.toSet().size()
+    &amp;&amp; proposed.hasOnly(/* set of earned ids via exists() per id */);
+}
+</code></pre></div>
+<p>(The rule is fully spelled out in <code>firestore.rules</code> during implementation; this snippet captures the contract.)</p>
+<h3 id="riverpod-provider-signatures">Riverpod provider signatures<a class="headerlink" href="#riverpod-provider-signatures" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@riverpod</span>
+<span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Badge</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">badgeCatalog</span><span class="p">(</span><span class="n">Ref</span><span class="w"> </span><span class="n">ref</span><span class="p">);</span>
+
+<span class="nd">@riverpod</span>
+<span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">EarnedBadge</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">earnedBadges</span><span class="p">(</span><span class="n">Ref</span><span class="w"> </span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">);</span>
+
+<span class="nd">@riverpod</span>
+<span class="n">Stream</span><span class="o">&lt;</span><span class="n">UserGamification</span><span class="o">&gt;</span><span class="w"> </span><span class="n">userGamification</span><span class="p">(</span><span class="n">Ref</span><span class="w"> </span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">);</span>
+
+<span class="nd">@riverpod</span>
+<span class="n">LevelProgress</span><span class="w"> </span><span class="n">levelProgress</span><span class="p">(</span><span class="n">Ref</span><span class="w"> </span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">uid</span><span class="p">);</span><span class="w"> </span><span class="c1">// derived</span>
+
+<span class="nd">@riverpod</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">NewBadgeAlertNotifier</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">_$NewBadgeAlertNotifier</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">List</span><span class="o">&lt;</span><span class="n">EarnedBadge</span><span class="o">&gt;</span><span class="w"> </span><span class="n">build</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">enqueue</span><span class="p">(</span><span class="n">EarnedBadge</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">  </span><span class="n">EarnedBadge</span><span class="o">?</span><span class="w"> </span><span class="n">drainNextForCurrentRoute</span><span class="p">();</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">markSeen</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">badgeId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="v1-badge-catalog">v1 Badge Catalog<a class="headerlink" href="#v1-badge-catalog" title="Permanent link">&para;</a></h2>
+<p>20 badges, seeded by <code>tools/seeds/badges.js</code>:</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>tier</th>
+<th>category</th>
+<th>points</th>
+<th>condition</th>
+<th>glyph</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>profile_complete</code></td>
+<td>Set the Stage</td>
+<td>onboarding</td>
+<td>profile</td>
+<td>10</td>
+<td><code>profileCompleted == true</code></td>
+<td><code>user-circle</code></td>
+</tr>
+<tr>
+<td><code>first_post</code></td>
+<td>First Steps</td>
+<td>onboarding</td>
+<td>content</td>
+<td>15</td>
+<td><code>postsCreated &gt;= 1</code></td>
+<td><code>paper-plane-tilt</code></td>
+</tr>
+<tr>
+<td><code>first_save_given</code></td>
+<td>Curator</td>
+<td>onboarding</td>
+<td>content</td>
+<td>10</td>
+<td><code>savesGiven &gt;= 1</code></td>
+<td><code>bookmark-simple</code></td>
+</tr>
+<tr>
+<td><code>first_comment</code></td>
+<td>Conversation Starter</td>
+<td>onboarding</td>
+<td>community</td>
+<td>10</td>
+<td><code>commentsWritten &gt;= 1</code></td>
+<td><code>chat-circle-dots</code></td>
+</tr>
+<tr>
+<td><code>first_request</code></td>
+<td>Ask the Community</td>
+<td>onboarding</td>
+<td>community</td>
+<td>10</td>
+<td><code>requestsCreated &gt;= 1</code></td>
+<td><code>hand-waving</code></td>
+</tr>
+<tr>
+<td><code>first_save_received</code></td>
+<td>Someone Found It Useful</td>
+<td>onboarding</td>
+<td>content</td>
+<td>20</td>
+<td><code>savesReceived &gt;= 1</code></td>
+<td><code>sparkle</code></td>
+</tr>
+<tr>
+<td><code>steady_sharer</code></td>
+<td>Steady Sharer</td>
+<td>progression</td>
+<td>content</td>
+<td>30</td>
+<td><code>postsCreated &gt;= 10</code></td>
+<td><code>stack</code></td>
+</tr>
+<tr>
+<td><code>useful</code></td>
+<td>Useful</td>
+<td>progression</td>
+<td>content</td>
+<td>40</td>
+<td><code>savesReceived &gt;= 10</code></td>
+<td><code>lightbulb</code></td>
+</tr>
+<tr>
+<td><code>notes_master</code></td>
+<td>Notes Master</td>
+<td>progression</td>
+<td>content</td>
+<td>50</td>
+<td><code>postsWithAtLeastOneSave &gt;= 5</code></td>
+<td><code>notebook</code></td>
+</tr>
+<tr>
+<td><code>active_voice</code></td>
+<td>Active Voice</td>
+<td>progression</td>
+<td>community</td>
+<td>30</td>
+<td><code>commentsWritten &gt;= 25</code></td>
+<td><code>chats</code></td>
+</tr>
+<tr>
+<td><code>helpful_hand</code></td>
+<td>Helpful Hand</td>
+<td>progression</td>
+<td>community</td>
+<td>50</td>
+<td><code>requestsFulfilled &gt;= 5</code></td>
+<td><code>hand-heart</code></td>
+</tr>
+<tr>
+<td><code>cross_discipline</code></td>
+<td>Cross-Discipline</td>
+<td>progression</td>
+<td>recognition</td>
+<td>40</td>
+<td><code>uniqueDepartmentsContributed.length &gt;= 3</code></td>
+<td><code>compass</code></td>
+</tr>
+<tr>
+<td><code>well_versed</code></td>
+<td>Well-Versed</td>
+<td>progression</td>
+<td>content</td>
+<td>30</td>
+<td><code>postsCreated &gt;= 25</code></td>
+<td><code>books</code></td>
+</tr>
+<tr>
+<td><code>lend_an_ear</code></td>
+<td>Lend an Ear</td>
+<td>progression</td>
+<td>community</td>
+<td>30</td>
+<td><code>commentsWritten &gt;= 50</code></td>
+<td><code>ear</code></td>
+</tr>
+<tr>
+<td><code>community_anchor</code></td>
+<td>Community Anchor</td>
+<td>progression</td>
+<td>community</td>
+<td>60</td>
+<td><code>requestsFulfilled &gt;= 10</code></td>
+<td><code>anchor</code></td>
+</tr>
+<tr>
+<td><code>beloved</code></td>
+<td>Beloved</td>
+<td>prestige</td>
+<td>content</td>
+<td>100</td>
+<td><code>savesReceived &gt;= 100</code></td>
+<td><code>crown-simple</code></td>
+</tr>
+<tr>
+<td><code>pillar</code></td>
+<td>Pillar of the Community</td>
+<td>prestige</td>
+<td>community</td>
+<td>100</td>
+<td><code>requestsFulfilled &gt;= 25</code></td>
+<td><code>tree</code></td>
+</tr>
+<tr>
+<td><code>trusted_source</code></td>
+<td>Trusted Source</td>
+<td>prestige</td>
+<td>content</td>
+<td>100</td>
+<td><code>uniqueSaversCount &gt;= 50</code></td>
+<td><code>seal-check</code></td>
+</tr>
+<tr>
+<td><code>renaissance</code></td>
+<td>Renaissance Contributor</td>
+<td>prestige</td>
+<td>recognition</td>
+<td>100</td>
+<td><code>uniqueDepartmentsContributed.length &gt;= 5</code></td>
+<td><code>globe</code></td>
+</tr>
+<tr>
+<td><code>legacy</code></td>
+<td year="year">Class of</td>
+<td>prestige</td>
+<td>recognition</td>
+<td>50</td>
+<td>granted at semester end to top-N per department</td>
+<td><code>medal</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ux-contracts">UX Contracts<a class="headerlink" href="#ux-contracts" title="Permanent link">&para;</a></h2>
+<h3 id="profile-card-layout">Profile card layout<a class="headerlink" href="#profile-card-layout" title="Permanent link">&para;</a></h3>
+<p>Header row: <code>[Avatar] [Name ............................................. [Lv N]]</code>. Title appears immediately under the name when set. Existing fields (email, bio, role/dept chips, joined year, year level) follow unchanged. Existing stats row (POSTS / COMMENTS / SAVED) unchanged. New <code>ProfileAchievementsSection</code> follows the stats row with: "ACHIEVEMENTS" label + "View all →" tappable; row of 3 displayed badges (or 3 muted placeholders + empty-state hint copy); progress bar with Fira Code "X / Y pts to Lv N+1" label. The whole "View all" row is tappable and navigates to <code>/achievements</code> (own profile) or <code>/achievements/:uid</code> (other profile).</p>
+<h3 id="badge-frame-visual-variants">Badge frame visual variants<a class="headerlink" href="#badge-frame-visual-variants" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Frame fill</th>
+<th>Frame border</th>
+<th>Glyph color</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Onboarding (earned)</td>
+<td><code>ac.amber</code></td>
+<td>none</td>
+<td><code>ac.surfaceDark</code></td>
+<td>Sticker feel.</td>
+</tr>
+<tr>
+<td>Progression (earned)</td>
+<td><code>ac.amberSubtle</code></td>
+<td><code>ac.amber</code>, 1.5px</td>
+<td><code>ac.amber</code></td>
+<td>Restrained.</td>
+</tr>
+<tr>
+<td>Prestige (earned)</td>
+<td><code>ac.surfaceDark</code></td>
+<td>none, but 2px <code>ac.amber</code> top accent bar</td>
+<td><code>ac.amber</code></td>
+<td>Embossed-medal feel.</td>
+</tr>
+<tr>
+<td>Locked (any tier)</td>
+<td><code>ac.muted</code></td>
+<td>none</td>
+<td><code>ac.textMuted</code>, lock glyph</td>
+<td>Single muted style.</td>
+</tr>
+</tbody>
+</table>
+<p>Sizes: 48dp (profile row), 72dp (achievements grid), 96dp (earn-moment modal). All corner radii reuse the existing 6–8px from <code>ProfileCard</code>.</p>
+<h3 id="earn-moment-dispatcher-rules">Earn-moment dispatcher rules<a class="headerlink" href="#earn-moment-dispatcher-rules" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Buffer:</strong> <code>NewBadgeAlertNotifier</code> watches <code>users/{uid}/earnedBadges</code> for <code>earnedAt &gt; lastSeenAt</code> (persisted in Hive). New unlocks enqueue, never fire directly.</li>
+<li><strong>Surface gating:</strong> A <code>GoRouter</code> observer tags routes as <code>rest</code> or <code>flow</code>. Rest routes: <code>/feed</code>, <code>/profile</code>, <code>/profile/:uid</code>, <code>/achievements</code>, <code>/achievements/:uid</code>, <code>/notifications</code>. Flow routes: any compose / edit / request-create / file-preview / settings dialog. Drain only triggers when entering a rest route.</li>
+<li><strong>Tier-aware presentation:</strong></li>
+<li>Onboarding tier → <code>EarnMomentModal</code></li>
+<li>Prestige tier → <code>EarnMomentModal</code></li>
+<li>Progression tier → <code>EarnMomentToast</code></li>
+<li>Any unlock that caused <code>level</code> to increase → <code>EarnMomentModal</code> (overrides toast).</li>
+</ol>
+<h3 id="notification-entries">Notification entries<a class="headerlink" href="#notification-entries" title="Permanent link">&para;</a></h3>
+<p>Each unlock writes one notification doc using the existing schema. Title: badge name. Body: <code>description</code> plus "+{points} pts". Tapping navigates to <code>/achievements</code> with the badge highlighted.</p>
+<h3 id="theme-compliance">Theme compliance<a class="headerlink" href="#theme-compliance" title="Permanent link">&para;</a></h3>
+<p>All UI uses existing tokens:
+- <code>ac.amber</code>, <code>ac.amberHover</code>, <code>ac.amberSubtle</code>, <code>ac.muted</code>, <code>ac.textMuted</code>, <code>ac.mutedForeground</code>, <code>ac.surfaceDark</code> — defined in <code>shared/theme/</code>.
+- <code>cs.surface</code>, <code>cs.onSurface</code> — <code>ColorScheme</code> access.
+- <code>theme.textTheme.*</code> for all body / label styles (Space Grotesk).
+- <code>AppTypography.mono(base: ...)</code> for progress text, badge IDs in debug, and the "X / Y pts" label (Fira Code).
+- No hardcoded colors, font sizes, or family strings anywhere in the new code.</p>
+<h2 id="security-anti-abuse">Security &amp; Anti-Abuse<a class="headerlink" href="#security-anti-abuse" title="Permanent link">&para;</a></h2>
+<h3 id="firestore-rules-summary">Firestore rules summary<a class="headerlink" href="#firestore-rules-summary" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>read</th>
+<th>write</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>badges/{id}</code></td>
+<td>authenticated</td>
+<td>denied (seeded only)</td>
+</tr>
+<tr>
+<td><code>users/{uid}.stats</code></td>
+<td>authenticated</td>
+<td>denied (server-only)</td>
+</tr>
+<tr>
+<td><code>users/{uid}.gamification.totalPoints</code></td>
+<td>authenticated</td>
+<td>denied</td>
+</tr>
+<tr>
+<td><code>users/{uid}.gamification.level</code></td>
+<td>authenticated</td>
+<td>denied</td>
+</tr>
+<tr>
+<td><code>users/{uid}.gamification.displayedBadges</code></td>
+<td>authenticated</td>
+<td>owner, ≤ 3 unique, each must exist as <code>earnedBadges/{id}</code></td>
+</tr>
+<tr>
+<td><code>users/{uid}.gamification.selectedTitle</code></td>
+<td>authenticated</td>
+<td>owner, must equal an earned badge id or null</td>
+</tr>
+<tr>
+<td><code>users/{uid}/earnedBadges/{id}</code></td>
+<td>authenticated</td>
+<td>denied (server-only)</td>
+</tr>
+<tr>
+<td><code>users/{uid}/uniqueSavers/{saverUid}</code></td>
+<td>server-only read</td>
+<td>server-only</td>
+</tr>
+</tbody>
+</table>
+<h3 id="counter-abuse-defences">Counter-abuse defences<a class="headerlink" href="#counter-abuse-defences" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Self-saves rejected</strong> in <code>onPostSaved</code> and at rule level (<code>saverId != authorId</code>).</li>
+<li><strong>Save-unsave farming</strong>: saves keyed by <code>saverUid</code>, only <code>onCreate</code> increments. Unsave+resave by same user is a no-op for counters.</li>
+<li><strong>Idempotent grants</strong>: <code>earnedBadges/{badgeId}</code> keyed by id; re-attempt is a no-op.</li>
+<li><strong>Sybil rings</strong>: <code>uniqueSaversCount</code> caps ring exploit at ring size; email-verified <code>@kmutt.ac.th</code> constrains account creation.</li>
+</ul>
+<h3 id="revocation-policy">Revocation policy<a class="headerlink" href="#revocation-policy" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Counters decrement on the inverse event, but already-earned badges stay earned.</li>
+<li>Re-crossing a threshold does not re-fire a badge (idempotency).</li>
+<li>Moderation strikes track on <code>stats.moderationFlags</code>; a scheduled job (separate from integrity sweep) calls <code>revokeBadge(uid, badgeId)</code> admin function at <code>moderationFlags &gt;= 3</code>.</li>
+<li>Account deletion cascades earnedBadges + uniqueSavers via the existing account-deletion handler.</li>
+</ul>
+<h3 id="integrity-sweep">Integrity sweep<a class="headerlink" href="#integrity-sweep" title="Permanent link">&para;</a></h3>
+<p>Daily 03:00 ICT scheduled function for users active in the last 24h:
+1. Re-derive <code>stats</code> from source-of-truth queries (count posts by author, count saves received, etc.).
+2. Diff against stored counters.
+3. Drift &gt; 1 → write correction, re-run evaluator (will only grant missing badges, never re-grant). Log drift to Crashlytics.</p>
+<h2 id="test-plan">Test plan<a class="headerlink" href="#test-plan" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test file</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>apps/mobile/test/unit/features/achievements/level_formula_test.dart</code></td>
+<td><code>ComputeLevelProgress</code> table boundaries (0 pts, 29, 30, 79, 80, … past Lv 10).</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/unit/features/achievements/badge_condition_test.dart</code></td>
+<td>Threshold matching across all 20 v1 badges, edge cases at threshold − 1 / = / + 1.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/unit/features/achievements/displayed_badges_validator_test.dart</code></td>
+<td>Cap of 3, dedup, must be earned, set/unset selectedTitle.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/achievements/badge_frame_test.dart</code></td>
+<td>Each tier + locked renders with correct theme tokens at 48 / 72 / 96 dp.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/achievements/profile_achievements_section_test.dart</code></td>
+<td>Empty state (3 placeholders + hint), populated state, progress bar fill correctness.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/achievements/achievements_screen_test.dart</code></td>
+<td>Grid renders earned + locked sections, tap opens <code>BadgeDetailSheet</code>.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/achievements/earn_moment_modal_test.dart</code></td>
+<td>Renders payload, dismiss flow, level-up variant.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/achievements/earn_moment_toast_test.dart</code></td>
+<td>Renders, auto-dismisses, queues correctly.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/achievements/badge_picker_sheet_test.dart</code></td>
+<td>Selection cap enforced; save calls repo with chosen ids.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/widget/features/achievements/title_picker_sheet_test.dart</code></td>
+<td>Selection of earned title only; clear works.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/test/goldens/badges/*.png</code></td>
+<td>One golden per tier × size variant.</td>
+</tr>
+<tr>
+<td><code>functions/test/badges/evaluateBadges.test.ts</code></td>
+<td>Table-driven: all 20 v1 badges with stats at threshold − 1 / = / + 1, with various <code>alreadyEarned</code> sets.</td>
+</tr>
+<tr>
+<td><code>functions/test/badges/levelForPoints.test.ts</code></td>
+<td>Lookup boundaries + past-Lv-10 linear extrapolation.</td>
+</tr>
+<tr>
+<td><code>functions/test/triggers/onPostCreated.test.ts</code> (and one per new/modified trigger)</td>
+<td>Emulator-backed: source-doc write → counters increment → expected earnedBadges doc(s) created.</td>
+</tr>
+<tr>
+<td><code>functions/test/badges/idempotency.test.ts</code></td>
+<td>Run evaluator twice → one grant; pointsAdded sum once.</td>
+</tr>
+<tr>
+<td><code>functions/test/badges/integritySweep.test.ts</code></td>
+<td>Seed drift, run sweep, assert correction + missing-badge grant.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/integration_test/achievements/first_post_earn_flow_test.dart</code></td>
+<td>Sign in → create post → wait for earnedBadges stream → assert modal with <code>first_post</code>.</td>
+</tr>
+<tr>
+<td><code>apps/mobile/integration_test/achievements/displayed_badges_persistence_test.dart</code></td>
+<td>Pick → restart → assert persisted.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="coverage-targets">Coverage targets<a class="headerlink" href="#coverage-targets" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Domain &amp; pure helpers: 100%.</li>
+<li>Cloud Functions evaluator + triggers: ≥ 90%.</li>
+<li>Data layer (datasources, repositories): ≥ 80%.</li>
+<li>Presentation widgets: covered by widget tests above; no hard %.</li>
+</ul>
+<h2 id="out-of-scope">Out of scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Department / semester leaderboards</strong> — v1.1 once activity data exists.</li>
+<li><strong>Ajarn recognition feature + ajarn-related badges</strong> — v1.1, blocked on a faculty role flag.</li>
+<li><strong>Cosmetic profile accents</strong> (e.g., amber border at Lv 10) — v1.1.</li>
+<li><strong>"Class of {year}" semester-end granting</strong> — scheduled function deferred until semester boundary calendar is configured.</li>
+<li><strong>Sponsor / partnership static page</strong> — v1.2+, non-blocking.</li>
+<li><strong>Animated earn moments</strong> (confetti, particle effects) — v1.2+.</li>
+<li><strong>Localised (Thai) badge names / descriptions</strong> — once catalog stabilises.</li>
+<li><strong>Share-card image generation</strong> — v1.2+.</li>
+<li><strong>Daily streaks / engagement-loop mechanics</strong> — out permanently (wrong goal).</li>
+<li><strong>Paywalled feature unlocks</strong> — out permanently (wrong reward shape).</li>
+<li><strong>Tangible / sponsored rewards in-app</strong> — handled out-of-band if at all.</li>
+</ul>
+<h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Confirm Phosphor licence + bundled asset size before merging the <code>pubspec.yaml</code> change.</li>
+<li>[ ] Confirm the 03:00 ICT sweep window doesn't clash with any existing scheduled function.</li>
+<li>[ ] Confirm the 3-strike moderation revocation threshold once moderation tooling is specified.</li>
+<li>[ ] Validate that the existing notification schema accommodates badge-unlock entries without a new type field — if not, add <code>type: 'badge_unlock'</code>.</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
