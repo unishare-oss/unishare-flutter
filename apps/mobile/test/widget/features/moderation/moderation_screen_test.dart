@@ -80,9 +80,11 @@ void main() {
     });
 
     testWidgets('shows error state on queue error', (tester) async {
-      // sync: true delivers addError() synchronously to Riverpod's listener,
-      // bypassing the Dart event-queue deferral that breaks pump() timing in
-      // Flutter's test zone.
+      // sync: true ensures addError() calls onError synchronously once a
+      // subscriber exists. We pump once after pumpWidget so Riverpod fully
+      // subscribes to the stream before we emit the error — on a single-
+      // subscription stream any event emitted before the subscriber is
+      // attached is silently dropped.
       final controller = StreamController<List<PendingPost>>(sync: true);
       addTearDown(controller.close);
 
@@ -95,10 +97,10 @@ void main() {
         ),
       );
 
-      controller.addError(Exception('Firestore error'));
-      await tester
-          .pump(); // Riverpod receives error → AsyncError, rebuild queued
-      await tester.pump(); // Widget rebuilds, error text rendered
+      await tester.pump(); // Riverpod subscribes to the stream
+      controller.addError(Exception('Firestore error')); // sync delivery
+      await tester.pump(); // state → AsyncError, rebuild queued
+      await tester.pump(); // widget rebuilds, error text rendered
       expect(find.textContaining('Error'), findsOneWidget);
     });
   });
