@@ -19,6 +19,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Stream<AppUser?> get authStateChanges {
     return _auth.authStateChanges.asyncMap((firebaseUser) async {
       if (firebaseUser == null) return null;
+      if (firebaseUser.isAnonymous) {
+        return AppUser(
+          id: firebaseUser.uid,
+          name: '',
+          email: '',
+          isAnonymous: true,
+        );
+      }
       final providerIds = _providerIds(firebaseUser);
       final model = await _firestore.getUser(firebaseUser.uid);
       // Fall back to Firebase Auth data if the Firestore document doesn't
@@ -37,6 +45,18 @@ class AuthRepositoryImpl implements AuthRepository {
 
   List<String> _providerIds(User user) =>
       user.providerData.map((p) => p.providerId).toList(growable: false);
+
+  @override
+  Future<AppUser> signInAnonymously() async {
+    final credential = await _auth.signInAnonymously();
+    final firebaseUser = credential.user!;
+    return AppUser(
+      id: firebaseUser.uid,
+      name: '',
+      email: '',
+      isAnonymous: true,
+    );
+  }
 
   @override
   Future<AppUser> signInWithGoogle() async {
@@ -126,6 +146,14 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<AppUser?> getCurrentUser() async {
     final firebaseUser = _auth.currentUser;
     if (firebaseUser == null) return null;
+    if (firebaseUser.isAnonymous) {
+      return AppUser(
+        id: firebaseUser.uid,
+        name: '',
+        email: '',
+        isAnonymous: true,
+      );
+    }
     final providerIds = _providerIds(firebaseUser);
     final model = await _firestore.getUser(firebaseUser.uid);
     return model?.toEntity(providerIds: providerIds);

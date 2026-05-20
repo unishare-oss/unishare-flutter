@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/auth_exception.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
-import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/universities_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/google_sign_in_button.dart';
@@ -620,20 +619,25 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           Divider(color: dividerColor, height: 1),
 
           // 12. Continue as guest
-          const SizedBox(height: 4),
-          Center(
-            child: TextButton(
-              onPressed: () => ref.read(guestModeProvider.notifier).enter(),
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 42,
+            child: OutlinedButton(
+              onPressed: () =>
+                  ref.read(authRepositoryProvider).signInAnonymously(),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                foregroundColor: ac.mutedForeground,
               ),
               child: Text(
                 'Continue as guest',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: ac.mutedForeground,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),

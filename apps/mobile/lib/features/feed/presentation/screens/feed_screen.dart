@@ -352,10 +352,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                   ),
                   const SizedBox(width: 10),
                   Expanded(child: _buildSearchField()),
-                  if (!_isGuest) ...[
-                    const SizedBox(width: 8),
-                    _buildCreateButton(),
-                  ],
+                  const SizedBox(width: 8),
+                  _buildCreateButton(),
                 ],
               ),
             ),
@@ -447,7 +445,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   Widget _buildCreateButton() {
     final cs = Theme.of(context).colorScheme;
     return GestureDetector(
-      onTap: () => context.push('/posts/create'),
+      onTap: () =>
+          _isGuest ? context.go('/welcome') : context.push('/posts/create'),
       child: Container(
         width: 36,
         height: 36,

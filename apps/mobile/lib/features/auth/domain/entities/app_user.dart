@@ -10,6 +10,7 @@ class AppUser {
     this.bio,
     this.role = 'student',
     this.providerIds = const <String>[],
+    this.isAnonymous = false,
   });
 
   final String id;
@@ -25,4 +26,6 @@ class AppUser {
   /// Firebase Auth provider IDs linked to this account.
   /// e.g. `google.com`, `password`, `apple.com`. Empty when unknown.
   final List<String> providerIds;
+
+  final bool isAnonymous;
 }

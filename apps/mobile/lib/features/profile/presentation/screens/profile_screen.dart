@@ -6,7 +6,6 @@ import 'package:unishare_mobile/core/logging/app_logger.dart';
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
-import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/providers/profile_form_provider.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/appearance_section.dart';
 import 'package:unishare_mobile/features/profile/presentation/widgets/bio_visibility_notice.dart';
@@ -130,7 +129,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     try {
       await ref.read(signOutUseCaseProvider).call();
-      ref.read(guestModeProvider.notifier).exit();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

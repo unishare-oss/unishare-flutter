@@ -391,3 +391,64 @@ Outcome: Implemented SPEC-0011 across 15 files — domain interface extended, tw
 Decisions: firebase_storage ^12.3.7 was incompatible with firebase_remote_config ^6.5.1; bumped to ^13.4.1 as suggested by pub resolver. The `override_on_non_overriding_member` warning in edit_post_provider.dart is expected until build_runner regenerates edit_post_provider.g.dart — not a real error.
 Handoff: Run `dart run build_runner build` from apps/mobile to generate edit_post_provider.g.dart and regenerate post_repository_provider.g.dart. After codegen, run `flutter analyze` and `flutter test` to confirm clean. Submit for QA/architect review — do not self-approve.
 Review: PENDING
+
+2026-05-20
+  [12:39] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:39] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:40] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:40] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [12:40] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [12:40] Edit: apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  [12:41] Write: apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+  [12:41] Edit: apps/mobile/lib/core/router/router.dart
+Files:
+  ~ apps/mobile/lib/core/router/guest_shell_scaffold.dart
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/core/router/shell_scaffold.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/departments/presentation/screens/departments_screen.dart
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  ~ apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  ~ apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+Summary:  9 files changed, 149 insertions(+), 31 deletions(-)
+
+  [17:04] Edit: apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  [17:04] Edit: apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+  [17:04] Edit: apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+  [17:06] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+Files:
+  ~ apps/mobile/lib/features/auth/data/datasources/firebase_auth_datasource.dart
+  ~ apps/mobile/lib/features/auth/data/repositories/auth_repository_impl.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/auth/domain/repositories/auth_repository.dart
+  ~ apps/mobile/lib/features/auth/presentation/providers/guest_mode_provider.dart
+  ~ apps/mobile/lib/features/auth/presentation/screens/welcome_screen.dart
+  ~ apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart
+  ~ apps/mobile/lib/features/saved/presentation/screens/saved_screen.dart
+  ~ apps/mobile/test/unit/auth/fakes/fake_firebase_auth_datasource.dart
+  ~ apps/mobile/test/unit/auth/sign_in_with_email_test.dart
+  ~ apps/mobile/test/unit/auth/sign_in_with_google_test.dart
+  ~ apps/mobile/test/unit/auth/sign_up_with_email_test.dart
+  ~ apps/mobile/test/unit/auth/update_academic_profile_test.dart
+  ~ apps/mobile/test/widget/auth/welcome_screen_test.dart
+  ~ apps/mobile/test/widget/core/router/shell_router_test.dart
+  ~ apps/mobile/test/widget/features/feed/feed_filter_drawer_test.dart
+  ~ apps/mobile/test/widget/features/saved/screens/saved_screen_test.dart
+  ~ apps/mobile/test/widget/feed/feed_screen_test.dart
+Summary:  18 files changed, 103 insertions(+), 59 deletions(-)
+
+  [17:08] Edit: apps/mobile/lib/core/router/router.dart
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/saved/presentation/widgets/save_button.dart
+Summary:  2 files changed, 13 insertions(+), 16 deletions(-)
+

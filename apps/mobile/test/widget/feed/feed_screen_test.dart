@@ -21,11 +21,6 @@ import 'package:unishare_mobile/shared/theme/themes.dart';
 // Fakes
 // ---------------------------------------------------------------------------
 
-class _GuestModeOn extends GuestMode {
-  @override
-  bool build() => true;
-}
-
 class _PresetFeedFilter extends FeedFilter {
   _PresetFeedFilter(this._initial);
   final FeedFilterState _initial;
@@ -36,6 +31,9 @@ class _PresetFeedFilter extends FeedFilter {
 class _FakeAuthRepository implements AuthRepository {
   @override
   Stream<AppUser?> get authStateChanges => const Stream.empty();
+
+  @override
+  Future<AppUser> signInAnonymously() async => throw UnimplementedError();
 
   @override
   Future<AppUser> signInWithGoogle() async => throw UnimplementedError();
@@ -168,7 +166,7 @@ Widget _buildSubject({
   return ProviderScope(
     overrides: [
       authRepositoryProvider.overrideWithValue(_FakeAuthRepository()),
-      if (guestMode) guestModeProvider.overrideWith(() => _GuestModeOn()),
+      if (guestMode) guestModeProvider.overrideWithValue(true),
       feedProvider.overrideWith((_) => Stream.value(_mockFeed)),
       feedFilterProvider.overrideWith(() => _PresetFeedFilter(feedFilter)),
     ],
@@ -331,11 +329,11 @@ void main() {
   });
 
   group('FeedScreen — guest mode', () {
-    testWidgets('hides create-post button for guest user', (tester) async {
+    testWidgets('shows create-post button for guest user', (tester) async {
       await tester.pumpWidget(_buildSubject(guestMode: true));
       await tester.pump();
 
-      expect(find.byIcon(Icons.add), findsNothing);
+      expect(find.byIcon(Icons.add), findsOneWidget);
     });
   });
 
