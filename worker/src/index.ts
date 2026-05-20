@@ -15,6 +15,9 @@ export interface Env {
   GROQ_API_KEY: string;
   GROQ_MODEL?: string;
   GROQ_VISION_MODEL?: string;
+  // PROP-0011 Phase 4 — semantic search bindings. Provided by wrangler.toml.
+  VECTORIZE: VectorizeIndex;
+  AI: Ai;
 }
 
 const MIME_TO_EXT: Record<string, string> = {

@@ -22,6 +22,16 @@ head_sampling_rate = 1
 FIREBASE_PROJECT_ID = "unishare-flutter"
 R2_PUBLIC_URL = "https://cdn.psstee.dev"
 # GROQ_MODEL = "llama-3.3-70b-versatile"   # optional override
+# GROQ_VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"  # optional override
 
 # Secrets (set via: wrangler secret put GROQ_API_KEY)
 # GROQ_API_KEY
+
+# wrangler vectorize create unishare-posts --dimensions=768 --metric=cosine
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "unishare-posts"
+
+# Workers AI binding for embedding generation (@cf/baai/bge-base-en-v1.5).
+[ai]
+binding = "AI"

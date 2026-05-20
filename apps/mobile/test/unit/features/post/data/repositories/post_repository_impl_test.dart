@@ -29,6 +29,8 @@ class _FakeAiSummarizeDatasource extends AiSummarizeDatasource {
     required String fileUrl,
     required String filename,
     List<String> existingTags = const [],
+    String? postId,
+    String? title,
   }) async {
     capturedFileUrl = fileUrl;
     capturedExistingTags = existingTags;

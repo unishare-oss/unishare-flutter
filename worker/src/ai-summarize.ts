@@ -134,7 +134,13 @@ interface SummarizeResult {
 }
 
 export async function handleAiSummarize(request: Request, env: Env): Promise<Response> {
-  let body: { fileUrl: string; filename: string; existingTags?: unknown }
+  let body: {
+    fileUrl: string
+    filename: string
+    existingTags?: unknown
+    postId?: string
+    title?: string
+  }
   try {
     body = await request.json()
   } catch {
@@ -144,6 +150,10 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
   const { fileUrl, filename } = body
   if (!fileUrl || typeof fileUrl !== 'string') return jsonError('fileUrl required', 400)
   if (!filename || typeof filename !== 'string') return jsonError('filename required', 400)
+  // postId + title are optional for backward compat with pre-Phase-4a clients,
+  // but without them we can't upsert to Vectorize.
+  const postId = typeof body.postId === 'string' && body.postId.length > 0 ? body.postId : null
+  const title = typeof body.title === 'string' ? body.title : ''
 
   // Phase A whitelist (PROP-0011). Advisory — empty/missing disables vocabulary
   // control for this call. Defensive validation: drop non-strings.
@@ -219,6 +229,24 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
     return json({ summaryStatus: 'unsupported_type', summary: null })
   }
 
+  // PROP-0011 Phase 4a — best-effort embed + upsert to Vectorize for semantic
+  // search. Failures here MUST NOT fail the summarize response: persisting the
+  // summary is the primary contract, indexing is a downstream enhancement that
+  // can be retried on the next summarize call.
+  if (postId) {
+    try {
+      await indexPostForSearch(env, {
+        postId,
+        title,
+        summary: result.summary,
+        aiTags: result.aiTags,
+        extractedText: result.extractedText,
+      })
+    } catch (e) {
+      console.error('vectorize upsert failed', e)
+    }
+  }
+
   return json({
     summaryStatus: 'done',
     summary: result.summary,
@@ -226,6 +254,58 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
     extractedTextTruncated: result.extractedTextTruncated,
     aiTags: result.aiTags,
   })
+}
+
+/// Build the search blob fed to the embedding model. BGE-base-en-v1.5 truncates
+/// inputs at 512 tokens (~2000 chars), so we compose by signal density:
+/// title (high) → summary (medium) → aiTags (keywords) → leading extracted
+/// content (covers what the summary leaves out). Hard cap on whole blob.
+const SEARCH_BLOB_CHAR_CAP = 2000
+const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5'
+
+function buildSearchBlob(p: {
+  title: string
+  summary: string
+  aiTags: string[]
+  extractedText: string
+}): string {
+  const parts: string[] = []
+  if (p.title) parts.push(p.title)
+  if (p.summary) parts.push(p.summary)
+  if (p.aiTags.length > 0) parts.push(p.aiTags.join(' '))
+  if (p.extractedText) parts.push(p.extractedText.slice(0, 1500))
+  return parts.join('\n\n').slice(0, SEARCH_BLOB_CHAR_CAP)
+}
+
+async function indexPostForSearch(
+  env: Env,
+  params: {
+    postId: string
+    title: string
+    summary: string
+    aiTags: string[]
+    extractedText: string
+  },
+): Promise<void> {
+  const text = buildSearchBlob(params)
+  if (!text.trim()) return // nothing useful to embed
+
+  const embedResult = (await env.AI.run(EMBEDDING_MODEL, { text })) as {
+    data: number[][]
+  }
+  const vector = embedResult.data?.[0]
+  if (!Array.isArray(vector) || vector.length !== 768) {
+    throw new Error(`embed returned wrong shape: ${vector?.length ?? 'null'}`)
+  }
+
+  await env.VECTORIZE.upsert([
+    {
+      id: params.postId,
+      values: vector,
+      // Metadata reserved for future Phase 4 features (universityId scoping,
+      // type-faceted search, freshness boosting via timestamp).
+    },
+  ])
 }
 
 async function summarizeText(

@@ -208,7 +208,7 @@ class PostRepositoryImpl implements PostRepository {
       if (supportedIndex != -1) {
         final fileUrl = mediaUrls[supportedIndex];
         final filename = fileUrl.split('/').last;
-        triggerSummarize(current.id, fileUrl, filename);
+        triggerSummarize(current.id, fileUrl, filename, title: current.title);
       }
     } catch (e) {
       await saveDraft(
@@ -222,10 +222,16 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   @visibleForTesting
-  void triggerSummarize(String postId, String fileUrl, String filename) {
+  void triggerSummarize(
+    String postId,
+    String fileUrl,
+    String filename, {
+    String title = '',
+  }) {
     // Fire-and-forget: fetch the Phase A whitelist (advisory; failures
     // degrade to an empty list), then dispatch summarize and write back
-    // whatever the worker returns.
+    // whatever the worker returns. [title] is passed to the worker so it
+    // can include it in the Vectorize search blob (PROP-0011 Phase 4a).
     Future<void> runSummarize() async {
       final existingTags = await _tagWhitelistService?.topTags() ?? const [];
       try {
@@ -233,6 +239,8 @@ class PostRepositoryImpl implements PostRepository {
           fileUrl: fileUrl,
           filename: filename,
           existingTags: existingTags,
+          postId: postId,
+          title: title,
         );
         final summaryStatus = data['summaryStatus'] as String? ?? 'error';
         final summary = data['summary'] as String?;

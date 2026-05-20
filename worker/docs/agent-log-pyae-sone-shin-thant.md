@@ -22,3 +22,6 @@
   [23:47] Edit: apps/mobile/lib/features/post/presentation/providers/ask_ai_provider.dart
   [23:48] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
   [23:48] Edit: apps/mobile/lib/features/post/presentation/widgets/ask_ai_section.dart
+
+2026-05-20
+  [10:59] Edit: apps/mobile/lib/features/post/data/datasources/ai_summarize_datasource.dart

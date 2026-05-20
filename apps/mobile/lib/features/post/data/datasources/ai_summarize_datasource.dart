@@ -22,6 +22,8 @@ class AiSummarizeDatasource {
     required String fileUrl,
     required String filename,
     List<String> existingTags = const [],
+    String? postId,
+    String? title,
   }) async {
     final token = await FirebaseAuth.instance.currentUser?.getIdToken();
     if (token == null) throw Exception('not_authenticated');
@@ -36,6 +38,11 @@ class AiSummarizeDatasource {
         'fileUrl': fileUrl,
         'filename': filename,
         if (existingTags.isNotEmpty) 'existingTags': existingTags,
+        // PROP-0011 Phase 4a — postId + title let the worker upsert this post
+        // into the Vectorize index for semantic search. Optional for back-compat
+        // with older worker versions that ignore unknown fields.
+        'postId': ?postId,
+        if (title != null && title.isNotEmpty) 'title': title,
       }),
     );
 
