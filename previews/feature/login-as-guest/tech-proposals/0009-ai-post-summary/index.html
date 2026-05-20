@@ -1,0 +1,2670 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Pre-generate an AI summary and auto-tags for every uploaded post so students can judge relevance without opening the file, and enable an in-context "Ask AI" chat grounded on the document.">
+      
+      
+      
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/previews/feature/login-as-guest/tech-proposals/0009-ai-post-summary/">
+      
+      
+        <link rel="prev" href="../0008-request-post/">
+      
+      
+        <link rel="next" href="../0010-achievements/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>0009: AI Post Summary - Unishare Engineering Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#prop-0009-ai-post-summary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Unishare Engineering Docs" class="md-header__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Unishare Engineering Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              0009: AI Post Summary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="amber" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="amber" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/unishare-oss/unishare-flutter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unishare-oss/unishare-flutter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Unishare Engineering Docs
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../decisions/" class="md-tabs__link">
+          
+  
+  
+  Decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../stencils/adr/" class="md-tabs__link">
+          
+  
+  
+  Stencils
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Tech proposals
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tech-specs/" class="md-tabs__link">
+          
+  
+  
+  Tech specs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Unishare Engineering Docs" class="md-nav__button md-logo" aria-label="Unishare Engineering Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Unishare Engineering Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/unishare-oss/unishare-flutter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    unishare-oss/unishare-flutter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unishare Engineering Docs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Decision Records
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-feed-filtering-via-array-contains-any/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Use Firestore array-contains-any for feed tag filtering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-notification-delivery-mechanism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Use FCM + Cloud Functions for notification delivery with Firestore subcollection for in-app history
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0001-single-slot-theming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Single-slot theming for 12-theme design system
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0002-border-in-colorscheme-not-appcolors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: border token lives in ColorScheme.outline, not AppColors
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0003-post-integration-packages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Use connectivity_plus and file_picker for post integration
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0004-shell-scroll-to-top-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: GlobalKey mixin pattern for shell-triggered scroll-to-top
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--ACCEPTED"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0005-global-key-state-cast-for-scroll-to-top/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: GlobalKey<State> with runtime cast replaces GlobalKey<ScrollToTopTarget>
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0006-post-detail-data-loading-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail screen uses hybrid seed-then-stream data loading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0007-file-preview-unified-route/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Unified /preview GoRoute with FilePreviewArgs extra
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0007-save-post-storage-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save-post feature uses Hive for guest storage and Firestore subcollection for authenticated users, merged on login
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0008-share-post-deep-link-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Use Firebase Hosting + share_plus for universal deep-link sharing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0010-achievement-only-xp-and-event-driven-evaluation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievement-only XP with event-driven badge evaluation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0011-edit-delete-own-post-action-surface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: Edit and delete own post — action surface on PostDetailScreen only
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stencils
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stencils
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/adr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-proposal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposal Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stencils/tech-spec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Spec Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech proposals
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech proposals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Proposals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0001-notification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Notification System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0003-post-feed/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0003: Post Feed
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-feed-filtering-tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Feed Filtering by Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0005-main-navbar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-file-preview-screen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0007-save-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0008-request-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-generatepostsummary-firestore-oncreate-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function: generatePostSummary (Firestore onCreate trigger)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-askaiaboutpost-https-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function: askAiAboutPost (HTTPS callable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-schema-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore schema additions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-client-side-text-extraction-and-direct-llm-call-from-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Client-side text extraction and direct LLM call from Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-gemini-google-ai-instead-of-groq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Gemini (Google AI) instead of Groq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-on-demand-summary-generated-on-first-view-not-at-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — On-demand summary (generated on first view, not at upload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-achievements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievements System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0010-share-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-ai-content-suite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: AI content suite — auto-tags, semantic search, full-RAG chat
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../0011-edit-delete-own-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: Edit and Delete Own Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech specs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tech specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tech Specs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0001-auth-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Auth Feature Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0001-notification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0001: Notification System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0002-navigation-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0002: Navigation Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0004-post-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0004: Post Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0005-feed-filtering-tags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Feed Filtering by Tags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0005-main-navbar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0005: Main Navigation Bar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0006-post-detail-page/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0006: Post Detail Page
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0007-file-preview-screen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: File Preview Screen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0007-save-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0007: Save Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0008-request-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0008: Request Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0009-ai-post-summary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0009: AI Post Summary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0010-achievements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Achievements System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0010-share-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0010: Share Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0011-edit-delete-own-post/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: Edit and Delete Own Post
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tech-specs/0011-users-public-and-discoverability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0011: users_public mirror + achievements discoverability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Solution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-generatepostsummary-firestore-oncreate-trigger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function: generatePostSummary (Firestore onCreate trigger)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-askaiaboutpost-https-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function: askAiAboutPost (HTTPS callable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firestore-schema-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore schema additions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flutter-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flutter changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-client-side-text-extraction-and-direct-llm-call-from-flutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Client-side text extraction and direct LLM call from Flutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-gemini-google-ai-instead-of-groq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Gemini (Google AI) instead of Groq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-on-demand-summary-generated-on-first-view-not-at-upload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — On-demand summary (generated on first view, not at upload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0009-ai-post-summary.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="prop-0009-ai-post-summary">PROP-0009: AI Post Summary<a class="headerlink" href="#prop-0009-ai-post-summary" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> PROPOSED
+<strong>Author:</strong> Slade
+<strong>Date:</strong> 2026-05-14
+<strong>Spec:</strong> (pending approval)
+<strong>Approved by:</strong> (fill in when accepted)</p>
+<hr />
+<h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
+<p>The Unishare feed is content-rich but opaque at the list level. A post entry shows a title, course tag, and uploader name — none of which reliably conveys whether the document inside answers the specific question a student has right now. The only way to find out is to open the post detail screen, download or preview the file, and read enough of it to make a judgement. For large lecture decks, past exams, or multi-week note compilations, that round-trip takes two to five minutes per file. When a student is preparing for an exam and scanning the feed for relevant material, that friction compounds quickly.</p>
+<p>The result is lower engagement with genuinely useful content and a higher abandonment rate on the post detail screen. Uploaders also lose signal: if students bounce before reading the file, the uploader receives no feedback that their material was valuable.</p>
+<p>A concise AI-generated summary — shown directly on the post detail screen before any download — gives students enough signal to decide in under ten seconds whether the file is worth their time. Auto-tagging is a secondary benefit: posts uploaded without tags receive machine-assigned tags, improving feed filtering for everyone downstream.</p>
+<p>The feature must be free to operate (no paid infra), must not run on every view (pre-generation at upload time only), and must stay entirely within the Firebase ecosystem (no external server).</p>
+<hr />
+<h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
+<h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
+<p>A Firebase Cloud Function is triggered by the Firestore <code>onCreate</code> event on <code>posts/{postId}</code>. The function fetches the uploaded file from Firebase Storage, extracts up to 6,000 characters of plain text, calls the Groq API (<code>llama-3.3-70b-versatile</code>) to produce a summary, and writes the result back to the same Firestore document. The Flutter app reads the <code>summary</code> field as part of its existing <code>watchPost</code> stream and renders a collapsible summary panel on the post detail screen. A second HTTPS-callable Cloud Function backs the "Ask AI" chat feature.</p>
+<p>No Flutter client ever calls Groq directly. The API key lives only in Cloud Functions environment config (<code>functions.config()</code> or Secret Manager).</p>
+<h3 id="cloud-function-generatepostsummary-firestore-oncreate-trigger">Cloud Function: <code>generatePostSummary</code> (Firestore onCreate trigger)<a class="headerlink" href="#cloud-function-generatepostsummary-firestore-oncreate-trigger" title="Permanent link">&para;</a></h3>
+<p>Trigger: <code>firestore.document('posts/{postId}').onCreate</code></p>
+<p>Steps:</p>
+<ol>
+<li>Read <code>mediaUrls[0]</code> and <code>mediaType</code> from the new post document.</li>
+<li>Download the file bytes from Firebase Storage using the Admin SDK.</li>
+<li>Extract text:</li>
+<li>PDF: <code>pdf-parse</code> library, first 6,000 characters of extracted text.</li>
+<li>DOCX: <code>mammoth</code> library, plain-text output, first 6,000 characters.</li>
+<li>Other types: write <code>summary: null</code> and <code>summaryError: 'unsupported_type'</code>; exit early.</li>
+<li>Content screening pass (single Groq call): ask the model whether the text contains any harmful, plagiarised, or policy-violating content. If the screen returns <code>FLAGGED</code>, write <code>summary: null</code>, <code>summaryStatus: 'flagged'</code>, and exit — do not proceed to summarise.</li>
+<li>Summary call (single Groq call): system prompt instructs the model to produce exactly one introductory sentence followed by 3–7 bullet points prefixed with <code>•</code>. Max output tokens: 300.</li>
+<li>Auto-tag call (conditional, single Groq call): if the post document has an empty or absent <code>tags</code> array, ask the model to return up to 5 relevant academic tags as a JSON array. Merge these tags into the <code>tags</code> field.</li>
+<li>Write to Firestore:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>posts/{postId}
+  summary:        string   (the formatted summary text)
+  summaryStatus:  string   (&#39;done&#39; | &#39;flagged&#39; | &#39;unsupported_type&#39; | &#39;error&#39;)
+  summarizedAt:   Timestamp
+  tags:           string[] (merged with any user-supplied tags — auto-tag path only)
+</code></pre></div>
+<p>All writes are a single <code>update()</code> call to avoid overwriting the rest of the post document.</p>
+<p><strong>In-memory text cache:</strong> The extracted raw text is held in a module-level <code>Map&lt;string, string&gt;</code> keyed by <code>postId</code> for the lifetime of the Cloud Function instance (one hour maximum before cold restart). This satisfies the Redis-equivalent caching requirement without provisioning any additional infrastructure. The "Ask AI" function (below) benefits from this cache when the same instance handles both calls.</p>
+<p><strong>Groq rate-limit strategy:</strong> Cloud Functions for Firebase enforce a maximum of one concurrent instance per deployment by default on the free tier (Spark plan). Posts are therefore processed serially. If the Groq free tier rate limit (30 req/min on <code>llama-3.3-70b-versatile</code>) is approached, the function catches <code>429</code> responses and retries with exponential back-off up to three times before writing <code>summaryStatus: 'error'</code>. No queuing infrastructure is required at this scale.</p>
+<h3 id="cloud-function-askaiaboutpost-https-callable">Cloud Function: <code>askAiAboutPost</code> (HTTPS callable)<a class="headerlink" href="#cloud-function-askaiaboutpost-https-callable" title="Permanent link">&para;</a></h3>
+<p>Accepts: <code>{ postId: string, conversationHistory: Message[], question: string }</code></p>
+<p>The function loads the extracted text for <code>postId</code> from the in-memory cache if available, or re-downloads and re-extracts from Firebase Storage (same logic as above). It then calls Groq with the full conversation history prepended by a system prompt that grounds the model on the document text. If the question is classified as off-topic (no overlap with the document content), the model is instructed to reply with the literal string <code>OFF_TOPIC</code> so the client can show a friendly redirect message.</p>
+<p>The caller must be authenticated (Firebase Auth token verified via <code>context.auth</code>). Unauthenticated calls are rejected with <code>unauthenticated</code>.</p>
+<h3 id="firestore-schema-additions">Firestore schema additions<a class="headerlink" href="#firestore-schema-additions" title="Permanent link">&para;</a></h3>
+<p>The following fields are added to existing <code>posts/{postId}</code> documents (no new collection required):</p>
+<div class="highlight"><pre><span></span><code>summary:        string?    null until the function completes
+summaryStatus:  string?    &#39;pending&#39; (set by client at upload) | &#39;done&#39; | &#39;flagged&#39; | &#39;unsupported_type&#39; | &#39;error&#39;
+summarizedAt:   Timestamp? null until the function completes
+</code></pre></div>
+<p>No index changes are required — these fields are never used as query predicates.</p>
+<h3 id="flutter-changes">Flutter changes<a class="headerlink" href="#flutter-changes" title="Permanent link">&para;</a></h3>
+<p><strong>Domain layer (<code>features/posts/domain/</code>):</strong></p>
+<ul>
+<li>Add <code>summary</code>, <code>summaryStatus</code>, and <code>summarizedAt</code> fields to the <code>Post</code> entity (pure Dart, no new imports).</li>
+<li>Add <code>SummaryStatus</code> enum: <code>pending</code>, <code>done</code>, <code>flagged</code>, <code>unsupportedType</code>, <code>error</code>.</li>
+<li>Add <code>AskAiRepository</code> abstract interface with <code>askAi(postId, history, question)</code> method returning <code>Future&lt;String&gt;</code>.</li>
+<li>Add <code>AskAiUseCase</code> wrapping the repository.</li>
+</ul>
+<p><strong>Data layer (<code>features/posts/data/</code>):</strong></p>
+<ul>
+<li>Update <code>PostDto</code> / mapper to read the three new fields.</li>
+<li>Add <code>AskAiRemoteDatasource</code> that calls the <code>askAiAboutPost</code> HTTPS callable function via <code>cloud_functions</code>.</li>
+<li>Add <code>AskAiRepositoryImpl</code>.</li>
+</ul>
+<p><strong>Presentation layer (<code>features/posts/presentation/</code>):</strong></p>
+<ul>
+<li>Extend <code>PostDetailScreen</code> with a <code>AiSummaryPanel</code> widget: collapsible card, amber Sparkles icon, "AI SUMMARY" label in <code>AppTypography.mono</code>, intro sentence in <code>theme.textTheme.bodyMedium</code>, bullet points with amber dot prefix.</li>
+<li>When <code>summaryStatus == pending</code>, show a shimmer placeholder.</li>
+<li>When <code>summaryStatus == flagged</code>, show a muted "Content could not be summarised" message.</li>
+<li>Add <code>AskAiSection</code> widget below the summary panel: collapsible, chat input field, message list. The section is only rendered when <code>summaryStatus == done</code>.</li>
+<li>Add <code>askAiProvider</code> (<code>AsyncNotifier</code>) that calls <code>AskAiUseCase</code> and maintains local conversation history.</li>
+</ul>
+<h3 id="clean-architecture-layers">Clean Architecture layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Artifact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>domain/entities/</code></td>
+<td><code>Post</code> entity (extended), <code>SummaryStatus</code> enum, <code>AiMessage</code> entity</td>
+</tr>
+<tr>
+<td><code>domain/repositories/</code></td>
+<td><code>AskAiRepository</code> abstract interface</td>
+</tr>
+<tr>
+<td><code>domain/usecases/</code></td>
+<td><code>AskAiUseCase</code></td>
+</tr>
+<tr>
+<td><code>data/datasources/</code></td>
+<td><code>AskAiRemoteDatasource</code> (HTTPS callable)</td>
+</tr>
+<tr>
+<td><code>data/repositories/</code></td>
+<td><code>AskAiRepositoryImpl</code></td>
+</tr>
+<tr>
+<td><code>presentation/providers/</code></td>
+<td><code>askAiProvider</code></td>
+</tr>
+<tr>
+<td><code>presentation/widgets/</code></td>
+<td><code>AiSummaryPanel</code>, <code>AskAiSection</code>, <code>AiMessageBubble</code></td>
+</tr>
+</tbody>
+</table>
+<p>The Cloud Function code lives outside the Flutter app at <code>functions/src/</code> in the repo root (standard Firebase project layout). It is not part of the <code>apps/mobile</code> package and introduces no Flutter or Dart dependencies.</p>
+<hr />
+<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<h3 id="a-client-side-text-extraction-and-direct-llm-call-from-flutter">A — Client-side text extraction and direct LLM call from Flutter<a class="headerlink" href="#a-client-side-text-extraction-and-direct-llm-call-from-flutter" title="Permanent link">&para;</a></h3>
+<p>Extract text from the file on the device using a Dart PDF or DOCX library, then call the Groq HTTP API directly from Flutter.</p>
+<p><strong>Pros:</strong> No Cloud Functions required. No server-side infrastructure to maintain. Summary could be generated lazily on first view rather than at upload time, meaning only viewed posts incur API cost.</p>
+<p><strong>Cons:</strong> The Groq API key would be embedded in the Flutter app binary, where it is trivially extractable by any user with a decompiler. This violates the project's no-plaintext-secrets convention and would expose the team's free-tier quota to abuse. Text extraction on mobile is CPU and battery intensive for large PDFs; a 40-page lecture deck can take several seconds on a mid-range Android device. Offline extraction fails entirely when the user has no local copy of the file. The client also has no server-side caching surface, so the same file would be extracted repeatedly on every device that views the post. <strong>Rejected:</strong> API key exposure is a non-negotiable disqualifier. Battery and UX cost are secondary concerns that reinforce the rejection.</p>
+<h3 id="b-gemini-google-ai-instead-of-groq">B — Gemini (Google AI) instead of Groq<a class="headerlink" href="#b-gemini-google-ai-instead-of-groq" title="Permanent link">&para;</a></h3>
+<p>Use Gemini via the Vertex AI Firebase extension or direct Gemini API calls from Cloud Functions.</p>
+<p><strong>Pros:</strong> Gemini is deeply integrated with the Google/Firebase ecosystem. The Firebase Genkit framework provides first-class Firestore trigger patterns, reducing boilerplate. Gemini 1.5 Flash has a generous free tier (15 req/min, 1M tokens/day on AI Studio free tier) with a 1M-token context window — the 6,000-character document extract is trivial.</p>
+<p><strong>Cons:</strong> The team has already configured Groq API credentials in the environment. Switching to Gemini requires setting up a new API project, a separate billing account (even for free tier), and a different SDK. Gemini API latency from the Bangkok region has historically been higher than Groq for small-context requests. The Genkit framework is still in beta and adds a new dependency with an uncertain stability surface. The <code>llama-3.3-70b-versatile</code> model on Groq has demonstrated strong academic summarisation quality in the NestJS reference implementation. <strong>Not rejected outright</strong> — if Groq free-tier rate limits prove insufficient at scale, migrating to Gemini Flash is a viable path. The reversal cost is moderate: the Cloud Function logic is self-contained, so swapping the LLM client touches only the function code, not the Flutter app or Firestore schema.</p>
+<h3 id="c-on-demand-summary-generated-on-first-view-not-at-upload">C — On-demand summary (generated on first view, not at upload)<a class="headerlink" href="#c-on-demand-summary-generated-on-first-view-not-at-upload" title="Permanent link">&para;</a></h3>
+<p>Instead of triggering summarisation on <code>onCreate</code>, trigger it when the first user opens the post detail screen — either via a Firestore write from the client that the function watches, or via a direct HTTPS callable that the screen invokes if <code>summary</code> is null.</p>
+<p><strong>Pros:</strong> Only viewed posts are ever summarised, reducing Groq API call volume for posts that receive zero traffic (stale or niche uploads). Cold-start behaviour is visible only to the first viewer, not silently deferred.</p>
+<p><strong>Cons:</strong> The first viewer of any post experiences a 2–4 second loading delay while the function runs. This is particularly poor UX for popular posts where many users arrive at the same moment (Firestore <code>onUpdate</code> could trigger the function multiple times for a single document). Race conditions between concurrent first-view requests require deduplication logic (check-then-set). The upload-time trigger is cleaner: summarisation is a side-effect of ingestion, not of viewing, which aligns with the principle that the feed should always be ready to consume. The user brief explicitly states "pre-generated once at upload time." <strong>Rejected:</strong> the user brief rules it out directly, and the UX degradation for first viewers is not acceptable.</p>
+<hr />
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Supported file types at launch.</strong> The reference implementation handles PDF and DOCX. Should PPTX (PowerPoint) be in scope for launch, given that many lecture slides are shared in that format? <code>python-pptx</code> or <code>officeparser</code> could extract slide text in the Node.js function, but adds a dependency and increases cold-start time. A decision is needed before the spec enumerates extraction libraries.</p>
+</li>
+<li>
+<p><strong>Cold-start latency on the free Spark plan.</strong> The Firebase free tier does not support Cloud Functions with minimum instance configuration, meaning every cold start downloads <code>pdf-parse</code> and <code>mammoth</code> from the module cache. Cold starts on the Spark plan can take 3–8 seconds for Node.js functions with heavy native dependencies. Students uploading a post will not see the summary panel populate for up to 10–15 seconds after upload. Is this acceptable, or should a loading/pending state on the post detail screen persist until the <code>summary</code> field is written (real-time listener handles this automatically)?</p>
+</li>
+<li>
+<p><strong>Groq free-tier rate limit at scale.</strong> The <code>llama-3.3-70b-versatile</code> model on the Groq free tier allows 30 requests per minute and 14,400 requests per day. Each summarisation consumes up to three requests (screen + summary + auto-tag). At 100 posts uploaded per day, the daily cap is safe. At 500+ posts per day, the daily cap is breached. What is the expected upload volume at launch, and is a graceful degradation path (skip auto-tag to save one request, or fall back to a smaller model) acceptable?</p>
+</li>
+<li>
+<p><strong>"Ask AI" availability gate.</strong> Should the Ask AI chat section be rendered only when <code>summaryStatus == done</code>, or should it be available as soon as the post document exists (even before summarisation completes)? Showing it only when <code>done</code> simplifies the UX and avoids chat sessions where the model has no document context. However, it means users who open a post in the first 15 seconds after upload see no AI affordance at all. The preferred behaviour must be confirmed before the presentation layer is specced.</p>
+</li>
+<li>
+<p><strong>Conversation history persistence.</strong> The <code>askAiProvider</code> holds conversation history in local Riverpod state (lost on screen pop). Should conversation history be persisted to Firestore (<code>posts/{postId}/aiChats/{userId}</code>) so users can resume a session? This significantly increases read/write volume and adds a new sub-collection. The simpler path (ephemeral in-memory history) should be the default unless there is a specific UX requirement for persistence.</p>
+</li>
+<li>
+<p><strong>Summary display when <code>summaryStatus == error</code>.</strong> If the Cloud Function fails (Groq timeout, extraction failure), the post detail screen shows no summary. Should there be a manual "Retry summary" action available to the post author, or is a silent failure (summary panel simply absent) acceptable for the first release?</p>
+</li>
+</ol>
+<hr />
+<h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
+<ul>
+<li>When an authenticated user uploads a PDF or DOCX post, a <code>summary</code> field is written to the corresponding Firestore document within 30 seconds of the upload completing, without any additional client action.</li>
+<li>The post detail screen displays the <code>AiSummaryPanel</code> when <code>summaryStatus == done</code>. The panel shows one introductory sentence and between three and seven bullet points prefixed with an amber dot.</li>
+<li>The <code>AiSummaryPanel</code> is collapsible. Its expanded/collapsed state persists for the lifetime of the screen but is not persisted to storage.</li>
+<li>When <code>summaryStatus == pending</code>, the summary panel area displays a shimmer placeholder. When <code>summaryStatus</code> is <code>flagged</code>, <code>unsupported_type</code>, or <code>error</code>, the panel displays a muted descriptive message and the Ask AI section is not rendered.</li>
+<li>A post uploaded without tags receives auto-generated tags (up to 5) written to its <code>tags</code> array by the Cloud Function. A post uploaded with tags is not modified by the auto-tag step.</li>
+<li>The "Ask AI" section is rendered only when <code>summaryStatus == done</code>. It accepts a free-text question and returns a response grounded on the document content. If the question is off-topic, the UI displays a friendly "This question is outside the document's scope" message.</li>
+<li>The <code>askAiAboutPost</code> HTTPS callable function rejects unauthenticated requests with a Firebase <code>unauthenticated</code> error.</li>
+<li>The Groq API key is never present in Flutter source code, <code>pubspec.yaml</code>, or any file committed to the repository. It is stored exclusively in Cloud Functions environment configuration.</li>
+<li>The <code>Post</code> domain entity, <code>SummaryStatus</code> enum, <code>AiMessage</code> entity, and <code>AskAiRepository</code> interface contain zero Flutter or Firebase imports.</li>
+<li><code>AiSummaryPanel</code> and <code>AskAiSection</code> each have a widget test covering the <code>pending</code>, <code>done</code>, and error states.</li>
+<li><code>AskAiUseCase</code> has a unit test against a mock <code>AskAiRepository</code> covering successful response and <code>OFF_TOPIC</code> reply paths.</li>
+<li><code>flutter analyze</code> reports zero errors or warnings on all new Dart code.</li>
+<li>Firestore security rules do not grant read access to <code>summary</code> or <code>summaryStatus</code> to unauthenticated users (consistent with existing post-read rules).</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "search.suggest", "content.action.edit", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
