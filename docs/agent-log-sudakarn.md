@@ -61,6 +61,49 @@ Files:
   ? apps/mobile/lib/features/post_feed/presentation/widgets/feed_empty_state_widget.dart (untracked)
   ? apps/mobile/lib/features/post_feed/presentation/widgets/filter_picker_widget.dart (untracked)
 
+Files:
+  ? apps/mobile/lib/features/post_feed/data/datasources/preferences_firestore_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/datasources/tag_firestore_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/models/post_filter_preferences_model.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/models/tag_model.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/repositories/preferences_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/repositories/tag_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/entities/post_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/entities/tag_entity.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/repositories/preferences_repository.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/repositories/tag_repository.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/get_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/get_tag_list.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/save_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/feed_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/filter_preferences_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/tag_list_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/screens/feed_screen.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/widgets/feed_empty_state_widget.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/widgets/filter_picker_widget.dart (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post_feed/data/datasources/preferences_firestore_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/datasources/tag_firestore_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/models/post_filter_preferences_model.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/models/tag_model.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/repositories/preferences_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/repositories/tag_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/entities/post_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/entities/tag_entity.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/repositories/preferences_repository.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/repositories/tag_repository.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/get_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/get_tag_list.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/save_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/feed_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/filter_preferences_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/tag_list_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/screens/feed_screen.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/widgets/feed_empty_state_widget.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/widgets/filter_picker_widget.dart (untracked)
+
+
 ---
 Date: 2026-05-04 10:00
 Member: Sudakarn
@@ -138,3 +181,17 @@ Review: PENDING
   [18:47] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
   [20:33] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
   [20:33] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+  [15:21] Edit: apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart
+  [15:56] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [15:56] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [15:56] Edit: apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+Summary:  2 files changed, 7 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+Summary:  2 files changed, 7 insertions(+), 5 deletions(-)
+

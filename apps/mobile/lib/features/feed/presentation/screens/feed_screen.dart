@@ -78,7 +78,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     );
   }
 
-  void _maybeShowAcademicProfile() {
+  Future<void> _maybeShowAcademicProfile() async {
     if (!mounted) return;
     final authAsync = ref.read(authStateProvider);
     final user = authAsync.hasValue ? authAsync.value : null;
@@ -86,7 +86,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
         user.departmentId == null &&
         !academicProfileSessionDismissed) {
       academicProfileSessionDismissed = true;
-      showAcademicProfileBottomSheet(context);
+      final saved = await showAcademicProfileBottomSheet(context);
+      if (!saved) academicProfileSessionDismissed = false;
     }
   }
 

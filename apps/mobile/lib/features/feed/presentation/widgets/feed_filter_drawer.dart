@@ -15,6 +15,7 @@ class FeedFilterDrawer extends ConsumerStatefulWidget {
   static Future<void> show(BuildContext context, List<Post> loadedPosts) {
     return showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
