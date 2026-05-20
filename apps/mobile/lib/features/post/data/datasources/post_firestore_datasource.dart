@@ -154,6 +154,7 @@ class PostFirestoreDatasource {
     return _firestore
         .collection('posts')
         .where('courseId', isEqualTo: courseId)
+        .where('status', isEqualTo: 'approved')
         .orderBy('createdAt', descending: true)
         .limit(limit + 1)
         .snapshots()

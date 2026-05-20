@@ -1,4 +1,8 @@
-import { onDocumentCreated, type FirestoreEvent, type QueryDocumentSnapshot } from 'firebase-functions/v2/firestore';
+import {
+  onDocumentCreated,
+  type FirestoreEvent,
+  type QueryDocumentSnapshot,
+} from 'firebase-functions/v2/firestore';
 import { logger } from 'firebase-functions/v2';
 
 import { incrementStat, addUniqueDepartment } from '../badges/counters';
@@ -37,9 +41,17 @@ export async function onPostCreatedHandler(
 
 export const onPostCreated = onDocumentCreated(
   'posts/{postId}',
-  async (event: FirestoreEvent<QueryDocumentSnapshot | undefined, { postId: string }>) => {
+  async (
+    event: FirestoreEvent<
+      QueryDocumentSnapshot | undefined,
+      { postId: string }
+    >,
+  ) => {
     const snap = event.data;
     if (!snap) return;
-    await onPostCreatedHandler(event.params.postId, snap.data() as PostCreatedData);
+    await onPostCreatedHandler(
+      event.params.postId,
+      snap.data() as PostCreatedData,
+    );
   },
 );

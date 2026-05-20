@@ -54,6 +54,7 @@ service cloud.firestore {
       allow update: if request.auth != null
                     && request.auth.uid == userId
                     && !writesProtectedAchievementsFields()
+                    && !writesRole()
                     && (!touchesDisplayedBadges() || validDisplayedBadges())
                     && (!touchesSelectedTitle() || validSelectedTitle());
       allow delete: if false;
@@ -62,6 +63,11 @@ service cloud.firestore {
       // only reports top-level keys, so dotted-path checks would silently
       // miss nested writes under `gamification`. Comparing the actual
       // values is the only reliable way to detect the change.
+      function writesRole() {
+        return request.resource.data.get('role', null)
+            != resource.data.get('role', null);
+      }
+
       function writesProtectedAchievementsFields() {
         let beforeG = resource.data.get('gamification', {});
         let afterG = request.resource.data.get('gamification', {});
@@ -167,7 +173,11 @@ service cloud.firestore {
                     && request.resource.data.title is string
                     && request.resource.data.title.size() > 0
                     && request.resource.data.likesCount == 0
-                    && request.resource.data.status == 'pending';
+                    && request.resource.data.status == 'pending'
+                    && !('aiVerdict' in request.resource.data)
+                    && !('moderatedBy' in request.resource.data)
+                    && !('moderatedAt' in request.resource.data)
+                    && !('rejectionReason' in request.resource.data);
       allow update: if request.auth != null
                     && (
                       request.resource.data.diff(resource.data).affectedKeys()

@@ -5,12 +5,12 @@ description: "Completes the server-authoritative half of SPEC-0012 — Groq-powe
 
 # SPEC-0013: AI Moderation Server Wiring
 
-**Status:** DRAFT
+**Status:** APPROVED
 **Author:** Pyae Sone Shin Thant (drafted) — handed to teammate for implementation
 **Date:** 2026-05-20
 **Proposal:** (none — direct follow-up to PROP-0012)
 **Supersedes parts of:** [SPEC-0012](./0012-ai-admin-moderation.md) — specifically the Cloud Function, callable, and Firestore-rules sections
-**Approved by:** (fill in when approved)
+**Approved by:** Sudakarn
 
 ---
 

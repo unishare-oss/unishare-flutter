@@ -1,11 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 import 'package:unishare_mobile/features/moderation/data/models/pending_post_model.dart';
 import 'package:unishare_mobile/features/moderation/domain/entities/pending_post.dart';
 
 class ModerationFirestoreDatasource {
-  late final _db = FirebaseFirestore.instance;
+  ModerationFirestoreDatasource({FirebaseFunctions? functions})
+    : _functions =
+          functions ?? FirebaseFunctions.instanceFor(region: 'asia-southeast1');
+
+  final FirebaseFunctions _functions;
+  final _db = FirebaseFirestore.instance;
 
   Stream<List<PendingPost>> watchPendingPosts() {
     return _db
@@ -22,23 +27,17 @@ class ModerationFirestoreDatasource {
   }
 
   Future<void> approvePost(String postId) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) throw StateError('not_authenticated');
-    await _db.collection('posts').doc(postId).update({
-      'status': 'approved',
-      'moderatedBy': uid,
-      'moderatedAt': FieldValue.serverTimestamp(),
+    await _functions.httpsCallable('handleModerationAction').call({
+      'postId': postId,
+      'action': 'approve',
     });
   }
 
   Future<void> rejectPost(String postId, String reason) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) throw StateError('not_authenticated');
-    await _db.collection('posts').doc(postId).update({
-      'status': 'rejected',
-      'rejectionReason': reason,
-      'moderatedBy': uid,
-      'moderatedAt': FieldValue.serverTimestamp(),
+    await _functions.httpsCallable('handleModerationAction').call({
+      'postId': postId,
+      'action': 'reject',
+      'reason': reason,
     });
   }
 }

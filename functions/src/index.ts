@@ -18,3 +18,4 @@ export { onUserChangedPublicSync, onUserCreatedPublicSync } from './triggers/onU
 export { purgeOldNotifications } from './scheduled/purgeOldNotifications';
 export { integritySweep } from './scheduled/integritySweep';
 export { autoDisableBilling } from './billing/autoDisableBilling';
+export { handleModerationAction } from './callable/handleModerationAction';
