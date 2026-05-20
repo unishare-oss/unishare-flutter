@@ -88,6 +88,9 @@ void main() {
           child: const MaterialApp(home: ModerationScreen()),
         ),
       );
+      // Multiple pumps needed for Riverpod to process the stream error
+      // through its async pipeline and rebuild the widget tree.
+      await tester.pump();
       await tester.pump();
       expect(find.textContaining('Error'), findsOneWidget);
     });
