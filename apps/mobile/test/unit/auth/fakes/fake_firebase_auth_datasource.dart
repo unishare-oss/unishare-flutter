@@ -72,10 +72,13 @@ class FakeFirebaseAuthDatasource extends FirebaseAuthDatasource {
 // ---------------------------------------------------------------------------
 
 class FakeFirebaseUser extends Fake implements User {
-  FakeFirebaseUser({required this.uid});
+  FakeFirebaseUser({required this.uid, this.isAnonymous = false});
 
   @override
   final String uid;
+
+  @override
+  final bool isAnonymous;
 
   @override
   String? get displayName => null;
@@ -85,6 +88,12 @@ class FakeFirebaseUser extends Fake implements User {
 
   @override
   String? get photoURL => null;
+
+  @override
+  List<UserInfo> get providerData => const <UserInfo>[];
+
+  @override
+  Future<void> updateDisplayName(String? displayName) async {}
 }
 
 class FakeAdditionalUserInfo extends Fake implements AdditionalUserInfo {

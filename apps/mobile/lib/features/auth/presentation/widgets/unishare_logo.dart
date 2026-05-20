@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class UnishareLogo extends StatelessWidget {
   const UnishareLogo({
@@ -16,6 +15,7 @@ class UnishareLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -23,7 +23,7 @@ class UnishareLogo extends StatelessWidget {
           width: iconSize,
           height: iconSize,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: cs.surface,
             borderRadius: BorderRadius.circular(6),
           ),
           clipBehavior: Clip.antiAlias,
@@ -34,12 +34,12 @@ class UnishareLogo extends StatelessWidget {
           child: Text(
             'Unishare',
             overflow: TextOverflow.ellipsis,
-            style: GoogleFonts.spaceGrotesk(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: darkText
-                  ? const Color(0xFF1C1917)
-                  : const Color(0xFFF7F3EE),
+                  ? cs.onSurface
+                  : Theme.of(context).scaffoldBackgroundColor,
             ),
           ),
         ),

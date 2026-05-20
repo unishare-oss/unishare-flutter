@@ -43,6 +43,26 @@ class FirestoreUserDatasource {
     });
   }
 
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    String? bio,
+    String? universityId,
+    String? departmentId,
+    int? enrollmentYear,
+  }) async {
+    // Write nulls explicitly so users can *clear* a field — e.g., switching
+    // university to one we haven't seeded should also clear the dept.
+    // Firestore writes `null` (rather than omitting the field) for these.
+    await _users.doc(uid).update({
+      'name': name,
+      'bio': bio,
+      'universityId': universityId,
+      'departmentId': departmentId,
+      'enrollmentYear': enrollmentYear,
+    });
+  }
+
   Future<void> updateAcademicProfile({
     required String uid,
     required String departmentId,
@@ -75,6 +95,26 @@ class FirestoreUserDatasource {
             )
             .toList(),
       ),
+    );
+  }
+
+  /// Returns only departments belonging to the given university.
+  /// Server-side filter (avoids streaming the full department list).
+  Stream<List<({String id, String name})>> getDepartmentsForUniversity(
+    String universityId,
+  ) {
+    return Stream.fromFuture(
+      _departments
+          .where('universityId', isEqualTo: universityId)
+          .get()
+          .then(
+            (snap) => snap.docs
+                .map(
+                  (doc) =>
+                      (id: doc.id, name: doc.data()['name'] as String? ?? ''),
+                )
+                .toList(),
+          ),
     );
   }
 }

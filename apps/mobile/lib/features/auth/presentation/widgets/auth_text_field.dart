@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class AuthTextField extends StatefulWidget {
   const AuthTextField({
     super.key,
     required this.hint,
+    this.label,
     this.controller,
     this.validator,
     this.obscureText = false,
@@ -18,6 +18,7 @@ class AuthTextField extends StatefulWidget {
   });
 
   final String hint;
+  final String? label;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final bool obscureText;
@@ -44,12 +45,12 @@ class _AuthTextFieldState extends State<AuthTextField> {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
-    final baseStyle = GoogleFonts.spaceGrotesk(
-      fontSize: 14,
-      color: Theme.of(context).colorScheme.onSurface,
+    final theme = Theme.of(context);
+    final baseStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.onSurface,
     );
 
-    return TextFormField(
+    final field = TextFormField(
       controller: widget.controller,
       validator: widget.validator,
       obscureText: _obscured,
@@ -61,12 +62,11 @@ class _AuthTextFieldState extends State<AuthTextField> {
       style: baseStyle,
       decoration: InputDecoration(
         hintText: widget.hint,
-        hintStyle: baseStyle.copyWith(color: colors.textSecondary),
+        hintStyle: baseStyle?.copyWith(color: colors.textSecondary),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
         isDense: true,
-        errorStyle: GoogleFonts.spaceGrotesk(
-          fontSize: 12,
-          color: Theme.of(context).colorScheme.error,
+        errorStyle: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.error,
         ),
         // Fixed 36×36 slot on every field keeps all heights identical.
         suffixIconConstraints: const BoxConstraints.tightFor(
@@ -86,6 +86,24 @@ class _AuthTextFieldState extends State<AuthTextField> {
                   )
                 : const SizedBox.shrink()),
       ),
+    );
+
+    if (widget.label == null) return field;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          widget.label!,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 6),
+        field,
+      ],
     );
   }
 }

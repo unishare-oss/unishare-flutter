@@ -3,6 +3,41 @@ main = "src/index.ts"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = false
+persist = true
+head_sampling_rate = 1
+
 [vars]
 FIREBASE_PROJECT_ID = "unishare-flutter"
 R2_PUBLIC_URL = "https://cdn.psstee.dev"
+# GROQ_MODEL = "llama-3.3-70b-versatile"   # optional override
+# GROQ_VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"  # optional override
+
+# Secrets (set via: wrangler secret put GROQ_API_KEY)
+# GROQ_API_KEY
+
+# wrangler vectorize create unishare-posts --dimensions=768 --metric=cosine
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "unishare-posts"
+
+# wrangler vectorize create unishare-tags --dimensions=768 --metric=cosine
+# PROP-0011 Phase 4c — tag dedup index (one vector per canonical tag).
+[[vectorize]]
+binding = "TAG_INDEX"
+index_name = "unishare-tags"
+
+# Workers AI binding for embedding generation (@cf/baai/bge-base-en-v1.5).
+[ai]
+binding = "AI"

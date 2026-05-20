@@ -18,6 +18,11 @@
 # Git worktrees
 .worktrees/
 
+# Claude Code agent session files
+.claude/worktrees/
+**/.claude/settings.local.json
+**/.claude/worktrees/
+
 # Agent log 
 apps/mobile/docs/
 
@@ -38,3 +43,9 @@ ui-debug.log
 tools/*service-account*.json
 tools/*serviceAccount*.json
 *-firebase-adminsdk-*.json
+
+# Android build artifacts
+apps/mobile/android/build/
+
+# Local helper scripts
+scripts/

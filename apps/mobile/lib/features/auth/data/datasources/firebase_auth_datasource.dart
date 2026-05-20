@@ -13,6 +13,14 @@ class FirebaseAuthDatasource {
 
   User? get currentUser => _firebaseAuth.currentUser;
 
+  Future<UserCredential> signInAnonymously() async {
+    try {
+      return await _firebaseAuth.signInAnonymously();
+    } on FirebaseAuthException catch (e) {
+      throw _mapException(e);
+    }
+  }
+
   /// Returns null if the user cancels. Caller treats null as a silent no-op.
   Future<UserCredential?> signInWithGoogle() async {
     late final GoogleSignInAccount googleUser;

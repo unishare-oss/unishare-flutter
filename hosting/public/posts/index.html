@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unishare</title>
+  <!-- TODO (OQ4): replace with post-specific OG tags via SSR -->
+  <meta property="og:title" content="Unishare — Academic Content" />
+  <meta property="og:description" content="Open this post in the Unishare app." />
+</head>
+<body>
+  <p>Opening Unishare…</p>
+  <script>
+    (function () {
+      var path = window.location.pathname; // e.g. /posts/abc123
+      var postId = path.replace(/^\/posts\//, '');
+      var ua = navigator.userAgent || '';
+      var isAndroid = /android/i.test(ua);
+      var isIOS = /iphone|ipad|ipod/i.test(ua);
+
+      var playStore = 'https://play.google.com/store/apps/details?id=<ANDROID_PACKAGE_NAME>';
+      var appStore = 'https://apps.apple.com/app/id<APP_STORE_ID>';
+
+      // Attempt to open the app via a custom scheme before falling back to
+      // the store. The timeout fires if the app is not installed.
+      var appScheme = 'unishare://posts/' + postId;
+      var fallbackTimer;
+
+      function goToStore() {
+        if (isAndroid) {
+          window.location.replace(playStore);
+        } else if (isIOS) {
+          window.location.replace(appStore);
+        } else {
+          // Desktop fallback — TODO: replace with web app URL once deployed
+          document.querySelector('p').textContent =
+            'Install the Unishare app to view this post.';
+        }
+      }
+
+      if (isAndroid || isIOS) {
+        fallbackTimer = setTimeout(goToStore, 1500);
+        window.location.href = appScheme;
+        // Cancel store redirect if the app opened (page becomes hidden).
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) clearTimeout(fallbackTimer);
+        });
+      } else {
+        goToStore();
+      }
+    })();
+  </script>
+</body>
+</html>

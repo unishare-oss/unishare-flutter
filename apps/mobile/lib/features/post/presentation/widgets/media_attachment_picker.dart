@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class MediaAttachmentPicker extends StatelessWidget {
   const MediaAttachmentPicker({
@@ -51,6 +52,7 @@ class MediaAttachmentPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ac = Theme.of(context).extension<AppColors>()!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -84,11 +86,11 @@ class MediaAttachmentPicker extends StatelessWidget {
           icon: const Icon(Icons.attach_file, size: 16),
           label: Text(
             'Add attachment',
-            style: GoogleFonts.spaceGrotesk(fontSize: 13),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           style: OutlinedButton.styleFrom(
-            foregroundColor: const Color(0xFF6B6560),
-            side: const BorderSide(color: Color(0xFFE2DAD0)),
+            foregroundColor: ac.mutedForeground,
+            side: BorderSide(color: Theme.of(context).dividerColor),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
@@ -121,14 +123,18 @@ class _FileChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const red = Color(0xFFDC2626);
-    const stone = Color(0xFF8A837E);
-    final fg = tooLarge ? red : stone;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final errorColor = Theme.of(context).colorScheme.error;
+    final fg = tooLarge ? errorColor : ac.textMuted;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: tooLarge ? const Color(0xFFFEF2F2) : const Color(0xFFF7F3EE),
-        border: Border.all(color: tooLarge ? red : const Color(0xFFE2DAD0)),
+        color: tooLarge
+            ? Theme.of(context).colorScheme.errorContainer
+            : ac.muted,
+        border: Border.all(
+          color: tooLarge ? errorColor : Theme.of(context).dividerColor,
+        ),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
@@ -142,18 +148,26 @@ class _FileChip extends StatelessWidget {
             children: [
               Text(
                 name.length > 24 ? '${name.substring(0, 24)}…' : name,
-                style: GoogleFonts.firaCode(fontSize: 11, color: fg),
+                style: AppTypography.mono(
+                  base: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: fg),
+                ),
               ),
               Text(
                 tooLarge ? '$sizeLabel — exceeds 10 MB' : sizeLabel,
-                style: GoogleFonts.firaCode(fontSize: 10, color: fg),
+                style: AppTypography.mono(
+                  base: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: fg),
+                ),
               ),
             ],
           ),
           const SizedBox(width: 6),
           GestureDetector(
             onTap: onRemove,
-            child: const Icon(Icons.close, size: 14, color: stone),
+            child: Icon(Icons.close, size: 14, color: ac.textMuted),
           ),
         ],
       ),

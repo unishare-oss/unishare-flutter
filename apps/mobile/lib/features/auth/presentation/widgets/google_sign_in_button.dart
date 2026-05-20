@@ -1,10 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-// Web-matched color constants for auth buttons.
-const _kBorder = Color(0xFFE2DAD0);
-const _kCardBg = Color(0xFFFFFFFF);
-const _kForeground = Color(0xFF1C1917);
 
 // ---------------------------------------------------------------------------
 // Google logo painter
@@ -121,10 +115,11 @@ class _MicrosoftLogoPainter extends CustomPainter {
 // Shared button style helper
 // ---------------------------------------------------------------------------
 
-ButtonStyle _oauthButtonStyle() {
+ButtonStyle _oauthButtonStyle(BuildContext context) {
+  final cs = Theme.of(context).colorScheme;
   return OutlinedButton.styleFrom(
-    backgroundColor: _kCardBg,
-    side: const BorderSide(color: _kBorder, width: 1),
+    backgroundColor: cs.surface,
+    side: BorderSide(color: Theme.of(context).dividerColor, width: 1),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
     minimumSize: const Size.fromHeight(42),
     padding: EdgeInsets.zero,
@@ -147,25 +142,26 @@ class GoogleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return SizedBox(
       width: double.infinity,
       height: 42,
       child: OutlinedButton(
         onPressed: isLoading ? null : onPressed,
-        style: _oauthButtonStyle(),
+        style: _oauthButtonStyle(context),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 16,
                 height: 16,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: _kForeground,
+                  color: cs.onSurface,
                 ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                     height: 20,
                     child: CustomPaint(painter: _GoogleLogoPainter()),
@@ -173,10 +169,9 @@ class GoogleSignInButton extends StatelessWidget {
                   const SizedBox(width: 12),
                   Text(
                     'Continue with Google',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 14,
-                      color: _kForeground,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
                   ),
                 ],
               ),
@@ -196,16 +191,17 @@ class MicrosoftSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return SizedBox(
       width: double.infinity,
       height: 42,
       child: OutlinedButton(
         onPressed: onPressed,
-        style: _oauthButtonStyle(),
+        style: _oauthButtonStyle(context),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               width: 20,
               height: 20,
               child: CustomPaint(painter: _MicrosoftLogoPainter()),
@@ -213,10 +209,9 @@ class MicrosoftSignInButton extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               'Continue with Microsoft',
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 14,
-                color: _kForeground,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
             ),
           ],
         ),

@@ -6,10 +6,14 @@ import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
+import 'package:unishare_mobile/features/feed/presentation/providers/feed_filter_provider.dart';
+import 'package:unishare_mobile/features/feed/presentation/providers/feed_provider.dart';
 import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
 import 'package:unishare_mobile/features/feed/presentation/widgets/feed_empty_state_widget.dart';
-import 'package:unishare_mobile/features/feed/presentation/widgets/filter_picker_widget.dart';
-import 'package:unishare_mobile/features/feed/presentation/widgets/post_card_widget.dart';
+import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/saved/presentation/providers/is_post_saved_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
 import 'package:unishare_mobile/shared/theme/themes.dart';
 
@@ -17,14 +21,19 @@ import 'package:unishare_mobile/shared/theme/themes.dart';
 // Fakes
 // ---------------------------------------------------------------------------
 
-class _GuestModeOn extends GuestMode {
+class _PresetFeedFilter extends FeedFilter {
+  _PresetFeedFilter(this._initial);
+  final FeedFilterState _initial;
   @override
-  bool build() => true;
+  FeedFilterState build() => _initial;
 }
 
 class _FakeAuthRepository implements AuthRepository {
   @override
   Stream<AppUser?> get authStateChanges => const Stream.empty();
+
+  @override
+  Future<AppUser> signInAnonymously() async => throw UnimplementedError();
 
   @override
   Future<AppUser> signInWithGoogle() async => throw UnimplementedError();
@@ -50,6 +59,16 @@ class _FakeAuthRepository implements AuthRepository {
   Future<AppUser?> getCurrentUser() async => null;
 
   @override
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    String? bio,
+    String? universityId,
+    String? departmentId,
+    int? enrollmentYear,
+  }) => throw UnimplementedError();
+
+  @override
   Future<void> updateAcademicProfile({
     required String uid,
     required String departmentId,
@@ -58,14 +77,98 @@ class _FakeAuthRepository implements AuthRepository {
 }
 
 // ---------------------------------------------------------------------------
+// Mock feed data
+// ---------------------------------------------------------------------------
+
+Post _post({
+  required String id,
+  required PostType type,
+  required String courseId,
+  required String title,
+  required String authorName,
+  List<String> tags = const [],
+}) => Post(
+  id: id,
+  authorId: 'uid',
+  authorName: authorName,
+  authorAvatar: '',
+  postType: type,
+  year: 1,
+  courseId: courseId,
+  title: title,
+  description: '',
+  postingIdentity: PostingIdentity.named,
+  semester: 1,
+  moduleNumber: '',
+  mediaUrls: const [],
+  tags: tags,
+  likesCount: 0,
+  createdAt: DateTime(2026, 1, 1),
+  updatedAt: DateTime(2026, 1, 1),
+);
+
+final _mockFeed = [
+  _post(
+    id: '1',
+    type: PostType.lectureNote,
+    courseId: 'CSC233',
+    title: 'LR Parsing',
+    authorName: 'Test User',
+  ),
+  _post(
+    id: '2',
+    type: PostType.lectureNote,
+    courseId: 'CSC220',
+    title: 'TCP Congestion',
+    authorName: 'Test User',
+    tags: ['networking'],
+  ),
+  _post(
+    id: '3',
+    type: PostType.lectureNote,
+    courseId: 'CSC220',
+    title: 'Gemini Notes',
+    authorName: 'Test User',
+    tags: ['networking'],
+  ),
+  _post(
+    id: '4',
+    type: PostType.lectureNote,
+    courseId: 'CSC217',
+    title: 'Chapter 7',
+    authorName: 'Test User',
+    tags: ['concurrency', 'os'],
+  ),
+  _post(
+    id: '5',
+    type: PostType.exercise,
+    courseId: 'CSC233',
+    title: 'Assignment 9',
+    authorName: 'Test User',
+  ),
+  _post(
+    id: '6',
+    type: PostType.exercise,
+    courseId: 'GEN231',
+    title: 'M2 Final',
+    authorName: 'Test User',
+  ),
+];
+
+// ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
 
-Widget _buildSubject({bool guestMode = false}) {
+Widget _buildSubject({
+  bool guestMode = false,
+  FeedFilterState feedFilter = const FeedFilterState(),
+}) {
   return ProviderScope(
     overrides: [
       authRepositoryProvider.overrideWithValue(_FakeAuthRepository()),
-      if (guestMode) guestModeProvider.overrideWith(() => _GuestModeOn()),
+      if (guestMode) guestModeProvider.overrideWithValue(true),
+      feedProvider.overrideWith((_) => Stream.value(_mockFeed)),
+      feedFilterProvider.overrideWith(() => _PresetFeedFilter(feedFilter)),
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
@@ -94,13 +197,13 @@ void main() {
       expect(find.text('Search posts or #tags...'), findsOneWidget);
     });
 
-    testWidgets('renders three tabs: ALL, NOTES, ASSIGNMENTS', (tester) async {
+    testWidgets('renders three tabs: ALL, NOTES, EXERCISES', (tester) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
       expect(find.text('ALL'), findsOneWidget);
       expect(find.text('NOTES'), findsOneWidget);
-      expect(find.text('ASSIGNMENTS'), findsOneWidget);
+      expect(find.text('EXERCISES'), findsOneWidget);
     });
 
     testWidgets('renders Filters button', (tester) async {
@@ -116,9 +219,9 @@ void main() {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
-      // ListView lazily builds only visible items; the default 800×600 test
+      // ListView lazily builds only visible items; the default 800x600 test
       // viewport renders at least 4 of the 6 mock cards.
-      expect(find.byType(PostCardWidget), findsAtLeastNWidgets(4));
+      expect(find.byType(PostCard), findsAtLeastNWidgets(4));
     });
 
     testWidgets('shows create-post button for logged-in user', (tester) async {
@@ -135,19 +238,19 @@ void main() {
       await tester.tap(find.text('NOTES'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(PostCardWidget), findsNWidgets(4));
+      expect(find.byType(PostCard), findsNWidgets(4));
     });
 
-    testWidgets('tapping ASSIGNMENTS tab filters to 2 assignment cards', (
+    testWidgets('tapping EXERCISES tab filters to 2 exercise cards', (
       tester,
     ) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
-      await tester.tap(find.text('ASSIGNMENTS'));
+      await tester.tap(find.text('EXERCISES'));
       await tester.pumpAndSettle();
 
-      expect(find.byType(PostCardWidget), findsNWidgets(2));
+      expect(find.byType(PostCard), findsNWidgets(2));
     });
 
     testWidgets('post card shows title text', (tester) async {
@@ -157,118 +260,105 @@ void main() {
       expect(find.text('LR Parsing'), findsOneWidget);
     });
 
-    testWidgets('post card shows course code', (tester) async {
+    testWidgets('post card shows post title', (tester) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
-      expect(find.text('CSC233'), findsWidgets);
+      expect(find.text('TCP Congestion'), findsOneWidget);
     });
 
     testWidgets('post card shows author name', (tester) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
-      expect(find.text('La Yaung Phyo'), findsWidgets);
+      expect(find.text('Test User'), findsWidgets);
     });
 
-    testWidgets('tapping Filters button opens filter picker sheet', (
-      tester,
-    ) async {
+    testWidgets('tapping Filters button opens filter drawer', (tester) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
       await tester.tap(find.text('Filters'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Filter by tags'), findsOneWidget);
+      expect(find.text('Filter posts'), findsOneWidget);
     });
 
-    testWidgets('filter picker shows Confirm and Clear buttons', (
-      tester,
-    ) async {
+    testWidgets('filter drawer shows Clear and Apply buttons', (tester) async {
       await tester.pumpWidget(_buildSubject());
       await tester.pump();
 
       await tester.tap(find.text('Filters'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Confirm'), findsOneWidget);
       expect(find.text('Clear'), findsOneWidget);
+      expect(find.text('Apply'), findsOneWidget);
     });
 
-    testWidgets('active tag filter shows only matching posts', (tester) async {
-      await tester.pumpWidget(_buildSubject());
-      await tester.pump();
-
-      await tester.tap(find.text('Filters'));
-      await tester.pumpAndSettle();
-
-      // Scope to the sheet widget to avoid ambiguity with post card tag chips
-      final inSheet = find.descendant(
-        of: find.byType(FilterPickerWidget),
-        matching: find.text('concurrency'),
+    testWidgets('courseId filter shows only matching posts', (tester) async {
+      // CSC233 has 2 posts: 'LR Parsing' (note) + 'Assignment 9' (exercise)
+      await tester.pumpWidget(
+        _buildSubject(
+          feedFilter: const FeedFilterState(
+            courseId: 'CSC233',
+            courseName: 'CS',
+          ),
+        ),
       );
-      await tester.tap(inSheet);
       await tester.pump();
 
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
-
-      // only 1 mock post has 'concurrency' tag (Chapter 7)
-      expect(find.byType(PostCardWidget), findsNWidgets(1));
+      expect(find.byType(PostCard), findsNWidgets(2));
+      expect(find.text('LR Parsing'), findsOneWidget);
     });
 
-    testWidgets('no-match filter shows empty state widget', (tester) async {
-      await tester.pumpWidget(_buildSubject());
-      await tester.pump();
-
-      // ASSIGNMENTS tab — no assignment posts have the 'concurrency' tag
-      await tester.tap(find.text('ASSIGNMENTS'));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Filters'));
-      await tester.pumpAndSettle();
-
-      final inSheet = find.descendant(
-        of: find.byType(FilterPickerWidget),
-        matching: find.text('concurrency'),
+    testWidgets('no-match courseId filter shows empty state widget', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _buildSubject(
+          feedFilter: const FeedFilterState(
+            courseId: 'NO_MATCH',
+            courseName: 'x',
+          ),
+        ),
       );
-      await tester.tap(inSheet);
       await tester.pump();
-      await tester.tap(find.text('Confirm'));
-      await tester.pumpAndSettle();
 
       expect(find.byType(FeedEmptyStateWidget), findsOneWidget);
     });
   });
 
   group('FeedScreen — guest mode', () {
-    testWidgets('hides create-post button for guest user', (tester) async {
+    testWidgets('shows create-post button for guest user', (tester) async {
       await tester.pumpWidget(_buildSubject(guestMode: true));
       await tester.pump();
 
-      expect(find.byIcon(Icons.add), findsNothing);
+      expect(find.byIcon(Icons.add), findsOneWidget);
     });
   });
 
-  group('PostCardWidget', () {
+  group('PostCard', () {
+    Widget card(Post post) => ProviderScope(
+      overrides: [
+        isPostSavedProvider(post.id).overrideWith((_) => Stream.value(false)),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.build(AppThemes.unishare),
+        home: Scaffold(
+          body: SingleChildScrollView(child: PostCard(post: post)),
+        ),
+      ),
+    );
+
     testWidgets('note type shows NOTE badge', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.build(AppThemes.unishare),
-          home: const Scaffold(
-            body: PostCardWidget(
-              post: MockPost(
-                type: MockPostType.note,
-                courseCode: 'CSC101',
-                title: 'Test Note',
-                authorInitials: 'AB',
-                authorName: 'Author Name',
-                authorYear: 1,
-                commentCount: 3,
-                timeAgo: '2 days ago',
-              ),
-            ),
+        card(
+          _post(
+            id: 'a',
+            type: PostType.lectureNote,
+            courseId: 'CSC101',
+            title: 'Test Note',
+            authorName: 'Alice',
           ),
         ),
       );
@@ -279,54 +369,34 @@ void main() {
       expect(find.text('CSC101'), findsOneWidget);
     });
 
-    testWidgets('assignment type shows ASSIGNMENT badge', (tester) async {
+    testWidgets('exercise type shows EXERCISE badge', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.build(AppThemes.unishare),
-          home: const Scaffold(
-            body: PostCardWidget(
-              post: MockPost(
-                type: MockPostType.assignment,
-                courseCode: 'MTH200',
-                title: 'Homework 1',
-                authorInitials: 'XY',
-                authorName: 'Test User',
-                authorYear: 2,
-                commentCount: 0,
-                timeAgo: '5 days ago',
-              ),
-            ),
+        card(
+          _post(
+            id: 'b',
+            type: PostType.exercise,
+            courseId: 'MTH200',
+            title: 'HW1',
+            authorName: 'Bob',
           ),
         ),
       );
       await tester.pump();
 
-      expect(find.text('ASSIGNMENT'), findsOneWidget);
-      expect(find.text('Homework 1'), findsOneWidget);
+      expect(find.text('EXERCISE'), findsOneWidget);
+      expect(find.text('HW1'), findsOneWidget);
     });
 
-    testWidgets('renders topic tag chips when tags are provided', (
-      tester,
-    ) async {
+    testWidgets('renders tag chips when tags are present', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.build(AppThemes.unishare),
-          home: const Scaffold(
-            body: SingleChildScrollView(
-              child: PostCardWidget(
-                post: MockPost(
-                  type: MockPostType.note,
-                  courseCode: 'CSC217',
-                  title: 'Chapter 7',
-                  topicTags: ['concurrency', 'os'],
-                  authorInitials: 'S',
-                  authorName: 'Slade',
-                  authorYear: 2,
-                  commentCount: 0,
-                  timeAgo: '19 days ago',
-                ),
-              ),
-            ),
+        card(
+          _post(
+            id: 'c',
+            type: PostType.lectureNote,
+            courseId: 'CSC217',
+            title: 'Ch7',
+            authorName: 'Carol',
+            tags: ['concurrency', 'os'],
           ),
         ),
       );
@@ -336,57 +406,39 @@ void main() {
       expect(find.text('os'), findsOneWidget);
     });
 
-    testWidgets('renders comment count with label and time ago in meta row', (
-      tester,
-    ) async {
+    testWidgets('renders no Wrap when post has no tags', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.build(AppThemes.unishare),
-          home: const Scaffold(
-            body: PostCardWidget(
-              post: MockPost(
-                type: MockPostType.note,
-                courseCode: 'CSC101',
-                title: 'Sample',
-                authorInitials: 'AB',
-                authorName: 'Alice',
-                authorYear: 1,
-                commentCount: 7,
-                timeAgo: '3 hours ago',
-              ),
-            ),
+        card(
+          _post(
+            id: 'd',
+            type: PostType.lectureNote,
+            courseId: 'CSC101',
+            title: 'No Tags',
+            authorName: 'Dave',
           ),
         ),
       );
       await tester.pump();
 
-      expect(find.text('7 comments'), findsOneWidget);
-      expect(find.text('3 hours ago'), findsOneWidget);
+      expect(find.byType(Wrap), findsNothing);
     });
 
-    testWidgets('singular comment count shows "1 comment"', (tester) async {
+    testWidgets('renders author name and like count', (tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.build(AppThemes.unishare),
-          home: const Scaffold(
-            body: PostCardWidget(
-              post: MockPost(
-                type: MockPostType.note,
-                courseCode: 'CSC101',
-                title: 'Sample',
-                authorInitials: 'AB',
-                authorName: 'Alice',
-                authorYear: 1,
-                commentCount: 1,
-                timeAgo: '1 hour ago',
-              ),
-            ),
+        card(
+          _post(
+            id: 'e',
+            type: PostType.lectureNote,
+            courseId: 'CSC101',
+            title: 'T',
+            authorName: 'Eve',
           ),
         ),
       );
       await tester.pump();
 
-      expect(find.text('1 comment'), findsOneWidget);
+      expect(find.text('Eve'), findsOneWidget);
+      expect(find.text('0 likes'), findsOneWidget);
     });
   });
 }

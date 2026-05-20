@@ -25,7 +25,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.x"
+          flutter-version: "3.41.x"
           channel: stable
           cache: true
 
@@ -46,6 +46,10 @@ jobs:
       - name: Run code generation
         working-directory: apps/mobile
         run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Remove WASM modules (not needed for Android)
+        working-directory: apps/mobile
+        run: dart run pdfrx:remove_wasm_modules
 
       - name: Build Android APK (debug)
         working-directory: apps/mobile

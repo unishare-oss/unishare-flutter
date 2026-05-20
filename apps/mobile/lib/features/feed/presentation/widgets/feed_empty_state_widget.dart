@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-const _kOrange = Color(0xFFD97706);
-const _kTextMuted = Color(0xFF8A837E);
-const _kForeground = Color(0xFF1C1917);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 class FeedEmptyStateWidget extends StatelessWidget {
   const FeedEmptyStateWidget({super.key, required this.onClear});
@@ -11,35 +9,38 @@ class FeedEmptyStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.filter_list_off, size: 48, color: _kTextMuted),
+            Icon(Icons.filter_list_off, size: 48, color: ac.mutedForeground),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'No posts match your filter',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: _kForeground,
+                color: cs.onSurface,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Try selecting different tags or clear the filter to see all posts.',
+            Text(
+              'Try adjusting your filters or clear them to see all posts.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: _kTextMuted),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
             ),
             const SizedBox(height: 24),
             OutlinedButton(
               onPressed: onClear,
               style: OutlinedButton.styleFrom(
-                foregroundColor: _kOrange,
-                side: const BorderSide(color: _kOrange),
+                foregroundColor: ac.amber,
+                side: BorderSide(color: ac.amber),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

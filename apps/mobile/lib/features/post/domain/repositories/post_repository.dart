@@ -1,13 +1,22 @@
-// TODO(flutter-engineer): implement per SPEC-0004 API contracts
-// Check for a pre-existing file from PROP-0003 before finalising — do not break watchFeed.
+// Pure Dart — zero Flutter or Firebase imports.
 
 import 'dart:typed_data';
 
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 
 abstract interface class PostRepository {
   Stream<List<Post>> watchFeed({int limit = 20});
+  Stream<Post> watchPost(String postId);
+  Stream<List<Post>> watchPostsByAuthor(String authorId, {int limit = 50});
+
+  /// Unbounded count of posts by [authorId] using a Firestore aggregation.
+  /// Cheap (no doc fetch) and reflects the true total — unlike
+  /// `watchPostsByAuthor(...).length` which is capped by the page limit.
+  Future<int> countPostsByAuthor(String authorId);
+
+  Future<void> incrementViewCount(String postId);
 
   Future<void> saveDraft(PostDraft draft);
   Future<void> removeDraft(String draftId);
@@ -15,7 +24,22 @@ abstract interface class PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double progress)? onProgress,
-    // Web uploads: maps localMediaPaths key → file bytes (path is null on web)
+    void Function(int fileIndex, double fileProgress)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
+  });
+
+  // SPEC-0011
+  Future<void> deletePost(String postId);
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
   });
 }

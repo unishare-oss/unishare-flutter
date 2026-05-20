@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart';
-
-const _kBg = Color(0xFFF7F3EE);
-const _kWhite = Colors.white;
-const _kPrimary = Color(0xFFD97706);
-const _kBorder = Color(0xFFE2DAD0);
-const _kFg = Color(0xFF1C1917);
-const _kMuted = Color(0xFF8A837E);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 const _kLanguages = [
   'TypeScript',
@@ -90,10 +84,14 @@ class _CodeSnippetWidgetState extends State<CodeSnippetWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+    final dividerColor = Theme.of(context).dividerColor;
     return Container(
       decoration: BoxDecoration(
-        color: _kWhite,
-        border: Border.all(color: _kBorder),
+        color: cs.surface,
+        border: Border.all(color: dividerColor),
         borderRadius: BorderRadius.circular(6),
       ),
       padding: const EdgeInsets.all(14),
@@ -102,11 +100,12 @@ class _CodeSnippetWidgetState extends State<CodeSnippetWidget> {
         children: [
           Text(
             'CODE SNIPPET (OPTIONAL)',
-            style: GoogleFonts.firaCode(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: _kMuted,
-              letterSpacing: 0.55,
+            style: AppTypography.mono(
+              base: Theme.of(context).textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: ac.mutedForeground,
+                letterSpacing: 0.55,
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -141,25 +140,33 @@ class _CodeSnippetWidgetState extends State<CodeSnippetWidget> {
           TextField(
             controller: _contentCtrl,
             maxLines: 8,
-            style: GoogleFonts.firaCode(fontSize: 12, color: _kFg),
+            style: AppTypography.mono(
+              base: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+            ),
             decoration: InputDecoration(
               hintText: '// paste your code here…',
-              hintStyle: GoogleFonts.firaCode(fontSize: 12, color: _kMuted),
+              hintStyle: AppTypography.mono(
+                base: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
+              ),
               filled: true,
-              fillColor: _kBg,
+              fillColor: scaffoldBg,
               contentPadding: const EdgeInsets.all(10),
               isDense: true,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: const BorderSide(color: _kBorder),
+                borderSide: BorderSide(color: dividerColor),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: const BorderSide(color: _kBorder),
+                borderSide: BorderSide(color: dividerColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(4),
-                borderSide: const BorderSide(color: _kPrimary, width: 1.5),
+                borderSide: BorderSide(color: ac.amber, width: 1.5),
               ),
             ),
           ),
@@ -177,11 +184,15 @@ class _LanguageDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+    final dividerColor = Theme.of(context).dividerColor;
     return Container(
       height: 38,
       decoration: BoxDecoration(
-        color: _kBg,
-        border: Border.all(color: _kBorder),
+        color: scaffoldBg,
+        border: Border.all(color: dividerColor),
         borderRadius: BorderRadius.circular(4),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -189,9 +200,17 @@ class _LanguageDropdown extends StatelessWidget {
         child: DropdownButton<String>(
           value: value,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, color: _kMuted, size: 16),
-          style: GoogleFonts.firaCode(fontSize: 12, color: _kFg),
-          dropdownColor: Colors.white,
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: ac.mutedForeground,
+            size: 16,
+          ),
+          style: AppTypography.mono(
+            base: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+          ),
+          dropdownColor: cs.surface,
           borderRadius: BorderRadius.circular(4),
           items: _kLanguages
               .map(
@@ -199,7 +218,11 @@ class _LanguageDropdown extends StatelessWidget {
                   value: l,
                   child: Text(
                     l,
-                    style: GoogleFonts.firaCode(fontSize: 12, color: _kFg),
+                    style: AppTypography.mono(
+                      base: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+                    ),
                   ),
                 ),
               )
@@ -219,16 +242,28 @@ class _InlineTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
+    final dividerColor = Theme.of(context).dividerColor;
     return SizedBox(
       height: 38,
       child: TextField(
         controller: controller,
-        style: GoogleFonts.firaCode(fontSize: 12, color: _kFg),
+        style: AppTypography.mono(
+          base: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: cs.onSurface),
+        ),
         decoration: InputDecoration(
           hintText: hint,
-          hintStyle: GoogleFonts.firaCode(fontSize: 12, color: _kMuted),
+          hintStyle: AppTypography.mono(
+            base: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
+          ),
           filled: true,
-          fillColor: _kBg,
+          fillColor: scaffoldBg,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 8,
             vertical: 8,
@@ -236,15 +271,15 @@ class _InlineTextField extends StatelessWidget {
           isDense: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: _kBorder),
+            borderSide: BorderSide(color: dividerColor),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: _kBorder),
+            borderSide: BorderSide(color: dividerColor),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: _kPrimary, width: 1.5),
+            borderSide: BorderSide(color: ac.amber, width: 1.5),
           ),
         ),
       ),

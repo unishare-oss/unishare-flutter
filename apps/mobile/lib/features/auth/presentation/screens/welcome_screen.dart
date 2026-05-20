@@ -1,26 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/auth_exception.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
-import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/universities_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/auth_text_field.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/google_sign_in_button.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/unishare_logo.dart';
-
-// Web-matched auth palette — hardcoded so these screens always look correct
-// regardless of the active app theme.
-const _kBg = Color(0xFFF7F3EE);
-const _kSurfaceDark = Color(0xFF1C1917);
-const _kForeground = Color(0xFF1C1917);
-const _kPrimary = Color(0xFFD97706);
-const _kPrimaryFg = Color(0xFFFFFFFF);
-const _kBorder = Color(0xFFE2DAD0);
-const _kTextSecondary = Color(0xFF6B6560);
-const _kTextMuted = Color(0xFF8A837E);
-const _kDestructive = Color(0xFFDC2626);
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 
 enum _AuthMode { signIn, signUp }
 
@@ -173,8 +160,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   Widget build(BuildContext context) {
     final universitiesAsync = ref.watch(universitiesProvider);
 
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
     return Scaffold(
-      backgroundColor: _kBg,
+      backgroundColor: scaffoldBg,
       body: LayoutBuilder(
         builder: (context, constraints) {
           if (constraints.maxWidth > 800) {
@@ -189,13 +177,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   Widget _buildDesktopLayout(
     AsyncValue<List<({String id, String name})>> universitiesAsync,
   ) {
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final scaffoldBg = Theme.of(context).scaffoldBackgroundColor;
     return Row(
       children: [
         // Left panel — 55% width, always dark
         Flexible(
           flex: 55,
           child: Container(
-            color: _kSurfaceDark,
+            color: ac.surfaceDark,
             padding: const EdgeInsets.all(40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,11 +195,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 480),
                   child: Text(
-                    'Every lecture note and study guide — shared by students who’ve been there.',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 30,
+                    "Every lecture note and study guide — shared by students who've been there.",
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.w300,
-                      color: const Color(0xFFF7F3EE),
+                      color: Theme.of(context).scaffoldBackgroundColor,
                       letterSpacing: -0.5,
                       height: 1.3,
                     ),
@@ -224,7 +213,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         Flexible(
           flex: 45,
           child: Container(
-            color: _kBg,
+            color: scaffoldBg,
             child: Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
@@ -265,6 +254,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
     required AsyncValue<List<({String id, String name})>> universitiesAsync,
   }) {
     final isSignUp = _mode == _AuthMode.signUp;
+    final cs = Theme.of(context).colorScheme;
+    final ac = Theme.of(context).extension<AppColors>()!;
+    final dividerColor = Theme.of(context).dividerColor;
 
     return Form(
       key: _formKey,
@@ -282,10 +274,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           Text(
             isSignUp ? 'Create account' : 'Sign in',
             textAlign: TextAlign.center,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 24,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.w600,
-              color: _kForeground,
+              color: cs.onSurface,
             ),
           ),
 
@@ -294,10 +285,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           Text(
             'Use your university account to continue',
             textAlign: TextAlign.center,
-            style: GoogleFonts.spaceGrotesk(
-              fontSize: 14,
-              color: _kTextSecondary,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: ac.textSecondary),
           ),
           const SizedBox(height: 32),
 
@@ -315,18 +305,17 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           const SizedBox(height: 24),
           Row(
             children: [
-              const Expanded(child: Divider(color: _kBorder, height: 1)),
+              Expanded(child: Divider(color: dividerColor, height: 1)),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
                   'or',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 12,
-                    color: _kTextMuted,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
                 ),
               ),
-              const Expanded(child: Divider(color: _kBorder, height: 1)),
+              Expanded(child: Divider(color: dividerColor, height: 1)),
             ],
           ),
           const SizedBox(height: 24),
@@ -335,7 +324,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           if (isSignUp) ...[
             // Full name
             AuthTextField(
-              hint: 'Full name',
+              label: 'Full name',
+              hint: 'Jane Smith',
               controller: _nameController,
               keyboardType: TextInputType.name,
               textInputAction: TextInputAction.next,
@@ -351,69 +341,83 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             const SizedBox(height: 12),
 
             // University dropdown
-            universitiesAsync.when(
-              data: (universities) => DropdownButtonFormField<String>(
-                initialValue: _selectedUniversityId,
-                isExpanded: true,
-                hint: Text(
-                  'No university',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
-                    color: _kTextSecondary,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'University',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                icon: const Icon(
-                  Icons.keyboard_arrow_down,
-                  color: _kTextSecondary,
-                  size: 20,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 9,
-                  ),
-                  isDense: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(color: _kBorder, width: 1),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(color: _kBorder, width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: const BorderSide(color: _kPrimary, width: 1.5),
-                  ),
-                ),
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
-                  color: _kForeground,
-                ),
-                items: universities
-                    .map(
-                      (u) => DropdownMenuItem(
-                        value: u.id,
-                        child: Text(
-                          u.name,
-                          style: GoogleFonts.spaceGrotesk(fontSize: 14),
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                const SizedBox(height: 6),
+                universitiesAsync.when(
+                  data: (universities) => DropdownButtonFormField<String>(
+                    initialValue: _selectedUniversityId,
+                    isExpanded: true,
+                    hint: Text(
+                      'No university',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: ac.textSecondary),
+                    ),
+                    icon: Icon(
+                      Icons.keyboard_arrow_down,
+                      color: ac.textSecondary,
+                      size: 20,
+                    ),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: cs.surface,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 9,
                       ),
-                    )
-                    .toList(),
-                onChanged: (val) => setState(() => _selectedUniversityId = val),
-              ),
-              loading: () => const LinearProgressIndicator(color: _kPrimary),
-              error: (e, st) => const SizedBox.shrink(),
+                      isDense: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(color: dividerColor, width: 1),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(color: dividerColor, width: 1),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                        borderSide: BorderSide(color: ac.amber, width: 1.5),
+                      ),
+                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: cs.onSurface),
+                    items: universities
+                        .map(
+                          (u) => DropdownMenuItem(
+                            value: u.id,
+                            child: Text(
+                              u.name,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) =>
+                        setState(() => _selectedUniversityId = val),
+                  ),
+                  loading: () => LinearProgressIndicator(color: ac.amber),
+                  error: (e, st) => const SizedBox.shrink(),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
 
             // Email
             AuthTextField(
-              hint: 'Email',
+              label: 'Email',
+              hint: 'you@university.edu',
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
@@ -430,7 +434,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
             // Password (min 8 chars)
             AuthTextField(
-              hint: 'Password',
+              label: 'Password',
+              hint: 'Min. 8 characters',
               controller: _passwordController,
               obscureText: true,
               textInputAction: TextInputAction.next,
@@ -447,7 +452,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
             // Confirm password
             AuthTextField(
-              hint: 'Confirm password',
+              label: 'Confirm password',
+              hint: 'Repeat your password',
               controller: _confirmPasswordController,
               obscureText: true,
               textInputAction: TextInputAction.done,
@@ -475,7 +481,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     _consentChecked = v ?? false;
                     if (_consentChecked) _consentError = false;
                   }),
-                  activeColor: _kForeground,
+                  activeColor: cs.onSurface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(4),
                   ),
@@ -486,10 +492,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 Expanded(
                   child: Text(
                     'I have read and agree to the Terms of Service and Privacy Policy.',
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 12,
-                      color: _kTextSecondary,
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: ac.textSecondary),
                   ),
                 ),
               ],
@@ -500,16 +505,16 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               const SizedBox(height: 4),
               Text(
                 'You must accept the Terms and Privacy Policy to create an account',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 12,
-                  color: _kDestructive,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: cs.error),
               ),
             ],
           ] else ...[
             // Sign-in fields: Email + Password
             AuthTextField(
-              hint: 'Email',
+              label: 'Email',
+              hint: 'you@university.edu',
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
@@ -524,7 +529,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             ),
             const SizedBox(height: 12),
             AuthTextField(
-              hint: 'Password',
+              label: 'Password',
+              hint: 'Your password',
               controller: _passwordController,
               obscureText: true,
               textInputAction: TextInputAction.done,
@@ -542,10 +548,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             const SizedBox(height: 8),
             Text(
               _serverError!,
-              style: GoogleFonts.spaceGrotesk(
-                fontSize: 12,
-                color: _kDestructive,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.error),
             ),
           ],
 
@@ -558,9 +563,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   ? null
                   : (isSignUp ? _handleSignUp : _handleSignIn),
               style: FilledButton.styleFrom(
-                backgroundColor: _kPrimary,
-                foregroundColor: _kPrimaryFg,
-                disabledBackgroundColor: _kPrimary.withValues(alpha: 0.5),
+                backgroundColor: ac.amber,
+                foregroundColor: cs.surface,
+                disabledBackgroundColor: ac.amber.withValues(alpha: 0.5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(6),
                 ),
@@ -569,10 +574,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                 _isLoading
                     ? 'Please wait…'
                     : (isSignUp ? 'Create account' : 'Sign in'),
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
-                  color: _kPrimaryFg,
+                  color: cs.surface,
                 ),
               ),
             ),
@@ -586,11 +590,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
               Text(
                 isSignUp
                     ? 'Already have an account? '
-                    : "Don’t have an account? ",
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
-                  color: _kTextMuted,
-                ),
+                    : "Don't have an account? ",
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: ac.mutedForeground),
               ),
               TextButton(
                 onPressed: _switchMode,
@@ -598,13 +601,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                   padding: EdgeInsets.zero,
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  foregroundColor: _kForeground,
+                  foregroundColor: cs.onSurface,
                 ),
                 child: Text(
                   isSignUp ? 'Sign in' : 'Sign up',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 14,
-                    color: _kForeground,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: cs.onSurface,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -614,23 +616,27 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
 
           // 11. Divider
           const SizedBox(height: 16),
-          const Divider(color: _kBorder, height: 1),
+          Divider(color: dividerColor, height: 1),
 
           // 12. Continue as guest
-          const SizedBox(height: 4),
-          Center(
-            child: TextButton(
-              onPressed: () => ref.read(guestModeProvider.notifier).enter(),
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 42,
+            child: OutlinedButton(
+              onPressed: () =>
+                  ref.read(authRepositoryProvider).signInAnonymously(),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                foregroundColor: ac.mutedForeground,
               ),
               child: Text(
                 'Continue as guest',
-                style: GoogleFonts.spaceGrotesk(
-                  fontSize: 14,
-                  color: _kTextMuted,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: ac.mutedForeground,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -641,7 +647,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             Text(
               'By continuing with Google or Microsoft you agree to our Terms and Privacy Policy.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.spaceGrotesk(fontSize: 12, color: _kTextMuted),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: ac.mutedForeground),
             ),
           ],
           const SizedBox(height: 8),

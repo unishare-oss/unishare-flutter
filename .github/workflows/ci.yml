@@ -26,7 +26,7 @@ jobs:
       app: ${{ steps.filter.outputs.app }}
     steps:
       - uses: actions/checkout@v6
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
@@ -45,7 +45,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.x"
+          flutter-version: "3.41.x"
           channel: stable
           cache: true
 
@@ -93,7 +93,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.x"
+          flutter-version: "3.41.x"
           channel: stable
           cache: true
 
@@ -130,7 +130,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.x"
+          flutter-version: "3.41.x"
           channel: stable
           cache: true
 
@@ -151,6 +151,10 @@ jobs:
       - name: Run code generation
         working-directory: apps/mobile
         run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Remove WASM modules (not needed for Android)
+        working-directory: apps/mobile
+        run: dart run pdfrx:remove_wasm_modules
 
       - name: Build Android APK (debug)
         working-directory: apps/mobile
@@ -173,7 +177,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.x"
+          flutter-version: "3.41.x"
           channel: stable
           cache: true
 
@@ -209,6 +213,10 @@ jobs:
       - name: Install CocoaPods dependencies
         working-directory: apps/mobile/ios
         run: pod install
+
+      - name: Remove WASM modules (not needed for iOS)
+        working-directory: apps/mobile
+        run: dart run pdfrx:remove_wasm_modules
 
       - name: Build iOS (simulator)
         working-directory: apps/mobile

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/domain/repositories/post_repository.dart';
@@ -21,6 +22,19 @@ class _FakeRepo implements PostRepository {
   Stream<List<Post>> watchFeed({int limit = 20}) => throw UnimplementedError();
 
   @override
+  Stream<Post> watchPost(String postId) => throw UnimplementedError();
+
+  @override
+  Stream<List<Post>> watchPostsByAuthor(String authorId, {int limit = 50}) =>
+      throw UnimplementedError();
+
+  @override
+  Future<int> countPostsByAuthor(String authorId) async => 0;
+
+  @override
+  Future<void> incrementViewCount(String postId) async {}
+
+  @override
   Future<void> saveDraft(PostDraft draft) async {}
 
   @override
@@ -35,11 +49,29 @@ class _FakeRepo implements PostRepository {
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
+    void Function(int, double)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
   }) async {
     if (draft.id == failOnId) throw Exception('publish failed');
     published.add(draft.id);
   }
+
+  @override
+  Future<void> deletePost(String postId) => throw UnimplementedError();
+
+  @override
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
+  }) => throw UnimplementedError();
 }
 
 // ---------------------------------------------------------------------------
@@ -52,6 +84,7 @@ PostDraft _draft(String id, {DraftStatus status = DraftStatus.queued}) {
     postType: PostType.lectureNote,
     year: 1,
     courseId: 'csc101',
+    departmentId: 'dept-cs',
     title: 'Title $id',
     description: 'Desc',
     postingIdentity: PostingIdentity.named,

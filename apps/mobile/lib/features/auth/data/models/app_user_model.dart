@@ -18,6 +18,7 @@ abstract class AppUserModel with _$AppUserModel {
     String? universityId,
     String? departmentId,
     int? enrollmentYear,
+    String? bio,
     @Default('student') String role,
   }) = _AppUserModel;
 
@@ -36,11 +37,12 @@ abstract class AppUserModel with _$AppUserModel {
       universityId: data['universityId'] as String?,
       departmentId: data['departmentId'] as String?,
       enrollmentYear: data['enrollmentYear'] as int?,
+      bio: data['bio'] as String?,
       role: data['role'] as String? ?? 'student',
     );
   }
 
-  AppUser toEntity() => AppUser(
+  AppUser toEntity({List<String> providerIds = const <String>[]}) => AppUser(
     id: id,
     name: name,
     email: email,
@@ -48,6 +50,8 @@ abstract class AppUserModel with _$AppUserModel {
     universityId: universityId,
     departmentId: departmentId,
     enrollmentYear: enrollmentYear,
+    bio: bio,
     role: role,
+    providerIds: providerIds,
   );
 }

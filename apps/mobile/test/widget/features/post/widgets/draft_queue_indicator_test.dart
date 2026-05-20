@@ -1,6 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:unishare_mobile/core/cancellation/cancellation_token.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
@@ -25,11 +28,38 @@ class _StubRepo implements PostRepository {
   @override
   Future<List<PostDraft>> loadDraftQueue() async => [];
   @override
+  Stream<Post> watchPost(String postId) => throw UnimplementedError();
+  @override
+  Stream<List<Post>> watchPostsByAuthor(String authorId, {int limit = 50}) =>
+      throw UnimplementedError();
+  @override
+  Future<int> countPostsByAuthor(String authorId) async => 0;
+  @override
+  Future<void> incrementViewCount(String postId) async {}
+  @override
   Future<void> publishDraft(
     PostDraft draft, {
     void Function(double)? onProgress,
+    void Function(int, double)? onFileProgress,
+    void Function(PostDraft)? onDraftUpdated,
     Map<String, Uint8List>? fileDataOverride,
+    CancellationToken? cancellationToken,
   }) async {}
+
+  @override
+  Future<void> deletePost(String postId) => throw UnimplementedError();
+
+  @override
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
+  }) => throw UnimplementedError();
 }
 
 PostDraft _queuedDraft(String id) => PostDraft(
@@ -37,6 +67,7 @@ PostDraft _queuedDraft(String id) => PostDraft(
   postType: PostType.lectureNote,
   year: 1,
   courseId: 'csc101',
+  departmentId: 'dept-cs',
   title: 'T',
   description: 'D',
   postingIdentity: PostingIdentity.named,
@@ -61,7 +92,10 @@ Widget _wrap(List<PostDraft> queue) {
       ),
       draftQueueProvider.overrideWith(() => _FakeNotifier(queue)),
     ],
-    child: const MaterialApp(home: Scaffold(body: DraftQueueIndicator())),
+    child: MaterialApp(
+      theme: AppTheme.build(AppThemes.unishare),
+      home: const Scaffold(body: DraftQueueIndicator()),
+    ),
   );
 }
 

@@ -10,6 +10,7 @@ class PostDraftModel extends HiveObject {
     required this.postTypeIndex,
     required this.year,
     required this.courseId,
+    required this.departmentId,
     required this.title,
     required this.description,
     required this.postingIdentityIndex,
@@ -35,6 +36,8 @@ class PostDraftModel extends HiveObject {
   int year;
   // field 3
   String courseId;
+  // field 19
+  String departmentId;
   // field 4
   String title;
   // field 5
@@ -82,6 +85,7 @@ class PostDraftModel extends HiveObject {
       postType: PostType.values[postTypeIndex],
       year: year,
       courseId: courseId,
+      departmentId: departmentId,
       title: title,
       description: description,
       postingIdentity: PostingIdentity.values[postingIdentityIndex],
@@ -104,6 +108,7 @@ class PostDraftModel extends HiveObject {
       postTypeIndex: draft.postType.index,
       year: draft.year,
       courseId: draft.courseId,
+      departmentId: draft.departmentId,
       title: draft.title,
       description: draft.description,
       postingIdentityIndex: draft.postingIdentity.index,
@@ -138,6 +143,7 @@ class PostDraftModelAdapter extends TypeAdapter<PostDraftModel> {
       postTypeIndex: fields[1] as int? ?? 0,
       year: fields[2] as int? ?? 1,
       courseId: fields[3] as String? ?? '',
+      departmentId: fields[19] as String? ?? '',
       title: fields[4] as String? ?? '',
       description: fields[5] as String? ?? '',
       postingIdentityIndex: fields[6] as int? ?? 0,
@@ -159,7 +165,7 @@ class PostDraftModelAdapter extends TypeAdapter<PostDraftModel> {
   @override
   void write(BinaryWriter writer, PostDraftModel obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -168,6 +174,8 @@ class PostDraftModelAdapter extends TypeAdapter<PostDraftModel> {
       ..write(obj.year)
       ..writeByte(3)
       ..write(obj.courseId)
+      ..writeByte(19)
+      ..write(obj.departmentId)
       ..writeByte(4)
       ..write(obj.title)
       ..writeByte(5)

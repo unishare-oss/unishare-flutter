@@ -29,6 +29,8 @@ const departments = [
   require('./seeds/cve'),
   require('./seeds/che'),
 ];
+const badges = require('./seeds/badges');
+const appConfigLevels = require('./seeds/app_config_levels');
 
 const serviceAccountPath = process.argv[2];
 if (!serviceAccountPath) {
@@ -44,6 +46,22 @@ if (!fs.existsSync(resolved)) {
 
 admin.initializeApp({ credential: admin.credential.cert(require(resolved)) });
 const db = admin.firestore();
+
+async function seedBadges() {
+  console.log('Seeding badges...');
+  const batch = db.batch();
+  for (const b of badges) {
+    batch.set(db.collection('badges').doc(b.id), b, { merge: true });
+  }
+  await batch.commit();
+  console.log(`  ${badges.length} badges seeded.`);
+}
+
+async function seedAppConfig() {
+  console.log('Seeding app_config/levels...');
+  await db.collection('app_config').doc('levels').set(appConfigLevels, { merge: true });
+  console.log('  levels seeded.');
+}
 
 async function seed() {
   console.log('Seeding universities...');
@@ -76,6 +94,9 @@ async function seed() {
     await Promise.all(flushes);
     console.log(`  ✓ ${dept.name} — ${courses.length} courses`);
   }
+
+  await seedBadges();
+  await seedAppConfig();
 
   console.log('Done.');
 }

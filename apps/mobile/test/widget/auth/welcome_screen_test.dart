@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
-import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/universities_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:unishare_mobile/shared/theme/app_theme.dart';
@@ -16,8 +15,21 @@ import 'package:unishare_mobile/shared/theme/themes.dart';
 // ---------------------------------------------------------------------------
 
 class _FakeAuthRepository implements AuthRepository {
+  bool signInAnonymouslyCalled = false;
+
   @override
   Stream<AppUser?> get authStateChanges => const Stream.empty();
+
+  @override
+  Future<AppUser> signInAnonymously() async {
+    signInAnonymouslyCalled = true;
+    return const AppUser(
+      id: 'anon-uid',
+      name: '',
+      email: '',
+      isAnonymous: true,
+    );
+  }
 
   @override
   Future<AppUser> signInWithGoogle() async => throw UnimplementedError();
@@ -41,6 +53,16 @@ class _FakeAuthRepository implements AuthRepository {
 
   @override
   Future<AppUser?> getCurrentUser() async => null;
+
+  @override
+  Future<void> updateProfile({
+    required String uid,
+    required String name,
+    String? bio,
+    String? universityId,
+    String? departmentId,
+    int? enrollmentYear,
+  }) => throw UnimplementedError();
 
   @override
   Future<void> updateAcademicProfile({
@@ -102,38 +124,32 @@ void main() {
       },
     );
 
-    testWidgets('tapping "Continue as guest" sets guestMode to true', (
+    testWidgets('tapping "Continue as guest" calls signInAnonymously', (
       tester,
     ) async {
-      late WidgetRef capturedRef;
+      final fakeRepo = _FakeAuthRepository();
 
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            authRepositoryProvider.overrideWithValue(_FakeAuthRepository()),
+            authRepositoryProvider.overrideWithValue(fakeRepo),
             universitiesProvider.overrideWith(
               (ref) => Stream.value(<({String id, String name})>[]),
             ),
           ],
-          child: Consumer(
-            builder: (context, ref, _) {
-              capturedRef = ref;
-              return MaterialApp(
-                theme: AppTheme.build(AppThemes.unishare),
-                home: const AuthScreen(),
-              );
-            },
+          child: MaterialApp(
+            theme: AppTheme.build(AppThemes.unishare),
+            home: const AuthScreen(),
           ),
         ),
       );
       await tester.pump();
 
-      expect(capturedRef.read(guestModeProvider), isFalse);
-
+      await tester.ensureVisible(find.text('Continue as guest'));
       await tester.tap(find.text('Continue as guest'));
       await tester.pump();
 
-      expect(capturedRef.read(guestModeProvider), isTrue);
+      expect(fakeRepo.signInAnonymouslyCalled, isTrue);
     });
   });
 

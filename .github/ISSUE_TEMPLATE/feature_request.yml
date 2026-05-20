@@ -14,15 +14,7 @@ body:
     id: solution
     attributes:
       label: Proposed solution
-      description: What should happen? Include any design ideas or mockups.
-    validations:
-      required: true
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: Alternatives considered
-      description: Other approaches you thought about.
+      description: Optional — what you'd like to see, if you have ideas. The architect will write the formal proposal in `tech-proposals/`.
 
   - type: dropdown
     id: area
@@ -30,12 +22,15 @@ body:
       label: Feature area
       options:
         - Auth
-        - Content sharing
-        - Search & discovery
+        - Posts / Feed
+        - Requests / Suggestions
         - Profile
-        - Design system / UI
-        - Offline support
         - Notifications
+        - Design system / UI
+        - Cloud Functions / backend
+        - Firestore / data model
+        - CI/CD / Release
+        - Offline / caching
         - Other
     validations:
       required: true

@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:unishare_mobile/features/achievements/presentation/earn_moment_dispatcher.dart';
+import 'package:unishare_mobile/features/achievements/presentation/screens/achievements_screen.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/guest_mode_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:unishare_mobile/features/departments/presentation/screens/courses_screen.dart';
 import 'package:unishare_mobile/features/departments/presentation/screens/departments_screen.dart';
 import 'package:unishare_mobile/features/feed/presentation/screens/feed_screen.dart';
-import 'package:unishare_mobile/features/more/presentation/screens/more_screen.dart';
 import 'package:unishare_mobile/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/create_post_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/upload_progress_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/my_posts_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/edit_post_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
+import 'package:unishare_mobile/features/profile/presentation/screens/public_profile_screen.dart';
+import 'package:unishare_mobile/features/requests/presentation/screens/request_detail_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/requests_screen.dart';
 import 'package:unishare_mobile/features/saved/presentation/screens/saved_screen.dart';
+import 'package:unishare_mobile/core/router/guest_shell_scaffold.dart';
 import 'package:unishare_mobile/core/router/shell_scaffold.dart';
 
 part 'router.g.dart';
@@ -45,16 +56,52 @@ enum NavTab {
   }
 }
 
+/// Destinations reachable from the More drawer. When the user is on one of
+/// these routes, the 4th bottom-nav slot renders this destination's label
+/// and icon instead of the default "More" / menu icon.
+enum DrawerDestination {
+  profile('Profile', Icons.person_rounded),
+  // Distinct label so users can tell whether they're on their own
+  // editable profile (`/profile`) vs viewing someone else's public view
+  // (`/profile/:uid`). Different icon (outlined) reinforces the read-only
+  // nature of the public view.
+  publicProfile('Viewing', Icons.person_outline_rounded),
+  saved('Saved', Icons.bookmark_rounded),
+  departments('Depts', Icons.apartment_rounded),
+  requests('Requests', Icons.inbox_rounded),
+  achievements('Achievements', Icons.workspace_premium_rounded);
+
+  const DrawerDestination(this.label, this.icon);
+
+  final String label;
+  final IconData icon;
+
+  /// Returns the destination that owns [path], or `null` if [path] is not
+  /// inside the drawer-destinations branch.
+  static DrawerDestination? fromPath(String path) {
+    if (path == '/profile') return profile;
+    if (path.startsWith('/profile/')) return publicProfile;
+    if (path == '/saved') return saved;
+    if (path == '/departments' || path.startsWith('/departments/')) {
+      return departments;
+    }
+    if (path == '/requests' || path.startsWith('/requests/')) return requests;
+    if (path == '/achievements' || path.startsWith('/achievements/')) {
+      return achievements;
+    }
+    return null;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Notifier — watches auth + guest state, calls notifyListeners on change
 // ---------------------------------------------------------------------------
 
 class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(this._ref) {
-    _ref.listen<AsyncValue<Object?>>(
-      authStateProvider,
-      (prev, next) => notifyListeners(),
-    );
+    _ref.listen<AsyncValue<Object?>>(authStateProvider, (prev, next) {
+      notifyListeners();
+    });
     _ref.listen<bool>(guestModeProvider, (prev, next) => notifyListeners());
   }
 
@@ -74,16 +121,25 @@ class _RouterNotifier extends ChangeNotifier {
     const authRoutes = {'/welcome'};
     final currentPath = state.uri.path;
 
-    // 1. No session + not guest → force /welcome
+    // 1. No session + not guest → force /welcome, preserving intended URL
     if (!isAuthenticated && !isGuest) {
       if (!authRoutes.contains(currentPath)) {
-        return '/welcome';
+        final encoded = Uri.encodeComponent(state.uri.toString());
+        return '/welcome?redirect=$encoded';
       }
       return null;
     }
 
-    // 2. Authenticated on an auth route → go to /feed
-    if (isAuthenticated && authRoutes.contains(currentPath)) {
+    // 2. Authenticated or guest on an auth route → honour redirect param or go to /feed
+    if ((isAuthenticated || isGuest) && authRoutes.contains(currentPath)) {
+      final redirectParam = state.uri.queryParameters['redirect'];
+      if (redirectParam != null && redirectParam.isNotEmpty) {
+        final decoded = Uri.decodeComponent(redirectParam);
+        // Only follow in-app paths to prevent open-redirect abuse.
+        if (decoded.startsWith('/') && !decoded.contains('://')) {
+          return decoded;
+        }
+      }
       return '/feed';
     }
 
@@ -95,7 +151,18 @@ class _RouterNotifier extends ChangeNotifier {
     // 4. Unknown path → /feed
     // authRoutes covers /welcome as exact-match only (no child routes exist).
     // knownPrefixes covers shell branches and their nested children.
-    const knownPrefixes = {'/feed', '/posts', '/notifications', '/more'};
+    const knownPrefixes = {
+      '/feed',
+      '/posts',
+      '/notifications',
+      '/saved',
+      '/profile',
+      '/departments',
+      '/requests',
+      '/preview',
+      '/upload-progress',
+      '/achievements',
+    };
     final isKnown =
         authRoutes.contains(currentPath) ||
         knownPrefixes.any(
@@ -131,9 +198,49 @@ GoRouter router(Ref ref) {
         path: '/posts/create',
         builder: (context, state) => const CreatePostScreen(),
       ),
+      GoRoute(
+        path: '/upload-progress',
+        builder: (context, state) => const UploadProgressScreen(),
+      ),
+      GoRoute(
+        path: '/posts/:postId/edit',
+        builder: (context, state) {
+          final postId = state.pathParameters['postId']!;
+          final post = state.extra as Post?;
+          return EditPostScreen(postId: postId, post: post);
+        },
+      ),
+      GoRoute(
+        path: '/posts/:postId',
+        builder: (context, state) {
+          final postId = state.pathParameters['postId']!;
+          final seed = state.extra as Post?;
+          return PostDetailScreen(postId: postId, seed: seed);
+        },
+      ),
+      GoRoute(
+        path: '/preview',
+        builder: (context, state) {
+          final args = state.extra! as FilePreviewArgs;
+          return FilePreviewScreen(
+            url: args.url,
+            type: args.type,
+            filename: args.filename,
+          );
+        },
+      ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            ShellScaffold(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) => Consumer(
+          builder: (context, ref, _) {
+            final isGuest = ref.watch(guestModeProvider);
+            if (isGuest) {
+              return GuestShellScaffold(navigationShell: navigationShell);
+            }
+            return EarnMomentDispatcher(
+              child: ShellScaffold(navigationShell: navigationShell),
+            );
+          },
+        ),
         branches: [
           // Branch 0 — FEED
           StatefulShellBranch(
@@ -169,32 +276,67 @@ GoRouter router(Ref ref) {
               ),
             ],
           ),
-          // Branch 3 — MORE
+          // Branch 3 — drawer destinations (Profile / Saved / Departments /
+          // Requests). The 4th nav slot doesn't navigate here directly — it
+          // opens the More drawer. The drawer's tile callbacks call
+          // context.go() with one of these paths, activating this branch.
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/more',
-                builder: (context, state) => MoreScreen(
-                  scrollKey: ShellScaffold.scrollTargetKeys[NavTab.more.index],
+                path: '/profile',
+                builder: (context, state) => const ProfileScreen(),
+              ),
+              GoRoute(
+                path: '/saved',
+                builder: (context, state) => const SavedScreen(),
+              ),
+              GoRoute(
+                path: '/departments',
+                builder: (context, state) => DepartmentsScreen(
+                  scrollKey: ShellScaffold.guestDepartmentsScrollKey,
                 ),
                 routes: [
                   GoRoute(
-                    path: 'profile',
-                    builder: (context, state) => const ProfileScreen(),
-                  ),
-                  GoRoute(
-                    path: 'saved',
-                    builder: (context, state) => const SavedScreen(),
-                  ),
-                  GoRoute(
-                    path: 'departments',
-                    builder: (context, state) => const DepartmentsScreen(),
-                  ),
-                  GoRoute(
-                    path: 'requests',
-                    builder: (context, state) => const RequestsScreen(),
+                    path: ':deptId',
+                    builder: (context, state) => CoursesScreen(
+                      deptId: state.pathParameters['deptId']!,
+                      departmentName:
+                          state.uri.queryParameters['name'] ?? 'Courses',
+                    ),
                   ),
                 ],
+              ),
+              GoRoute(
+                path: '/requests',
+                builder: (context, state) => const RequestsScreen(),
+              ),
+              GoRoute(
+                path: '/requests/:requestId',
+                builder: (context, state) {
+                  final requestId = state.pathParameters['requestId']!;
+                  return RequestDetailScreen(requestId: requestId);
+                },
+              ),
+              GoRoute(
+                path: '/achievements/:uid',
+                builder: (context, state) =>
+                    AchievementsScreen(uid: state.pathParameters['uid']!),
+              ),
+              // Read-only profile for any uid. If the uid matches the
+              // signed-in user, redirect to /profile so they land on the
+              // editable owner view instead of the public mirror.
+              GoRoute(
+                path: '/profile/:uid',
+                redirect: (context, state) {
+                  final viewedUid = state.pathParameters['uid'];
+                  final me = ref.read(authStateProvider).asData?.value?.id;
+                  if (viewedUid != null && viewedUid == me) {
+                    return '/profile';
+                  }
+                  return null;
+                },
+                builder: (context, state) =>
+                    PublicProfileScreen(uid: state.pathParameters['uid']!),
               ),
             ],
           ),

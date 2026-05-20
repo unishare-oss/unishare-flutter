@@ -19,7 +19,10 @@ const _fakeUser = AppUser(id: 'u1', name: 'Test', email: 'test@test.com');
 /// from the [ProviderScope]'s container. Uses the [Consumer] element as the
 /// context, which is a direct child of [ProviderScope].
 GoRouter _router(WidgetTester tester) {
-  final consumerEl = tester.element(find.byType(Consumer));
+  // The router's StatefulShellRoute also uses a Consumer, so there are multiple
+  // in the tree. The outermost one (first in traversal) is always inside the
+  // ProviderScope from _buildApp, which is what we need.
+  final consumerEl = tester.element(find.byType(Consumer).first);
   final container = ProviderScope.containerOf(consumerEl);
   return container.read(routerProvider);
 }
@@ -30,7 +33,7 @@ Widget _buildApp({bool authenticated = true}) {
       authStateProvider.overrideWith(
         (_) => authenticated ? Stream.value(_fakeUser) : const Stream.empty(),
       ),
-      guestModeProvider.overrideWith(GuestMode.new),
+      guestModeProvider.overrideWithValue(false),
       // Stub out Hive-backed draft queue so CreatePostScreen renders without
       // requiring Hive.openBox() in tests.
       draftQueueProvider.overrideWithValue(<PostDraft>[]),
@@ -68,13 +71,17 @@ void main() {
       expect(find.byType(MainNavBar), findsOneWidget);
     });
 
-    testWidgets('MainNavBar present on /more', (tester) async {
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-      _router(tester).go('/more');
-      await tester.pumpAndSettle();
-      expect(find.byType(MainNavBar), findsOneWidget);
-    });
+    testWidgets(
+      'navigating to /more redirects to /feed (no longer a valid path)',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+        _router(tester).go('/more');
+        await tester.pumpAndSettle();
+        expect(find.byType(MainNavBar), findsOneWidget);
+        expect(find.text('Feed'), findsAtLeastNWidgets(1));
+      },
+    );
 
     testWidgets('MainNavBar absent on /welcome (unauthenticated)', (
       tester,
@@ -98,7 +105,8 @@ void main() {
       _router(tester).go('/nonexistent-xyz');
       await tester.pumpAndSettle();
       expect(find.byType(MainNavBar), findsOneWidget);
-      expect(find.text('Feed'), findsOneWidget);
+      // 'Feed' appears as both screen title and nav tab label.
+      expect(find.text('Feed'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('back press on POSTS branch navigates to FEED', (tester) async {
@@ -112,7 +120,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
 
-      expect(find.text('Feed'), findsOneWidget);
+      // 'My Posts' is gone (back press worked) and 'Feed' page is showing.
+      expect(find.text('My Posts'), findsNothing);
+      expect(find.text('Feed'), findsAtLeastNWidgets(1));
     });
 
     testWidgets('tapping active FEED tab does not throw', (tester) async {
@@ -128,6 +138,59 @@ void main() {
       await tester.tap(feedTab);
       await tester.pump();
       expect(find.byType(MainNavBar), findsOneWidget);
+    });
+
+    testWidgets(
+      'tapping More tab opens the More drawer (does not switch branch)',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+
+        final moreTab = find.byWidgetPredicate(
+          (w) =>
+              w is Semantics &&
+              w.properties.button == true &&
+              w.properties.label == 'More',
+        );
+        expect(moreTab, findsOneWidget);
+
+        await tester.tap(moreTab);
+        await tester.pumpAndSettle();
+
+        // The drawer surfaces these uppercase labels. Profile moved to
+        // the tappable user-row at the top of the drawer (SPEC-0011), so
+        // it's no longer a tile here.
+        expect(find.text('SAVED'), findsOneWidget);
+        expect(find.text('DEPARTMENTS'), findsOneWidget);
+        expect(find.text('REQUESTS'), findsOneWidget);
+        expect(find.text('ACHIEVEMENTS'), findsOneWidget);
+        // We're still rooted on /feed under the drawer.
+        expect(find.byType(MainNavBar), findsOneWidget);
+      },
+    );
+
+    testWidgets('on /saved the 4th nav slot reports Saved as Semantics value', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+      _router(tester).go('/saved');
+      await tester.pumpAndSettle();
+
+      // Nav bar still present on the drawer destination.
+      expect(find.byType(MainNavBar), findsOneWidget);
+
+      // The 4th slot's semantics: label stays 'More' (the action), and
+      // the current sub-destination is exposed as `value` so the tap
+      // action remains accurate while the page state is announced.
+      final moreTab = find.byWidgetPredicate(
+        (w) =>
+            w is Semantics &&
+            w.properties.button == true &&
+            w.properties.label == 'More' &&
+            w.properties.value == 'Saved',
+      );
+      expect(moreTab, findsOneWidget);
     });
   });
 }
