@@ -9,10 +9,18 @@ class AskAiDatasource {
 
   final http.Client _client;
 
+  /// Streams the worker's `/ai/chat` response.
+  ///
+  /// [extractedText] is the full document content cached on the post doc
+  /// (PROP-0011 Phase 3). When provided, the worker uses it as the grounding
+  /// context instead of [summary] — answers can reference details that
+  /// don't appear in the bullet summary. [summary] is still required as a
+  /// fallback for pre-Phase-1 posts whose extracted text was never cached.
   Stream<Map<String, dynamic>> stream({
     required String summary,
     required String question,
     required List<Map<String, String>> history,
+    String? extractedText,
   }) async* {
     final token = await FirebaseAuth.instance.currentUser?.getIdToken();
     if (token == null) throw Exception('not_authenticated');
@@ -22,6 +30,8 @@ class AskAiDatasource {
       ..headers['Authorization'] = 'Bearer $token'
       ..body = jsonEncode({
         'summary': summary,
+        if (extractedText != null && extractedText.isNotEmpty)
+          'extractedText': extractedText,
         'question': question,
         'history': history,
       });

@@ -5,6 +5,7 @@ abstract class AskAiRepository {
     required String summary,
     required List<AiMessage> history,
     required String question,
+    String? extractedText,
   });
 }
 

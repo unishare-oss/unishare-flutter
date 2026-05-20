@@ -8,10 +8,20 @@ import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class AskAiSection extends ConsumerStatefulWidget {
-  const AskAiSection({super.key, required this.postId, required this.summary});
+  const AskAiSection({
+    super.key,
+    required this.postId,
+    required this.summary,
+    this.extractedText,
+  });
 
   final String postId;
   final String summary;
+
+  /// PROP-0011 Phase 3 — when present, used as the worker's grounding context
+  /// instead of [summary], so answers can reference details beyond the
+  /// 3-7 bullet summary. Null for posts created before extractedText was cached.
+  final String? extractedText;
 
   @override
   ConsumerState<AskAiSection> createState() => _AskAiSectionState();
@@ -36,7 +46,11 @@ class _AskAiSectionState extends ConsumerState<AskAiSection> {
     try {
       await ref
           .read(askAiProvider(widget.postId).notifier)
-          .sendMessage(question, summary: widget.summary);
+          .sendMessage(
+            question,
+            summary: widget.summary,
+            extractedText: widget.extractedText,
+          );
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,

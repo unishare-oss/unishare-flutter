@@ -687,7 +687,11 @@ class _PostHeader extends ConsumerWidget {
           AiSummaryPanel(status: post.summaryStatus, summary: post.summary),
           const SizedBox(height: 8),
           if (post.summaryStatus == SummaryStatus.done) ...[
-            AskAiSection(postId: post.id, summary: post.summary!),
+            AskAiSection(
+              postId: post.id,
+              summary: post.summary!,
+              extractedText: post.extractedText,
+            ),
             const SizedBox(height: 8),
           ],
           const SizedBox(height: 8),

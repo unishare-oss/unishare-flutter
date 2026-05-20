@@ -14,6 +14,7 @@ class AskAiRepositoryImpl implements AskAiRepository {
     required String summary,
     required List<AiMessage> history,
     required String question,
+    String? extractedText,
   }) async* {
     final serialized = history
         .where((m) => !m.isPending)
@@ -30,6 +31,7 @@ class AskAiRepositoryImpl implements AskAiRepository {
 
       await for (final event in _datasource.stream(
         summary: summary,
+        extractedText: extractedText,
         question: question,
         history: serialized,
       )) {

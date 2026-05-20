@@ -16,7 +16,11 @@ class AskAi extends _$AskAi {
     return const AsyncData(<AiMessage>[]);
   }
 
-  Future<void> sendMessage(String question, {required String summary}) async {
+  Future<void> sendMessage(
+    String question, {
+    required String summary,
+    String? extractedText,
+  }) async {
     final history = state.value ?? [];
     final userMsg = AiMessage(content: question, isUser: true);
     const pending = AiMessage(content: '', isUser: false, isPending: true);
@@ -28,6 +32,7 @@ class AskAi extends _$AskAi {
       final params = AskAiParams(
         postId: postId,
         summary: summary,
+        extractedText: extractedText,
         history: [...history, userMsg],
         question: question,
       );
