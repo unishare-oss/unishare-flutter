@@ -226,8 +226,8 @@ class _AcademicProfileBottomSheetState
   }
 }
 
-Future<void> showAcademicProfileBottomSheet(BuildContext context) async {
-  await showDialog<bool>(
+Future<bool> showAcademicProfileBottomSheet(BuildContext context) async {
+  final result = await showDialog<bool>(
     context: context,
     barrierDismissible: true,
     builder: (_) => Dialog(
@@ -239,4 +239,5 @@ Future<void> showAcademicProfileBottomSheet(BuildContext context) async {
       ),
     ),
   );
+  return result == true;
 }

@@ -139,3 +139,16 @@ Review: PENDING
 
 2026-05-20
   [15:21] Edit: apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart
+  [15:56] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [15:56] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [15:56] Edit: apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+Summary:  2 files changed, 7 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+Summary:  2 files changed, 7 insertions(+), 5 deletions(-)
+

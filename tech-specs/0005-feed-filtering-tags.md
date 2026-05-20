@@ -5,7 +5,7 @@ description: "Full implementation spec for server-side tag filtering on the post
 
 # SPEC-0005: Feed Filtering by Tags
 
-**Status:** APPROVED  
+**Status:** DRAFT  
 **Author:** Sudakarn  
 **Date:** 2026-05-05  
 **Proposal:** [PROP-0005](../tech-proposals/0005-feed-filtering-tags.md)  
@@ -94,28 +94,28 @@ The Domain layer holds zero Flutter or Firebase imports. `PostRepository`, `TagR
 
 | Action | Path | Responsibility |
 |---|---|---|
-| Create | `lib/features/post/domain/entities/post_filter_preferences.dart` | Pure Dart entity holding `selectedTags` list and `updatedAt`; no framework imports |
-| Create | `lib/features/post/domain/entities/tag_entity.dart` | Pure Dart entity for one curated tag: `id`, `label`, `department`, `code` |
-| Modify | `lib/features/post/domain/repositories/post_repository.dart` | Add `getPostFeed` method with `tagFilter` parameter alongside existing methods |
-| Create | `lib/features/post/domain/repositories/tag_repository.dart` | Abstract interface: `getTags()` returning curated tag list |
-| Create | `lib/features/post/domain/repositories/preferences_repository.dart` | Abstract interface: `saveFilterPreferences`, `getFilterPreferences` |
-| Create | `lib/features/post/domain/usecases/get_tag_list.dart` | Delegates to `TagRepository.getTags()`; single responsibility |
-| Create | `lib/features/post/domain/usecases/save_filter_preferences.dart` | Validates tag list (max 30, all non-empty strings), delegates to `PreferencesRepository` |
-| Create | `lib/features/post/domain/usecases/get_filter_preferences.dart` | Reads from `PreferencesRepository`; returns empty `PostFilterPreferences` if no document exists |
-| Create | `lib/features/post/data/datasources/tag_firestore_datasource.dart` | Reads curated tag reference collection from Firestore; maps documents to `TagEntity` |
-| Create | `lib/features/post/data/datasources/preferences_firestore_datasource.dart` | Reads and writes `users/{uid}/preferences` document; returns raw map |
-| Modify | `lib/features/post/data/datasources/post_firestore_datasource.dart` | Swap query predicate: `array-contains-any` when `tagFilter` is non-empty; fallback to unfiltered `orderBy` when empty |
-| Create | `lib/features/post/data/models/tag_model.dart` | Freezed model mirroring `TagEntity`; `fromFirestore` factory and `toEntity()` method |
-| Create | `lib/features/post/data/models/post_filter_preferences_model.dart` | Freezed model mirroring `PostFilterPreferences`; `fromFirestore` and `toEntity()` |
-| Create | `lib/features/post/data/repositories/tag_repository_impl.dart` | Implements `TagRepository`; delegates to `TagFirestoreDatasource` |
-| Create | `lib/features/post/data/repositories/preferences_repository_impl.dart` | Implements `PreferencesRepository`; delegates to `PreferencesFirestoreDatasource` |
-| Modify | `lib/features/post/data/repositories/post_repository_impl.dart` | Pass `tagFilter` through to `PostFirestoreDatasource`; use tag-aware cache key in Hive |
-| Modify | `lib/features/post/presentation/screens/feed_screen.dart` | Add filter chip row at top; wire to `filterPreferencesProvider`; render empty-state widget when feed list is empty and filter is active |
-| Create | `lib/features/post/presentation/widgets/filter_picker_widget.dart` | Bottom-sheet or dialog listing all curated tags from `tagListProvider`; checkboxes reflecting `filterPreferencesProvider` selection; confirm / clear buttons |
-| Create | `lib/features/post/presentation/widgets/feed_empty_state_widget.dart` | Renders message and "Clear filter" button when filtered feed returns zero posts |
-| Create | `lib/features/post/presentation/providers/tag_list_provider.dart` | `@riverpod` `AutoDisposeFutureProvider` calling `GetTagList` use case |
-| Create | `lib/features/post/presentation/providers/filter_preferences_provider.dart` | `@riverpod` `AsyncNotifier<PostFilterPreferences>` calling `GetFilterPreferences` on build; `save` method calls `SaveFilterPreferences` |
-| Modify | `lib/features/post/presentation/providers/feed_provider.dart` | Read `filterPreferencesProvider`; pass `selectedTags` as `tagFilter` to `PostRepository.getPostFeed` |
+| Create | `apps/mobile/lib/features/feed/domain/entities/post_filter_preferences.dart` | Pure Dart entity holding `selectedTags` list and `updatedAt`; no framework imports |
+| Create | `apps/mobile/lib/features/feed/domain/entities/tag_entity.dart` | Pure Dart entity for one curated tag: `id`, `label`, `department`, `code` |
+| Modify | `apps/mobile/lib/features/feed/domain/repositories/post_repository.dart` | Add `getPostFeed` method with `tagFilter` parameter alongside existing methods |
+| Create | `apps/mobile/lib/features/feed/domain/repositories/tag_repository.dart` | Abstract interface: `getTags()` returning curated tag list |
+| Create | `apps/mobile/lib/features/feed/domain/repositories/preferences_repository.dart` | Abstract interface: `saveFilterPreferences`, `getFilterPreferences` |
+| Create | `apps/mobile/lib/features/feed/domain/usecases/get_tag_list.dart` | Delegates to `TagRepository.getTags()`; single responsibility |
+| Create | `apps/mobile/lib/features/feed/domain/usecases/save_filter_preferences.dart` | Validates tag list (max 30, all non-empty strings), delegates to `PreferencesRepository` |
+| Create | `apps/mobile/lib/features/feed/domain/usecases/get_filter_preferences.dart` | Reads from `PreferencesRepository`; returns empty `PostFilterPreferences` if no document exists |
+| Create | `apps/mobile/lib/features/feed/data/datasources/tag_firestore_datasource.dart` | Reads curated tag reference collection from Firestore; maps documents to `TagEntity` |
+| Create | `apps/mobile/lib/features/feed/data/datasources/preferences_firestore_datasource.dart` | Reads and writes `users/{uid}/preferences` document; returns raw map |
+| Modify | `apps/mobile/lib/features/feed/data/datasources/post_firestore_datasource.dart` | Swap query predicate: `array-contains-any` when `tagFilter` is non-empty; fallback to unfiltered `orderBy` when empty |
+| Create | `apps/mobile/lib/features/feed/data/models/tag_model.dart` | Freezed model mirroring `TagEntity`; `fromFirestore` factory and `toEntity()` method |
+| Create | `apps/mobile/lib/features/feed/data/models/post_filter_preferences_model.dart` | Freezed model mirroring `PostFilterPreferences`; `fromFirestore` and `toEntity()` |
+| Create | `apps/mobile/lib/features/feed/data/repositories/tag_repository_impl.dart` | Implements `TagRepository`; delegates to `TagFirestoreDatasource` |
+| Create | `apps/mobile/lib/features/feed/data/repositories/preferences_repository_impl.dart` | Implements `PreferencesRepository`; delegates to `PreferencesFirestoreDatasource` |
+| Modify | `apps/mobile/lib/features/feed/data/repositories/post_repository_impl.dart` | Pass `tagFilter` through to `PostFirestoreDatasource`; use tag-aware cache key in Hive |
+| Modify | `apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart` | Add filter chip row at top; wire to `filterPreferencesProvider`; render empty-state widget when feed list is empty and filter is active |
+| Create | `apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart` | Bottom-sheet or dialog listing all curated tags from `tagListProvider`; checkboxes reflecting `filterPreferencesProvider` selection; confirm / clear buttons |
+| Create | `apps/mobile/lib/features/feed/presentation/widgets/feed_empty_state_widget.dart` | Renders message and "Clear filter" button when filtered feed returns zero posts |
+| Create | `apps/mobile/lib/features/feed/presentation/providers/tag_list_provider.dart` | `@riverpod` `AutoDisposeFutureProvider` calling `GetTagList` use case |
+| Create | `apps/mobile/lib/features/feed/presentation/providers/filter_preferences_provider.dart` | `@riverpod` `AsyncNotifier<PostFilterPreferences>` calling `GetFilterPreferences` on build; `save` method calls `SaveFilterPreferences` |
+| Modify | `apps/mobile/lib/features/feed/presentation/providers/feed_provider.dart` | Read `filterPreferencesProvider`; pass `selectedTags` as `tagFilter` to `PostRepository.getPostFeed` |
 | Modify | `firestore.indexes.json` | Add composite index: `posts` collection, `tags` (Arrays) + `createdAt` (Descending) |
 | Modify | `firestore.rules` | Add `allow read, write` rule for `users/{uid}/preferences`; scope write to authenticated owner |
 
@@ -399,7 +399,7 @@ class FeedNotifier extends _$FeedNotifier {
     // Read active filter; default to empty (unfiltered) if preferences are
     // still loading or errored.
     final prefsAsync = ref.watch(filterPreferencesNotifierProvider);
-    final tagFilter = prefsAsync.valueOrNull?.selectedTags ?? const [];
+    final tagFilter = prefsAsync.asData?.value.selectedTags ?? const [];
 
     final repository = ref.read(postRepositoryProvider);
     return repository.getPostFeed(tagFilter: tagFilter);
@@ -408,7 +408,7 @@ class FeedNotifier extends _$FeedNotifier {
   /// Fetches the next page using the last document as a cursor.
   Future<void> fetchNextPage(Object? cursor) async {
     final prefsAsync = ref.read(filterPreferencesNotifierProvider);
-    final tagFilter = prefsAsync.valueOrNull?.selectedTags ?? const [];
+    final tagFilter = prefsAsync.asData?.value.selectedTags ?? const [];
     final repository = ref.read(postRepositoryProvider);
     final nextPage = await repository.getPostFeed(
       cursor: cursor,
