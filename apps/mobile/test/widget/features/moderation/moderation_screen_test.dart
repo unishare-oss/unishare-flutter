@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -78,20 +80,23 @@ void main() {
     });
 
     testWidgets('shows error state on queue error', (tester) async {
+      // Use a StreamController so we control exactly when the error is emitted.
+      final controller = StreamController<List<PendingPost>>();
+      addTearDown(controller.close);
+
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            moderationQueueProvider.overrideWith(
-              (ref) => Stream.error(Exception('Firestore error')),
-            ),
+            moderationQueueProvider.overrideWith((ref) => controller.stream),
           ],
           child: const MaterialApp(home: ModerationScreen()),
         ),
       );
-      // Multiple pumps needed for Riverpod to process the stream error
-      // through its async pipeline and rebuild the widget tree.
-      await tester.pump();
-      await tester.pump();
+
+      // Emit the error after the initial loading frame is rendered.
+      controller.addError(Exception('Firestore error'));
+      await tester.pump(); // Deliver error to Riverpod
+      await tester.pump(); // Rebuild widget tree with error state
       expect(find.textContaining('Error'), findsOneWidget);
     });
   });
