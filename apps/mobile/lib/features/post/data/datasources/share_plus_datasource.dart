@@ -13,9 +13,8 @@ class SharePlusDataSource {
     required String postTitle,
   }) async {
     final url = '$_baseUrl/posts/$postId';
-    final text = '$postTitle — $url';
     try {
-      await Share.share(text);
+      await Share.share(url, subject: postTitle);
       // Dismissed by user (cancelled) is still treated as success — silent.
       return ShareFallbackResult.shared;
     } on PlatformException {
