@@ -80,12 +80,11 @@ void main() {
     });
 
     testWidgets('shows error state on queue error', (tester) async {
-      // sync: true ensures addError() calls onError synchronously once a
-      // subscriber exists. We pump once after pumpWidget so Riverpod fully
-      // subscribes to the stream before we emit the error — on a single-
-      // subscription stream any event emitted before the subscriber is
-      // attached is silently dropped.
-      final controller = StreamController<List<PendingPost>>(sync: true);
+      // Riverpod 3.x propagates stream errors through a real Future chain.
+      // tester.pump() only advances frames, not real Futures. runAsync() steps
+      // outside fake-async so the Riverpod pipeline processes the error before
+      // we pump the frame that renders the updated widget.
+      final controller = StreamController<List<PendingPost>>();
       addTearDown(controller.close);
 
       await tester.pumpWidget(
@@ -97,11 +96,12 @@ void main() {
         ),
       );
 
-      await tester.pump(); // Riverpod subscribes to the stream
-      controller.addError(Exception('Firestore error')); // sync delivery
-      await tester.pump(); // state → AsyncError, rebuild queued
-      await tester.pump(); // widget rebuilds
-      // Find the error Center by key — avoids dependency on text rendering.
+      await tester.runAsync(() async {
+        controller.addError(Exception('Firestore error'));
+        await Future<void>.delayed(Duration.zero);
+      });
+      await tester.pump();
+      await tester.pump();
       expect(find.byKey(const Key('moderation-error')), findsOneWidget);
     });
   });
