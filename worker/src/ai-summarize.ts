@@ -229,6 +229,19 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
     return json({ summaryStatus: 'unsupported_type', summary: null })
   }
 
+  // PROP-0011 Phase 4c — embedding-based tag dedup. Snap each proposed tag
+  // to an existing canonical tag when cosine ≥ TAG_DEDUP_THRESHOLD; insert
+  // genuinely-new tags into the tag index so future calls can snap to them.
+  // Failures degrade silently: we just use the proposed tags as-is.
+  let canonicalTags = result.aiTags
+  if (canonicalTags.length > 0) {
+    try {
+      canonicalTags = await dedupAndInsertTags(env, canonicalTags)
+    } catch (e) {
+      console.error('tag dedup failed', e)
+    }
+  }
+
   // PROP-0011 Phase 4a — best-effort embed + upsert to Vectorize for semantic
   // search. Failures here MUST NOT fail the summarize response: persisting the
   // summary is the primary contract, indexing is a downstream enhancement that
@@ -239,7 +252,7 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
         postId,
         title,
         summary: result.summary,
-        aiTags: result.aiTags,
+        aiTags: canonicalTags,
         extractedText: result.extractedText,
       })
     } catch (e) {
@@ -252,7 +265,7 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
     summary: result.summary,
     extractedText: result.extractedText,
     extractedTextTruncated: result.extractedTextTruncated,
-    aiTags: result.aiTags,
+    aiTags: canonicalTags,
   })
 }
 
@@ -275,6 +288,78 @@ function buildSearchBlob(p: {
   if (p.aiTags.length > 0) parts.push(p.aiTags.join(' '))
   if (p.extractedText) parts.push(p.extractedText.slice(0, 1500))
   return parts.join('\n\n').slice(0, SEARCH_BLOB_CHAR_CAP)
+}
+
+/// PROP-0011 Phase 4c — tag dedup threshold. Two tags whose BGE embeddings
+/// have cosine similarity ≥ this value are considered "the same concept" and
+/// collapse to the older canonical form. Tune by observing the synonym pairs
+/// that show up in the corpus.
+const TAG_DEDUP_THRESHOLD = 0.85
+
+async function dedupAndInsertTags(
+  env: Env,
+  proposed: string[],
+): Promise<string[]> {
+  if (proposed.length === 0) return proposed
+
+  // Batch-embed all proposed tags in one model call to save round trips.
+  // BGE accepts string[] and returns one vector per input.
+  const embedResult = (await env.AI.run(EMBEDDING_MODEL, {
+    text: proposed,
+  })) as { data: number[][] }
+  const embeddings = embedResult.data
+  if (!Array.isArray(embeddings) || embeddings.length !== proposed.length) {
+    // Embedding shape isn't what we expected — bail to "no dedup".
+    return proposed
+  }
+
+  const canonical: string[] = []
+  const toInsert: { id: string; values: number[] }[] = []
+  const seen = new Set<string>()
+
+  for (let i = 0; i < proposed.length; i++) {
+    const tag = proposed[i]
+    const vec = embeddings[i]
+    if (!Array.isArray(vec) || vec.length !== 768) {
+      // Skip this tag's dedup but keep it as-is.
+      if (!seen.has(tag)) {
+        seen.add(tag)
+        canonical.push(tag)
+      }
+      continue
+    }
+
+    let pickedTag = tag
+    try {
+      const matches = await env.TAG_INDEX.query(vec, { topK: 1 })
+      const best = matches.matches?.[0]
+      if (best && best.score >= TAG_DEDUP_THRESHOLD) {
+        pickedTag = best.id
+      } else {
+        // Genuinely new tag — schedule for insert so future calls snap to it.
+        toInsert.push({ id: tag, values: vec })
+      }
+    } catch (e) {
+      // Query failed — use proposed tag, don't insert (could create dupes
+      // if the index is briefly unavailable, but better than blocking).
+      console.error('tag index query failed', e)
+    }
+
+    if (!seen.has(pickedTag)) {
+      seen.add(pickedTag)
+      canonical.push(pickedTag)
+    }
+  }
+
+  if (toInsert.length > 0) {
+    try {
+      await env.TAG_INDEX.upsert(toInsert)
+    } catch (e) {
+      console.error('tag index upsert failed', e)
+    }
+  }
+
+  return canonical
 }
 
 async function indexPostForSearch(

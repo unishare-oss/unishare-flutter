@@ -13,6 +13,7 @@ class SemanticSearchHit {
   const SemanticSearchHit({required this.postId, required this.score});
 
   final String postId;
+
   /// Cosine similarity in [0, 1]. Higher is closer. The worker already
   /// filtered below its similarityFloor before returning.
   final double score;
@@ -20,7 +21,7 @@ class SemanticSearchHit {
 
 class SemanticSearchDatasource {
   SemanticSearchDatasource({http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final http.Client _client;
 
@@ -51,10 +52,12 @@ class SemanticSearchDatasource {
     final raw = body['results'] as List? ?? const [];
     return raw
         .whereType<Map<String, dynamic>>()
-        .map((m) => SemanticSearchHit(
-              postId: m['postId'] as String,
-              score: (m['score'] as num).toDouble(),
-            ))
+        .map(
+          (m) => SemanticSearchHit(
+            postId: m['postId'] as String,
+            score: (m['score'] as num).toDouble(),
+          ),
+        )
         .toList(growable: false);
   }
 }

@@ -23,9 +23,9 @@ class TagWhitelistService {
     required Box<dynamic> cacheBox,
     FirebaseFirestore? firestore,
     @visibleForTesting Future<List<String>> Function()? computeOverride,
-  })  : _box = cacheBox,
-        _firestoreOverride = firestore,
-        _computeOverride = computeOverride;
+  }) : _box = cacheBox,
+       _firestoreOverride = firestore,
+       _computeOverride = computeOverride;
 
   final Box<dynamic> _box;
   // Lazy: we don't touch FirebaseFirestore.instance at construction time so
@@ -53,7 +53,11 @@ class TagWhitelistService {
       await _writeCache(fresh);
       return fresh;
     } catch (e, st) {
-      AppLogger.error('TagWhitelistService compute failed', error: e, stackTrace: st);
+      AppLogger.error(
+        'TagWhitelistService compute failed',
+        error: e,
+        stackTrace: st,
+      );
       return const [];
     }
   }

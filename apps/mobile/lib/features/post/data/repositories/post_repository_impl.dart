@@ -25,9 +25,9 @@ class PostRepositoryImpl implements PostRepository {
     this.cacheTtl = const Duration(minutes: 5),
     AiSummarizeDatasource? aiSummarizeDatasource,
     TagWhitelistService? tagWhitelistService,
-  })  : _aiSummarizeDatasource =
-            aiSummarizeDatasource ?? AiSummarizeDatasource(),
-        _tagWhitelistService = tagWhitelistService;
+  }) : _aiSummarizeDatasource =
+           aiSummarizeDatasource ?? AiSummarizeDatasource(),
+       _tagWhitelistService = tagWhitelistService;
 
   final PostFirestoreDatasource firestoreDatasource;
   final PostStorageDatasource storageDatasource;
@@ -35,6 +35,7 @@ class PostRepositoryImpl implements PostRepository {
   final FeedCache feedCache;
   final Duration cacheTtl;
   final AiSummarizeDatasource _aiSummarizeDatasource;
+
   /// Optional — null in unit tests that don't exercise vocabulary control.
   /// When set, [triggerSummarize] passes the cached top-tags list to the
   /// worker so the model prefers reusing existing tag vocabulary.

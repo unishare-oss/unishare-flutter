@@ -142,7 +142,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     if (_searchQuery.startsWith('#')) return keywordResults;
     final knownIds = keywordResults.map((p) => p.id).toSet();
     final extras = semanticPosts
-        .where((p) => !knownIds.contains(p.id) && _matchesTabAndFilter(p, filter))
+        .where(
+          (p) => !knownIds.contains(p.id) && _matchesTabAndFilter(p, filter),
+        )
         .toList(growable: false);
     if (extras.isEmpty) return keywordResults;
     final remaining = _hybridResultCap - keywordResults.length;
@@ -262,10 +264,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     // there's nothing to search for.
     final shouldSearchSemantic =
         _debouncedSearchQuery.length >= _semanticMinQuery &&
-            !_debouncedSearchQuery.startsWith('#');
+        !_debouncedSearchQuery.startsWith('#');
     final semanticResults = shouldSearchSemantic
         ? ref.watch(semanticSearchProvider(_debouncedSearchQuery)).value ??
-            const <Post>[]
+              const <Post>[]
         : const <Post>[];
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

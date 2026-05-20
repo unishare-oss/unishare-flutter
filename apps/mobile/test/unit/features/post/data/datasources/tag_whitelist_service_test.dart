@@ -15,7 +15,9 @@ void main() {
   });
 
   setUp(() async {
-    box = await Hive.openBox<dynamic>('tag_whitelist_test_${DateTime.now().microsecondsSinceEpoch}');
+    box = await Hive.openBox<dynamic>(
+      'tag_whitelist_test_${DateTime.now().microsecondsSinceEpoch}',
+    );
   });
 
   tearDown(() async {
@@ -51,7 +53,10 @@ void main() {
         return ['first-fetch'];
       }
 
-      final service = TagWhitelistService(cacheBox: box, computeOverride: compute);
+      final service = TagWhitelistService(
+        cacheBox: box,
+        computeOverride: compute,
+      );
       await service.topTags(); // primes cache
       expect(calls, 1);
 

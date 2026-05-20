@@ -49,9 +49,7 @@ FeedCache feedCache(Ref ref) => FeedCache();
 
 @Riverpod(keepAlive: true)
 TagWhitelistService tagWhitelistService(Ref ref) {
-  return TagWhitelistService(
-    cacheBox: Hive.box<dynamic>(tagWhitelistBoxName),
-  );
+  return TagWhitelistService(cacheBox: Hive.box<dynamic>(tagWhitelistBoxName));
 }
 
 @Riverpod(keepAlive: true)

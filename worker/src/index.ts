@@ -18,6 +18,8 @@ export interface Env {
   GROQ_VISION_MODEL?: string;
   // PROP-0011 Phase 4 — semantic search bindings. Provided by wrangler.toml.
   VECTORIZE: VectorizeIndex;
+  // PROP-0011 Phase 4c — canonical-tag index for embedding-based tag dedup.
+  TAG_INDEX: VectorizeIndex;
   AI: Ai;
 }
 

@@ -96,10 +96,7 @@ class PostFirestoreDatasource {
     }
     // whereIn doesn't guarantee result order; re-order by request to keep
     // the similarity ranking the worker provided.
-    return ids
-        .map((id) => byId[id])
-        .whereType<Post>()
-        .toList(growable: false);
+    return ids.map((id) => byId[id]).whereType<Post>().toList(growable: false);
   }
 
   Post _docToPost(DocumentSnapshot<Map<String, dynamic>> doc) {
