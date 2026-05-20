@@ -25,3 +25,4 @@
 
 2026-05-20
   [10:59] Edit: apps/mobile/lib/features/post/data/datasources/ai_summarize_datasource.dart
+  [11:04] Write: apps/mobile/lib/features/post/data/datasources/semantic_search_datasource.dart

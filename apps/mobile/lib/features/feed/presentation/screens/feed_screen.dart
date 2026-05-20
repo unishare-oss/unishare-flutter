@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +17,7 @@ import 'package:unishare_mobile/features/feed/presentation/widgets/post_card.dar
 import 'package:unishare_mobile/features/post/domain/entities/post.dart';
 import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/providers/create_post_provider.dart';
+import 'package:unishare_mobile/features/post/presentation/providers/semantic_search_provider.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
@@ -44,6 +47,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   String _searchQuery = '';
+
+  /// Debounced copy of [_searchQuery] used to gate the semantic-search
+  /// network call. Updated ~300ms after the user stops typing so each
+  /// keystroke doesn't fire a worker request. PROP-0011 Phase 4b.
+  String _debouncedSearchQuery = '';
+  Timer? _searchDebounce;
+  static const _searchDebounceMs = 300;
+  static const _semanticMinQuery = 3;
+  static const _hybridResultCap = 30;
 
   @override
   ScrollController get scrollController => _scrollController;
@@ -80,11 +92,62 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
     _tabController.dispose();
     _scrollController.dispose();
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  /// Updates the live query immediately, then schedules a debounced update
+  /// to [_debouncedSearchQuery] which gates the semantic-search call.
+  void _onSearchChanged(String value) {
+    setState(() => _searchQuery = value.trim());
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(
+      const Duration(milliseconds: _searchDebounceMs),
+      () {
+        if (!mounted) return;
+        setState(() => _debouncedSearchQuery = _searchQuery);
+      },
+    );
+  }
+
+  /// Tab + filter constraints applied to semantic results so a search on
+  /// the NOTES tab doesn't surface exercises just because they're a
+  /// vector neighbour of the query.
+  bool _matchesTabAndFilter(Post p, FeedFilterState filter) {
+    final tab = _tabController.index;
+    if (tab == 1 && p.postType != PostType.lectureNote) return false;
+    if (tab == 2 && p.postType != PostType.exercise) return false;
+    if (filter.year != null && p.year != filter.year) return false;
+    if (filter.courseId != null && p.courseId != filter.courseId) return false;
+    if (filter.moduleNumber != null && p.moduleNumber != filter.moduleNumber) {
+      return false;
+    }
+    return true;
+  }
+
+  /// Hybrid result list: keyword matches first (preserving the existing
+  /// search semantics), then semantic results for posts not already in the
+  /// keyword set, capped at [_hybridResultCap]. Semantic results are only
+  /// consulted for non-tag queries (`#` triggers exact-tag mode).
+  List<Post> _mergeWithSemantic(
+    List<Post> keywordResults,
+    List<Post> semanticPosts,
+    FeedFilterState filter,
+  ) {
+    if (semanticPosts.isEmpty) return keywordResults;
+    if (_searchQuery.startsWith('#')) return keywordResults;
+    final knownIds = keywordResults.map((p) => p.id).toSet();
+    final extras = semanticPosts
+        .where((p) => !knownIds.contains(p.id) && _matchesTabAndFilter(p, filter))
+        .toList(growable: false);
+    if (extras.isEmpty) return keywordResults;
+    final remaining = _hybridResultCap - keywordResults.length;
+    if (remaining <= 0) return keywordResults;
+    return [...keywordResults, ...extras.take(remaining)];
   }
 
   bool get _isGuest {
@@ -162,7 +225,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
 
   void _onSuggestionTap(String suggestion) {
     _searchController.text = suggestion;
-    setState(() => _searchQuery = suggestion.trim());
+    _onSearchChanged(suggestion);
     _searchFocusNode.requestFocus();
   }
 
@@ -192,6 +255,18 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     final filter = ref.watch(feedFilterProvider);
     final feedAsync = ref.watch(feedProvider);
     final suggestions = _buildSuggestions(feedAsync.value ?? const []);
+
+    // PROP-0011 Phase 4b — fire semantic search only when the debounced query
+    // is long enough and isn't a tag-mode query. Watching an empty-query
+    // provider is a no-op, but we want to skip the worker call entirely when
+    // there's nothing to search for.
+    final shouldSearchSemantic =
+        _debouncedSearchQuery.length >= _semanticMinQuery &&
+            !_debouncedSearchQuery.startsWith('#');
+    final semanticResults = shouldSearchSemantic
+        ? ref.watch(semanticSearchProvider(_debouncedSearchQuery)).value ??
+            const <Post>[]
+        : const <Post>[];
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: NestedScrollView(
@@ -219,7 +294,12 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
             ),
           ),
           data: (allPosts) {
-            final posts = _filterPosts(allPosts, filter);
+            final keywordResults = _filterPosts(allPosts, filter);
+            final posts = _mergeWithSemantic(
+              keywordResults,
+              semanticResults,
+              filter,
+            );
             if (posts.isEmpty) {
               return FeedEmptyStateWidget(
                 onClear: () => ref.read(feedFilterProvider.notifier).clear(),
@@ -332,7 +412,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
       child: TextField(
         controller: _searchController,
         focusNode: _searchFocusNode,
-        onChanged: (value) => setState(() => _searchQuery = value.trim()),
+        onChanged: _onSearchChanged,
         style: Theme.of(
           context,
         ).textTheme.bodySmall?.copyWith(color: cs.onSurface),

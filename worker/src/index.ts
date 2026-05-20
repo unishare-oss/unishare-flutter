@@ -3,6 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { verifyFirebaseJwt } from './jwt';
 import { handleAiSummarize } from './ai-summarize';
 import { handleAiChat } from './ai-chat';
+import { handleAiSearch } from './ai-search';
 import { CORS_HEADERS, json } from './response';
 
 export interface Env {
@@ -88,6 +89,12 @@ export default {
       const uid = await requireAuth(request, env);
       if (uid instanceof Response) return uid;
       return handleAiChat(request, env);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/ai/search') {
+      const uid = await requireAuth(request, env);
+      if (uid instanceof Response) return uid;
+      return handleAiSearch(request, env);
     }
 
     if (request.method !== 'POST') {

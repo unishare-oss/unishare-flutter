@@ -80,6 +80,28 @@ class PostFirestoreDatasource {
     });
   }
 
+  /// One-shot fetch of multiple posts by ID, preserving the input order.
+  /// Used by semantic search to materialize Post entities from the
+  /// postIds returned by the worker. Firestore's `whereIn` caps at 30 IDs
+  /// per query — callers that need more should chunk.
+  Future<List<Post>> getPostsByIds(List<String> ids) async {
+    if (ids.isEmpty) return const [];
+    final snapshot = await _firestore
+        .collection('posts')
+        .where(FieldPath.documentId, whereIn: ids)
+        .get();
+    final byId = <String, Post>{};
+    for (final doc in snapshot.docs) {
+      byId[doc.id] = _docToPost(doc);
+    }
+    // whereIn doesn't guarantee result order; re-order by request to keep
+    // the similarity ranking the worker provided.
+    return ids
+        .map((id) => byId[id])
+        .whereType<Post>()
+        .toList(growable: false);
+  }
+
   Post _docToPost(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data()!;
     return Post(
