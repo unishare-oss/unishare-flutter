@@ -1934,7 +1934,7 @@
 
 
 <h1 id="spec-0005-feed-filtering-by-tags">SPEC-0005: Feed Filtering by Tags<a class="headerlink" href="#spec-0005-feed-filtering-by-tags" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> APPROVED<br />
+<p><strong>Status:</strong> DRAFT<br />
 <strong>Author:</strong> Sudakarn<br />
 <strong>Date:</strong> 2026-05-05<br />
 <strong>Proposal:</strong> <a href="../../tech-proposals/0005-feed-filtering-tags/">PROP-0005</a><br />
@@ -2020,112 +2020,112 @@
 <tbody>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/domain/entities/post_filter_preferences.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/domain/entities/post_filter_preferences.dart</code></td>
 <td>Pure Dart entity holding <code>selectedTags</code> list and <code>updatedAt</code>; no framework imports</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/domain/entities/tag_entity.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/domain/entities/tag_entity.dart</code></td>
 <td>Pure Dart entity for one curated tag: <code>id</code>, <code>label</code>, <code>department</code>, <code>code</code></td>
 </tr>
 <tr>
 <td>Modify</td>
-<td><code>lib/features/post/domain/repositories/post_repository.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/domain/repositories/post_repository.dart</code></td>
 <td>Add <code>getPostFeed</code> method with <code>tagFilter</code> parameter alongside existing methods</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/domain/repositories/tag_repository.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/domain/repositories/tag_repository.dart</code></td>
 <td>Abstract interface: <code>getTags()</code> returning curated tag list</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/domain/repositories/preferences_repository.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/domain/repositories/preferences_repository.dart</code></td>
 <td>Abstract interface: <code>saveFilterPreferences</code>, <code>getFilterPreferences</code></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/domain/usecases/get_tag_list.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/domain/usecases/get_tag_list.dart</code></td>
 <td>Delegates to <code>TagRepository.getTags()</code>; single responsibility</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/domain/usecases/save_filter_preferences.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/domain/usecases/save_filter_preferences.dart</code></td>
 <td>Validates tag list (max 30, all non-empty strings), delegates to <code>PreferencesRepository</code></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/domain/usecases/get_filter_preferences.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/domain/usecases/get_filter_preferences.dart</code></td>
 <td>Reads from <code>PreferencesRepository</code>; returns empty <code>PostFilterPreferences</code> if no document exists</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/data/datasources/tag_firestore_datasource.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/data/datasources/tag_firestore_datasource.dart</code></td>
 <td>Reads curated tag reference collection from Firestore; maps documents to <code>TagEntity</code></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/data/datasources/preferences_firestore_datasource.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/data/datasources/preferences_firestore_datasource.dart</code></td>
 <td>Reads and writes <code>users/{uid}/preferences</code> document; returns raw map</td>
 </tr>
 <tr>
 <td>Modify</td>
-<td><code>lib/features/post/data/datasources/post_firestore_datasource.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/data/datasources/post_firestore_datasource.dart</code></td>
 <td>Swap query predicate: <code>array-contains-any</code> when <code>tagFilter</code> is non-empty; fallback to unfiltered <code>orderBy</code> when empty</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/data/models/tag_model.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/data/models/tag_model.dart</code></td>
 <td>Freezed model mirroring <code>TagEntity</code>; <code>fromFirestore</code> factory and <code>toEntity()</code> method</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/data/models/post_filter_preferences_model.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/data/models/post_filter_preferences_model.dart</code></td>
 <td>Freezed model mirroring <code>PostFilterPreferences</code>; <code>fromFirestore</code> and <code>toEntity()</code></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/data/repositories/tag_repository_impl.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/data/repositories/tag_repository_impl.dart</code></td>
 <td>Implements <code>TagRepository</code>; delegates to <code>TagFirestoreDatasource</code></td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/data/repositories/preferences_repository_impl.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/data/repositories/preferences_repository_impl.dart</code></td>
 <td>Implements <code>PreferencesRepository</code>; delegates to <code>PreferencesFirestoreDatasource</code></td>
 </tr>
 <tr>
 <td>Modify</td>
-<td><code>lib/features/post/data/repositories/post_repository_impl.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/data/repositories/post_repository_impl.dart</code></td>
 <td>Pass <code>tagFilter</code> through to <code>PostFirestoreDatasource</code>; use tag-aware cache key in Hive</td>
 </tr>
 <tr>
 <td>Modify</td>
-<td><code>lib/features/post/presentation/screens/feed_screen.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart</code></td>
 <td>Add filter chip row at top; wire to <code>filterPreferencesProvider</code>; render empty-state widget when feed list is empty and filter is active</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/presentation/widgets/filter_picker_widget.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart</code></td>
 <td>Bottom-sheet or dialog listing all curated tags from <code>tagListProvider</code>; checkboxes reflecting <code>filterPreferencesProvider</code> selection; confirm / clear buttons</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/presentation/widgets/feed_empty_state_widget.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/presentation/widgets/feed_empty_state_widget.dart</code></td>
 <td>Renders message and "Clear filter" button when filtered feed returns zero posts</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/presentation/providers/tag_list_provider.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/presentation/providers/tag_list_provider.dart</code></td>
 <td><code>@riverpod</code> <code>AutoDisposeFutureProvider</code> calling <code>GetTagList</code> use case</td>
 </tr>
 <tr>
 <td>Create</td>
-<td><code>lib/features/post/presentation/providers/filter_preferences_provider.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/presentation/providers/filter_preferences_provider.dart</code></td>
 <td><code>@riverpod</code> <code>AsyncNotifier&lt;PostFilterPreferences&gt;</code> calling <code>GetFilterPreferences</code> on build; <code>save</code> method calls <code>SaveFilterPreferences</code></td>
 </tr>
 <tr>
 <td>Modify</td>
-<td><code>lib/features/post/presentation/providers/feed_provider.dart</code></td>
+<td><code>apps/mobile/lib/features/feed/presentation/providers/feed_provider.dart</code></td>
 <td>Read <code>filterPreferencesProvider</code>; pass <code>selectedTags</code> as <code>tagFilter</code> to <code>PostRepository.getPostFeed</code></td>
 </tr>
 <tr>
@@ -2388,7 +2388,7 @@
 <span class="w">    </span><span class="c1">// Read active filter; default to empty (unfiltered) if preferences are</span>
 <span class="w">    </span><span class="c1">// still loading or errored.</span>
 <span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">prefsAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">watch</span><span class="p">(</span><span class="n">filterPreferencesNotifierProvider</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">tagFilter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefsAsync</span><span class="p">.</span><span class="n">valueOrNull</span><span class="o">?</span><span class="p">.</span><span class="n">selectedTags</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">tagFilter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefsAsync</span><span class="p">.</span><span class="n">asData</span><span class="o">?</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">selectedTags</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[];</span>
 
 <span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">postRepositoryProvider</span><span class="p">);</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">repository</span><span class="p">.</span><span class="n">getPostFeed</span><span class="p">(</span><span class="nl">tagFilter:</span><span class="w"> </span><span class="n">tagFilter</span><span class="p">);</span>
@@ -2397,7 +2397,7 @@
 <span class="w">  </span><span class="c1">/// Fetches the next page using the last document as a cursor.</span>
 <span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fetchNextPage</span><span class="p">(</span><span class="kt">Object</span><span class="o">?</span><span class="w"> </span><span class="n">cursor</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">prefsAsync</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">filterPreferencesNotifierProvider</span><span class="p">);</span>
-<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">tagFilter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefsAsync</span><span class="p">.</span><span class="n">valueOrNull</span><span class="o">?</span><span class="p">.</span><span class="n">selectedTags</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[];</span>
+<span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">tagFilter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefsAsync</span><span class="p">.</span><span class="n">asData</span><span class="o">?</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">selectedTags</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[];</span>
 <span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">postRepositoryProvider</span><span class="p">);</span>
 <span class="w">    </span><span class="kd">final</span><span class="w"> </span><span class="n">nextPage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">await</span><span class="w"> </span><span class="n">repository</span><span class="p">.</span><span class="n">getPostFeed</span><span class="p">(</span>
 <span class="w">      </span><span class="nl">cursor:</span><span class="w"> </span><span class="n">cursor</span><span class="p">,</span>
