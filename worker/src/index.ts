@@ -20,6 +20,8 @@ export interface Env {
   VECTORIZE: VectorizeIndex;
   // PROP-0011 Phase 4c — canonical-tag index for embedding-based tag dedup.
   TAG_INDEX: VectorizeIndex;
+  // PROP-0011 follow-up — per-post chunk index for RAG chat retrieval on long docs.
+  POST_CHUNK_INDEX: VectorizeIndex;
   AI: Ai;
 }
 

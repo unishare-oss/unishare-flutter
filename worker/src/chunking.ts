@@ -1,3 +1,6 @@
+import type { Env } from './index'
+import { embedText } from './embeddings'
+
 /// Target chunk size in characters. BGE-base-en-v1.5 truncates inputs at
 /// ~2000 chars (512 tokens), so 800 stays well clear of the truncation line
 /// while still giving each chunk 1-2 paragraphs of coherent context.
@@ -56,4 +59,42 @@ export function chunkText(text: string): string[] {
   }
 
   return chunks
+}
+
+/// Retrieves the top-k most-relevant chunks for a given query, scoped to a
+/// single post. Returns the chunk texts (read from Vectorize metadata,
+/// not Firestore — saves a round-trip). Returns [] on any failure; callers
+/// should fall back to the slice path.
+export async function retrieveChunks(
+  env: Env,
+  postId: string,
+  query: string,
+  k: number = 5,
+): Promise<string[]> {
+  let vec: number[]
+  try {
+    vec = await embedText(env, query)
+  } catch (e) {
+    console.error('retrieveChunks: embed failed', e)
+    return []
+  }
+
+  let matches: VectorizeMatches
+  try {
+    matches = await env.POST_CHUNK_INDEX.query(vec, {
+      topK: k,
+      filter: { postId },
+      returnMetadata: 'all',
+    })
+  } catch (e) {
+    console.error('retrieveChunks: vectorize query failed', e)
+    return []
+  }
+
+  return (matches.matches ?? [])
+    .map((m) => {
+      const text = m.metadata?.chunkText
+      return typeof text === 'string' ? text : ''
+    })
+    .filter((t) => t.length > 0)
 }
