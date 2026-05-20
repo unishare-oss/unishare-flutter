@@ -15,7 +15,7 @@ Widget _buildSubject({
     ],
     child: MaterialApp(
       theme: AppTheme.build(AppThemes.unishare),
-      home: const DepartmentsScreen(),
+      home: DepartmentsScreen(scrollKey: GlobalKey<State>()),
     ),
   );
 }

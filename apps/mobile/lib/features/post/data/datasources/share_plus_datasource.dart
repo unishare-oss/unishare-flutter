@@ -15,7 +15,7 @@ class SharePlusDataSource {
     final url = '$_baseUrl/posts/$postId';
     final text = '$postTitle — $url';
     try {
-      await Share.share(text);
+      await SharePlus.instance.share(ShareParams(text: text));
       // Dismissed by user (cancelled) is still treated as success — silent.
       return ShareFallbackResult.shared;
     } on PlatformException {
