@@ -21,6 +21,17 @@ class _AcademicProfileBottomSheetState
   bool _isSaving = false;
 
   @override
+  void initState() {
+    super.initState();
+    final authAsync = ref.read(authStateProvider);
+    final user = authAsync.hasValue ? authAsync.value : null;
+    _selectedDepartmentId = user?.departmentId;
+    if (user?.enrollmentYear != null) {
+      _yearController.text = user!.enrollmentYear.toString();
+    }
+  }
+
+  @override
   void dispose() {
     _yearController.dispose();
     super.dispose();
@@ -47,6 +58,7 @@ class _AcademicProfileBottomSheetState
             departmentId: _selectedDepartmentId!,
             enrollmentYear: _enrollmentYear,
           );
+      ref.invalidate(authStateProvider);
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
       if (mounted) {
@@ -207,8 +219,8 @@ class _AcademicProfileBottomSheetState
   }
 }
 
-Future<void> showAcademicProfileBottomSheet(BuildContext context) async {
-  await showDialog<bool>(
+Future<bool> showAcademicProfileBottomSheet(BuildContext context) async {
+  final result = await showDialog<bool>(
     context: context,
     barrierDismissible: true,
     builder: (_) => Dialog(
@@ -220,4 +232,5 @@ Future<void> showAcademicProfileBottomSheet(BuildContext context) async {
       ),
     ),
   );
+  return result == true;
 }

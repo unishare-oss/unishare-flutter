@@ -61,6 +61,49 @@ Files:
   ? apps/mobile/lib/features/post_feed/presentation/widgets/feed_empty_state_widget.dart (untracked)
   ? apps/mobile/lib/features/post_feed/presentation/widgets/filter_picker_widget.dart (untracked)
 
+Files:
+  ? apps/mobile/lib/features/post_feed/data/datasources/preferences_firestore_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/datasources/tag_firestore_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/models/post_filter_preferences_model.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/models/tag_model.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/repositories/preferences_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/repositories/tag_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/entities/post_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/entities/tag_entity.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/repositories/preferences_repository.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/repositories/tag_repository.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/get_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/get_tag_list.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/save_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/feed_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/filter_preferences_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/tag_list_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/screens/feed_screen.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/widgets/feed_empty_state_widget.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/widgets/filter_picker_widget.dart (untracked)
+
+Files:
+  ? apps/mobile/lib/features/post_feed/data/datasources/preferences_firestore_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/datasources/tag_firestore_datasource.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/models/post_filter_preferences_model.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/models/tag_model.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/repositories/preferences_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/data/repositories/tag_repository_impl.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/entities/post_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/entities/tag_entity.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/repositories/preferences_repository.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/repositories/tag_repository.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/get_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/get_tag_list.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/domain/usecases/save_filter_preferences.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/feed_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/filter_preferences_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/providers/tag_list_provider.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/screens/feed_screen.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/widgets/feed_empty_state_widget.dart (untracked)
+  ? apps/mobile/lib/features/post_feed/presentation/widgets/filter_picker_widget.dart (untracked)
+
+
 ---
 Date: 2026-05-04 10:00
 Member: Sudakarn
@@ -93,3 +136,19 @@ Outcome: Implemented all feed UI to match Figma designs. (1) Fixed PostCardWidge
 Decisions: Used local mock state (_activeTagFilters list on FeedScreen) for tag filtering instead of wiring the unimplemented Firestore providers — the spec's data layer is still in draft/stub status. FilterPickerWidget accepts availableTags/selectedTags params and an onConfirm callback so it is easy to swap in real providers later. Guest mode detection checks both authStateProvider (for authenticated users) and guestModeProvider (for explicit guest browsing) so the loading state defaults to the logged-in nav.
 Handoff: All 23 widget tests pass. The FilterPickerWidget, FeedEmptyStateWidget, and guest bottom nav are complete. Next step: wire FeedNotifier and FilterPreferencesNotifier to real Firestore (once the curated tags collection name is confirmed from the seed script — open question in SPEC-0005). Pre-existing unused-import analyzer warnings in the stub providers are unaffected.
 Review: PENDING
+
+2026-05-20
+  [15:21] Edit: apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart
+  [15:56] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [15:56] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [15:56] Edit: apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+Summary:  2 files changed, 7 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/features/auth/presentation/widgets/academic_profile_dialog.dart
+  ~ apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+Summary:  2 files changed, 7 insertions(+), 5 deletions(-)
+
