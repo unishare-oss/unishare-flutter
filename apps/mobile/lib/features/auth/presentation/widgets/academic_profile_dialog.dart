@@ -22,6 +22,17 @@ class _AcademicProfileBottomSheetState
   bool _isSaving = false;
 
   @override
+  void initState() {
+    super.initState();
+    final authAsync = ref.read(authStateProvider);
+    final user = authAsync.hasValue ? authAsync.value : null;
+    _selectedDepartmentId = user?.departmentId;
+    if (user?.enrollmentYear != null) {
+      _yearController.text = user!.enrollmentYear.toString();
+    }
+  }
+
+  @override
   void dispose() {
     _yearController.dispose();
     super.dispose();
@@ -48,6 +59,7 @@ class _AcademicProfileBottomSheetState
             departmentId: _selectedDepartmentId!,
             enrollmentYear: _enrollmentYear,
           );
+      ref.invalidate(authStateProvider);
       if (mounted) Navigator.of(context).pop(true);
     } catch (_) {
       if (mounted) {
