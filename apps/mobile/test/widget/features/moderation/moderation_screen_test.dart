@@ -31,7 +31,9 @@ final _fakePosts = [
 
 void main() {
   group('ModerationScreen', () {
-    testWidgets('shows loading indicator while queue is loading', (tester) async {
+    testWidgets('shows loading indicator while queue is loading', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [

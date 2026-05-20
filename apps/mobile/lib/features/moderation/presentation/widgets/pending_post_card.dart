@@ -90,7 +90,9 @@ class PendingPostCard extends StatelessWidget {
                   child: FilledButton(
                     onPressed: onApprove,
                     style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).extension<AppColors>()?.success,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).extension<AppColors>()?.success,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -206,7 +208,9 @@ class _AiVerdictSection extends StatelessWidget {
 
     final isApprove = v.recommended == 'approve';
     final ac = Theme.of(context).extension<AppColors>();
-    final badgeColor = isApprove ? (ac?.success ?? Colors.green) : theme.colorScheme.error;
+    final badgeColor = isApprove
+        ? (ac?.success ?? Colors.green)
+        : theme.colorScheme.error;
     final badgeLabel = isApprove ? 'APPROVE' : 'REJECT';
     final confidencePct = (v.confidence * 100).toStringAsFixed(0);
 
