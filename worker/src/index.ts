@@ -4,6 +4,7 @@ import { verifyFirebaseJwt } from './jwt';
 import { handleAiSummarize } from './ai-summarize';
 import { handleAiChat } from './ai-chat';
 import { handleAiSearch } from './ai-search';
+import { handleAiReindex } from './ai-reindex';
 import { CORS_HEADERS, json } from './response';
 
 export interface Env {
@@ -99,6 +100,12 @@ export default {
       const uid = await requireAuth(request, env);
       if (uid instanceof Response) return uid;
       return handleAiSearch(request, env);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/ai/reindex') {
+      const uid = await requireAuth(request, env);
+      if (uid instanceof Response) return uid;
+      return handleAiReindex(request, env, uid);
     }
 
     if (request.method !== 'POST') {
