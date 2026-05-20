@@ -39,6 +39,7 @@ class PostFirestoreDatasource {
       'codeSnippetUrl': codeSnippetUrl,
       'tags': draft.tags,
       'likesCount': 0,
+      'status': 'pending',
       'createdAt': now,
       'updatedAt': now,
     });
@@ -47,6 +48,7 @@ class PostFirestoreDatasource {
   Stream<List<Post>> watchFeed({int limit = 20}) {
     return _firestore
         .collection('posts')
+        .where('status', isEqualTo: 'approved')
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()

@@ -15,14 +15,17 @@ class ModerationVerdictModel {
   final String reason;
   final DateTime processedAt;
 
-  factory ModerationVerdictModel.fromMap(Map<String, dynamic> map) {
+  static ModerationVerdictModel? fromMap(Map<String, dynamic> map) {
+    final recommended = map['recommended'] as String?;
+    if (recommended == null) return null;
+
     final ts = map['processedAt'];
     final processedAt = ts is Timestamp
         ? ts.toDate()
         : DateTime.fromMillisecondsSinceEpoch((ts as int? ?? 0));
 
     return ModerationVerdictModel(
-      recommended: (map['recommended'] as String? ?? 'approve'),
+      recommended: recommended,
       confidence: (map['confidence'] as num? ?? 0.0).toDouble(),
       reason: (map['reason'] as String? ?? ''),
       processedAt: processedAt,

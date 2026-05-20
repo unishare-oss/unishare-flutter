@@ -57,11 +57,13 @@ class ModerationScreen extends ConsumerWidget {
     String postId,
   ) async {
     await ref.read(moderationActionProvider.notifier).approve(postId);
-    if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Post approved')));
-    }
+    if (!context.mounted) return;
+    final state = ref.read(moderationActionProvider);
+    ScaffoldMessenger.of(context).showSnackBar(
+      state is AsyncError
+          ? SnackBar(content: Text('Failed: ${state.error}'))
+          : const SnackBar(content: Text('Post approved')),
+    );
   }
 
   Future<void> _handleReject(
@@ -72,11 +74,13 @@ class ModerationScreen extends ConsumerWidget {
     final reason = await _showRejectDialog(context);
     if (reason == null) return;
     await ref.read(moderationActionProvider.notifier).reject(postId, reason);
-    if (context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Post rejected')));
-    }
+    if (!context.mounted) return;
+    final state = ref.read(moderationActionProvider);
+    ScaffoldMessenger.of(context).showSnackBar(
+      state is AsyncError
+          ? SnackBar(content: Text('Failed: ${state.error}'))
+          : const SnackBar(content: Text('Post rejected')),
+    );
   }
 
   Future<String?> _showRejectDialog(BuildContext context) async {

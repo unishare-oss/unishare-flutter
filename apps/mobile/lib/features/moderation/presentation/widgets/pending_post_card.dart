@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:unishare_mobile/features/moderation/domain/entities/moderation_verdict.dart';
 import 'package:unishare_mobile/features/moderation/domain/entities/pending_post.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
 class PendingPostCard extends StatelessWidget {
@@ -89,7 +90,7 @@ class PendingPostCard extends StatelessWidget {
                   child: FilledButton(
                     onPressed: onApprove,
                     style: FilledButton.styleFrom(
-                      backgroundColor: Colors.green.shade600,
+                      backgroundColor: Theme.of(context).extension<AppColors>()?.success,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -102,8 +103,8 @@ class PendingPostCard extends StatelessWidget {
                   child: OutlinedButton(
                     onPressed: onReject,
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red.shade600,
-                      side: BorderSide(color: Colors.red.shade600),
+                      foregroundColor: cs.error,
+                      side: BorderSide(color: cs.error),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -204,7 +205,8 @@ class _AiVerdictSection extends StatelessWidget {
     }
 
     final isApprove = v.recommended == 'approve';
-    final badgeColor = isApprove ? Colors.green.shade600 : Colors.red.shade600;
+    final ac = Theme.of(context).extension<AppColors>();
+    final badgeColor = isApprove ? (ac?.success ?? Colors.green) : theme.colorScheme.error;
     final badgeLabel = isApprove ? 'APPROVE' : 'REJECT';
     final confidencePct = (v.confidence * 100).toStringAsFixed(0);
 

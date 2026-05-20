@@ -40,7 +40,7 @@ flowchart TD
     end
 
     subgraph Firestore
-        posts[posts/{postId}\nstatus · aiVerdict\nmederatedBy · moderatedAt]
+        posts[posts/{postId}\nstatus · aiVerdict\nmoderatedBy · moderatedAt]
         users[users/{uid}\nrole: moderator]
     end
 
