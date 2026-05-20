@@ -16,15 +16,37 @@ description: "Completes the server-authoritative half of SPEC-0012 — Groq-powe
 
 ## Overview
 
-SPEC-0012 shipped the moderation **UI** (queue screen, pending-post card, role-gated More-drawer tile) but left every load-bearing server piece unimplemented:
+SPEC-0012 shipped the moderation **UI** (queue screen, pending-post card, role-gated More-drawer tile). A follow-up PR addressed some of the server gaps. This spec covers the remaining work: the AI verdict path, the role-checked callable, and the security/correctness gaps still on main.
 
-- No Cloud Function calls an LLM, so `posts/{id}.aiVerdict` is always `null` and the verdict badge is dead UI.
-- No callable validates the moderator role server-side. Approve/Reject calls write Firestore directly from the client.
-- `firestore.rules` has no branch for status/moderation fields, so even a real moderator's writes get `permission-denied` today.
-- Post creation doesn't set `status: 'pending'`, so the queue stays empty.
-- `firestore.indexes.json` doesn't have the composite the queue query needs.
+It replaces the Claude-Haiku-via-Cloud-Function approach from SPEC-0012 with **Groq llama-3.3-70b-versatile via the existing functions package**, and replaces the client-direct Firestore writes with a **role-checked callable**.
 
-This spec fills those gaps. It replaces the Claude-Haiku-via-Cloud-Function approach from SPEC-0012 with **Groq llama-3.3-70b-versatile via the existing functions package**, and replaces the client-direct Firestore writes with a **role-checked callable**.
+---
+
+## Current state on `main` (do NOT redo)
+
+The following landed in commits up to `c5c2e6a0` and is already in the working tree. Treat as load-bearing — verify it still matches the spec below before changing anything:
+
+- `post_firestore_datasource.dart:42` — `createPost` writes `status: 'pending'`.
+- `post_firestore_datasource.dart:51` — `watchFeed` filters `where('status', isEqualTo: 'approved')`.
+- `firestore.rules:220` — `isModerator()` helper using `get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'moderator'`.
+- `firestore.rules:159–199` — `posts` block has the read gate (`approved || author || moderator`), `status == 'pending'` enforced on create, and the moderator update branch on `['status', 'moderatedBy', 'moderatedAt', 'rejectionReason']` with `status in ['approved', 'rejected']`.
+- `apps/mobile/lib/features/moderation/data/models/pending_post_model.dart` — `aiVerdict` Firestore round-trip exists (the field will just be `null` until the trigger writes it).
+- `apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart` — direct Firestore writes for approve/reject (rules-permitted today; SPEC-0013 still recommends moving to a callable, see D3).
+
+## Gaps still to close — ordered by risk
+
+Cross-check each against current code before writing the implementation. Items 1–4 are **exploitable or query-breaking today** and must land before any production deploy. Items 5–6 are the AI feature itself.
+
+| # | Severity | Gap | Where |
+|---|---|---|---|
+| 1 | 🔴 critical | Composite index `posts: status ASC + createdAt DESC` missing. `watchFeed` and the moderation `watchPendingPosts` query throw `failed-precondition` on first run in any fresh environment. | `firestore.indexes.json` |
+| 2 | 🔴 critical | `users/{uid}.role` is not locked from client writes. Any authed user can `update({role: 'moderator'})` from the Firebase SDK and bypass the entire moderation system. | `firestore.rules` `match /users/{userId}` update rule |
+| 3 | 🟡 high | `watchPostsByCourse` does not filter by `status == 'approved'` — pending/rejected posts leak into the "more in this course" panel. | `apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart:149` |
+| 4 | 🟡 high | `posts` create rule doesn't reject pre-seeded `aiVerdict` / `moderatedBy` / `moderatedAt`. An author can write a fake AI verdict on create; the moderator queue would display it. | `firestore.rules` `match /posts/{postId}` create rule |
+| 5 | 🟢 feature | No Cloud Function calls an LLM, so `posts/{id}.aiVerdict` is always `null` and the verdict badge is dead UI. | `functions/src/triggers/onPostCreated.ts` + new `functions/src/lib/moderation.ts` |
+| 6 | 🟢 feature | Moderation actions still write Firestore directly. Migrating to a `handleModerationAction` callable centralizes state validation and gives a single error surface. | `functions/src/callable/handleModerationAction.ts` + `apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart` |
+
+A backfill of `status: 'approved'` for legacy posts is also required if any production data predates the feed-filter change — see *Migration* below.
 
 ---
 
@@ -130,35 +152,39 @@ flowchart TD
 
 ## File map
 
+Legend: ✅ already on main · ⬜ to implement.
+
 ### Cloud Functions (TypeScript)
 
-| Action | Path | Responsibility |
-|---|---|---|
-| Modify | `functions/package.json` | Add `groq-sdk` dependency |
-| Create | `functions/src/lib/moderation.ts` | Groq client setup, prompt builder, JSON parsing with defensive fallbacks |
-| Modify | `functions/src/triggers/onPostCreated.ts` | After existing badge logic, call moderation lib and write `aiVerdict` |
-| Create | `functions/src/callable/handleModerationAction.ts` | Role-checked callable for approve/reject |
-| Modify | `functions/src/index.ts` | Export new callable |
-| Modify | `functions/src/config.ts` | Add `GROQ_API_KEY` runtime parameter (or set via `firebase functions:secrets:set`) |
+| | Action | Path | Responsibility |
+|---|---|---|---|
+| ⬜ | Modify | `functions/package.json` | Add `groq-sdk` dependency |
+| ⬜ | Create | `functions/src/lib/moderation.ts` | Groq client setup, prompt builder, JSON parsing with defensive fallbacks |
+| ⬜ | Modify | `functions/src/triggers/onPostCreated.ts` | After existing badge logic, call moderation lib and write `aiVerdict`. Switch trigger to the options-object form so `secrets: [GROQ_API_KEY]` injects at runtime. |
+| ⬜ | Create | `functions/src/callable/handleModerationAction.ts` | Role-checked callable for approve/reject |
+| ⬜ | Modify | `functions/src/index.ts` | Export new callable |
+| ⬜ | Set | `GROQ_API_KEY` secret | `firebase functions:secrets:set GROQ_API_KEY` once per environment (no file change — see Deployment order) |
 
 ### Firestore configuration
 
-| Action | Path | Responsibility |
-|---|---|---|
-| Modify | `firestore.rules` | Add `isModerator()`; extend `posts` update rule; lock `users/{uid}.role` |
-| Modify | `firestore.indexes.json` | Composite: `posts` — `status` ASC + `createdAt` DESC |
+| | Action | Path | Responsibility |
+|---|---|---|---|
+| ✅ | Done | `firestore.rules` | `isModerator()` helper at `:220`; `posts` read gate + create `status == 'pending'` + moderator update branch all present at `:159–199` |
+| ⬜ | Modify | `firestore.rules` | (Gap #2) Lock `users/{uid}.role` with a `writesRole()` helper in the user update rule |
+| ⬜ | Modify | `firestore.rules` | (Gap #4) Extend `posts` create rule so authors cannot pre-seed `aiVerdict`, `moderatedBy`, or `moderatedAt` |
+| ⬜ | Modify | `firestore.indexes.json` | (Gap #1) Composite: `posts` — `status` ASC + `createdAt` DESC. **Add a second composite for course view: `posts` — `courseId` ASC + `status` ASC + `createdAt` DESC** if Gap #3 lands. |
 
 ### Flutter app
 
-| Action | Path | Responsibility |
-|---|---|---|
-| Modify | `apps/mobile/pubspec.yaml` | Add `cloud_functions: ^5.x` (latest compatible with `firebase_core ^4.7.0`) |
-| Modify | `apps/mobile/lib/features/post/domain/entities/post.dart` | Add `ModerationStatus` enum + `aiVerdict` + `status` fields. **Update `copyWith`.** |
-| Create | `apps/mobile/lib/features/post/data/models/ai_verdict_model.dart` | (Optional — keep flat if simpler) Firestore round-tripper for the `aiVerdict` nested map |
-| Modify | `apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart` | Set `status: 'pending'` on `createPost`; filter `watchFeed` / `watchPostsByCourse` to `status == 'approved'` |
-| Modify | `apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart` | Replace direct Firestore writes with `FirebaseFunctions.instanceFor(region: 'asia-southeast1').httpsCallable('handleModerationAction')` |
-| Modify | `apps/mobile/lib/features/moderation/data/models/pending_post_model.dart` | Map the new `aiVerdict.error` field |
-| Modify | `apps/mobile/lib/features/post/presentation/providers/post_repository_provider.dart` | If the moderation datasource gains new deps, wire them through |
+| | Action | Path | Responsibility |
+|---|---|---|---|
+| ⬜ | Modify | `apps/mobile/pubspec.yaml` | Add `cloud_functions: ^5.x` (latest compatible with `firebase_core ^4.7.0`) |
+| ⬜ | Modify | `apps/mobile/lib/features/post/domain/entities/post.dart` | Add `ModerationStatus` enum + `aiVerdict` + `status` + `moderatedBy` + `moderatedAt` + `rejectionReason` fields. **Update `copyWith`.** |
+| ⬜ | Modify | `apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart` | (Gap #3) Filter `watchPostsByCourse` to `status == 'approved'`. Also extend `_docToPost` to populate the new entity fields. |
+| ✅ | Done | `apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart` | `createPost` already writes `status: 'pending'` (line 42); `watchFeed` already filters `status == 'approved'` (line 51) |
+| ⬜ | Modify | `apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart` | (Gap #6) Replace direct Firestore writes with `FirebaseFunctions.instanceFor(region: 'asia-southeast1').httpsCallable('handleModerationAction')`. Keep `watchPendingPosts` as a Firestore stream — it stays a query, not a callable. |
+| ⬜ | Modify | `apps/mobile/lib/features/moderation/data/models/pending_post_model.dart` | Map the new `aiVerdict.error` field |
+| ⬜ | Modify | `apps/mobile/lib/features/moderation/presentation/providers/moderation_action_provider.dart` | Map `FirebaseFunctionsException` codes (`unauthenticated`, `permission-denied`, `not-found`, `failed-precondition`, `invalid-argument`) to user-facing snackbar messages |
 
 ### Migration script
 
@@ -475,37 +501,45 @@ final String? rejectionReason;
 
 ### Flutter — `apps/mobile/lib/features/post/data/datasources/post_firestore_datasource.dart`
 
-Two changes.
+**(a) `createPost` writes `status: 'pending'` — ✅ already at line 42.** Skip.
 
-**(a) `createPost` writes `status: 'pending'`:**
+**(b) `watchFeed` filters approved — ✅ already at line 51.** Skip.
 
-```dart
-await _firestore.collection('posts').doc(draft.id).set({
-  // ... existing fields ...
-  'status': 'pending',
-  // ... rest ...
-});
-```
+**(c) `watchPostsByCourse` — ⬜ still missing the filter (Gap #3).**
 
-**(b) Feed and course queries filter to approved:**
+Current state at `:149–165`:
 
 ```dart
-Stream<List<Post>> watchFeed({int limit = 20}) {
+Stream<List<Post>> watchPostsByCourse(
+  String courseId, {
+  String? excludeId,
+  int limit = 5,
+}) {
   return _firestore
       .collection('posts')
-      .where('status', isEqualTo: 'approved')
+      .where('courseId', isEqualTo: courseId)
       .orderBy('createdAt', descending: true)
-      .limit(limit)
-      .snapshots()
-      .map((s) => s.docs.map(_docToPost).toList());
-}
+      // ...
 ```
 
-Apply the same `where('status', isEqualTo: 'approved')` to `watchPostsByCourse` and any other public-facing query. **Do not** filter `watchPostsByAuthor` — the author should see their own pending/rejected posts (the security rules below permit this).
+Add the status filter:
 
-**Backward-compat warning:** existing posts written before this spec have no `status` field, so `where('status', isEqualTo: 'approved')` excludes them. Run the backfill script (see *Migration*) before deploying.
+```dart
+return _firestore
+    .collection('posts')
+    .where('courseId', isEqualTo: courseId)
+    .where('status', isEqualTo: 'approved')   // <-- NEW
+    .orderBy('createdAt', descending: true)
+    // ...
+```
 
-**Index requirement:** the feed query now needs the composite `status ASC + createdAt DESC`. Don't deploy the query before the index is built.
+This needs the `courseId + status + createdAt` composite from the Index section.
+
+**Do not** filter `watchPostsByAuthor` — the author should see their own pending/rejected posts (security rules permit this; SPEC-0012 implicitly relies on it for the future "my posts" view).
+
+**Backward-compat warning:** legacy posts without a `status` field are excluded by all approved-filter queries. Run the backfill script (see *Migration*) before deploying the next environment.
+
+**Index requirement:** confirm both composites in the Index section are **Enabled** in the target environment before this change lands.
 
 ### Flutter — `apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart`
 
@@ -597,13 +631,20 @@ const db = admin.firestore();
 
 ---
 
-## Firestore rules diff
+## Firestore rules — what's already there and what still needs adding
 
-Apply to `firestore.rules`. Hunks are minimal — full surrounding context kept for reviewer clarity.
+### Already in main ✅
 
-### (a) Lock `users/{userId}.role` from client self-write
+- `isModerator()` helper at `firestore.rules:220`, using `get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '')`.
+- `posts/{postId}` read gate (`approved || author || moderator`) at `:162–164`.
+- Create rule enforcing `status == 'pending'` at `:165–170`.
+- Update rule with moderator branch on `['status', 'moderatedBy', 'moderatedAt', 'rejectionReason']` constrained to `status in ['approved', 'rejected']` at `:191–196`.
 
-Update the `users/{userId}` `allow update` rule. Add `role` to the protected-field check.
+### Still to add ⬜
+
+#### (a) Lock `users/{userId}.role` from client self-write — Gap #2
+
+Update the `users/{userId}` `allow update` rule. Add a `writesRole()` guard alongside the existing protected-field checks.
 
 ```javascript
 match /users/{userId} {
@@ -612,110 +653,64 @@ match /users/{userId} {
   allow update: if request.auth != null
                 && request.auth.uid == userId
                 && !writesProtectedAchievementsFields()
-                && !writesRole()
+                && !writesRole()                              // <-- NEW
                 && (!touchesDisplayedBadges() || validDisplayedBadges())
                 && (!touchesSelectedTitle() || validSelectedTitle());
 
   // ... existing helper functions unchanged ...
 
-  function writesRole() {
+  function writesRole() {                                     // <-- NEW
     return request.resource.data.get('role', null)
         != resource.data.get('role', null);
   }
 }
 ```
 
-### (b) `posts/{postId}` — read gate + moderation write branch
+#### (b) Block client-supplied verdict fields on `posts` create — Gap #4
 
-Replace the existing block with:
+Extend the existing `allow create` rule at `firestore.rules:165–170` so the create cannot smuggle in `aiVerdict`, `moderatedBy`, or `moderatedAt`. Add three `!('field' in request.resource.data)` clauses:
 
 ```javascript
-match /posts/{postId} {
-  // Public reads only on approved posts.
-  // Author can see their own pending/rejected posts (for "my posts" view).
-  // Moderators can see everything (for the queue).
-  allow read: if resource.data.get('status', 'approved') == 'approved'
-              || (request.auth != null
-                  && request.auth.uid == resource.data.authorId)
-              || isModerator();
-
-  allow create: if request.auth != null
-                && request.resource.data.authorId == request.auth.uid
-                && request.resource.data.title is string
-                && request.resource.data.title.size() > 0
-                && request.resource.data.likesCount == 0
-                // Authors can only ever create with status='pending'.
-                && request.resource.data.status == 'pending'
-                // aiVerdict is server-set; clients must not preseed it.
-                && !('aiVerdict' in request.resource.data)
-                && !('moderatedBy' in request.resource.data)
-                && !('moderatedAt' in request.resource.data);
-
-  allow update: if request.auth != null
-                && (
-                  // Anyone authenticated can bump like counts.
-                  request.resource.data.diff(resource.data).affectedKeys()
-                    .hasOnly(['likesCount'])
-                  // Author edits to content fields. Status/moderation/aiVerdict
-                  // are excluded from this set so the author can never flip
-                  // their own status or forge a verdict.
-                  || (
-                    request.auth.uid == resource.data.authorId
-                    && request.resource.data.diff(resource.data).affectedKeys()
-                         .hasOnly([
-                           'title', 'description', 'tags', 'externalUrl',
-                           'moduleNumber', 'updatedAt',
-                           'summary', 'summaryStatus', 'summarizedAt'
-                         ])
-                    && request.resource.data.title is string
-                    && request.resource.data.title.size() > 0
-                  )
-                  || (
-                    request.auth.uid == resource.data.authorId
-                    && request.resource.data.diff(resource.data).affectedKeys()
-                         .hasOnly(['summaryStatus', 'summary', 'summarizedAt'])
-                  )
-                  // Defense-in-depth: rules permit moderator writes on the
-                  // moderation fields. The canonical path is the callable
-                  // (running as Admin SDK, which bypasses rules), so this
-                  // branch effectively only catches accidents.
-                  || (
-                    isModerator()
-                    && request.resource.data.diff(resource.data).affectedKeys()
-                         .hasOnly(['status', 'moderatedBy', 'moderatedAt', 'rejectionReason'])
-                  )
-                );
-
-  allow delete: if request.auth != null
-                && request.auth.uid == resource.data.authorId;
-
-  // ... existing comments and likes subcollection rules unchanged ...
-}
-
-function isModerator() {
-  return request.auth != null
-      && get(/databases/$(database)/documents/users/$(request.auth.uid))
-           .data.get('role', null) == 'moderator';
-}
+allow create: if request.auth != null
+              && request.resource.data.authorId == request.auth.uid
+              && request.resource.data.title is string
+              && request.resource.data.title.size() > 0
+              && request.resource.data.likesCount == 0
+              && request.resource.data.status == 'pending'
+              && !('aiVerdict' in request.resource.data)        // <-- NEW
+              && !('moderatedBy' in request.resource.data)      // <-- NEW
+              && !('moderatedAt' in request.resource.data)      // <-- NEW
+              && !('rejectionReason' in request.resource.data); // <-- NEW
 ```
 
-**`get()` cost note:** every public-feed read now evaluates `isModerator()` only on the fallback branch (when `status != 'approved'` and the user isn't the author). For an approved-post read the first clause short-circuits and there's no `get()`. So the cost is bounded by moderator activity, not feed traffic.
+#### (c) Author edit rule — verify it still excludes moderation fields
 
-### (c) Helper placement
+The current author update branch (`:175–185`) restricts authors to `['title', 'description', 'tags', 'externalUrl', 'moduleNumber', 'updatedAt', 'summary', 'summaryStatus', 'summarizedAt']`. Confirm none of `status`, `aiVerdict`, `moderatedBy`, `moderatedAt`, `rejectionReason` were ever added to that list. No change needed today; this is a regression-guard note for reviewers.
 
-`isModerator()` is referenced from the `posts` block but needs to live at the `service`-level scope (or inside `match /databases/{database}/documents`). Put it next to the existing top-level functions inside `match /databases/{database}/documents`, **not** inside `match /posts/{postId}` (where it's currently impossible to express).
+### `get()` cost note
+
+`isModerator()` only fires on the read-gate's fallback branch (when `status != 'approved'` AND the caller is not the author). Approved-post reads short-circuit the first clause and skip the `get()`. So the per-read cost is bounded by moderator browsing, not feed traffic.
 
 ---
 
-## Firestore index addition
+## Firestore index addition — Gap #1
 
-Append to `firestore.indexes.json`:
+Append two composites to `firestore.indexes.json`. The first powers `watchFeed` and the moderation queue. The second powers `watchPostsByCourse` once Gap #3 lands.
 
 ```json
 {
   "collectionGroup": "posts",
   "queryScope": "COLLECTION",
   "fields": [
+    { "fieldPath": "status", "order": "ASCENDING" },
+    { "fieldPath": "createdAt", "order": "DESCENDING" }
+  ]
+},
+{
+  "collectionGroup": "posts",
+  "queryScope": "COLLECTION",
+  "fields": [
+    { "fieldPath": "courseId", "order": "ASCENDING" },
     { "fieldPath": "status", "order": "ASCENDING" },
     { "fieldPath": "createdAt", "order": "DESCENDING" }
   ]
@@ -728,7 +723,7 @@ Deploy with:
 firebase deploy --only firestore:indexes
 ```
 
-Wait until the index status shows **Enabled** in the Firebase Console before deploying the feed query change — otherwise the feed will throw `failed-precondition` for every reader.
+Wait until both indexes show **Enabled** in the Firebase Console. The feed-filter query is already shipping on main — **any environment that doesn't have this index will hit `failed-precondition` on every feed open today**. Treat as a hot fix.
 
 ---
 
@@ -768,33 +763,38 @@ Add `firestore-tests/posts.test.ts` (or wherever existing rules tests live — c
 
 ## Deployment order
 
-This sequence avoids any window where users see a broken feed or moderation queue.
+The Flutter feed-filter change is already on main, so any environment that hasn't deployed the new index is broken **right now**. Treat steps 1–3 as a hot fix; steps 4–7 ship with the rest of SPEC-0013.
 
-1. **Set the secret** once per environment:
-   ```bash
-   firebase functions:secrets:set GROQ_API_KEY
-   ```
-2. **Build & deploy the index:**
+**Hot fix — unblocks current main:**
+
+1. **Build & deploy the new indexes** (Gap #1):
    ```bash
    firebase deploy --only firestore:indexes
    ```
-   Wait for Enabled (~5 min for small collections; longer for large).
-3. **Run the backfill** so legacy posts get `status: 'approved'`:
+   Wait for both `posts: status + createdAt` and `posts: courseId + status + createdAt` to show **Enabled** in the Firebase Console.
+2. **Run the backfill** so legacy posts (created before `status: 'pending'` shipped) stay visible:
    ```bash
    cd tools && node backfill_post_status.js service-account.json
    ```
-4. **Deploy the new rules** (read gate now active, but no client uses status-filtered query yet):
+3. **Deploy the rules update** that adds Gap #2 (lock `role`) and Gap #4 (block client `aiVerdict` on create):
    ```bash
    firebase deploy --only firestore:rules
+   ```
+
+**Feature deploy — Gaps #5 and #6:**
+
+4. **Set the Groq secret** once per environment:
+   ```bash
+   firebase functions:secrets:set GROQ_API_KEY
    ```
 5. **Deploy functions** (trigger now writes `aiVerdict`, callable available):
    ```bash
    cd functions && npm run deploy
    ```
-6. **Ship the Flutter build** that writes `status: 'pending'`, filters the feed, and calls the callable.
-7. **Assign moderator role** to test users by manually editing `users/{uid}.role` in the Firebase Console.
+6. **Ship the Flutter build** with the `cloud_functions` dependency, the new `Post` entity fields, the moderation datasource swap to the callable, and the `watchPostsByCourse` filter (Gap #3).
+7. **Assign moderator role** to test users by manually editing `users/{uid}.role` in the Firebase Console (the rule from step 3 blocks all other paths).
 
-Rollback: revert step 6 first (clients stop relying on new server behavior), then 5, then 4. Backfill (step 3) is non-reversible but harmless — it just sets a default that the old code didn't read.
+Rollback: revert step 6 first (clients stop calling the callable), then 5, then 3. Backfill (step 2) is non-reversible but harmless. Step 1's indexes can be left in place.
 
 ---
 
