@@ -28,6 +28,49 @@ import 'package:unishare_mobile/shared/widgets/scroll_to_top_target.dart';
 
 const _kTabLabels = ['ALL', 'NOTES', 'EXERCISES'];
 
+/// Reciprocal Rank Fusion blend of two ranked Post lists. A post that appears
+/// in both lists gets the sum of `1 / (k + rank)` from each, naturally
+/// floating dual-matched posts to the top. `k = 60` is the published default
+/// from Cormack et al. — large enough that rank differences smooth out,
+/// small enough that top-ranked items still dominate.
+///
+/// Pure function; no Riverpod / Flutter dependencies — exported for unit
+/// testing. Callers apply tab/filter gating BEFORE calling this (so excluded
+/// posts don't get votes in either list).
+List<Post> hybridRankRRF(
+  List<Post> keywordResults,
+  List<Post> semanticPosts, {
+  int cap = 30,
+  int k = 60,
+}) {
+  if (semanticPosts.isEmpty) {
+    return keywordResults.length <= cap
+        ? keywordResults
+        : keywordResults.take(cap).toList();
+  }
+  if (keywordResults.isEmpty) {
+    return semanticPosts.length <= cap
+        ? semanticPosts
+        : semanticPosts.take(cap).toList();
+  }
+
+  final scores = <String, double>{};
+  final posts = <String, Post>{};
+  for (var i = 0; i < keywordResults.length; i++) {
+    final p = keywordResults[i];
+    scores[p.id] = (scores[p.id] ?? 0) + 1 / (k + i + 1);
+    posts[p.id] = p;
+  }
+  for (var i = 0; i < semanticPosts.length; i++) {
+    final p = semanticPosts[i];
+    scores[p.id] = (scores[p.id] ?? 0) + 1 / (k + i + 1);
+    posts[p.id] = p;
+  }
+  final ranked = scores.entries.toList()
+    ..sort((a, b) => b.value.compareTo(a.value));
+  return ranked.take(cap).map((e) => posts[e.key]!).toList();
+}
+
 // ---------------------------------------------------------------------------
 // FeedScreen
 // ---------------------------------------------------------------------------
@@ -129,27 +172,29 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     return true;
   }
 
-  /// Hybrid result list: keyword matches first (preserving the existing
-  /// search semantics), then semantic results for posts not already in the
-  /// keyword set, capped at [_hybridResultCap]. Semantic results are only
-  /// consulted for non-tag queries (`#` triggers exact-tag mode).
-  List<Post> _mergeWithSemantic(
+  /// Blended hybrid ranking: gate semantic results by tab/filter first
+  /// (so a NOTES-tab search doesn't surface exercises), then RRF-merge with
+  /// keyword results. Tag-mode (`#foo`) bypasses semantic entirely.
+  List<Post> _hybridRank(
     List<Post> keywordResults,
     List<Post> semanticPosts,
     FeedFilterState filter,
   ) {
-    if (semanticPosts.isEmpty) return keywordResults;
     if (_searchQuery.startsWith('#')) return keywordResults;
-    final knownIds = keywordResults.map((p) => p.id).toSet();
-    final extras = semanticPosts
-        .where(
-          (p) => !knownIds.contains(p.id) && _matchesTabAndFilter(p, filter),
-        )
+    if (_searchQuery.isEmpty) return keywordResults;
+    if (semanticPosts.isEmpty) return keywordResults;
+
+    final gatedSemantic = semanticPosts
+        .where((p) => _matchesTabAndFilter(p, filter))
         .toList(growable: false);
-    if (extras.isEmpty) return keywordResults;
-    final remaining = _hybridResultCap - keywordResults.length;
-    if (remaining <= 0) return keywordResults;
-    return [...keywordResults, ...extras.take(remaining)];
+    if (gatedSemantic.isEmpty) return keywordResults;
+
+    try {
+      return hybridRankRRF(keywordResults, gatedSemantic, cap: _hybridResultCap);
+    } catch (e) {
+      // Defensive fallback — never block the feed on a rank-blend bug.
+      return keywordResults;
+    }
   }
 
   bool get _isGuest {
@@ -297,7 +342,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
           ),
           data: (allPosts) {
             final keywordResults = _filterPosts(allPosts, filter);
-            final posts = _mergeWithSemantic(
+            final posts = _hybridRank(
               keywordResults,
               semanticResults,
               filter,
