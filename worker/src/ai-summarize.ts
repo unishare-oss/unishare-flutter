@@ -399,10 +399,22 @@ async function indexPostChunks(
   env: Env,
   params: { postId: string; extractedText: string },
 ): Promise<void> {
-  if (params.extractedText.length < CHUNK_THRESHOLD) return
+  if (params.extractedText.length <= CHUNK_THRESHOLD) return
 
   const chunks = chunkText(params.extractedText)
   if (chunks.length === 0) return
+
+  // Delete any chunks from a prior summarize run before upserting new ones.
+  // Vectorize has no filter-delete, so we delete a safe upper range of IDs
+  // (PERSIST_TEXT_CAP / effective stride ≈ 150 max) to avoid stale vectors
+  // being retrieved on re-summarize with a shorter extractedText.
+  const MAX_CHUNKS_PER_POST = 150
+  try {
+    const oldIds = Array.from({ length: MAX_CHUNKS_PER_POST }, (_, i) => `${params.postId}#${i}`)
+    await env.POST_CHUNK_INDEX.deleteByIds(oldIds)
+  } catch (e) {
+    console.error('indexPostChunks: old-chunk cleanup failed (continuing)', e)
+  }
 
   let vectors: number[][]
   try {

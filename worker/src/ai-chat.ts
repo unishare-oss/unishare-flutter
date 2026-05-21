@@ -42,35 +42,7 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
 
   const { summary, extractedText, postId, question, history = [] } = body
 
-  // Prefer extractedText (full document content, PROP-0011 Phase 3) when the
-  // client supplies it; fall back to summary for backward compat with posts
-  // created before extractedText was cached.
-  const summaryClean =
-    typeof summary === 'string' && summary.trim() ? summary.trim() : ''
-  const extractedRaw =
-    typeof extractedText === 'string' && extractedText.trim()
-      ? extractedText.trim()
-      : ''
-  const postIdClean = typeof postId === 'string' && postId.length > 0 ? postId : ''
-
-  let context: string
-  if (extractedRaw.length > CHUNK_THRESHOLD && postIdClean) {
-    const trimmedQ = typeof question === 'string' ? question.trim() : ''
-    const chunks = await retrieveChunks(env, postIdClean, trimmedQ, 5)
-    if (chunks.length > 0) {
-      context = chunks.join('\n\n---\n\n')
-    } else {
-      // Retrieval returned nothing (either failed or no chunks indexed —
-      // common for pre-PROP-0011-followup posts). Fall back to the slice path.
-      context = extractedRaw.slice(0, CONTEXT_CHAR_CAP)
-    }
-  } else if (extractedRaw.length > 0) {
-    context = extractedRaw.slice(0, CONTEXT_CHAR_CAP)
-  } else {
-    context = summaryClean
-  }
-  if (!context) return jsonError('summary or extractedText required', 400)
-
+  // Validate question and history first — before any AI/Vectorize work.
   const trimmedQuestion = typeof question === 'string' ? question.trim() : ''
   if (!trimmedQuestion || trimmedQuestion.length > MAX_QUESTION_LENGTH) {
     return jsonError('question must be a non-empty string under 500 chars', 400)
@@ -88,6 +60,34 @@ export async function handleAiChat(request: Request, env: Env): Promise<Response
       return jsonError('invalid history entry', 400)
     }
   }
+
+  // Prefer extractedText (full document content, PROP-0011 Phase 3) when the
+  // client supplies it; fall back to summary for backward compat with posts
+  // created before extractedText was cached.
+  const summaryClean =
+    typeof summary === 'string' && summary.trim() ? summary.trim() : ''
+  const extractedRaw =
+    typeof extractedText === 'string' && extractedText.trim()
+      ? extractedText.trim()
+      : ''
+  const postIdClean = typeof postId === 'string' && postId.length > 0 ? postId : ''
+
+  let context: string
+  if (extractedRaw.length > CHUNK_THRESHOLD && postIdClean) {
+    const chunks = await retrieveChunks(env, postIdClean, trimmedQuestion, 5)
+    if (chunks.length > 0) {
+      context = chunks.join('\n\n---\n\n')
+    } else {
+      // Retrieval returned nothing (either failed or no chunks indexed —
+      // common for pre-PROP-0011-followup posts). Fall back to the slice path.
+      context = extractedRaw.slice(0, CONTEXT_CHAR_CAP)
+    }
+  } else if (extractedRaw.length > 0) {
+    context = extractedRaw.slice(0, CONTEXT_CHAR_CAP)
+  } else {
+    context = summaryClean
+  }
+  if (!context) return jsonError('summary or extractedText required', 400)
 
   const groq = new Groq({ apiKey: env.GROQ_API_KEY })
   const model = env.GROQ_MODEL ?? 'llama-3.3-70b-versatile'

@@ -329,13 +329,19 @@ class PostRepositoryImpl implements PostRepository {
       unawaited(
         _aiReindexDatasource
             .call(postId: postId, title: title, description: description)
+            .then((ok) {
+              if (!ok) {
+                // Non-200 response (e.g. 401, 403, 5xx) — not an exception but
+                // still means the search vector is out of sync.
+                AppLogger.error('reindex_failed: postId=$postId got non-200');
+              }
+            })
             .catchError((Object e, StackTrace st) {
               AppLogger.error(
                 'reindex_failed: postId=$postId',
                 error: e,
                 stackTrace: st,
               );
-              return false;
             }),
       );
     }

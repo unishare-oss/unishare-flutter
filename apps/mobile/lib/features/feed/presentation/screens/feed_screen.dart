@@ -67,7 +67,12 @@ List<Post> hybridRankRRF(
     posts[p.id] = p;
   }
   final ranked = scores.entries.toList()
-    ..sort((a, b) => b.value.compareTo(a.value));
+    ..sort((a, b) {
+      final cmp = b.value.compareTo(a.value);
+      // Tie-breaker: lexicographic by post ID — deterministic ordering across
+      // rebuilds so equal-score items don't cause UI jitter or flaky tests.
+      return cmp != 0 ? cmp : a.key.compareTo(b.key);
+    });
   return ranked.take(cap).map((e) => posts[e.key]!).toList();
 }
 
