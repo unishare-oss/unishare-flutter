@@ -190,7 +190,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     if (gatedSemantic.isEmpty) return keywordResults;
 
     try {
-      return hybridRankRRF(keywordResults, gatedSemantic, cap: _hybridResultCap);
+      return hybridRankRRF(
+        keywordResults,
+        gatedSemantic,
+        cap: _hybridResultCap,
+      );
     } catch (e) {
       // Defensive fallback — never block the feed on a rank-blend bug.
       return keywordResults;
@@ -342,11 +346,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
           ),
           data: (allPosts) {
             final keywordResults = _filterPosts(allPosts, filter);
-            final posts = _hybridRank(
-              keywordResults,
-              semanticResults,
-              filter,
-            );
+            final posts = _hybridRank(keywordResults, semanticResults, filter);
             if (posts.isEmpty) {
               return FeedEmptyStateWidget(
                 onClear: () => ref.read(feedFilterProvider.notifier).clear(),

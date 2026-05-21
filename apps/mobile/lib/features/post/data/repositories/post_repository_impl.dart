@@ -330,13 +330,13 @@ class PostRepositoryImpl implements PostRepository {
         _aiReindexDatasource
             .call(postId: postId, title: title, description: description)
             .catchError((Object e, StackTrace st) {
-          AppLogger.error(
-            'reindex_failed: postId=$postId',
-            error: e,
-            stackTrace: st,
-          );
-          return false;
-        }),
+              AppLogger.error(
+                'reindex_failed: postId=$postId',
+                error: e,
+                stackTrace: st,
+              );
+              return false;
+            }),
       );
     }
   }
