@@ -11,6 +11,7 @@ class AskAiRepositoryImpl implements AskAiRepository {
 
   @override
   Stream<AiMessage> ask({
+    required String postId,
     required String summary,
     required List<AiMessage> history,
     required String question,
@@ -30,6 +31,7 @@ class AskAiRepositoryImpl implements AskAiRepository {
       String accumulated = '';
 
       await for (final event in _datasource.stream(
+        postId: postId,
         summary: summary,
         extractedText: extractedText,
         question: question,

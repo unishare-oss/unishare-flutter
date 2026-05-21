@@ -57,6 +57,7 @@ class FakePostRepository implements PostRepository {
     String? externalUrl,
     required String moduleNumber,
     required bool descriptionChanged,
+    required bool titleChanged,
     required SummaryStatus? currentSummaryStatus,
   }) => throw UnimplementedError();
 }

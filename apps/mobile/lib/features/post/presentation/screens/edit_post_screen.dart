@@ -23,6 +23,7 @@ class _EditPostScreenState extends ConsumerState<EditPostScreen> {
   late final TextEditingController _urlCtrl;
   late final TextEditingController _tagCtrl;
   late List<String> _tags;
+  late String _originalTitle;
   late String _originalDescription;
 
   String? _titleError;
@@ -38,6 +39,7 @@ class _EditPostScreenState extends ConsumerState<EditPostScreen> {
     _urlCtrl = TextEditingController(text: p?.externalUrl ?? '');
     _tagCtrl = TextEditingController();
     _tags = List<String>.from(p?.tags ?? []);
+    _originalTitle = p?.title ?? '';
     _originalDescription = p?.description ?? '';
   }
 
@@ -85,6 +87,7 @@ class _EditPostScreenState extends ConsumerState<EditPostScreen> {
               : _urlCtrl.text.trim(),
           moduleNumber: _moduleCtrl.text.trim(),
           descriptionChanged: desc != _originalDescription,
+          titleChanged: title != _originalTitle,
           currentSummaryStatus: post?.summaryStatus,
         );
 

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:unishare_mobile/features/post/data/datasources/ai_reindex_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/ai_summarize_datasource.dart';
 import 'package:unishare_mobile/features/post/data/datasources/feed_cache.dart';
 import 'package:unishare_mobile/features/post/data/datasources/post_firestore_datasource.dart';
@@ -70,6 +71,18 @@ class _FakeDatasource extends PostFirestoreDatasource {
     lastExtractedTextTruncated = extractedTextTruncated;
     lastAiTags = aiTags;
   }
+
+  @override
+  Future<void> updatePost({
+    required String postId,
+    required String title,
+    required String description,
+    required List<String> tags,
+    String? externalUrl,
+    required String moduleNumber,
+    required bool descriptionChanged,
+    required SummaryStatus? currentSummaryStatus,
+  }) async {}
 }
 
 // ---------------------------------------------------------------------------
@@ -124,6 +137,7 @@ void main() {
     required _FakeDatasource datasource,
     Duration cacheTtl = const Duration(minutes: 5),
     _FakeAiSummarizeDatasource? aiDatasource,
+    _MockReindexDatasource? aiReindexDatasource,
   }) => PostRepositoryImpl(
     firestoreDatasource: datasource,
     storageDatasource: PostStorageDatasource(),
@@ -131,6 +145,7 @@ void main() {
     feedCache: feedCache,
     cacheTtl: cacheTtl,
     aiSummarizeDatasource: aiDatasource,
+    aiReindexDatasource: aiReindexDatasource,
   );
 
   group('watchFeed — cache miss', () {
@@ -355,4 +370,122 @@ void main() {
       await sub.cancel();
     });
   });
+
+  group('updatePost reindex trigger', () {
+    test('calls reindex datasource once when titleChanged', () async {
+      final mockReindex = _MockReindexDatasource();
+      final datasource = _FakeDatasource();
+      final repo = makeRepo(
+        feedCache: FeedCache(),
+        datasource: datasource,
+        aiReindexDatasource: mockReindex,
+      );
+
+      await repo.updatePost(
+        postId: 'p1',
+        title: 'New title',
+        description: 'unchanged description',
+        tags: const [],
+        moduleNumber: '1',
+        descriptionChanged: false,
+        titleChanged: true,
+        currentSummaryStatus: null,
+      );
+
+      await Future<void>.delayed(Duration.zero);
+      expect(mockReindex.calls, hasLength(1));
+      expect(mockReindex.calls.single.postId, 'p1');
+      expect(mockReindex.calls.single.title, 'New title');
+    });
+
+    test('calls reindex datasource once when descriptionChanged', () async {
+      final mockReindex = _MockReindexDatasource();
+      final datasource = _FakeDatasource();
+      final repo = makeRepo(
+        feedCache: FeedCache(),
+        datasource: datasource,
+        aiReindexDatasource: mockReindex,
+      );
+
+      await repo.updatePost(
+        postId: 'p1',
+        title: 'unchanged title',
+        description: 'New description',
+        tags: const [],
+        moduleNumber: '1',
+        descriptionChanged: true,
+        titleChanged: false,
+        currentSummaryStatus: null,
+      );
+
+      await Future<void>.delayed(Duration.zero);
+      expect(mockReindex.calls, hasLength(1));
+    });
+
+    test('does not call reindex when neither changed', () async {
+      final mockReindex = _MockReindexDatasource();
+      final datasource = _FakeDatasource();
+      final repo = makeRepo(
+        feedCache: FeedCache(),
+        datasource: datasource,
+        aiReindexDatasource: mockReindex,
+      );
+
+      await repo.updatePost(
+        postId: 'p1',
+        title: 'same',
+        description: 'same',
+        tags: const [],
+        moduleNumber: '1',
+        descriptionChanged: false,
+        titleChanged: false,
+        currentSummaryStatus: null,
+      );
+
+      await Future<void>.delayed(Duration.zero);
+      expect(mockReindex.calls, isEmpty);
+    });
+
+    test('swallows reindex failure without rethrowing', () async {
+      final failingReindex = _MockReindexDatasource(shouldFail: true);
+      final datasource = _FakeDatasource();
+      final repo = makeRepo(
+        feedCache: FeedCache(),
+        datasource: datasource,
+        aiReindexDatasource: failingReindex,
+      );
+
+      await expectLater(
+        repo.updatePost(
+          postId: 'p1',
+          title: 'New',
+          description: 'd',
+          tags: const [],
+          moduleNumber: '1',
+          descriptionChanged: false,
+          titleChanged: true,
+          currentSummaryStatus: null,
+        ),
+        completes,
+      );
+    });
+  });
+}
+
+class _MockReindexDatasource implements AiReindexDatasource {
+  _MockReindexDatasource({this.shouldFail = false});
+
+  final bool shouldFail;
+  final List<({String postId, String title, String description})> calls = [];
+
+  @override
+  Future<bool> call({
+    required String postId,
+    required String title,
+    required String description,
+  }) async {
+    calls.add((postId: postId, title: title, description: description));
+    if (shouldFail) throw Exception('reindex failed');
+    return true;
+  }
 }

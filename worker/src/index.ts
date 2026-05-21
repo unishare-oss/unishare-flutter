@@ -4,6 +4,7 @@ import { verifyFirebaseJwt } from './jwt';
 import { handleAiSummarize } from './ai-summarize';
 import { handleAiChat } from './ai-chat';
 import { handleAiSearch } from './ai-search';
+import { handleAiReindex } from './ai-reindex';
 import { CORS_HEADERS, json } from './response';
 
 export interface Env {
@@ -20,6 +21,8 @@ export interface Env {
   VECTORIZE: VectorizeIndex;
   // PROP-0011 Phase 4c — canonical-tag index for embedding-based tag dedup.
   TAG_INDEX: VectorizeIndex;
+  // PROP-0011 follow-up — per-post chunk index for RAG chat retrieval on long docs.
+  POST_CHUNK_INDEX: VectorizeIndex;
   AI: Ai;
 }
 
@@ -97,6 +100,12 @@ export default {
       const uid = await requireAuth(request, env);
       if (uid instanceof Response) return uid;
       return handleAiSearch(request, env);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/ai/reindex') {
+      const uid = await requireAuth(request, env);
+      if (uid instanceof Response) return uid;
+      return handleAiReindex(request, env, uid);
     }
 
     if (request.method !== 'POST') {
