@@ -590,6 +590,19 @@ Files:
 - apps/mobile/test/widget/feed/feed_screen_test.dart
   Summary: 96 files changed, 4880 insertions(+), 439 deletions(-)
 
+  [15:08] Edit: apps/mobile/lib/features/post/domain/usecases/create_post.dart
+  [15:11] Edit: apps/mobile/lib/features/post/presentation/widgets/file_upload_widget.dart
+  [15:12] Edit: apps/mobile/lib/features/post/domain/entities/post_draft.dart
+  [15:12] Edit: apps/mobile/lib/features/post/presentation/widgets/type_step.dart
+  [15:13] Edit: apps/mobile/lib/features/post/presentation/screens/create_post_screen.dart
+  [21:37] Edit: apps/mobile/lib/core/router/router.dart
+  [15:37] Edit: apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+  [15:37] Edit: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+Files:
+  ~ apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  ~ apps/mobile/test/widget/features/post/widgets/type_step_test.dart
+Summary:  2 files changed, 3 insertions(+), 3 deletions(+)
+
 [22:27] Edit: apps/mobile/lib/core/router/router.dart
 [22:28] Edit: apps/mobile/lib/features/post/domain/entities/post.dart
 [22:28] Edit: apps/mobile/lib/features/post/domain/entities/post.dart
@@ -1490,3 +1503,6 @@ Decisions: Added `import 'package:unishare_mobile/features/post/domain/entities/
 Handoff: Branch feature/ai-suite-chunking-rerank is ready for architect/QA review of the RRF ranking changes.
 Review: PENDING
   [08:41] Edit: apps/mobile/test/unit/features/feed/presentation/screens/feed_screen_rrf_test.dart
+  [20:55] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [20:55] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [20:56] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
