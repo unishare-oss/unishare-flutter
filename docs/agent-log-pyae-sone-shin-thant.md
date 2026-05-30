@@ -1506,3 +1506,92 @@ Review: PENDING
   [20:55] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [20:55] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [20:56] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart
+
+2026-05-30
+  [11:35] Edit: apps/mobile/test/unit/shared/theme/app_theme_test.dart
+  [11:36] Edit: apps/mobile/lib/shared/theme/themes.dart
+  [11:40] Write: apps/mobile/test/unit/shared/theme/app_typography_test.dart
+  [11:41] Edit: apps/mobile/test/unit/shared/theme/app_typography_test.dart
+  [11:41] Write: apps/mobile/lib/shared/theme/app_typography.dart
+  [11:42] Write: apps/mobile/test/unit/shared/theme/app_typography_test.dart
+  [11:47] Write: apps/mobile/lib/features/saplings/domain/entities/sapling.dart
+  [11:48] Write: apps/mobile/test/unit/features/saplings/sapling_model_test.dart
+  [11:48] Write: apps/mobile/lib/features/saplings/data/models/sapling_model.dart
+  [11:52] Edit: apps/mobile/lib/features/saplings/data/models/sapling_model.dart
+  [11:52] Edit: apps/mobile/test/unit/features/saplings/sapling_model_test.dart
+  [11:52] Edit: apps/mobile/test/unit/features/saplings/sapling_model_test.dart
+  [11:54] Write: apps/mobile/lib/core/router/shell_scaffold.dart
+  [11:54] Write: apps/mobile/lib/features/discover/presentation/screens/discover_screen.dart
+  [11:54] Write: apps/mobile/lib/features/grove/presentation/screens/grove_screen.dart
+  [11:54] Write: apps/mobile/lib/features/map/presentation/screens/map_screen.dart
+  [11:55] Write: apps/mobile/lib/features/impact/presentation/screens/impact_screen.dart
+  [14:56] Write: apps/mobile/lib/features/you/presentation/screens/you_screen.dart
+  [14:56] Edit: apps/mobile/lib/core/router/router.dart
+  [14:56] Edit: apps/mobile/lib/core/router/router.dart
+  [14:56] Edit: apps/mobile/lib/core/router/router.dart
+  [14:57] Write: apps/mobile/test/widget/core/router/shell_scaffold_test.dart
+  [14:57] Edit: apps/mobile/lib/core/router/router.dart
+  [15:03] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [15:03] Edit: apps/mobile/lib/core/router/shell_scaffold.dart
+  [15:14] Edit: apps/mobile/test/unit/shared/theme/app_colors_test.dart
+  [15:14] Edit: apps/mobile/test/unit/features/saplings/sapling_model_test.dart
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+Summary:  3 files changed, 14 insertions(+), 4 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+Summary:  3 files changed, 14 insertions(+), 4 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  ? apps/mobile/lib/features/admin/ (untracked)
+Summary:  3 files changed, 14 insertions(+), 4 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  ? apps/mobile/lib/features/admin/ (untracked)
+Summary:  3 files changed, 14 insertions(+), 4 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  ? apps/mobile/lib/features/admin/ (untracked)
+Summary:  3 files changed, 33 insertions(+), 5 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart
+  ? apps/mobile/lib/features/admin/ (untracked)
+  ? apps/mobile/test/widget/features/admin/ (untracked)
+Summary:  4 files changed, 76 insertions(+), 29 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart
+  ? apps/mobile/lib/features/admin/ (untracked)
+  ? apps/mobile/test/widget/features/admin/ (untracked)
+Summary:  4 files changed, 76 insertions(+), 29 deletions(-)
+
+Files:
+  ~ apps/mobile/lib/core/router/router.dart
+  ~ apps/mobile/lib/features/auth/domain/entities/app_user.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  ~ apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart
+  ? apps/mobile/lib/features/admin/ (untracked)
+  ? apps/mobile/test/widget/features/admin/ (untracked)
+Summary:  4 files changed, 76 insertions(+), 29 deletions(-)
+
