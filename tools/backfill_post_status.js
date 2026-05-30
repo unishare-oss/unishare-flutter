@@ -8,9 +8,23 @@
 // service-account.json is gitignored. Get it from:
 //   Firebase Console → Project Settings → Service accounts → Generate new key
 const admin = require('firebase-admin');
-const cert = require(process.argv[2]);
+const path = require('path');
+const fs = require('fs');
 
-admin.initializeApp({ credential: admin.credential.cert(cert) });
+const serviceAccountPath = process.argv[2];
+if (!serviceAccountPath) {
+  console.error('Usage: node backfill_post_status.js <path-to-service-account.json>');
+  process.exit(1);
+}
+// Resolve against the current working directory so a bare filename works;
+// require() alone treats a non-relative path as a package name.
+const resolved = path.resolve(serviceAccountPath);
+if (!fs.existsSync(resolved)) {
+  console.error(`Service account file not found: ${resolved}`);
+  process.exit(1);
+}
+
+admin.initializeApp({ credential: admin.credential.cert(require(resolved)) });
 const db = admin.firestore();
 
 (async () => {
