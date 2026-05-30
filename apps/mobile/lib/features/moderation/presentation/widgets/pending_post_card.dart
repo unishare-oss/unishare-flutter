@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:unishare_mobile/features/moderation/domain/entities/moderation_verdict.dart';
 import 'package:unishare_mobile/features/moderation/domain/entities/pending_post.dart';
+import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_carousel.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
@@ -164,8 +165,9 @@ class _PostTypeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final ac = theme.extension<AppColors>()!;
-    // postType is the PostType enum name, e.g. "lectureNote" | "exercise".
-    final isNote = postType.toLowerCase() == 'lecturenote';
+    // postType is the stored PostType enum name, e.g. "lectureNote" | "exercise".
+    final type = PostType.fromName(postType);
+    final isNote = type == PostType.lectureNote;
     final color = isNote ? ac.info : ac.amber;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -174,7 +176,7 @@ class _PostTypeChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        isNote ? 'NOTE' : 'EXERCISE',
+        type.displayLabel,
         style: AppTypography.mono(
           base: theme.textTheme.labelSmall?.copyWith(
             fontSize: 10,

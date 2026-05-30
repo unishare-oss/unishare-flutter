@@ -278,7 +278,7 @@ class _TypeBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        isNote ? 'NOTE' : 'EXERCISE',
+        type.displayLabel,
         style: AppTypography.mono(
           base: Theme.of(context).textTheme.labelSmall?.copyWith(
             fontWeight: FontWeight.w500,
