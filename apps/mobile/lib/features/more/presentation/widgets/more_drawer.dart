@@ -39,8 +39,9 @@ class MoreDrawerSheet extends ConsumerWidget {
     final isDark = theme.brightness == Brightness.dark;
     final userAsync = ref.watch(currentUserProvider);
     final bottomInset = MediaQuery.of(context).padding.bottom;
-    final isModerator =
-        ref.watch(authStateProvider).asData?.value?.role == 'moderator';
+    final authUser = ref.watch(authStateProvider).asData?.value;
+    final isModerator = authUser?.canModerate ?? false;
+    final isAdmin = authUser?.isAdmin ?? false;
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(
@@ -127,6 +128,10 @@ class MoreDrawerSheet extends ConsumerWidget {
                     },
                     isModerator: isModerator,
                     onModerationTap: () => _go(context, '/moderation'),
+                    isAdmin: isAdmin,
+                    onAdminUsersTap: () => _go(context, '/admin/users'),
+                    onAdminDepartmentsTap: () =>
+                        _go(context, '/admin/departments'),
                   ),
                   _SignOutRow(
                     onTap: () => _signOut(context, ref),
