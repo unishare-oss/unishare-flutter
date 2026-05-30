@@ -207,12 +207,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     }
   }
 
-  bool get _isGuest {
-    final authAsync = ref.watch(authStateProvider);
-    final isAuthenticated = authAsync.hasValue && authAsync.value != null;
-    if (isAuthenticated) return false;
-    return ref.watch(guestModeProvider);
-  }
+  // Anonymous Firebase users (guest mode) are technically "authenticated" to
+  // Firebase but are not real accounts. Use guestModeProvider (which checks
+  // isAnonymous) rather than presence of an auth user.
+  bool get _isGuest => ref.watch(guestModeProvider);
 
   List<Post> _filterPosts(List<Post> all, FeedFilterState filter) {
     var posts = switch (_tabController.index) {
