@@ -273,15 +273,19 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
-    final color = switch (status) {
-      PostStatus.rejected => Theme.of(context).colorScheme.error,
-      _ => appColors.amber, // pending (approved never reaches here)
+    final cs = Theme.of(context).colorScheme;
+    // Neutral for pending (distinct from both type badges, reads as "awaiting");
+    // error for rejected. Both pairs are theme-curated, no flat alpha on a
+    // hand-tuned token. (Approved never reaches here — badge is hidden.)
+    final (bg, fg) = switch (status) {
+      PostStatus.rejected => (cs.error.withValues(alpha: 0.12), cs.error),
+      _ => (appColors.muted, appColors.mutedForeground),
     };
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: bg,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -289,7 +293,7 @@ class _StatusBadge extends StatelessWidget {
         style: AppTypography.mono(
           base: Theme.of(context).textTheme.labelSmall?.copyWith(
             fontWeight: FontWeight.w500,
-            color: color,
+            color: fg,
             letterSpacing: 0.55,
           ),
         ),
