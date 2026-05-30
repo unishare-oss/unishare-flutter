@@ -109,6 +109,7 @@ Post _fakePost({
   String id = 'post-1',
   String title = 'Test Post',
   PostStatus status = PostStatus.approved,
+  String? rejectionReason,
 }) => Post(
   id: id,
   authorId: 'uid-1',
@@ -123,6 +124,7 @@ Post _fakePost({
   semester: 1,
   moduleNumber: '',
   status: status,
+  rejectionReason: rejectionReason,
   mediaUrls: const [],
   tags: const ['flutter'],
   likesCount: 3,
@@ -207,6 +209,24 @@ void main() {
       // One pending post → exactly one PENDING badge; approved post has none.
       expect(find.text('PENDING'), findsOneWidget);
       expect(find.text('APPROVED'), findsNothing);
+    });
+
+    testWidgets('shows rejection reason on rejected posts', (tester) async {
+      final postRepo = _FakePostRepository();
+      await tester.pumpWidget(_buildSubject(postRepo: postRepo));
+
+      postRepo.emitPosts([
+        _fakePost(
+          id: 'p1',
+          title: 'Rejected Post',
+          status: PostStatus.rejected,
+          rejectionReason: 'Contains copyrighted material.',
+        ),
+      ]);
+      await tester.pump();
+
+      expect(find.text('REJECTED'), findsOneWidget);
+      expect(find.text('Contains copyrighted material.'), findsOneWidget);
     });
 
     testWidgets('appbar shows "My Posts" title', (tester) async {

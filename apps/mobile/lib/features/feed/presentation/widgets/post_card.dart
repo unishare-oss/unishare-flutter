@@ -43,6 +43,13 @@ class PostCard extends ConsumerWidget {
             _buildTopRow(context, appColors, isSaved, ref),
             const SizedBox(height: 6),
             _buildTitle(context),
+            // Author-facing rejection reason (My Posts only — rejected posts
+            // never reach the public feed).
+            if (post.status == PostStatus.rejected &&
+                (post.rejectionReason?.trim().isNotEmpty ?? false)) ...[
+              const SizedBox(height: 6),
+              _buildRejectionNote(context),
+            ],
             if (post.tags.isNotEmpty) ...[
               const SizedBox(height: 6),
               _buildTagsWrap(context, appColors),
@@ -135,6 +142,34 @@ class PostCard extends ConsumerWidget {
       ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _buildRejectionNote(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: cs.error.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: cs.error.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline, size: 14, color: cs.error),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              post.rejectionReason!.trim(),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.error),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

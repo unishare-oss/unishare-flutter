@@ -62,6 +62,7 @@ class Post {
     required this.createdAt,
     required this.updatedAt,
     this.status = PostStatus.approved,
+    this.rejectionReason,
     this.mediaTypes = const [],
     this.viewsCount = 0,
     this.reactionCounts = const {},
@@ -92,6 +93,10 @@ class Post {
   /// Moderation status. Defaults to [PostStatus.approved] for backwards-compat
   /// with posts written before the moderation pipeline existed.
   final PostStatus status;
+
+  /// Moderator-supplied reason when [status] is [PostStatus.rejected]. Surfaced
+  /// to the author in "My Posts". Null for non-rejected posts.
+  final String? rejectionReason;
 
   final List<String> mediaUrls;
 
@@ -148,6 +153,7 @@ class Post {
     int? semester,
     String? moduleNumber,
     PostStatus? status,
+    String? rejectionReason,
     List<String>? mediaUrls,
     List<String>? mediaTypes,
     List<String>? tags,
@@ -180,6 +186,7 @@ class Post {
       semester: semester ?? this.semester,
       moduleNumber: moduleNumber ?? this.moduleNumber,
       status: status ?? this.status,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
       mediaUrls: mediaUrls ?? this.mediaUrls,
       mediaTypes: mediaTypes ?? this.mediaTypes,
       tags: tags ?? this.tags,
