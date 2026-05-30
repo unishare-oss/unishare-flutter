@@ -1,7 +1,7 @@
 import type { Env } from './index'
+import { embedText } from './embeddings'
 import { json, jsonError } from './response'
 
-const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5'
 const MAX_QUERY_LENGTH = 200
 const DEFAULT_LIMIT = 10
 const MAX_LIMIT = 30
@@ -32,14 +32,7 @@ export async function handleAiSearch(request: Request, env: Env): Promise<Respon
   // Embed the query — same model + dim used at write time.
   let vector: number[]
   try {
-    const embedResult = (await env.AI.run(EMBEDDING_MODEL, { text: query })) as {
-      data: number[][]
-    }
-    const v = embedResult.data?.[0]
-    if (!Array.isArray(v) || v.length !== 768) {
-      throw new Error(`embed returned wrong shape: ${v?.length ?? 'null'}`)
-    }
-    vector = v
+    vector = await embedText(env, query)
   } catch (e) {
     console.error('embed query failed', e)
     return jsonError('Embedding failed', 502)

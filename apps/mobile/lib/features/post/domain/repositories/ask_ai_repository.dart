@@ -2,6 +2,7 @@ import 'package:unishare_mobile/features/post/domain/entities/ai_message.dart';
 
 abstract class AskAiRepository {
   Stream<AiMessage> ask({
+    required String postId,
     required String summary,
     required List<AiMessage> history,
     required String question,

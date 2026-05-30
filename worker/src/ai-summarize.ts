@@ -4,6 +4,8 @@ import { PhotonImage, resize, SamplingFilter } from '@cf-wasm/photon'
 import { extractText } from './text-extractor'
 import type { Env } from './index'
 import { json, jsonError } from './response'
+import { embedText, embedTextBatch } from './embeddings'
+import { chunkText, CHUNK_THRESHOLD } from './chunking'
 
 /// Shared aiTags rules — a flat list of specific topic strings. Mirrors the
 /// shape of the user-typed `tags` field on the post doc, just labeled as
@@ -258,6 +260,18 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
     } catch (e) {
       console.error('vectorize upsert failed', e)
     }
+
+    // Best-effort chunk indexing for RAG chat on long docs (PROP-0011 follow-up).
+    // Wrapped separately so a chunk-pipeline failure can't reach back and
+    // un-do the post-level index above.
+    try {
+      await indexPostChunks(env, {
+        postId,
+        extractedText: result.extractedText,
+      })
+    } catch (e) {
+      console.error('chunk upsert failed', e)
+    }
   }
 
   return json({
@@ -274,7 +288,6 @@ export async function handleAiSummarize(request: Request, env: Env): Promise<Res
 /// title (high) → summary (medium) → aiTags (keywords) → leading extracted
 /// content (covers what the summary leaves out). Hard cap on whole blob.
 const SEARCH_BLOB_CHAR_CAP = 2000
-const EMBEDDING_MODEL = '@cf/baai/bge-base-en-v1.5'
 
 function buildSearchBlob(p: {
   title: string
@@ -304,12 +317,11 @@ async function dedupAndInsertTags(
 
   // Batch-embed all proposed tags in one model call to save round trips.
   // BGE accepts string[] and returns one vector per input.
-  const embedResult = (await env.AI.run(EMBEDDING_MODEL, {
-    text: proposed,
-  })) as { data: number[][] }
-  const embeddings = embedResult.data
-  if (!Array.isArray(embeddings) || embeddings.length !== proposed.length) {
-    // Embedding shape isn't what we expected — bail to "no dedup".
+  let embeddings: number[][]
+  try {
+    embeddings = await embedTextBatch(env, proposed)
+  } catch (e) {
+    console.error('tag embed batch failed', e)
     return proposed
   }
 
@@ -320,14 +332,6 @@ async function dedupAndInsertTags(
   for (let i = 0; i < proposed.length; i++) {
     const tag = proposed[i]
     const vec = embeddings[i]
-    if (!Array.isArray(vec) || vec.length !== 768) {
-      // Skip this tag's dedup but keep it as-is.
-      if (!seen.has(tag)) {
-        seen.add(tag)
-        canonical.push(tag)
-      }
-      continue
-    }
 
     let pickedTag = tag
     try {
@@ -375,13 +379,7 @@ async function indexPostForSearch(
   const text = buildSearchBlob(params)
   if (!text.trim()) return // nothing useful to embed
 
-  const embedResult = (await env.AI.run(EMBEDDING_MODEL, { text })) as {
-    data: number[][]
-  }
-  const vector = embedResult.data?.[0]
-  if (!Array.isArray(vector) || vector.length !== 768) {
-    throw new Error(`embed returned wrong shape: ${vector?.length ?? 'null'}`)
-  }
+  const vector = await embedText(env, text)
 
   await env.VECTORIZE.upsert([
     {
@@ -391,6 +389,52 @@ async function indexPostForSearch(
       // type-faceted search, freshness boosting via timestamp).
     },
   ])
+}
+
+/// PROP-0011 follow-up — per-chunk vectors for RAG chat on long documents.
+/// Skips short docs (those that fit in the chat handler's context budget).
+/// Failure is logged and swallowed: the summarize response still succeeds
+/// without chunks; chat will fall back to the slice path.
+async function indexPostChunks(
+  env: Env,
+  params: { postId: string; extractedText: string },
+): Promise<void> {
+  if (params.extractedText.length <= CHUNK_THRESHOLD) return
+
+  const chunks = chunkText(params.extractedText)
+  if (chunks.length === 0) return
+
+  // Delete any chunks from a prior summarize run before upserting new ones.
+  // Vectorize has no filter-delete, so we delete a safe upper range of IDs
+  // (PERSIST_TEXT_CAP / effective stride ≈ 150 max) to avoid stale vectors
+  // being retrieved on re-summarize with a shorter extractedText.
+  const MAX_CHUNKS_PER_POST = 150
+  try {
+    const oldIds = Array.from({ length: MAX_CHUNKS_PER_POST }, (_, i) => `${params.postId}#${i}`)
+    await env.POST_CHUNK_INDEX.deleteByIds(oldIds)
+  } catch (e) {
+    console.error('indexPostChunks: old-chunk cleanup failed (continuing)', e)
+  }
+
+  let vectors: number[][]
+  try {
+    vectors = await embedTextBatch(env, chunks)
+  } catch (e) {
+    console.error('indexPostChunks: embed batch failed', e)
+    return
+  }
+
+  try {
+    await env.POST_CHUNK_INDEX.upsert(
+      chunks.map((text, i) => ({
+        id: `${params.postId}#${i}`,
+        values: vectors[i],
+        metadata: { postId: params.postId, chunkText: text },
+      })),
+    )
+  } catch (e) {
+    console.error('indexPostChunks: upsert failed', e)
+  }
 }
 
 async function summarizeText(

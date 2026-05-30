@@ -17,6 +17,7 @@ class AskAiDatasource {
   /// don't appear in the bullet summary. [summary] is still required as a
   /// fallback for pre-Phase-1 posts whose extracted text was never cached.
   Stream<Map<String, dynamic>> stream({
+    required String postId,
     required String summary,
     required String question,
     required List<Map<String, String>> history,
@@ -29,6 +30,7 @@ class AskAiDatasource {
       ..headers['Content-Type'] = 'application/json'
       ..headers['Authorization'] = 'Bearer $token'
       ..body = jsonEncode({
+        'postId': postId,
         'summary': summary,
         if (extractedText != null && extractedText.isNotEmpty)
           'extractedText': extractedText,

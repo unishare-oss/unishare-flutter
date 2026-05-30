@@ -304,6 +304,65 @@ aiTags                   string[]   (PROP-0011 Phase 2, kebab-case AI-derived to
 
 ---
 
+## AI suite — chunking, re-embed-on-edit, RRF (May 2026)
+
+PR #78 shipped the foundation: cached `extractedText`, auto-tags, full-RAG chat, semantic search. A follow-up closed three gaps:
+
+### Long-document chat — chunking + retrieval
+
+```
+publish post
+   ↓
+/ai/summarize (worker)
+   ├─ summarize + auto-tag (unchanged)
+   ├─ index post-level vector → unishare-posts          [search]
+   └─ if extractedText > 30 000 chars:
+        chunk into 800-char windows (100-char overlap)
+        embed batch (BGE-base, 768 dim)
+        upsert chunks → unishare-post-chunks            [RAG retrieval]
+            id     = {postId}#{idx}
+            meta   = { postId, chunkText }
+```
+
+When the chat handler sees a post with `extractedText > 30 000 chars` and the request includes `postId`, it embeds the user's question, queries `unishare-post-chunks` filtered by `postId` (top-5), joins the chunk texts with `\n---\n` separators, and uses that as the system-prompt context. Shorter docs continue to send the full text inline. Retrieval failures fall back to the legacy slice path so chat never breaks.
+
+### Re-embed on edit — `/ai/reindex`
+
+`updatePost` (mobile, `post_repository_impl.dart`) fires `POST /ai/reindex` after Firestore confirms the write, whenever title or description changed:
+
+```
+edit title or description
+   ↓
+Firestore updatePost (mobile)
+   ↓
+unawaited fire-and-forget:
+   POST /ai/reindex { postId, title, description }
+   ↓
+worker verifies Firebase ID token + post.authorId == uid
+   ↓
+worker rebuilds search blob:
+   incoming title + persisted summary + incoming description
+   + aiTags + first 1500 chars of extractedText
+   ↓
+embed → upsert to unishare-posts (same id, overwrites)
+```
+
+Chunks are not touched — `extractedText` doesn't change on a metadata edit.
+
+### Hybrid search ranking — Reciprocal Rank Fusion
+
+Client-side. `feed_screen.dart` computes a keyword-result list (existing in-memory filter) and a semantic-result list (from `/ai/search`), then blends them with RRF:
+
+```
+score(post) = Σ over each source S where post appears:
+                  1 / (k + rank_S(post))
+k = 60 (Cormack default)
+```
+
+Posts that appear in both lists naturally outrank single-source posts. Tag-mode (`#foo`) bypasses RRF and uses strict tag matching only.
+
+---
+
 ## CI / Deployment
 
 ```

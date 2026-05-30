@@ -38,6 +38,13 @@ index_name = "unishare-posts"
 binding = "TAG_INDEX"
 index_name = "unishare-tags"
 
+# wrangler vectorize create unishare-post-chunks --dimensions=768 --metric=cosine
+# wrangler vectorize create-metadata-index unishare-post-chunks --property-name=postId --type=string
+# PROP-0011 follow-up — per-post chunk index for RAG chat retrieval on long docs.
+[[vectorize]]
+binding = "POST_CHUNK_INDEX"
+index_name = "unishare-post-chunks"
+
 # Workers AI binding for embedding generation (@cf/baai/bge-base-en-v1.5).
 [ai]
 binding = "AI"

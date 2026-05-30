@@ -1444,6 +1444,65 @@ Summary:  2 files changed, 6 insertions(+), 6 deletions(-)
   [18:18] Edit: apps/mobile/test/widget/features/more/more_drawer_test.dart
   [18:18] Edit: apps/mobile/test/widget/features/profile/screens/profile_screen_test.dart
   [18:18] Edit: apps/mobile/test/widget/features/departments/screens/departments_screen_test.dart
+  [22:24] Edit: apps/mobile/lib/features/post/domain/repositories/ask_ai_repository.dart
+  [22:24] Edit: apps/mobile/lib/features/post/data/repositories/ask_ai_repository_impl.dart
+  [22:24] Edit: apps/mobile/lib/features/post/data/repositories/ask_ai_repository_impl.dart
+  [22:24] Edit: apps/mobile/lib/features/post/data/datasources/ask_ai_datasource.dart
+  [22:24] Edit: apps/mobile/lib/features/post/data/datasources/ask_ai_datasource.dart
+  [22:24] Edit: apps/mobile/lib/features/post/domain/usecases/ask_ai.dart
+
+---
+Date: 2026-05-20 00:00
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 11 — create AiReindexDatasource using TDD
+Prompt: Implement AiReindexDatasource for POST /ai/reindex with 401-retry logic, using TDD (write failing test first, then implement, then verify full suite).
+  [22:30] Write: apps/mobile/test/unit/features/post/data/datasources/ai_reindex_datasource_test.dart
+  [22:48] Write: apps/mobile/lib/features/post/data/datasources/ai_reindex_datasource.dart
+  [22:49] Edit: apps/mobile/test/unit/features/post/data/datasources/ai_reindex_datasource_test.dart
+  [22:49] Edit: apps/mobile/test/unit/features/post/data/datasources/ai_reindex_datasource_test.dart
+Outcome: Created AiReindexDatasource and its 4-case unit test suite. All tests pass (418 total), 0 analyze issues.
+Decisions: Kept `captured` typed as `http.BaseRequest` (the callback's static type) and downcast to `http.Request` only at the `.body` access point — avoids the `unnecessary_cast` lint while still accessing the concrete property. The `// ignore: avoid_dynamic_calls` suppressor is not needed there; the cast is sufficient.
+Handoff: AiReindexDatasource is ready for wiring into PostRepositoryImpl. The caller should invoke it fire-and-forget after a successful Firestore title/description edit and log the boolean result via AppLogger.
+Review: PENDING
+  [22:53] Edit: apps/mobile/lib/features/post/domain/repositories/post_repository.dart
+  [22:53] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [22:54] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [22:54] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [22:54] Edit: apps/mobile/lib/features/post/data/repositories/post_repository_impl.dart
+  [22:54] Edit: apps/mobile/lib/features/post/domain/usecases/update_post.dart
+  [22:54] Edit: apps/mobile/lib/features/post/presentation/providers/edit_post_provider.dart
+  [22:54] Edit: apps/mobile/test/unit/features/post/fakes/fake_post_repository.dart
+  [22:54] Edit: apps/mobile/test/unit/features/post/domain/usecases/sync_draft_queue_test.dart
+  [22:54] Edit: apps/mobile/test/unit/features/post/domain/usecases/create_post_test.dart
+  [22:54] Edit: apps/mobile/test/widget/features/post/screens/my_posts_screen_test.dart
+  [22:54] Edit: apps/mobile/test/widget/features/post/screens/post_detail_screen_test.dart
+  [22:54] Edit: apps/mobile/test/widget/features/post/widgets/draft_queue_indicator_test.dart
+  [22:55] Edit: apps/mobile/test/widget/features/post/screens/create_post_screen_test.dart
+  [22:55] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [22:55] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [22:55] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [22:55] Edit: apps/mobile/test/unit/features/post/data/repositories/post_repository_impl_test.dart
+  [22:56] Edit: apps/mobile/lib/features/post/presentation/screens/edit_post_screen.dart
+  [22:56] Edit: apps/mobile/lib/features/post/presentation/screens/edit_post_screen.dart
+  [23:00] Write: apps/mobile/test/unit/features/feed/presentation/screens/feed_screen_rrf_test.dart
+  [23:01] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [23:02] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+  [23:02] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
+
+---
+
+Date: 2026-05-21
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Task 13 — replace `_mergeWithSemantic` with RRF hybrid ranking
+Prompt: Implement `hybridRankRRF` top-level function in feed_screen.dart, replace `_mergeWithSemantic` with `_hybridRank`, add 5-case unit test file, all tests passing.
+
+Outcome: `hybridRankRRF` and `_hybridRank` were already present in feed_screen.dart from prior work. Created the missing test file `feed_screen_rrf_test.dart`; fixed its missing `post_draft.dart` import (PostType/PostingIdentity live there, not in post.dart). 5 RRF tests pass, full suite 427/427 pass, 0 analyze issues. Committed as `feat(mobile): RRF hybrid ranking in feed search`.
+Decisions: Added `import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart'` to the test file — the spec template omitted it because the enums appear to re-export from post.dart in the web codebase, but in this repo they are defined only in post_draft.dart.
+Handoff: Branch feature/ai-suite-chunking-rerank is ready for architect/QA review of the RRF ranking changes.
+Review: PENDING
+  [08:41] Edit: apps/mobile/test/unit/features/feed/presentation/screens/feed_screen_rrf_test.dart
   [20:55] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [20:55] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [20:56] Edit: apps/mobile/lib/features/feed/presentation/widgets/feed_filter_drawer.dart

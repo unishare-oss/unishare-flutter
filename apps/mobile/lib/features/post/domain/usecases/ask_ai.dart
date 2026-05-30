@@ -27,6 +27,7 @@ class AskAiUseCase {
   final AskAiRepository _repository;
 
   Stream<AiMessage> call(AskAiParams params) => _repository.ask(
+    postId: params.postId,
     summary: params.summary,
     extractedText: params.extractedText,
     history: params.history,

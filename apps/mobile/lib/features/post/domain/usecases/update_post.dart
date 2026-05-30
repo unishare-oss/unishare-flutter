@@ -15,6 +15,7 @@ class UpdatePost {
     String? externalUrl,
     required String moduleNumber,
     required bool descriptionChanged,
+    required bool titleChanged,
     required SummaryStatus? currentSummaryStatus,
   }) {
     if (title.trim().isEmpty) throw ArgumentError('title_required');
@@ -27,6 +28,7 @@ class UpdatePost {
       externalUrl: externalUrl,
       moduleNumber: moduleNumber,
       descriptionChanged: descriptionChanged,
+      titleChanged: titleChanged,
       currentSummaryStatus: currentSummaryStatus,
     );
   }
