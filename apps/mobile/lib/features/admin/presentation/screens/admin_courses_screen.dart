@@ -5,12 +5,13 @@ import 'package:unishare_mobile/features/admin/presentation/providers/admin_prov
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
-/// Admin courses screen — shows courses for a department grouped by year tabs.
-/// Each course tile has a PopupMenuButton with edit/delete.
+/// Admin courses screen — year-tabbed view with edit/delete per course.
+/// FAB lives in the single outer Scaffold to avoid nested-Scaffold assertion
+/// errors with DefaultTabController's InheritedWidget disposal.
 ///
 /// Template TODOs:
 ///   - No use-case layer; collapsed for compactness.
-class AdminCoursesScreen extends ConsumerWidget {
+class AdminCoursesScreen extends ConsumerStatefulWidget {
   const AdminCoursesScreen({
     super.key,
     required this.deptId,
@@ -21,104 +22,69 @@ class AdminCoursesScreen extends ConsumerWidget {
   final String departmentName;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AdminCoursesScreen> createState() => _AdminCoursesScreenState();
+}
+
+class _AdminCoursesScreenState extends ConsumerState<AdminCoursesScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tab;
+
+  // 1-based year matching the tab order.
+  int get _activeYear => _tab.index + 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _tab = TabController(length: 4, vsync: this)
+      ..addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _tab.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final ac = Theme.of(context).extension<AppColors>()!;
     final theme = Theme.of(context);
 
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(departmentName),
-          leading: const BackButton(),
-          bottom: TabBar(
-            indicatorColor: ac.amber,
-            labelColor: ac.amber,
-            unselectedLabelColor: ac.textMuted,
-            labelStyle: theme.textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-            tabs: const [
-              Tab(text: 'Year 1'),
-              Tab(text: 'Year 2'),
-              Tab(text: 'Year 3'),
-              Tab(text: 'Year 4'),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.departmentName),
+        leading: const BackButton(),
+        bottom: TabBar(
+          controller: _tab,
+          indicatorColor: ac.amber,
+          labelColor: ac.amber,
+          unselectedLabelColor: ac.textMuted,
+          labelStyle: theme.textTheme.bodySmall?.copyWith(
+            fontWeight: FontWeight.w600,
           ),
-        ),
-        body: TabBarView(
-          children: [
-            for (final year in [1, 2, 3, 4])
-              _CoursesTab(deptId: deptId, year: year),
+          tabs: const [
+            Tab(text: 'Year 1'),
+            Tab(text: 'Year 2'),
+            Tab(text: 'Year 3'),
+            Tab(text: 'Year 4'),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _CoursesTab extends ConsumerWidget {
-  const _CoursesTab({required this.deptId, required this.year});
-
-  final String deptId;
-  final int year;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final ac = theme.extension<AppColors>()!;
-    final coursesAsync = ref.watch(adminCoursesProvider((deptId, year)));
-
-    return Scaffold(
+      // Single FAB in the outer Scaffold — avoids nested-Scaffold assertion.
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: MainNavBar.bottomInset),
         child: FloatingActionButton.extended(
-          heroTag: 'add-course-year-$year',
           onPressed: () => _createCourse(context, ref),
           icon: const Icon(Icons.add),
           label: const Text('Course'),
         ),
       ),
-      body: coursesAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(
-          child: Text(
-            'Failed to load courses.',
-            style: theme.textTheme.bodyMedium?.copyWith(color: ac.textMuted),
-          ),
-        ),
-        data: (courses) {
-          if (courses.isEmpty) {
-            return Center(
-              child: Text(
-                'No courses for Year $year.',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: ac.textMuted,
-                ),
-              ),
-            );
-          }
-          return ListView.builder(
-            padding: const EdgeInsets.fromLTRB(
-              16,
-              8,
-              16,
-              MainNavBar.bottomInset + 88,
-            ),
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              final course = courses[index];
-              return _CourseTile(
-                id: course.id,
-                name: course.name,
-                onEdit: () =>
-                    _editCourse(context, ref, course.id, course.name),
-                onDelete: () =>
-                    _deleteCourse(context, ref, course.id, course.name),
-              );
-            },
-          );
-        },
+      body: TabBarView(
+        controller: _tab,
+        children: [
+          for (final year in [1, 2, 3, 4])
+            _CoursesTab(deptId: widget.deptId, year: year),
+        ],
       ),
     );
   }
@@ -126,11 +92,11 @@ class _CoursesTab extends ConsumerWidget {
   Future<void> _createCourse(BuildContext context, WidgetRef ref) async {
     final codeCtl = TextEditingController();
     final nameCtl = TextEditingController();
-    final yearCtl = TextEditingController(text: year.toString());
+    final yearCtl = TextEditingController(text: _activeYear.toString());
 
     final ok = await _showFormDialog(
       context: context,
-      title: 'New course — Year $year',
+      title: 'New course — Year $_activeYear',
       fields: [
         (
           label: 'Code (e.g. CSC101)',
@@ -150,7 +116,7 @@ class _CoursesTab extends ConsumerWidget {
       final result = await ref
           .read(adminCatalogActionsProvider.notifier)
           .createCourse(
-            departmentId: deptId,
+            departmentId: widget.deptId,
             code: codeCtl.text.trim(),
             name: nameCtl.text.trim(),
             yearLevel: int.tryParse(yearCtl.text.trim()),
@@ -160,6 +126,112 @@ class _CoursesTab extends ConsumerWidget {
     codeCtl.dispose();
     nameCtl.dispose();
     yearCtl.dispose();
+  }
+
+  void _report(BuildContext context, AsyncValue<void> result, String okMsg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(result is AsyncError ? 'Failed: ${result.error}' : okMsg),
+      ),
+    );
+  }
+
+  Future<bool?> _showFormDialog({
+    required BuildContext context,
+    required String title,
+    required List<
+      ({String label, TextEditingController controller, TextInputType keyboard})
+    > fields,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final f in fields)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: TextField(
+                    controller: f.controller,
+                    keyboardType: f.keyboard,
+                    decoration: InputDecoration(
+                      labelText: f.label,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Pure content widget — no Scaffold, so it can live safely inside TabBarView.
+class _CoursesTab extends ConsumerWidget {
+  const _CoursesTab({required this.deptId, required this.year});
+
+  final String deptId;
+  final int year;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final ac = theme.extension<AppColors>()!;
+    final coursesAsync = ref.watch(adminCoursesProvider((deptId, year)));
+
+    return coursesAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(
+        child: Text(
+          'Failed to load courses.',
+          style: theme.textTheme.bodyMedium?.copyWith(color: ac.textMuted),
+        ),
+      ),
+      data: (courses) {
+        if (courses.isEmpty) {
+          return Center(
+            child: Text(
+              'No courses for Year $year.',
+              style: theme.textTheme.bodyMedium?.copyWith(color: ac.textMuted),
+            ),
+          );
+        }
+        return ListView.builder(
+          padding: const EdgeInsets.fromLTRB(
+            16,
+            8,
+            16,
+            MainNavBar.bottomInset + 88,
+          ),
+          itemCount: courses.length,
+          itemBuilder: (context, index) {
+            final course = courses[index];
+            return _CourseTile(
+              id: course.id,
+              name: course.name,
+              onEdit: () => _editCourse(context, ref, course.id, course.name),
+              onDelete: () =>
+                  _deleteCourse(context, ref, course.id, course.name),
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _editCourse(
@@ -365,11 +437,7 @@ class _CourseTile extends StatelessWidget {
                   value: _CourseAction.edit,
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.edit_outlined,
-                        size: 18,
-                        color: cs.onSurface,
-                      ),
+                      Icon(Icons.edit_outlined, size: 18, color: cs.onSurface),
                       const SizedBox(width: 10),
                       const Text('Edit'),
                     ],
@@ -379,11 +447,7 @@ class _CourseTile extends StatelessWidget {
                   value: _CourseAction.delete,
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.delete_outline,
-                        size: 18,
-                        color: cs.error,
-                      ),
+                      Icon(Icons.delete_outline, size: 18, color: cs.error),
                       const SizedBox(width: 10),
                       Text('Delete', style: TextStyle(color: cs.error)),
                     ],
