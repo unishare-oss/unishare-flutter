@@ -1631,3 +1631,8 @@ Files:
   ~ apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
 Summary:  4 files changed, 193 insertions(+), 80 deletions(-)
 
+
+Addendum (session continued): Beyond the initial moderation label + preview fix, the session grew to 6 commits on fix/moderation: (1) NOTE/EXERCISE label + clickable attachment previews in moderation queue; (2) refactor centralizing the label on PostType.displayLabel across feed/post-detail/saved/moderation; (3) My Posts status badge for non-approved posts (added PostStatus enum + Post.status); (4) theme fix — status badge uses curated muted/error tokens (amberSubtle is per-theme tuned, not a flat alpha, and amber clashed with the EXERCISE badge); (5) surface rejectionReason on rejected posts in My Posts; (6) scheduled purgeRejectedPostMedia Cloud Function + Worker /media/delete route + composite index, reusing existing WORKER_URL/MODERATION_WORKER_KEY (no new secrets), retention 14 days.
+Verified: flutter analyze clean, 446/446 app tests; functions tsc+eslint clean, 96/96 tests; worker tsc clean.
+Not done / handoff: purge is NOT integration-tested against live R2/deploy (watch first scheduled run in logs); no unit tests on the sweep or worker delete handler (consistent with codebase — offered to add). Deploy needs: worker deploy + firebase deploy firestore:indexes + functions:purgeRejectedPostMedia. rejectionReason still not shown on the moderation queue side or post-detail (only My Posts). Branch not pushed by me — member pushes + opens PR.
+Review: PENDING

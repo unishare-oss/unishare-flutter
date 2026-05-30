@@ -26,7 +26,8 @@ R2_PUBLIC_URL = "https://cdn.psstee.dev"
 
 # Secrets (set via: wrangler secret put GROQ_API_KEY)
 # GROQ_API_KEY
-# MODERATION_KEY  — shared secret gating POST /ai/moderate (server-to-server).
+# MODERATION_KEY  — shared secret gating the internal server-to-server routes
+#   POST /ai/moderate and POST /media/delete (rejected-post media GC).
 #   Must match the MODERATION_WORKER_KEY secret configured for Cloud Functions.
 #   wrangler secret put MODERATION_KEY
 

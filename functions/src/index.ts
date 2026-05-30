@@ -17,6 +17,7 @@ export { onPostUnsaved } from './triggers/onPostUnsaved';
 export { onProfileUpdated } from './triggers/onProfileUpdated';
 export { onUserChangedPublicSync, onUserCreatedPublicSync } from './triggers/onUserChangedPublicSync';
 export { purgeOldNotifications } from './scheduled/purgeOldNotifications';
+export { purgeRejectedPostMedia } from './scheduled/purgeRejectedPostMedia';
 export { integritySweep } from './scheduled/integritySweep';
 export { autoDisableBilling } from './billing/autoDisableBilling';
 export { handleModerationAction } from './callable/handleModerationAction';

@@ -6,16 +6,22 @@ Deploys to `asia-southeast1`. See [`../tech-specs/0001-notification.md`](../tech
 
 ## Function Map
 
-| Function | Trigger | What it does |
-|---|---|---|
-| `onCommentAdded` | onCreate `posts/{postId}/comments/{commentId}` | Top-level comment → notify post owner |
-| `onCommentReply` | onCreate same path, when `parentId` is set | Reply → notify parent author |
-| `onPostLiked` | onCreate `posts/{postId}/likes/{userId}` | Like → notify post owner |
-| `onRequestUpvoted` | onCreate `requests/{requestId}/upvotes/{userId}` | Upvote → notify requester |
-| `onSuggestionSubmitted` | onCreate `requests/{requestId}/suggestions/{suggestionId}` | Suggestion → notify requester |
-| `onRequestFulfilled` | onUpdate `requests/{requestId}` when `status` → `fulfilled` | Notify the winning suggester |
-| `purgeOldNotifications` | Scheduled, every 24 h | Delete notifications older than 30 days |
-| `autoDisableBilling` | Pub/Sub on topic `billing-budget-alerts` | Detach billing account if budget exceeded |
+| Function                 | Trigger                                                     | What it does                                                                                                    |
+| ------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `onCommentAdded`         | onCreate `posts/{postId}/comments/{commentId}`              | Top-level comment → notify post owner                                                                           |
+| `onCommentReply`         | onCreate same path, when `parentId` is set                  | Reply → notify parent author                                                                                    |
+| `onPostLiked`            | onCreate `posts/{postId}/likes/{userId}`                    | Like → notify post owner                                                                                        |
+| `onRequestUpvoted`       | onCreate `requests/{requestId}/upvotes/{userId}`            | Upvote → notify requester                                                                                       |
+| `onSuggestionSubmitted`  | onCreate `requests/{requestId}/suggestions/{suggestionId}`  | Suggestion → notify requester                                                                                   |
+| `onRequestFulfilled`     | onUpdate `requests/{requestId}` when `status` → `fulfilled` | Notify the winning suggester                                                                                    |
+| `purgeOldNotifications`  | Scheduled, every 24 h                                       | Delete notifications older than 14 days                                                                         |
+| `purgeRejectedPostMedia` | Scheduled, every 24 h                                       | Purge R2 media for posts rejected > `REJECTED_MEDIA_RETENTION_DAYS` ago, via the Worker's `/media/delete` route |
+| `autoDisableBilling`     | Pub/Sub on topic `billing-budget-alerts`                    | Detach billing account if budget exceeded                                                                       |
+
+> `purgeRejectedPostMedia` reuses the existing `WORKER_URL` param and
+> `MODERATION_WORKER_KEY` secret (same ones the moderation classifier uses) —
+> no new secrets. It needs the `posts (status, moderatedAt)` composite index;
+> deploy it with `firebase deploy --only firestore:indexes`.
 
 Each notification trigger writes one document to `users/{recipientUid}/notifications/{notifId}` via the Admin SDK and fans out an FCM multicast to the recipient's `fcmTokens` subcollection. Stale tokens (rejected with `messaging/registration-token-not-registered`) are pruned automatically.
 
@@ -70,6 +76,7 @@ Prerequisites — done once per environment:
    - Role: search "Project Billing Manager"
 
    **CLI (if gcloud installed):**
+
    ```bash
    gcloud beta billing accounts add-iam-policy-binding BILLING_ACCOUNT_ID \
      --member=serviceAccount:PROJECT_NUMBER-compute@developer.gserviceaccount.com \
