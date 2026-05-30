@@ -57,8 +57,7 @@ class AdminDepartmentsScreen extends ConsumerWidget {
                   '/admin/departments/${dept.id}/courses'
                   '?name=${Uri.encodeComponent(dept.name)}',
                 ),
-                onEdit: () =>
-                    _editDepartment(context, ref, dept.id, dept.name),
+                onEdit: () => _editDepartment(context, ref, dept.id, dept.name),
                 onDelete: () =>
                     _deleteDepartment(context, ref, dept.id, dept.name),
               );
@@ -79,7 +78,11 @@ class AdminDepartmentsScreen extends ConsumerWidget {
       context: context,
       title: 'New department',
       fields: [
-        (label: 'ID (e.g. cs)', controller: idCtl, keyboard: TextInputType.text),
+        (
+          label: 'ID (e.g. cs)',
+          controller: idCtl,
+          keyboard: TextInputType.text,
+        ),
         (label: 'Name', controller: nameCtl, keyboard: TextInputType.text),
         (
           label: 'University ID (free-text)',
@@ -173,7 +176,8 @@ class AdminDepartmentsScreen extends ConsumerWidget {
     required String title,
     required List<
       ({String label, TextEditingController controller, TextInputType keyboard})
-    > fields,
+    >
+    fields,
   }) {
     return showDialog<bool>(
       context: context,
@@ -256,8 +260,11 @@ class _DepartmentTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 alignment: Alignment.center,
-                child:
-                    Icon(Icons.apartment_outlined, size: 20, color: ac.amber),
+                child: Icon(
+                  Icons.apartment_outlined,
+                  size: 20,
+                  color: ac.amber,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -299,7 +306,11 @@ class _DepartmentTile extends StatelessWidget {
                     value: _DeptAction.edit,
                     child: Row(
                       children: [
-                        Icon(Icons.edit_outlined, size: 18, color: cs.onSurface),
+                        Icon(
+                          Icons.edit_outlined,
+                          size: 18,
+                          color: cs.onSurface,
+                        ),
                         const SizedBox(width: 10),
                         const Text('Edit'),
                       ],

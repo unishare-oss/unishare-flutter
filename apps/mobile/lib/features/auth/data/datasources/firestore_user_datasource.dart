@@ -70,10 +70,10 @@ class FirestoreUserDatasource {
   }) async {
     // Use set+merge so this works for anonymous (guest) users who may not yet
     // have a users/{uid} document. A plain update() throws NOT_FOUND in that case.
-    await _users.doc(uid).set(
-      {'departmentId': departmentId, 'enrollmentYear': ?enrollmentYear},
-      SetOptions(merge: true),
-    );
+    await _users.doc(uid).set({
+      'departmentId': departmentId,
+      'enrollmentYear': ?enrollmentYear,
+    }, SetOptions(merge: true));
   }
 
   Stream<List<({String id, String name})>> getUniversities() {

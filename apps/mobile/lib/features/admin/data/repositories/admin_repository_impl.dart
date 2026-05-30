@@ -54,8 +54,10 @@ class AdminRepositoryImpl implements AdminRepository {
   );
 
   @override
-  Stream<List<({String id, String name})>> watchCourses(String deptId, int year) =>
-      _firestore.watchCourses(deptId, year);
+  Stream<List<({String id, String name})>> watchCourses(
+    String deptId,
+    int year,
+  ) => _firestore.watchCourses(deptId, year);
 
   @override
   Future<void> updateDepartment(String id, String name) =>

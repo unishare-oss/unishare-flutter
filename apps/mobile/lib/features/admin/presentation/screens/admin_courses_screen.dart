@@ -141,7 +141,8 @@ class _AdminCoursesScreenState extends ConsumerState<AdminCoursesScreen>
     required String title,
     required List<
       ({String label, TextEditingController controller, TextInputType keyboard})
-    > fields,
+    >
+    fields,
   }) {
     return showDialog<bool>(
       context: context,
@@ -314,7 +315,8 @@ class _CoursesTab extends ConsumerWidget {
     required String title,
     required List<
       ({String label, TextEditingController controller, TextInputType keyboard})
-    > fields,
+    >
+    fields,
   }) {
     return showDialog<bool>(
       context: context,
