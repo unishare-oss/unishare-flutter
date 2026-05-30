@@ -99,6 +99,12 @@ class PostCard extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _TypeBadge(type: post.postType),
+        // Moderation status — only surfaces for the author's own non-approved
+        // posts (e.g. in "My Posts"); the feed only ever shows approved posts.
+        if (post.status != PostStatus.approved) ...[
+          const SizedBox(width: 6),
+          _StatusBadge(status: post.status),
+        ],
         const SizedBox(width: 6),
         Text(
           post.courseId,
@@ -256,6 +262,39 @@ class PostCard extends ConsumerWidget {
     if (diff.inHours >= 1) return '${diff.inHours}h ago';
     if (diff.inMinutes >= 1) return '${diff.inMinutes}m ago';
     return 'just now';
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({required this.status});
+
+  final PostStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final color = switch (status) {
+      PostStatus.rejected => Theme.of(context).colorScheme.error,
+      _ => appColors.amber, // pending (approved never reaches here)
+    };
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        status.displayLabel,
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: color,
+            letterSpacing: 0.55,
+          ),
+        ),
+      ),
+    );
   }
 }
 
