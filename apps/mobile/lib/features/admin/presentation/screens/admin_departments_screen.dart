@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:unishare_mobile/features/admin/presentation/providers/admin_providers.dart';
+import 'package:unishare_mobile/shared/theme/app_colors.dart';
+import 'package:unishare_mobile/shared/widgets/main_nav_bar.dart';
 
 /// Admin → Departments & courses. Lists departments and creates departments /
 /// courses via real Firestore writes (admin-only per firestore.rules).
@@ -17,10 +19,15 @@ class AdminDepartmentsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Departments & Courses')),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _createDepartment(context, ref),
-        icon: const Icon(Icons.add),
-        label: const Text('Department'),
+      // The admin screens live inside the shell, so the floating nav bar
+      // overlays the body — lift the FAB above it.
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: MainNavBar.bottomInset),
+        child: FloatingActionButton.extended(
+          onPressed: () => _createDepartment(context, ref),
+          icon: const Icon(Icons.add),
+          label: const Text('Department'),
+        ),
       ),
       body: deptsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -33,20 +40,23 @@ class AdminDepartmentsScreen extends ConsumerWidget {
         ),
         data: (depts) {
           if (depts.isEmpty) {
-            return const Center(child: Text('No departments yet'));
+            return const _EmptyState();
           }
           return ListView.builder(
+            // Clear the floating nav bar + the lifted FAB.
+            padding: const EdgeInsets.fromLTRB(
+              16,
+              8,
+              16,
+              MainNavBar.bottomInset + 88,
+            ),
             itemCount: depts.length,
             itemBuilder: (context, index) {
               final dept = depts[index];
-              return ListTile(
-                title: Text(dept.name),
-                subtitle: Text(dept.id),
-                trailing: TextButton.icon(
-                  icon: const Icon(Icons.add),
-                  label: const Text('Course'),
-                  onPressed: () => _createCourse(context, ref, dept.id),
-                ),
+              return _DepartmentCard(
+                id: dept.id,
+                name: dept.name,
+                onAddCourse: () => _createCourse(context, ref, dept.id),
               );
             },
           );
@@ -79,14 +89,14 @@ class AdminDepartmentsScreen extends ConsumerWidget {
     );
 
     if (ok == true) {
-      await ref
+      final result = await ref
           .read(adminCatalogActionsProvider.notifier)
           .createDepartment(
             id: idCtl.text.trim(),
             name: nameCtl.text.trim(),
             universityId: uniCtl.text.trim(),
           );
-      if (context.mounted) _report(context, ref, 'Department created');
+      if (context.mounted) _report(context, result, 'Department created');
     }
     idCtl.dispose();
     nameCtl.dispose();
@@ -121,7 +131,7 @@ class AdminDepartmentsScreen extends ConsumerWidget {
     );
 
     if (ok == true) {
-      await ref
+      final result = await ref
           .read(adminCatalogActionsProvider.notifier)
           .createCourse(
             departmentId: departmentId,
@@ -129,21 +139,17 @@ class AdminDepartmentsScreen extends ConsumerWidget {
             name: nameCtl.text.trim(),
             yearLevel: int.tryParse(yearCtl.text.trim()),
           );
-      if (context.mounted) _report(context, ref, 'Course created');
+      if (context.mounted) _report(context, result, 'Course created');
     }
     codeCtl.dispose();
     nameCtl.dispose();
     yearCtl.dispose();
   }
 
-  void _report(BuildContext context, WidgetRef ref, String successMsg) {
-    if (!context.mounted) return;
-    final state = ref.read(adminCatalogActionsProvider);
+  void _report(BuildContext context, AsyncValue<void> result, String okMsg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          state is AsyncError ? 'Failed: ${state.error}' : successMsg,
-        ),
+        content: Text(result is AsyncError ? 'Failed: ${result.error}' : okMsg),
       ),
     );
   }
@@ -185,6 +191,103 @@ class AdminDepartmentsScreen extends ConsumerWidget {
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Create'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DepartmentCard extends StatelessWidget {
+  const _DepartmentCard({
+    required this.id,
+    required this.name,
+    required this.onAddCourse,
+  });
+
+  final String id;
+  final String name;
+  final VoidCallback onAddCourse;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final ac = theme.extension<AppColors>()!;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: theme.dividerColor),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 10, 12),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: ac.amberSubtle,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.center,
+              child: Icon(Icons.apartment_outlined, size: 20, color: ac.amber),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    id,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: ac.textMuted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            TextButton.icon(
+              icon: const Icon(Icons.add, size: 18),
+              label: const Text('Course'),
+              style: TextButton.styleFrom(foregroundColor: cs.onSurface),
+              onPressed: onAddCourse,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  const _EmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final ac = theme.extension<AppColors>()!;
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.apartment_outlined, size: 40, color: ac.textMuted),
+          const SizedBox(height: 12),
+          Text(
+            'No departments yet',
+            style: theme.textTheme.bodyMedium?.copyWith(color: ac.textMuted),
           ),
         ],
       ),
