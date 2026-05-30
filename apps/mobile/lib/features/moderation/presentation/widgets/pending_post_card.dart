@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:unishare_mobile/features/moderation/domain/entities/moderation_verdict.dart';
 import 'package:unishare_mobile/features/moderation/domain/entities/pending_post.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/attachment_carousel.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 
@@ -26,98 +27,121 @@ class PendingPostCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title + post type chip
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Text(
-                    post.title,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+                // Title + post type chip
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        post.title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
+                    const SizedBox(width: 8),
+                    _PostTypeChip(postType: post.postType),
+                  ],
+                ),
+                const SizedBox(height: 4),
+
+                // Author name + createdAt
+                Text(
+                  '${post.authorName} · ${_timeAgo(post.createdAt)}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: cs.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(width: 8),
-                _PostTypeChip(postType: post.postType),
+
+                // Description
+                if (post.description.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    post.description,
+                    style: theme.textTheme.bodyMedium,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+
+                // Tags
+                if (post.tags.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: post.tags
+                        .map((tag) => _TagChip(tag: tag))
+                        .toList(),
+                  ),
+                ],
               ],
             ),
-            const SizedBox(height: 4),
+          ),
 
-            // Author name + createdAt
-            Text(
-              '${post.authorName} · ${_timeAgo(post.createdAt)}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: cs.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Description
-            if (post.description.isNotEmpty) ...[
-              Text(
-                post.description,
-                style: theme.textTheme.bodyMedium,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 8),
-            ],
-
-            // Tags
-            if (post.tags.isNotEmpty) ...[
-              Wrap(
-                spacing: 6,
-                runSpacing: 4,
-                children: post.tags.map((tag) => _TagChip(tag: tag)).toList(),
-              ),
-              const SizedBox(height: 10),
-            ],
-
-            // AI verdict section
-            _AiVerdictSection(verdict: verdict),
+          // Attachments — full-bleed carousel; tap a slot to preview the file.
+          if (post.mediaUrls.isNotEmpty) ...[
             const SizedBox(height: 12),
-
-            // Action buttons
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton(
-                    onPressed: onApprove,
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(
-                        context,
-                      ).extension<AppColors>()?.success,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    child: const Text('Approve'),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onReject,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: cs.error,
-                      side: BorderSide(color: cs.error),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    child: const Text('Reject'),
-                  ),
-                ),
-              ],
+            AttachmentCarousel(
+              mediaUrls: post.mediaUrls,
+              mediaTypes: post.mediaTypes,
             ),
           ],
-        ),
+
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // AI verdict section
+                _AiVerdictSection(verdict: verdict),
+                const SizedBox(height: 12),
+
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: onApprove,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).extension<AppColors>()?.success,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        child: const Text('Approve'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: onReject,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: cs.error,
+                          side: BorderSide(color: cs.error),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        child: const Text('Reject'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -139,19 +163,24 @@ class _PostTypeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final ac = theme.extension<AppColors>()!;
+    // postType is the PostType enum name, e.g. "lectureNote" | "exercise".
+    final isNote = postType.toLowerCase() == 'lecturenote';
+    final color = isNote ? ac.info : ac.amber;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
+        color: isNote ? ac.info.withValues(alpha: 0.12) : ac.amberSubtle,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        postType.toUpperCase(),
+        isNote ? 'NOTE' : 'EXERCISE',
         style: AppTypography.mono(
           base: theme.textTheme.labelSmall?.copyWith(
             fontSize: 10,
             letterSpacing: 0.55,
             fontWeight: FontWeight.w700,
+            color: color,
           ),
         ),
       ),

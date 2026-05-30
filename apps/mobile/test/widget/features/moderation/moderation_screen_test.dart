@@ -7,6 +7,9 @@ import 'package:unishare_mobile/features/moderation/domain/entities/pending_post
 import 'package:unishare_mobile/features/moderation/presentation/providers/moderation_action_provider.dart';
 import 'package:unishare_mobile/features/moderation/presentation/providers/moderation_queue_provider.dart';
 import 'package:unishare_mobile/features/moderation/presentation/screens/moderation_screen.dart';
+import 'package:unishare_mobile/features/post/presentation/widgets/attachment_carousel.dart';
+import 'package:unishare_mobile/shared/theme/app_theme.dart';
+import 'package:unishare_mobile/shared/theme/themes.dart';
 
 final _now = DateTime(2026, 5, 20, 12);
 
@@ -29,6 +32,21 @@ final _fakePosts = [
   ),
 ];
 
+final _fakePostsWithMedia = [
+  PendingPost(
+    id: 'post2',
+    title: 'Lab 3 worksheet',
+    description: 'Exercise sheet for lab 3.',
+    authorId: 'uid2',
+    authorName: 'Bob',
+    tags: ['lab'],
+    postType: 'exercise',
+    createdAt: _now.subtract(const Duration(hours: 1)),
+    mediaUrls: const ['https://cdn.example.com/posts/uid2/diagram.png'],
+    mediaTypes: const ['image'],
+  ),
+];
+
 void main() {
   group('ModerationScreen', () {
     testWidgets('shows loading indicator while queue is loading', (
@@ -39,7 +57,10 @@ void main() {
           overrides: [
             moderationQueueProvider.overrideWith((ref) => const Stream.empty()),
           ],
-          child: const MaterialApp(home: ModerationScreen()),
+          child: MaterialApp(
+            theme: AppTheme.build(AppThemes.unishare),
+            home: const ModerationScreen(),
+          ),
         ),
       );
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -51,7 +72,10 @@ void main() {
           overrides: [
             moderationQueueProvider.overrideWith((ref) => Stream.value([])),
           ],
-          child: const MaterialApp(home: ModerationScreen()),
+          child: MaterialApp(
+            theme: AppTheme.build(AppThemes.unishare),
+            home: const ModerationScreen(),
+          ),
         ),
       );
       await tester.pump();
@@ -67,7 +91,10 @@ void main() {
             ),
             moderationActionProvider.overrideWith(ModerationAction.new),
           ],
-          child: const MaterialApp(home: ModerationScreen()),
+          child: MaterialApp(
+            theme: AppTheme.build(AppThemes.unishare),
+            home: const ModerationScreen(),
+          ),
         ),
       );
       await tester.pump();
@@ -75,6 +102,33 @@ void main() {
       expect(find.text('Approve'), findsOneWidget);
       expect(find.text('Reject'), findsOneWidget);
       expect(find.text('APPROVE'), findsOneWidget);
+      // lectureNote renders the canonical "NOTE" label, not "LECTURENOTE".
+      expect(find.text('NOTE'), findsOneWidget);
+      expect(find.text('LECTURENOTE'), findsNothing);
+      // No media on this post → no carousel.
+      expect(find.byType(AttachmentCarousel), findsNothing);
+    });
+
+    testWidgets('renders attachment carousel when post has media', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            moderationQueueProvider.overrideWith(
+              (ref) => Stream.value(_fakePostsWithMedia),
+            ),
+            moderationActionProvider.overrideWith(ModerationAction.new),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.build(AppThemes.unishare),
+            home: const ModerationScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(AttachmentCarousel), findsOneWidget);
+      expect(find.text('EXERCISE'), findsOneWidget);
     });
 
     testWidgets('shows error state on queue error', (tester) async {
@@ -88,7 +142,10 @@ void main() {
               AsyncError(Exception('Firestore error'), StackTrace.empty),
             ),
           ],
-          child: const MaterialApp(home: ModerationScreen()),
+          child: MaterialApp(
+            theme: AppTheme.build(AppThemes.unishare),
+            home: const ModerationScreen(),
+          ),
         ),
       );
       expect(find.byKey(const Key('moderation-error')), findsOneWidget);

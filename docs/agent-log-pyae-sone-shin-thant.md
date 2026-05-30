@@ -1602,3 +1602,32 @@ Summary:  4 files changed, 76 insertions(+), 29 deletions(-)
   [17:05] Write: apps/mobile/lib/features/admin/presentation/widgets/admin_user_tile.dart
   [17:05] Write: apps/mobile/lib/features/admin/presentation/screens/admin_users_screen.dart
   [17:06] Write: apps/mobile/lib/features/admin/presentation/screens/admin_departments_screen.dart
+
+---
+Date: 2026-05-30 20:01
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Fix moderation queue post-type label (lectureNote→NOTE) and add clickable file/attachment previews to pending post cards
+Prompt: in moderation queue, tag should be "NOTE" instead of "lecturenote" and should we show file content also? that's clickable to preview?
+  [20:01] Edit: apps/mobile/lib/features/moderation/domain/entities/pending_post.dart
+  [20:01] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [20:01] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [20:01] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [20:01] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [20:02] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [20:02] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [20:02] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [20:03] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+  [20:03] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+
+Outcome: (1) Moderation post-type chip now maps lectureNote->NOTE and exercise->EXERCISE with info/amber color coding (was raw "LECTURENOTE"). (2) Added clickable attachment previews to pending post cards by surfacing mediaUrls/mediaTypes (already on the /posts doc) through PendingPost entity+model and rendering the existing AttachmentCarousel full-bleed; tap opens /preview (image/pdf/video). Updated moderation_screen_test to provide real AppTheme so AppColors resolves; 5/5 pass, flutter analyze clean.
+Decisions: Reused /posts same-collection data - no schema/write-path or Firestore-rules change (isModerator() already grants read on pending posts; media on public R2 URLs). Carousel placed full-bleed between content and verdict to align with its internal 16px padding. Label compared case-insensitively since stored value is enum .name "lectureNote".
+Handoff: Reviewer (architect or qa-engineer) to verify. Label mapping duplicates feed _TypeBadge logic - could extract shared PostType.displayLabel later. No unit test for PendingPostModel.fromFirestore media parsing.
+Review: PENDING
+Files:
+  ~ apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  ~ apps/mobile/lib/features/moderation/domain/entities/pending_post.dart
+  ~ apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  ~ apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+Summary:  4 files changed, 193 insertions(+), 80 deletions(-)
+
