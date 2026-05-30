@@ -2,7 +2,28 @@ import 'package:unishare_mobile/features/post/domain/entities/code_snippet.dart'
 
 enum DraftStatus { idle, uploading, publishing, published, queued, error }
 
-enum PostType { lectureNote, exercise }
+enum PostType {
+  lectureNote,
+  exercise;
+
+  /// Human-facing label shown in type badges across the app (feed, post detail,
+  /// saved, moderation). Single source of truth — keep call sites using this
+  /// instead of inlining `'NOTE'`/`'EXERCISE'` literals.
+  String get displayLabel => switch (this) {
+    PostType.lectureNote => 'NOTE',
+    PostType.exercise => 'EXERCISE',
+  };
+
+  /// Parses a stored enum name (e.g. `"lectureNote"`) case-insensitively.
+  /// Unknown values fall back to [PostType.exercise].
+  static PostType fromName(String name) {
+    final lower = name.toLowerCase();
+    return PostType.values.firstWhere(
+      (t) => t.name.toLowerCase() == lower,
+      orElse: () => PostType.exercise,
+    );
+  }
+}
 
 enum PostingIdentity { named, anonymous }
 

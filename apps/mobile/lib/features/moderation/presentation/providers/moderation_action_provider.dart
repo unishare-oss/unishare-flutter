@@ -22,4 +22,11 @@ class ModerationAction extends _$ModerationAction {
       () => ref.read(rejectPostUseCaseProvider).call(postId, reason),
     );
   }
+
+  Future<void> restore(String postId) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => ref.read(restorePostUseCaseProvider).call(postId),
+    );
+  }
 }

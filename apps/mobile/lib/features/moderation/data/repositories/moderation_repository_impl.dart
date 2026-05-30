@@ -11,9 +11,16 @@ class ModerationRepositoryImpl implements ModerationRepository {
   Stream<List<PendingPost>> getPendingPosts() => datasource.watchPendingPosts();
 
   @override
+  Stream<List<PendingPost>> getRejectedPosts() =>
+      datasource.watchRejectedPosts();
+
+  @override
   Future<void> approvePost(String postId) => datasource.approvePost(postId);
 
   @override
   Future<void> rejectPost(String postId, String reason) =>
       datasource.rejectPost(postId, reason);
+
+  @override
+  Future<void> restorePost(String postId) => datasource.restorePost(postId);
 }

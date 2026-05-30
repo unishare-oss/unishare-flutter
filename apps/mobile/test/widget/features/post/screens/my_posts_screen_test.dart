@@ -105,7 +105,12 @@ class _FakeSavedPostRepository implements SavedPostRepository {
 
 final _scrollKey = GlobalKey<State>();
 
-Post _fakePost({String id = 'post-1', String title = 'Test Post'}) => Post(
+Post _fakePost({
+  String id = 'post-1',
+  String title = 'Test Post',
+  PostStatus status = PostStatus.approved,
+  String? rejectionReason,
+}) => Post(
   id: id,
   authorId: 'uid-1',
   authorName: 'Tester',
@@ -118,6 +123,8 @@ Post _fakePost({String id = 'post-1', String title = 'Test Post'}) => Post(
   postingIdentity: PostingIdentity.named,
   semester: 1,
   moduleNumber: '',
+  status: status,
+  rejectionReason: rejectionReason,
   mediaUrls: const [],
   tags: const ['flutter'],
   likesCount: 3,
@@ -181,6 +188,45 @@ void main() {
 
       expect(find.text('First Post'), findsOneWidget);
       expect(find.text('Second Post'), findsOneWidget);
+    });
+
+    testWidgets('shows PENDING badge for not-yet-approved posts', (
+      tester,
+    ) async {
+      final postRepo = _FakePostRepository();
+      await tester.pumpWidget(_buildSubject(postRepo: postRepo));
+
+      postRepo.emitPosts([
+        _fakePost(id: 'p1', title: 'Approved Post'),
+        _fakePost(
+          id: 'p2',
+          title: 'Awaiting Review',
+          status: PostStatus.pending,
+        ),
+      ]);
+      await tester.pump();
+
+      // One pending post → exactly one PENDING badge; approved post has none.
+      expect(find.text('PENDING'), findsOneWidget);
+      expect(find.text('APPROVED'), findsNothing);
+    });
+
+    testWidgets('shows rejection reason on rejected posts', (tester) async {
+      final postRepo = _FakePostRepository();
+      await tester.pumpWidget(_buildSubject(postRepo: postRepo));
+
+      postRepo.emitPosts([
+        _fakePost(
+          id: 'p1',
+          title: 'Rejected Post',
+          status: PostStatus.rejected,
+          rejectionReason: 'Contains copyrighted material.',
+        ),
+      ]);
+      await tester.pump();
+
+      expect(find.text('REJECTED'), findsOneWidget);
+      expect(find.text('Contains copyrighted material.'), findsOneWidget);
     });
 
     testWidgets('appbar shows "My Posts" title', (tester) async {

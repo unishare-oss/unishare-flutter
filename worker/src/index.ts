@@ -1,4 +1,8 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectsCommand,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { verifyFirebaseJwt } from './jwt';
 import { handleAiSummarize } from './ai-summarize';
@@ -124,6 +128,16 @@ export default {
       return handleAiModerate(request, env);
     }
 
+    // Internal media GC. Server-to-server only (same shared secret as
+    // /ai/moderate): the purgeRejectedPostMedia Cloud Function calls this to
+    // delete R2 objects for posts whose rejection retention window has lapsed.
+    if (request.method === 'POST' && url.pathname === '/media/delete') {
+      if (!isInternalCaller(request, env)) {
+        return json({ error: 'Unauthorized' }, 401);
+      }
+      return handleMediaDelete(request, env);
+    }
+
     if (request.method !== 'POST') {
       return json({ error: 'Method not allowed' }, 405);
     }
@@ -160,14 +174,7 @@ export default {
     const ext = MIME_TO_EXT[contentType] ?? 'bin';
     const random = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
     const key = `posts/${uid}/${Date.now()}-${random}.${ext}`;
-    const client = new S3Client({
-      region: 'auto',
-      endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-      credentials: {
-        accessKeyId: env.R2_ACCESS_KEY_ID,
-        secretAccessKey: env.R2_SECRET_ACCESS_KEY,
-      },
-    });
+    const client = r2Client(env);
 
     const command = new PutObjectCommand({
       Bucket: env.R2_BUCKET,
@@ -186,6 +193,58 @@ export default {
     return json({ uploadUrl, publicUrl }, 200);
   },
 };
+
+/// S3-compatible client pointed at the R2 bucket. Shared by the upload
+/// (presign) and media-delete paths.
+function r2Client(env: Env): S3Client {
+  return new S3Client({
+    region: 'auto',
+    endpoint: `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: env.R2_ACCESS_KEY_ID,
+      secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+    },
+  });
+}
+
+/// Deletes R2 objects given their public CDN URLs. Only URLs under
+/// `R2_PUBLIC_URL` with a `posts/` key prefix are eligible — anything else is
+/// ignored so a bad payload can never delete outside the posts namespace.
+async function handleMediaDelete(request: Request, env: Env): Promise<Response> {
+  let body: { urls?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: 'Invalid JSON body' }, 400);
+  }
+
+  if (!Array.isArray(body.urls)) {
+    return json({ error: 'urls array required' }, 400);
+  }
+
+  const prefix = `${env.R2_PUBLIC_URL}/`;
+  const keys: string[] = [];
+  for (const u of body.urls) {
+    if (typeof u !== 'string' || !u.startsWith(prefix)) continue;
+    const key = u.slice(prefix.length);
+    if (key.startsWith('posts/')) keys.push(key);
+  }
+
+  if (keys.length === 0) return json({ deleted: 0 }, 200);
+
+  try {
+    await r2Client(env).send(
+      new DeleteObjectsCommand({
+        Bucket: env.R2_BUCKET,
+        Delete: { Objects: keys.map((Key) => ({ Key })), Quiet: true },
+      }),
+    );
+  } catch {
+    return json({ error: 'Failed to delete objects' }, 500);
+  }
+
+  return json({ deleted: keys.length }, 200);
+}
 
 /// Constant-time-ish check of the shared internal secret used by trusted
 /// server callers (Cloud Functions) instead of a per-user Firebase JWT.

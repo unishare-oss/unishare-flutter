@@ -4,10 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - 'functions/**'
-      - 'firebase.json'
-      - '.firebaserc'
-      - '.github/workflows/functions-deploy.yml'
+      - "functions/**"
+      - "firebase.json"
+      - ".firebaserc"
+      - ".github/workflows/functions-deploy.yml"
 
 permissions:
   contents: read
@@ -26,7 +26,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: "22"
           cache: npm
           cache-dependency-path: functions/package-lock.json
 
@@ -44,6 +44,12 @@ jobs:
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
+
+      - name: Write functions runtime config
+        working-directory: functions
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+        run: echo "WORKER_URL=$WORKER_URL" > .env.unishare-flutter
 
       - name: Deploy functions
         run: firebase deploy --only functions --project unishare-flutter --force

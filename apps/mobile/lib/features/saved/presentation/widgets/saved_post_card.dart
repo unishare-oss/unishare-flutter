@@ -125,7 +125,8 @@ class _TypeBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
-    final isNote = postType == PostType.lectureNote.name;
+    final type = PostType.fromName(postType);
+    final isNote = type == PostType.lectureNote;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -136,7 +137,7 @@ class _TypeBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        isNote ? 'NOTE' : 'EXERCISE',
+        type.displayLabel,
         style: AppTypography.mono(
           base: Theme.of(context).textTheme.labelSmall?.copyWith(
             fontWeight: FontWeight.w500,

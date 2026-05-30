@@ -13,9 +13,12 @@ class PendingPostModel {
     required this.tags,
     required this.postType,
     required this.createdAt,
+    this.mediaUrls = const [],
+    this.mediaTypes = const [],
     this.aiVerdictModel,
     this.moderatedBy,
     this.moderatedAt,
+    this.rejectionReason,
   });
 
   final String id;
@@ -26,9 +29,12 @@ class PendingPostModel {
   final List<String> tags;
   final String postType;
   final DateTime createdAt;
+  final List<String> mediaUrls;
+  final List<String> mediaTypes;
   final ModerationVerdictModel? aiVerdictModel;
   final String? moderatedBy;
   final DateTime? moderatedAt;
+  final String? rejectionReason;
 
   factory PendingPostModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
@@ -55,6 +61,16 @@ class PendingPostModel {
         ? rawTags.map((t) => t.toString()).toList()
         : <String>[];
 
+    final rawMediaUrls = data['mediaUrls'];
+    final mediaUrls = rawMediaUrls is List
+        ? rawMediaUrls.map((u) => u.toString()).toList()
+        : <String>[];
+
+    final rawMediaTypes = data['mediaTypes'];
+    final mediaTypes = rawMediaTypes is List
+        ? rawMediaTypes.map((t) => t.toString()).toList()
+        : <String>[];
+
     return PendingPostModel(
       id: doc.id,
       title: (data['title'] as String? ?? ''),
@@ -64,9 +80,12 @@ class PendingPostModel {
       tags: tags,
       postType: (data['postType'] as String? ?? ''),
       createdAt: createdAt,
+      mediaUrls: mediaUrls,
+      mediaTypes: mediaTypes,
       aiVerdictModel: aiVerdictModel,
       moderatedBy: data['moderatedBy'] as String?,
       moderatedAt: moderatedAt,
+      rejectionReason: data['rejectionReason'] as String?,
     );
   }
 
@@ -79,8 +98,11 @@ class PendingPostModel {
     tags: tags,
     postType: postType,
     createdAt: createdAt,
+    mediaUrls: mediaUrls,
+    mediaTypes: mediaTypes,
     aiVerdict: aiVerdictModel?.toEntity(),
     moderatedBy: moderatedBy,
     moderatedAt: moderatedAt,
+    rejectionReason: rejectionReason,
   );
 }

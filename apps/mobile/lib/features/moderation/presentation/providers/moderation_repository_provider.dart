@@ -5,7 +5,9 @@ import 'package:unishare_mobile/features/moderation/data/repositories/moderation
 import 'package:unishare_mobile/features/moderation/domain/repositories/moderation_repository.dart';
 import 'package:unishare_mobile/features/moderation/domain/usecases/approve_post.dart';
 import 'package:unishare_mobile/features/moderation/domain/usecases/get_pending_posts.dart';
+import 'package:unishare_mobile/features/moderation/domain/usecases/get_rejected_posts.dart';
 import 'package:unishare_mobile/features/moderation/domain/usecases/reject_post.dart';
+import 'package:unishare_mobile/features/moderation/domain/usecases/restore_post.dart';
 
 part 'moderation_repository_provider.g.dart';
 
@@ -23,9 +25,17 @@ GetPendingPosts getPendingPostsUseCase(Ref ref) =>
     GetPendingPosts(ref.watch(moderationRepositoryProvider));
 
 @Riverpod(keepAlive: true)
+GetRejectedPosts getRejectedPostsUseCase(Ref ref) =>
+    GetRejectedPosts(ref.watch(moderationRepositoryProvider));
+
+@Riverpod(keepAlive: true)
 ApprovePost approvePostUseCase(Ref ref) =>
     ApprovePost(ref.watch(moderationRepositoryProvider));
 
 @Riverpod(keepAlive: true)
 RejectPost rejectPostUseCase(Ref ref) =>
     RejectPost(ref.watch(moderationRepositoryProvider));
+
+@Riverpod(keepAlive: true)
+RestorePost restorePostUseCase(Ref ref) =>
+    RestorePost(ref.watch(moderationRepositoryProvider));

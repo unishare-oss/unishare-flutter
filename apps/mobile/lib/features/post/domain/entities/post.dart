@@ -17,6 +17,31 @@ enum SummaryStatus {
   };
 }
 
+/// Moderation status of a post. Drives the status badge surfaced on the
+/// author's own posts ("My Posts"); the public feed only ever shows
+/// [PostStatus.approved] posts.
+enum PostStatus {
+  pending,
+  approved,
+  rejected;
+
+  /// Badge label shown for non-approved posts.
+  String get displayLabel => switch (this) {
+    PostStatus.pending => 'PENDING',
+    PostStatus.approved => 'APPROVED',
+    PostStatus.rejected => 'REJECTED',
+  };
+
+  /// Parses the Firestore `status` string. Missing or unknown values are
+  /// treated as [approved] so legacy posts (written before moderation) and
+  /// feed posts never surface a spurious status badge.
+  static PostStatus fromFirestore(String? raw) => switch (raw) {
+    'pending' => PostStatus.pending,
+    'rejected' => PostStatus.rejected,
+    _ => PostStatus.approved,
+  };
+}
+
 class Post {
   const Post({
     required this.id,
@@ -36,6 +61,8 @@ class Post {
     required this.likesCount,
     required this.createdAt,
     required this.updatedAt,
+    this.status = PostStatus.approved,
+    this.rejectionReason,
     this.mediaTypes = const [],
     this.viewsCount = 0,
     this.reactionCounts = const {},
@@ -62,6 +89,15 @@ class Post {
   final PostingIdentity postingIdentity;
   final int semester;
   final String moduleNumber;
+
+  /// Moderation status. Defaults to [PostStatus.approved] for backwards-compat
+  /// with posts written before the moderation pipeline existed.
+  final PostStatus status;
+
+  /// Moderator-supplied reason when [status] is [PostStatus.rejected]. Surfaced
+  /// to the author in "My Posts". Null for non-rejected posts.
+  final String? rejectionReason;
+
   final List<String> mediaUrls;
 
   /// Parallel to [mediaUrls]. Values: "image" | "pdf" | "video".
@@ -116,6 +152,8 @@ class Post {
     PostingIdentity? postingIdentity,
     int? semester,
     String? moduleNumber,
+    PostStatus? status,
+    String? rejectionReason,
     List<String>? mediaUrls,
     List<String>? mediaTypes,
     List<String>? tags,
@@ -147,6 +185,8 @@ class Post {
       postingIdentity: postingIdentity ?? this.postingIdentity,
       semester: semester ?? this.semester,
       moduleNumber: moduleNumber ?? this.moduleNumber,
+      status: status ?? this.status,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
       mediaUrls: mediaUrls ?? this.mediaUrls,
       mediaTypes: mediaTypes ?? this.mediaTypes,
       tags: tags ?? this.tags,

@@ -120,6 +120,8 @@ class PostFirestoreDatasource {
       ),
       semester: (data['semester'] as num?)?.toInt() ?? 1,
       moduleNumber: data['moduleNumber'] as String? ?? '',
+      status: PostStatus.fromFirestore(data['status'] as String?),
+      rejectionReason: data['rejectionReason'] as String?,
       mediaUrls: List<String>.from(data['mediaUrls'] as List? ?? []),
       mediaTypes: List<String>.from(data['mediaTypes'] as List? ?? []),
       tags: List<String>.from(data['tags'] as List? ?? []),

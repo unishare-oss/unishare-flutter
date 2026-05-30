@@ -43,6 +43,13 @@ class PostCard extends ConsumerWidget {
             _buildTopRow(context, appColors, isSaved, ref),
             const SizedBox(height: 6),
             _buildTitle(context),
+            // Author-facing rejection reason (My Posts only — rejected posts
+            // never reach the public feed).
+            if (post.status == PostStatus.rejected &&
+                (post.rejectionReason?.trim().isNotEmpty ?? false)) ...[
+              const SizedBox(height: 6),
+              _buildRejectionNote(context),
+            ],
             if (post.tags.isNotEmpty) ...[
               const SizedBox(height: 6),
               _buildTagsWrap(context, appColors),
@@ -99,6 +106,12 @@ class PostCard extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _TypeBadge(type: post.postType),
+        // Moderation status — only surfaces for the author's own non-approved
+        // posts (e.g. in "My Posts"); the feed only ever shows approved posts.
+        if (post.status != PostStatus.approved) ...[
+          const SizedBox(width: 6),
+          _StatusBadge(status: post.status),
+        ],
         const SizedBox(width: 6),
         Text(
           post.courseId,
@@ -129,6 +142,34 @@ class PostCard extends ConsumerWidget {
       ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _buildRejectionNote(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: cs.error.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: cs.error.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline, size: 14, color: cs.error),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              post.rejectionReason!.trim(),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.error),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -259,6 +300,43 @@ class PostCard extends ConsumerWidget {
   }
 }
 
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({required this.status});
+
+  final PostStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+    final cs = Theme.of(context).colorScheme;
+    // Neutral for pending (distinct from both type badges, reads as "awaiting");
+    // error for rejected. Both pairs are theme-curated, no flat alpha on a
+    // hand-tuned token. (Approved never reaches here — badge is hidden.)
+    final (bg, fg) = switch (status) {
+      PostStatus.rejected => (cs.error.withValues(alpha: 0.12), cs.error),
+      _ => (appColors.muted, appColors.mutedForeground),
+    };
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        status.displayLabel,
+        style: AppTypography.mono(
+          base: Theme.of(context).textTheme.labelSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+            color: fg,
+            letterSpacing: 0.55,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _TypeBadge extends StatelessWidget {
   const _TypeBadge({required this.type});
 
@@ -278,7 +356,7 @@ class _TypeBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        isNote ? 'NOTE' : 'EXERCISE',
+        type.displayLabel,
         style: AppTypography.mono(
           base: Theme.of(context).textTheme.labelSmall?.copyWith(
             fontWeight: FontWeight.w500,

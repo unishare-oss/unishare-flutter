@@ -1602,3 +1602,63 @@ Summary:  4 files changed, 76 insertions(+), 29 deletions(-)
   [17:05] Write: apps/mobile/lib/features/admin/presentation/widgets/admin_user_tile.dart
   [17:05] Write: apps/mobile/lib/features/admin/presentation/screens/admin_users_screen.dart
   [17:06] Write: apps/mobile/lib/features/admin/presentation/screens/admin_departments_screen.dart
+
+---
+Date: 2026-05-30 20:01
+Member: Pyae Sone Shin Thant
+Agent: flutter-engineer
+Task: Fix moderation queue post-type label (lectureNote→NOTE) and add clickable file/attachment previews to pending post cards
+Prompt: in moderation queue, tag should be "NOTE" instead of "lecturenote" and should we show file content also? that's clickable to preview?
+  [20:01] Edit: apps/mobile/lib/features/moderation/domain/entities/pending_post.dart
+  [20:01] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [20:01] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [20:01] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [20:01] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [20:02] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [20:02] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [20:02] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [20:03] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+  [20:03] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+
+Outcome: (1) Moderation post-type chip now maps lectureNote->NOTE and exercise->EXERCISE with info/amber color coding (was raw "LECTURENOTE"). (2) Added clickable attachment previews to pending post cards by surfacing mediaUrls/mediaTypes (already on the /posts doc) through PendingPost entity+model and rendering the existing AttachmentCarousel full-bleed; tap opens /preview (image/pdf/video). Updated moderation_screen_test to provide real AppTheme so AppColors resolves; 5/5 pass, flutter analyze clean.
+Decisions: Reused /posts same-collection data - no schema/write-path or Firestore-rules change (isModerator() already grants read on pending posts; media on public R2 URLs). Carousel placed full-bleed between content and verdict to align with its internal 16px padding. Label compared case-insensitively since stored value is enum .name "lectureNote".
+Handoff: Reviewer (architect or qa-engineer) to verify. Label mapping duplicates feed _TypeBadge logic - could extract shared PostType.displayLabel later. No unit test for PendingPostModel.fromFirestore media parsing.
+Review: PENDING
+Files:
+  ~ apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  ~ apps/mobile/lib/features/moderation/domain/entities/pending_post.dart
+  ~ apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  ~ apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+Summary:  4 files changed, 193 insertions(+), 80 deletions(-)
+
+
+Addendum (session continued): Beyond the initial moderation label + preview fix, the session grew to 6 commits on fix/moderation: (1) NOTE/EXERCISE label + clickable attachment previews in moderation queue; (2) refactor centralizing the label on PostType.displayLabel across feed/post-detail/saved/moderation; (3) My Posts status badge for non-approved posts (added PostStatus enum + Post.status); (4) theme fix — status badge uses curated muted/error tokens (amberSubtle is per-theme tuned, not a flat alpha, and amber clashed with the EXERCISE badge); (5) surface rejectionReason on rejected posts in My Posts; (6) scheduled purgeRejectedPostMedia Cloud Function + Worker /media/delete route + composite index, reusing existing WORKER_URL/MODERATION_WORKER_KEY (no new secrets), retention 14 days.
+Verified: flutter analyze clean, 446/446 app tests; functions tsc+eslint clean, 96/96 tests; worker tsc clean.
+Not done / handoff: purge is NOT integration-tested against live R2/deploy (watch first scheduled run in logs); no unit tests on the sweep or worker delete handler (consistent with codebase — offered to add). Deploy needs: worker deploy + firebase deploy firestore:indexes + functions:purgeRejectedPostMedia. rejectionReason still not shown on the moderation queue side or post-detail (only My Posts). Branch not pushed by me — member pushes + opens PR.
+Review: PENDING
+  [21:20] Edit: apps/mobile/lib/features/moderation/domain/entities/pending_post.dart
+  [21:20] Edit: apps/mobile/lib/features/moderation/domain/entities/pending_post.dart
+  [21:20] Edit: apps/mobile/lib/features/moderation/domain/repositories/moderation_repository.dart
+  [21:20] Write: apps/mobile/lib/features/moderation/domain/usecases/get_rejected_posts.dart
+  [21:20] Write: apps/mobile/lib/features/moderation/domain/usecases/restore_post.dart
+  [21:20] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [21:20] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [21:20] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [21:20] Edit: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [21:21] Edit: apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart
+  [21:21] Edit: apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart
+  [21:21] Edit: apps/mobile/lib/features/moderation/data/repositories/moderation_repository_impl.dart
+  [21:21] Edit: apps/mobile/lib/features/moderation/presentation/providers/moderation_repository_provider.dart
+  [21:21] Edit: apps/mobile/lib/features/moderation/presentation/providers/moderation_repository_provider.dart
+  [21:21] Edit: apps/mobile/lib/features/moderation/presentation/providers/moderation_queue_provider.dart
+  [21:21] Edit: apps/mobile/lib/features/moderation/presentation/providers/moderation_action_provider.dart
+  [21:22] Write: apps/mobile/lib/features/moderation/presentation/widgets/moderation_post_chips.dart
+  [21:22] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [21:22] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [21:22] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [21:22] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [21:23] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [21:23] Write: apps/mobile/lib/features/moderation/presentation/widgets/rejected_post_card.dart
+  [21:24] Write: apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart
+
+Addendum 2 (moderation tabs): Added Pending/Rejected tabs to ModerationScreen with a Restore action (rejected→pending). Backend: refactored handleModerationAction into a testable pure handler + onCall wrapper, added the restore action (requires status==rejected, clears moderatedBy/moderatedAt/rejectionReason, keeps aiVerdict) + 11 unit tests. Flutter: added rejectionReason to PendingPost entity+model, watchRejectedPosts datasource (reuses existing status+createdAt index), getRejectedPosts/restorePost usecases, providers, RejectedPostCard, and extracted shared ModerationTypeChip/ModerationTagChip/moderationTimeAgo into moderation_post_chips.dart. Verified: flutter analyze clean, 448/448 app tests; functions build+lint clean, 106/106 tests. Confirmed restore is safe — onPostUpdatedHandler bails when aiVerdict!=null and only fires on the summary-settle edge, so a status change does not re-trigger AI moderation. Commit 1aa21196.

@@ -9,3 +9,8 @@ part 'moderation_queue_provider.g.dart';
 Stream<List<PendingPost>> moderationQueue(Ref ref) {
   return ref.watch(getPendingPostsUseCaseProvider).call();
 }
+
+@riverpod
+Stream<List<PendingPost>> moderationRejectedQueue(Ref ref) {
+  return ref.watch(getRejectedPostsUseCaseProvider).call();
+}

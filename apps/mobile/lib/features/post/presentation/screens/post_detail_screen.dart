@@ -1175,7 +1175,7 @@ class _PostTypeBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final appColors = Theme.of(context).extension<AppColors>()!;
     final isNote = type == PostType.lectureNote;
-    final label = isNote ? 'NOTE' : 'EXERCISE';
+    final label = type.displayLabel;
     final color = isNote ? appColors.info : appColors.amber;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
