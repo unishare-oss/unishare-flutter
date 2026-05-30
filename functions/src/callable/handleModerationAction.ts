@@ -2,6 +2,7 @@ import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { logger } from 'firebase-functions/v2';
 
 import { db, FieldValue } from '../admin';
+import { canModerate } from '../lib/roles';
 
 interface ApproveInput {
   postId: string;
@@ -31,9 +32,9 @@ export const handleModerationAction = onCall<Input>(async (request) => {
   }
 
   const userSnap = await db.collection('users').doc(uid).get();
-  if (userSnap.data()?.role !== 'moderator') {
+  if (!canModerate(userSnap.data()?.role)) {
     logger.warn('moderation action denied — not a moderator', { uid, postId });
-    throw new HttpsError('permission-denied', 'Moderator role required');
+    throw new HttpsError('permission-denied', 'Moderator or admin role required');
   }
 
   const postRef = db.collection('posts').doc(postId);

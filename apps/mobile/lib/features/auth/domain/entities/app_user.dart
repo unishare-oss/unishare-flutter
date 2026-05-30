@@ -28,4 +28,14 @@ class AppUser {
   final List<String> providerIds;
 
   final bool isAnonymous;
+
+  /// Role hierarchy — mirrors firestore.rules and functions/src/lib/roles.ts.
+  /// `admin` is a superset of `moderator`.
+
+  /// Full-project superuser.
+  bool get isAdmin => role == 'admin';
+
+  /// May moderate posts (view the pending queue, approve/reject). Admins
+  /// inherit moderator capability.
+  bool get canModerate => role == 'moderator' || role == 'admin';
 }
