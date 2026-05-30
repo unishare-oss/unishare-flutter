@@ -14,7 +14,7 @@ Deploys to `asia-southeast1`. See [`../tech-specs/0001-notification.md`](../tech
 | `onRequestUpvoted`       | onCreate `requests/{requestId}/upvotes/{userId}`            | Upvote → notify requester                                                                                       |
 | `onSuggestionSubmitted`  | onCreate `requests/{requestId}/suggestions/{suggestionId}`  | Suggestion → notify requester                                                                                   |
 | `onRequestFulfilled`     | onUpdate `requests/{requestId}` when `status` → `fulfilled` | Notify the winning suggester                                                                                    |
-| `purgeOldNotifications`  | Scheduled, every 24 h                                       | Delete notifications older than 14 days                                                                         |
+| `purgeOldNotifications`  | Scheduled, every 24 h                                       | Delete notifications older than 30 days                                                                         |
 | `purgeRejectedPostMedia` | Scheduled, every 24 h                                       | Purge R2 media for posts rejected > `REJECTED_MEDIA_RETENTION_DAYS` ago, via the Worker's `/media/delete` route |
 | `autoDisableBilling`     | Pub/Sub on topic `billing-budget-alerts`                    | Detach billing account if budget exceeded                                                                       |
 
