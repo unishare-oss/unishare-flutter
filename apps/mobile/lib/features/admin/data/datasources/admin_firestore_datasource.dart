@@ -82,4 +82,55 @@ class AdminFirestoreDatasource {
         .doc(code)
         .set({'code': code, 'name': name, 'yearLevel': ?yearLevel});
   }
+
+  Stream<List<({String id, String name})>> watchCourses(
+    String deptId,
+    int year,
+  ) {
+    return _db
+        .collection('departments')
+        .doc(deptId)
+        .collection('courses')
+        .where('yearLevel', isEqualTo: year)
+        .orderBy('name')
+        .snapshots()
+        .map(
+          (snap) => snap.docs
+              .map((d) => (id: d.id, name: d.data()['name'] as String? ?? d.id))
+              .toList(growable: false),
+        );
+  }
+
+  Future<void> updateDepartment(String id, String name) {
+    return _db.collection('departments').doc(id).update({'name': name});
+  }
+
+  Future<void> deleteDepartment(String id) {
+    // TODO: cascade-delete courses subcollection via a Cloud Function or
+    // batch write to avoid orphaned course docs.
+    return _db.collection('departments').doc(id).delete();
+  }
+
+  Future<void> updateCourse(
+    String deptId,
+    String courseId,
+    String name,
+    int? yearLevel,
+  ) {
+    return _db
+        .collection('departments')
+        .doc(deptId)
+        .collection('courses')
+        .doc(courseId)
+        .update({'name': name, 'yearLevel': yearLevel});
+  }
+
+  Future<void> deleteCourse(String deptId, String courseId) {
+    return _db
+        .collection('departments')
+        .doc(deptId)
+        .collection('courses')
+        .doc(courseId)
+        .delete();
+  }
 }

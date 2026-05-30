@@ -22,6 +22,7 @@ import 'package:unishare_mobile/features/post/presentation/screens/post_detail_s
 import 'package:unishare_mobile/features/moderation/presentation/screens/moderation_screen.dart';
 import 'package:unishare_mobile/features/admin/presentation/screens/admin_users_screen.dart';
 import 'package:unishare_mobile/features/admin/presentation/screens/admin_departments_screen.dart';
+import 'package:unishare_mobile/features/admin/presentation/screens/admin_courses_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/public_profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/request_detail_screen.dart';
@@ -369,6 +370,16 @@ GoRouter router(Ref ref) {
               GoRoute(
                 path: '/admin/departments',
                 builder: (context, state) => const AdminDepartmentsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':deptId/courses',
+                    builder: (context, state) => AdminCoursesScreen(
+                      deptId: state.pathParameters['deptId']!,
+                      departmentName:
+                          state.uri.queryParameters['name'] ?? 'Courses',
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

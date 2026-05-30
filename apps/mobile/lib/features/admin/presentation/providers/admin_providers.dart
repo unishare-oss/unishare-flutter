@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:unishare_mobile/features/admin/data/datasources/admin_firestore_datasource.dart';
@@ -107,4 +108,57 @@ class AdminCatalogActions extends _$AdminCatalogActions {
     if (ref.mounted) state = result;
     return result;
   }
+
+  Future<AsyncValue<void>> updateDepartment(String id, String name) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(
+      () => ref.read(adminRepositoryProvider).updateDepartment(id, name),
+    );
+    if (ref.mounted) state = result;
+    return result;
+  }
+
+  Future<AsyncValue<void>> deleteDepartment(String id) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(
+      () => ref.read(adminRepositoryProvider).deleteDepartment(id),
+    );
+    if (ref.mounted) state = result;
+    return result;
+  }
+
+  Future<AsyncValue<void>> updateCourse(
+    String deptId,
+    String courseId,
+    String name,
+    int? yearLevel,
+  ) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(
+      () => ref
+          .read(adminRepositoryProvider)
+          .updateCourse(deptId, courseId, name, yearLevel),
+    );
+    if (ref.mounted) state = result;
+    return result;
+  }
+
+  Future<AsyncValue<void>> deleteCourse(String deptId, String courseId) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(
+      () => ref.read(adminRepositoryProvider).deleteCourse(deptId, courseId),
+    );
+    if (ref.mounted) state = result;
+    return result;
+  }
 }
+
+/// Live courses for a department filtered by year — vanilla provider so no
+/// build_runner pass is needed for this addition.
+// TODO: migrate to @riverpod once build_runner runs automatically in CI.
+final adminCoursesProvider = StreamProvider.autoDispose
+    .family<List<({String id, String name})>, (String, int)>(
+      (ref, args) => ref
+          .watch(adminFirestoreDatasourceProvider)
+          .watchCourses(args.$1, args.$2),
+    );
