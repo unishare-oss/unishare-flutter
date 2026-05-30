@@ -3,13 +3,13 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /universities/{universityId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if isAdmin();
     }
 
-    // Achievements badge catalog — public read, seed-only writes.
+    // Achievements badge catalog — public read, admin-managed writes.
     match /badges/{badgeId} {
       allow read: if request.auth != null;
-      allow write: if false;
+      allow write: if isAdmin();
     }
 
     // Public-safe mirror of users/{uid} — name, photoUrl, bio, and the
@@ -22,29 +22,30 @@ service cloud.firestore {
     }
 
     // Tunable level threshold table and other app-wide config — public read,
-    // seed-only writes.
+    // admin-managed writes.
     match /app_config/{docId} {
       allow read: if request.auth != null;
-      allow write: if false;
+      allow write: if isAdmin();
     }
 
     match /departments/{departmentId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if isAdmin();
 
       match /courses/{courseId} {
         allow read: if true;
-        allow write: if false;
+        allow write: if isAdmin();
       }
     }
 
     match /users/{userId} {
       // Owner-only reads keep `email` and other private fields private.
-      // Cross-user gamification display (badges visible on someone else's
-      // profile) is intentionally deferred to v1.1 — that will introduce a
-      // dedicated `users_public/{uid}` collection that only mirrors safe
-      // fields (name, photoUrl, level, displayedBadges, selectedTitle).
-      allow read: if request.auth != null && request.auth.uid == userId;
+      // Admins may read any user (and list the collection) to power the admin
+      // console — isAdmin() does not depend on userId, so it also authorizes
+      // list queries. Cross-user gamification display still goes through the
+      // public mirror `users_public/{uid}`.
+      allow read: if request.auth != null
+                  && (request.auth.uid == userId || isAdmin());
       allow create: if request.auth != null && request.auth.uid == userId;
 
       // Owner-only updates, with server-managed gamification/stats fields
@@ -54,6 +55,7 @@ service cloud.firestore {
       allow update: if request.auth != null
                     && request.auth.uid == userId
                     && !writesProtectedAchievementsFields()
+                    && !writesRole()
                     && (!touchesDisplayedBadges() || validDisplayedBadges())
                     && (!touchesSelectedTitle() || validSelectedTitle());
       allow delete: if false;
@@ -62,6 +64,11 @@ service cloud.firestore {
       // only reports top-level keys, so dotted-path checks would silently
       // miss nested writes under `gamification`. Comparing the actual
       // values is the only reliable way to detect the change.
+      function writesRole() {
+        return request.resource.data.get('role', null)
+            != resource.data.get('role', null);
+      }
+
       function writesProtectedAchievementsFields() {
         let beforeG = resource.data.get('gamification', {});
         let afterG = request.resource.data.get('gamification', {});
@@ -157,12 +164,21 @@ service cloud.firestore {
     }
 
     match /posts/{postId} {
-      allow read: if true;
+      // Approved posts are public; pending/rejected posts are visible only to
+      // the author and moderators.
+      allow read: if resource.data.status == 'approved'
+                  || (request.auth != null && request.auth.uid == resource.data.authorId)
+                  || isModerator();
       allow create: if request.auth != null
                     && request.resource.data.authorId == request.auth.uid
                     && request.resource.data.title is string
                     && request.resource.data.title.size() > 0
-                    && request.resource.data.likesCount == 0;
+                    && request.resource.data.likesCount == 0
+                    && request.resource.data.status == 'pending'
+                    && !('aiVerdict' in request.resource.data)
+                    && !('moderatedBy' in request.resource.data)
+                    && !('moderatedAt' in request.resource.data)
+                    && !('rejectionReason' in request.resource.data);
       allow update: if request.auth != null
                     && (
                       request.resource.data.diff(resource.data).affectedKeys()
@@ -183,9 +199,16 @@ service cloud.firestore {
                         && request.resource.data.diff(resource.data).affectedKeys()
                              .hasOnly(['summaryStatus', 'summary', 'summarizedAt'])
                       )
+                      || (
+                        isModerator()
+                        && request.resource.data.diff(resource.data).affectedKeys()
+                             .hasOnly(['status', 'moderatedBy', 'moderatedAt', 'rejectionReason'])
+                        && request.resource.data.status in ['approved', 'rejected']
+                      )
                     );
+      // Author may delete their own post; an admin may take down any post.
       allow delete: if request.auth != null
-                    && request.auth.uid == resource.data.authorId;
+                    && (request.auth.uid == resource.data.authorId || isAdmin());
 
       match /comments/{commentId} {
         allow read: if true;
@@ -193,8 +216,9 @@ service cloud.firestore {
                       && request.resource.data.authorId == request.auth.uid
                       && request.resource.data.body is string
                       && request.resource.data.body.size() > 0;
+        // Author may delete their own comment; an admin may remove any comment.
         allow delete: if request.auth != null
-                      && resource.data.authorId == request.auth.uid;
+                      && (resource.data.authorId == request.auth.uid || isAdmin());
         allow update: if false;
       }
 
@@ -204,6 +228,22 @@ service cloud.firestore {
                                && request.auth.uid == userId;
         allow update: if false;
       }
+    }
+
+    // Role hierarchy. `admin` is a superset of `moderator`: anything a
+    // moderator may do, an admin may do too. The role lives on
+    // users/{uid}.role and is never client-writable (see writesRole()); it is
+    // changed only via the admin-gated setUserRole callable.
+    function userRole() {
+      return request.auth != null
+          ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'student')
+          : '';
+    }
+    function isAdmin() {
+      return userRole() == 'admin';
+    }
+    function isModerator() {
+      return userRole() == 'moderator' || isAdmin();
     }
 
     match /requests/{requestId} {

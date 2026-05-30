@@ -6,6 +6,7 @@ export { onCommentReply } from './triggers/onCommentReply';
 export { onCommentRemoved } from './triggers/onCommentRemoved';
 export { onPostLiked } from './triggers/onPostLiked';
 export { onPostCreated } from './triggers/onPostCreated';
+export { onPostUpdated } from './triggers/onPostUpdated';
 export { onPostDeleted } from './triggers/onPostDeleted';
 export { onRequestUpvoted } from './triggers/onRequestUpvoted';
 export { onSuggestionSubmitted } from './triggers/onSuggestionSubmitted';
@@ -18,3 +19,5 @@ export { onUserChangedPublicSync, onUserCreatedPublicSync } from './triggers/onU
 export { purgeOldNotifications } from './scheduled/purgeOldNotifications';
 export { integritySweep } from './scheduled/integritySweep';
 export { autoDisableBilling } from './billing/autoDisableBilling';
+export { handleModerationAction } from './callable/handleModerationAction';
+export { setUserRole } from './callable/setUserRole';

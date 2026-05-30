@@ -19,6 +19,9 @@ import 'package:unishare_mobile/features/post/presentation/screens/my_posts_scre
 import 'package:unishare_mobile/features/post/presentation/screens/file_preview_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/edit_post_screen.dart';
 import 'package:unishare_mobile/features/post/presentation/screens/post_detail_screen.dart';
+import 'package:unishare_mobile/features/moderation/presentation/screens/moderation_screen.dart';
+import 'package:unishare_mobile/features/admin/presentation/screens/admin_users_screen.dart';
+import 'package:unishare_mobile/features/admin/presentation/screens/admin_departments_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/profile_screen.dart';
 import 'package:unishare_mobile/features/profile/presentation/screens/public_profile_screen.dart';
 import 'package:unishare_mobile/features/requests/presentation/screens/request_detail_screen.dart';
@@ -69,7 +72,9 @@ enum DrawerDestination {
   saved('Saved', Icons.bookmark_rounded),
   departments('Depts', Icons.apartment_rounded),
   requests('Requests', Icons.inbox_rounded),
-  achievements('Achievements', Icons.workspace_premium_rounded);
+  achievements('Achievements', Icons.workspace_premium_rounded),
+  moderation('Moderation', Icons.shield_outlined),
+  admin('Admin', Icons.admin_panel_settings_outlined);
 
   const DrawerDestination(this.label, this.icon);
 
@@ -89,6 +94,8 @@ enum DrawerDestination {
     if (path == '/achievements' || path.startsWith('/achievements/')) {
       return achievements;
     }
+    if (path == '/moderation') return moderation;
+    if (path == '/admin' || path.startsWith('/admin/')) return admin;
     return null;
   }
 }
@@ -151,6 +158,17 @@ class _RouterNotifier extends ChangeNotifier {
     // 4. Unknown path → /feed
     // authRoutes covers /welcome as exact-match only (no child routes exist).
     // knownPrefixes covers shell branches and their nested children.
+    // 4a. Moderation is restricted to moderators (and admins, who inherit it).
+    if (currentPath == '/moderation') {
+      final user = authAsync.asData?.value;
+      if (user == null || !user.canModerate) return '/feed';
+    }
+    // 4b. Admin console is restricted to admins.
+    if (currentPath == '/admin' || currentPath.startsWith('/admin/')) {
+      final user = authAsync.asData?.value;
+      if (user == null || !user.isAdmin) return '/feed';
+    }
+
     const knownPrefixes = {
       '/feed',
       '/posts',
@@ -162,6 +180,8 @@ class _RouterNotifier extends ChangeNotifier {
       '/preview',
       '/upload-progress',
       '/achievements',
+      '/moderation',
+      '/admin',
     };
     final isKnown =
         authRoutes.contains(currentPath) ||
@@ -337,6 +357,18 @@ GoRouter router(Ref ref) {
                 },
                 builder: (context, state) =>
                     PublicProfileScreen(uid: state.pathParameters['uid']!),
+              ),
+              GoRoute(
+                path: '/moderation',
+                builder: (context, state) => const ModerationScreen(),
+              ),
+              GoRoute(
+                path: '/admin/users',
+                builder: (context, state) => const AdminUsersScreen(),
+              ),
+              GoRoute(
+                path: '/admin/departments',
+                builder: (context, state) => const AdminDepartmentsScreen(),
               ),
             ],
           ),

@@ -470,13 +470,21 @@ class _NavTabItem extends StatelessWidget {
           children: [
             iconWidget,
             const SizedBox(height: 2),
-            Text(
-              _label,
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontSize: 10,
-                color: color,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-                letterSpacing: 0.2,
+            // Scale long dynamic labels (e.g. "Achievements", "Moderation")
+            // down to the tab width on small screens instead of overflowing.
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                _label,
+                maxLines: 1,
+                softWrap: false,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  fontSize: 10,
+                  color: color,
+                  fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                  letterSpacing: 0.2,
+                ),
               ),
             ),
           ],

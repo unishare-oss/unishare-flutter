@@ -138,6 +138,49 @@ Handoff: All 23 widget tests pass. The FilterPickerWidget, FeedEmptyStateWidget,
 Review: PENDING
 
 2026-05-20
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/entities/moderation_verdict.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/entities/pending_post.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/repositories/moderation_repository.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/usecases/get_pending_posts.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/usecases/approve_post.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/domain/usecases/reject_post.dart
+  [18:04] Write: apps/mobile/lib/features/moderation/data/models/moderation_verdict_model.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/data/models/pending_post_model.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/data/repositories/moderation_repository_impl.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/presentation/providers/moderation_repository_provider.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/presentation/providers/moderation_queue_provider.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/presentation/providers/moderation_action_provider.dart
+  [18:05] Write: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [18:06] Write: apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Edit: apps/mobile/lib/core/router/router.dart
+  [18:06] Write: apps/mobile/lib/features/more/presentation/widgets/more_drawer_grid.dart
+  [18:06] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [18:06] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [18:07] Edit: apps/mobile/lib/features/more/presentation/widgets/more_drawer.dart
+  [18:07] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [18:07] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [18:08] Edit: apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart
+  [18:08] Edit: apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart
+  [18:08] Edit: apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart
+
+---
+Date: 2026-05-20 18:05
+Member: Sudakarn
+Agent: flutter-engineer
+Task: Implement AI admin moderation feature (pending queue, approve/reject, moderator-only route guard)
+Prompt: Implement the AI admin moderation feature for the Unishare Flutter app. All files go under apps/mobile/lib/. Clean Architecture domain→data→presentation. Posts submitted with status:"pending", Cloud Function AI-screens them and writes aiVerdict back. Admins with role=="moderator" see Moderation screen listing pending posts with AI hint. They can approve or reject each post.
+Outcome: Created 12 new files across domain/data/presentation layers for features/moderation. Modified router.dart (DrawerDestination enum, fromPath, knownPrefixes, moderator-only redirect guard, GoRoute), more_drawer_grid.dart (isModerator + onModerationTap params), more_drawer.dart (reads authStateProvider for isModerator, passes to grid).
+Decisions: Used manual fromFirestore/toEntity pattern (no Freezed) as specified. ModerationVerdictModel handles both Timestamp and int epoch for processedAt. _AiVerdictSection uses local non-null variable v = verdict after null guard for sound null-safety. Route guard placed before knownPrefixes check so unauthenticated+non-moderator always bounce to /feed. MoreDrawerGrid renders MODERATION tile only when isModerator==true and onModerationTap!=null.
+Handoff: build_runner must be run to generate the three .g.dart files: moderation_repository_provider.g.dart, moderation_queue_provider.g.dart, moderation_action_provider.g.dart. No widget tests written yet — QA engineer should add tests for ModerationScreen and PendingPostCard.
+Review: PENDING
+  [18:47] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+  [20:33] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
+  [20:33] Edit: apps/mobile/test/widget/features/moderation/moderation_screen_test.dart
   [15:21] Edit: apps/mobile/lib/features/feed/presentation/widgets/filter_picker_widget.dart
   [15:56] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart
   [15:56] Edit: apps/mobile/lib/features/feed/presentation/screens/feed_screen.dart

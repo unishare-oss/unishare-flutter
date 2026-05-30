@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
+import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/current_user_provider.dart';
 import 'package:unishare_mobile/features/auth/presentation/widgets/unishare_logo.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_grid.dart';
@@ -38,6 +39,9 @@ class MoreDrawerSheet extends ConsumerWidget {
     final isDark = theme.brightness == Brightness.dark;
     final userAsync = ref.watch(currentUserProvider);
     final bottomInset = MediaQuery.of(context).padding.bottom;
+    final authUser = ref.watch(authStateProvider).asData?.value;
+    final isModerator = authUser?.canModerate ?? false;
+    final isAdmin = authUser?.isAdmin ?? false;
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(
@@ -122,6 +126,12 @@ class MoreDrawerSheet extends ConsumerWidget {
                       if (uid == null) return;
                       _go(context, '/achievements/$uid');
                     },
+                    isModerator: isModerator,
+                    onModerationTap: () => _go(context, '/moderation'),
+                    isAdmin: isAdmin,
+                    onAdminUsersTap: () => _go(context, '/admin/users'),
+                    onAdminDepartmentsTap: () =>
+                        _go(context, '/admin/departments'),
                   ),
                   _SignOutRow(
                     onTap: () => _signOut(context, ref),
