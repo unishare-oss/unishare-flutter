@@ -138,8 +138,9 @@ class _RouterNotifier extends ChangeNotifier {
       return null;
     }
 
-    // 2. Authenticated or guest on an auth route → honour redirect param or go to /feed
-    if ((isAuthenticated || isGuest) && authRoutes.contains(currentPath)) {
+    // 2. Authenticated (non-guest) on an auth route → honour redirect param or go to /feed.
+    // Guests are allowed to reach /welcome so they can sign in.
+    if (isAuthenticated && !isGuest && authRoutes.contains(currentPath)) {
       final redirectParam = state.uri.queryParameters['redirect'];
       if (redirectParam != null && redirectParam.isNotEmpty) {
         final decoded = Uri.decodeComponent(redirectParam);

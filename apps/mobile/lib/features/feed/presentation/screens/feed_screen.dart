@@ -403,8 +403,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                   ),
                   const SizedBox(width: 10),
                   Expanded(child: _buildSearchField()),
-                  const SizedBox(width: 8),
-                  _buildCreateButton(),
+                  if (!_isGuest) ...[
+                    const SizedBox(width: 8),
+                    _buildCreateButton(),
+                  ],
                 ],
               ),
             ),
