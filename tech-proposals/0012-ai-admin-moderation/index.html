@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Achievement-only XP system with tiered badges to incentivize quality contribution to Unishare.">
+        <meta name="description" content="Posts enter a pending queue; AI pre-screens each one and an admin approves or rejects before the post appears on the feed.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0010-achievements/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-proposals/0012-ai-admin-moderation/">
       
       
-        <link rel="prev" href="../0009-ai-post-summary/">
+        <link rel="prev" href="../0011-edit-delete-own-post/">
       
       
-        <link rel="next" href="../0010-share-post/">
+        <link rel="next" href="../../tech-specs/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0010: Achievements System - Unishare Engineering Docs</title>
+        <title>0012: AI Admin Moderation - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#prop-0010-achievements-system" class="md-skip">
+        <a href="#prop-0012-ai-admin-moderation" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0010: Achievements System
+              0012: AI Admin Moderation
             
           </span>
         </div>
@@ -1383,37 +1383,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0010: Achievements System
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0010-achievements/" class="md-nav__link">
         
   
   
@@ -1429,142 +1402,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#proposed-solution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Proposed Solution
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives Considered
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Alternatives Considered">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#a-point-per-action-xp-stack-overflow-reddit-karma-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A — Point-per-action XP (Stack Overflow / Reddit karma model)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#b-badges-only-no-points-or-levels" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        B — Badges only, no points or levels
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#c-engagement-loop-system-daily-streaks-daily-challenges-log-in-7-days-in-a-row" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C — Engagement-loop system (daily streaks, daily challenges, "log in 7 days in a row")
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#d-tangible-rewards-gift-cards-vouchers-and-in-app-paywalled-feature-unlocks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        D — Tangible rewards (gift cards, vouchers) and in-app paywalled feature unlocks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#e-scheduled-batch-badge-evaluation-vs-event-driven" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        E — Scheduled-batch badge evaluation (vs event-driven)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#acceptance-criteria" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Acceptance Criteria
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1658,10 +1495,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0012-ai-admin-moderation/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0012: AI Admin Moderation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1677,6 +1541,120 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Solution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alternatives Considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-fully-automatic-ai-moderation-no-human-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A — Fully automatic AI moderation (no human step)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-human-only-moderation-no-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B — Human-only moderation (no AI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-optimistic-publish-with-post-hoc-removal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C — Optimistic publish with post-hoc removal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance Criteria
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2313,10 +2291,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#a-point-per-action-xp-stack-overflow-reddit-karma-model" class="md-nav__link">
+  <a href="#a-fully-automatic-ai-moderation-no-human-step" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A — Point-per-action XP (Stack Overflow / Reddit karma model)
+        A — Fully automatic AI moderation (no human step)
       
     </span>
   </a>
@@ -2324,10 +2302,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#b-badges-only-no-points-or-levels" class="md-nav__link">
+  <a href="#b-human-only-moderation-no-ai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        B — Badges only, no points or levels
+        B — Human-only moderation (no AI)
       
     </span>
   </a>
@@ -2335,32 +2313,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#c-engagement-loop-system-daily-streaks-daily-challenges-log-in-7-days-in-a-row" class="md-nav__link">
+  <a href="#c-optimistic-publish-with-post-hoc-removal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C — Engagement-loop system (daily streaks, daily challenges, "log in 7 days in a row")
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#d-tangible-rewards-gift-cards-vouchers-and-in-app-paywalled-feature-unlocks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        D — Tangible rewards (gift cards, vouchers) and in-app paywalled feature unlocks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#e-scheduled-batch-badge-evaluation-vs-event-driven" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        E — Scheduled-batch badge evaluation (vs event-driven)
+        C — Optimistic publish with post-hoc removal
       
     </span>
   </a>
@@ -2411,7 +2367,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0010-achievements.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-proposals/0012-ai-admin-moderation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2419,76 +2375,45 @@
   
 
 
-<h1 id="prop-0010-achievements-system">PROP-0010: Achievements System<a class="headerlink" href="#prop-0010-achievements-system" title="Permanent link">&para;</a></h1>
-<p><strong>Status:</strong> PROPOSED
-<strong>Author:</strong> Pyae Sone Shin Thant
-<strong>Date:</strong> 2026-05-18
-<strong>Spec:</strong> <a href="../../tech-specs/0010-achievements/">SPEC-0010</a>
-<strong>Approved by:</strong> (pending)</p>
+<h1 id="prop-0012-ai-admin-moderation">PROP-0012: AI Admin Moderation<a class="headerlink" href="#prop-0012-ai-admin-moderation" title="Permanent link">&para;</a></h1>
+<p><strong>Status:</strong> ACCEPTED<br />
+<strong>Author:</strong> Sudakarn<br />
+<strong>Date:</strong> 2026-05-20<br />
+<strong>Spec:</strong> <a href="../../tech-specs/0012-ai-admin-moderation/">SPEC-0012</a><br />
+<strong>Approved by:</strong> Sudakarn</p>
 <hr />
 <h2 id="problem">Problem<a class="headerlink" href="#problem" title="Permanent link">&para;</a></h2>
-<p>Unishare is a content-sharing platform for academic materials, but contributing has no built-in feedback loop. A student who shares 50 high-quality CSE101 notes that get saved hundreds of times looks identical, on their profile, to one who joined yesterday. There is:</p>
-<ul>
-<li><strong>No signal of contribution</strong> — profiles show post count, comment count, and saved count as raw numbers, with no notion of milestones or quality.</li>
-<li><strong>No incentive to share</strong> — first-time contributors have nothing pulling them past the cold-start cliff (sign up → look around → leave without posting).</li>
-<li><strong>No way to surface community helpers</strong> — students fulfilling each other's requests, contributing across departments, or receiving many saves go unrecognized.</li>
-<li><strong>No hook for future faculty / sponsor partnerships</strong> — we have nothing to point at when asking ajarns or local businesses to recognize top contributors.</li>
-</ul>
-<p>Unishare is pre-launch, so this is the right window to design the contribution-recognition layer before behavioural patterns are set.</p>
+<p>Currently any authenticated user can submit a post and it immediately appears on the feed with no review step. This allows low-quality, irrelevant, or inappropriate content to surface to all students. The platform needs a lightweight content gate that catches problems before they reach the feed, without requiring admins to read every post from scratch.</p>
 <h2 id="proposed-solution">Proposed Solution<a class="headerlink" href="#proposed-solution" title="Permanent link">&para;</a></h2>
-<p>A four-piece <strong>achievement system</strong> built Firebase-native, fitting the existing Cloud Function trigger pattern.</p>
+<p>Introduce a <strong>pending → approved / rejected</strong> lifecycle for every post submission.</p>
 <ol>
-<li>
-<p><strong>Badges as the only point source.</strong> Doing actions (posting, commenting, saving) does not award points. Crossing milestone thresholds — "first post", "10 saves received", "5 requests fulfilled" — unlocks badges, and each badge carries a point value. Points roll up into a level (lookup table, tunable in Firestore). This removes per-action grinding incentives entirely.</p>
-</li>
-<li>
-<p><strong>Tiered milestones for spam resistance.</strong> Three tiers: <strong>onboarding</strong> (action-based, fast wins — intentionally gameable because gaming = doing exactly what new users should do), <strong>progression</strong> (mostly outcome-based: saves received, requests fulfilled, validated by <em>other users'</em> actions), <strong>prestige</strong> (pure outcome, rare). Quality-resistant badges are the bulk of the catalog.</p>
-</li>
-<li>
-<p><strong>Server-authoritative evaluation.</strong> Cloud Function triggers extend the existing notification / post-interaction triggers. Each interesting event updates denormalised counters on the user doc; an evaluator function targets only the badges whose condition matches the changed stat and writes the unlock atomically. Real-time, cheat-proof, and idempotent.</p>
-</li>
-<li>
-<p><strong>Four v1 surfaces:</strong> profile-card integration (level chip + selected title + displayed badges row + progress bar), dedicated <code>/achievements</code> screen, in-app earn moments (modal for onboarding/prestige/level-up, toast for progression), and a notification-feed entry per unlock (reusing the notification system already shipped in SPEC-0001).</p>
-</li>
+<li><strong>Post submission</strong> — when a user submits a post, it is written to Firestore with <code>status: "pending"</code>. It does not appear on the public feed.</li>
+<li><strong>AI pre-screening</strong> — a Firebase Cloud Function triggers on the new document. It calls the Claude API, passes the post title, description, tags, and file type, and receives a structured verdict: <code>recommended: approve | reject</code>, <code>confidence: 0–1</code>, and a short <code>reason</code> string. The verdict is written back to the post document as <code>aiVerdict</code>.</li>
+<li><strong>Admin moderation queue</strong> — admins (identified by a <code>role: "moderator"</code> field on their Firestore user document) see a dedicated <strong>Moderation</strong> screen in the app. It lists all <code>pending</code> posts ordered by submission time, with the AI verdict and reason surfaced as a visual hint.</li>
+<li><strong>Admin decision</strong> — the admin taps Approve or Reject. A Cloud Function validates the admin's role and updates <code>status</code> to <code>"approved"</code> or <code>"rejected"</code> and records <code>moderatedBy</code> and <code>moderatedAt</code>. Approved posts become visible on the feed immediately. Rejected posts trigger an in-app notification to the author explaining the reason.</li>
 </ol>
-<p><strong>v1 launch set:</strong> 20 badges spanning content, community, profile, and recognition categories. Selectable title (one earned badge name) and three displayed badges per user.</p>
-<p><strong>Explicit out of scope for v1, deferred to v1.1:</strong> department / semester leaderboards (need real activity data to tune); ajarn recognition button + ajarn-related badges (needs a faculty role on accounts); cosmetic profile accents at higher levels.</p>
-<p><strong>Explicit out of scope permanently:</strong> daily streaks / engagement-loop badges (we want quality contribution, not daily-active mechanics); paywalled feature unlocks (status-driven, not capability-driven); tangible / sponsored rewards in-app (will be handled as out-of-band partnerships if at all).</p>
 <h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<h3 id="a-point-per-action-xp-stack-overflow-reddit-karma-model">A — Point-per-action XP (Stack Overflow / Reddit karma model)<a class="headerlink" href="#a-point-per-action-xp-stack-overflow-reddit-karma-model" title="Permanent link">&para;</a></h3>
-<p>Every action grants points: post = 10, save received = 2, request fulfilled = 15, etc. Badges unlock at point thresholds. Levels derived from total points.</p>
-<p><strong>Rejected:</strong> Creates a per-action grinding loop. The rational behaviour becomes "post as many low-effort items as possible," which is the <em>opposite</em> of what we want. Defending it requires complex point formulas, daily diminishing returns, quality multipliers, and moderation deductions — significantly more machinery than the achievement-only model, and easier to game in subtle ways.</p>
-<h3 id="b-badges-only-no-points-or-levels">B — Badges only, no points or levels<a class="headerlink" href="#b-badges-only-no-points-or-levels" title="Permanent link">&para;</a></h3>
-<p>Earn discrete badges. Display them. No numeric score, no leaderboard.</p>
-<p><strong>Rejected:</strong> Loses the "single legible 'I'm a strong contributor'" signal users want and that the future leaderboard (J in the rewards menu) needs to rank by. Badges alone don't sort. The chosen design awards points <em>only</em> via badges, but the points exist as a side-effect, which gives us a sortable score for free without re-introducing per-action grinding.</p>
-<h3 id="c-engagement-loop-system-daily-streaks-daily-challenges-log-in-7-days-in-a-row">C — Engagement-loop system (daily streaks, daily challenges, "log in 7 days in a row")<a class="headerlink" href="#c-engagement-loop-system-daily-streaks-daily-challenges-log-in-7-days-in-a-row" title="Permanent link">&para;</a></h3>
-<p>Duolingo / Snapchat / Strava-style daily mechanics.</p>
-<p><strong>Rejected:</strong> This would optimise for daily-active retention, not contribution quantity or quality — explicitly the wrong goal for Unishare per the brainstorming conversation. Worth revisiting if retention becomes a problem post-launch, but not v1.</p>
-<h3 id="d-tangible-rewards-gift-cards-vouchers-and-in-app-paywalled-feature-unlocks">D — Tangible rewards (gift cards, vouchers) and in-app paywalled feature unlocks<a class="headerlink" href="#d-tangible-rewards-gift-cards-vouchers-and-in-app-paywalled-feature-unlocks" title="Permanent link">&para;</a></h3>
-<p>Either reward top contributors with real-world value, or gate product features behind level/achievement requirements.</p>
-<p><strong>Rejected for v1:</strong> Tangible rewards need a sponsor / partnership program, fulfillment ops, and fraud protection — none of which exist today. Paywalled feature unlocks turn the achievement system into a progression gate on product value, which makes the app feel mean to new users. We deferred a <em>placeholder</em> faculty-recognition feature (L2) to v1.1 instead, which signals partnership intent without locking anyone out of features.</p>
-<h3 id="e-scheduled-batch-badge-evaluation-vs-event-driven">E — Scheduled-batch badge evaluation (vs event-driven)<a class="headerlink" href="#e-scheduled-batch-badge-evaluation-vs-event-driven" title="Permanent link">&para;</a></h3>
-<p>A single scheduled Cloud Function runs every 5–15 minutes, scanning all users and granting any newly-earned badges. Centralised eval logic, easy to add new badges by editing one file.</p>
-<p><strong>Rejected:</strong> Kills the real-time earn-moment UX (modal/toast popping seconds after the user makes their first post is what makes the system feel alive). Scales poorly with user count. Event-driven triggers fit the existing codebase pattern (the project already uses Firestore triggers for notifications and request fulfillment) and auto-deploy on push to main via CI.</p>
+<h3 id="a-fully-automatic-ai-moderation-no-human-step">A — Fully automatic AI moderation (no human step)<a class="headerlink" href="#a-fully-automatic-ai-moderation-no-human-step" title="Permanent link">&para;</a></h3>
+<p>Auto-approve or auto-reject based solely on the AI verdict, no admin queue. <strong>Rejected:</strong> false positives would silently block legitimate academic content with no recourse; students would have no way to appeal.</p>
+<h3 id="b-human-only-moderation-no-ai">B — Human-only moderation (no AI)<a class="headerlink" href="#b-human-only-moderation-no-ai" title="Permanent link">&para;</a></h3>
+<p>Admins read every post manually with no AI hint. <strong>Rejected:</strong> does not scale as the platform grows; reviewers would spend time on obviously fine posts.</p>
+<h3 id="c-optimistic-publish-with-post-hoc-removal">C — Optimistic publish with post-hoc removal<a class="headerlink" href="#c-optimistic-publish-with-post-hoc-removal" title="Permanent link">&para;</a></h3>
+<p>Posts appear immediately; AI and admins flag and remove retroactively. <strong>Rejected:</strong> bad content is already visible to students during the review window, which is the core problem we are solving.</p>
 <h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Glyph family for badges</strong> — preliminary direction is Phosphor (thin weight) via a Flutter package for refined, consistent line work without an asset pipeline. Alternative: outlined Material Symbols only (no new dep). To be confirmed during spec implementation; either is reversible in a single seed-file edit. <em>(Resolved during spec-writing: Phosphor.)</em></li>
-<li><strong>Daily integrity sweep window</strong> — the spec proposes 03:00 ICT. Confirm with the team before scheduling.</li>
-<li><strong>Moderation-strike threshold</strong> — the spec proposes badge revocation at 3 moderation-removed posts. Open for adjustment when moderation tools land.</li>
+<li>Which Claude model should power the screener — Haiku 4.5 (fast, cheap) or Sonnet 4.6 (better reasoning)? Haiku is likely sufficient for structured classification.</li>
+<li>Should rejected posts be permanently deleted or soft-deleted (retained for appeals)?</li>
+<li>How is the <code>moderator</code> role granted — manually via Firebase Console, or through an in-app flow?</li>
+<li>Should the AI verdict be shown to the post author (transparency) or kept internal to admins only?</li>
 </ol>
 <h2 id="acceptance-criteria">Acceptance Criteria<a class="headerlink" href="#acceptance-criteria" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Users earn badges via Cloud Function triggers; no client can grant a badge to itself.</li>
-<li>Earning a badge writes one <code>users/{uid}/earnedBadges/{badgeId}</code> document, bumps <code>users/{uid}.gamification.totalPoints</code>, and recomputes <code>gamification.level</code> — atomically.</li>
-<li>The catalog of 20 v1 badges is seeded from <code>tools/seeds/badges.js</code> via the existing <code>seed_firestore.js</code> workflow, idempotently.</li>
-<li>Profile screen shows level chip on the name row, selected title under the name, up to 3 displayed badges, and a level-progress bar — always visible (empty state uses muted placeholders).</li>
-<li>A dedicated <code>/achievements</code> screen renders earned + locked badges with hints.</li>
-<li>Earning a badge fires the in-app earn moment (modal for onboarding/prestige/level-up, toast otherwise) when the user is on a "rest" surface; queues if the user is in a compose flow.</li>
-<li>Earning a badge also writes a notification doc via the existing notification system.</li>
-<li>All UI uses existing theme tokens (<code>ac.*</code>, <code>cs.*</code>, <code>theme.textTheme.*</code>, Space Grotesk / Fira Code) — no hardcoded colors or text styles.</li>
-<li>Firestore rules deny client writes to <code>stats</code>, <code>earnedBadges</code>, and <code>gamification.totalPoints</code> / <code>gamification.level</code>; allow client writes to <code>gamification.displayedBadges</code> (cap 3, must be earned) and <code>gamification.selectedTitle</code> (must be earned).</li>
-<li>Server-side evaluator and triggers reach ≥ 90% test coverage; Domain &amp; pure helpers reach 100%; widget tests cover empty / populated / locked states for the profile section, achievements screen, picker, and earn moments.</li>
-<li>Integration test demonstrates end-to-end first-post → badge-earn → modal flow against the Firebase Emulator.</li>
+<li>Newly submitted posts have <code>status: "pending"</code> and are invisible on the public feed.</li>
+<li>A Cloud Function runs within 30 s of submission and writes <code>aiVerdict</code> to the post document.</li>
+<li>Users with <code>role: "moderator"</code> can access the Moderation screen; non-moderators cannot.</li>
+<li>Approving a post sets <code>status: "approved"</code> and makes it appear on the feed.</li>
+<li>Rejecting a post sets <code>status: "rejected"</code> and sends the author an in-app notification with the reason.</li>
+<li>The moderation action is recorded (<code>moderatedBy</code>, <code>moderatedAt</code>) for audit purposes.</li>
 </ul>
 
 

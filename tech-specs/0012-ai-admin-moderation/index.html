@@ -6,17 +6,17 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Firebase-native authentication design for Unishare Flutter — Google sign-in, email/password, and guest browsing.">
+        <meta name="description" content="Posts enter a pending queue; a Cloud Function AI-screens each one; admins approve or reject from a dedicated screen.">
       
       
       
-        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/0001-auth-design/">
+        <link rel="canonical" href="https://unishare-oss.github.io/unishare-flutter/tech-specs/0012-ai-admin-moderation/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../0011-users-public-and-discoverability/">
       
       
-        <link rel="next" href="../0001-notification/">
+        <link rel="next" href="../0013-ai-moderation-server-wiring/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>0001: Auth Feature Design - Unishare Engineering Docs</title>
+        <title>0012: AI Admin Moderation - Unishare Engineering Docs</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#spec-0001-auth-feature-design" class="md-skip">
+        <a href="#spec-0012-ai-admin-moderation" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0001: Auth Feature Design
+              0012: AI Admin Moderation
             
           </span>
         </div>
@@ -1610,37 +1610,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0001: Auth Feature Design
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0001-auth-design/" class="md-nav__link">
         
   
   
@@ -1656,142 +1629,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#screens-navigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Screens &amp; Navigation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#firebase-data-layer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Firebase &amp; Data Layer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture Layers
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Clean Architecture Layers">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#domain-pure-dart-zero-firebaseflutter-imports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Domain (pure Dart — zero Firebase/Flutter imports)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#presentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Presentation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-handling-edge-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Handling &amp; Edge Cases
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#out-of-scope-this-phase" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Out of Scope (this phase)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2193,10 +2030,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0012-ai-admin-moderation/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0012: AI Admin Moderation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2212,6 +2076,214 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firestore-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Firestore schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#postspostid-extended-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        posts/{postId} — extended fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usersuid-extended-field" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        users/{uid} — extended field
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#file-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domain-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain entities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#riverpod-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Riverpod providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-moderatepost-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function — moderatePost (TypeScript)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-handlemoderationaction-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function — handleModerationAction (callable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firestore-security-rules-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore security rules (additions)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2290,10 +2362,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#screens-navigation" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Screens &amp; Navigation
+        Architecture
       
     </span>
   </a>
@@ -2301,33 +2373,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#firebase-data-layer" class="md-nav__link">
+  <a href="#firestore-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Firebase &amp; Data Layer
+        Firestore schema
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#clean-architecture-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clean Architecture Layers
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Clean Architecture Layers">
+    <nav class="md-nav" aria-label="Firestore schema">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#domain-pure-dart-zero-firebaseflutter-imports" class="md-nav__link">
+  <a href="#postspostid-extended-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Domain (pure Dart — zero Firebase/Flutter imports)
+        posts/{postId} — extended fields
       
     </span>
   </a>
@@ -2335,21 +2396,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#data" class="md-nav__link">
+  <a href="#usersuid-extended-field" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#presentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Presentation
+        users/{uid} — extended field
       
     </span>
   </a>
@@ -2362,10 +2412,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#error-handling-edge-cases" class="md-nav__link">
+  <a href="#file-map" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Error Handling &amp; Edge Cases
+        File map
       
     </span>
   </a>
@@ -2373,10 +2423,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#testing" class="md-nav__link">
+  <a href="#api-contracts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Testing
+        API contracts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="API contracts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#domain-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain entities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#riverpod-providers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Riverpod providers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-moderatepost-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function — moderatePost (TypeScript)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloud-function-handlemoderationaction-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Function — handleModerationAction (callable)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firestore-security-rules-additions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firestore security rules (additions)
       
     </span>
   </a>
@@ -2384,10 +2506,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#out-of-scope-this-phase" class="md-nav__link">
+  <a href="#test-plan" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Out of Scope (this phase)
+        Test plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
       
     </span>
   </a>
@@ -2411,7 +2555,7 @@
 
 
   
-    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0001-auth-design.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/unishare-oss/unishare-flutter/edit/docs/docs/tech-specs/0012-ai-admin-moderation.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2419,220 +2563,393 @@
   
 
 
-<h1 id="spec-0001-auth-feature-design">SPEC-0001: Auth Feature Design<a class="headerlink" href="#spec-0001-auth-feature-design" title="Permanent link">&para;</a></h1>
+<h1 id="spec-0012-ai-admin-moderation">SPEC-0012: AI Admin Moderation<a class="headerlink" href="#spec-0012-ai-admin-moderation" title="Permanent link">&para;</a></h1>
 <p><strong>Status:</strong> APPROVED<br />
-<strong>Author:</strong> architect<br />
-<strong>Date:</strong> 2026-04-30<br />
-<strong>Scope:</strong> Firebase-native authentication for the Unishare Flutter app (separate product from the NestJS web platform)</p>
+<strong>Author:</strong> Sudakarn<br />
+<strong>Date:</strong> 2026-05-20<br />
+<strong>Proposal:</strong> <a href="../../tech-proposals/0012-ai-admin-moderation/">PROP-0012</a><br />
+<strong>Approved by:</strong> Sudakarn</p>
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Implement authentication as the first feature of the Flutter app. The app is Firebase-native with no dependency on the NestJS API. Auth supports Google sign-in and email/password, with MS OAuth deferred to a later phase. Guest browsing (read-only) is supported.</p>
+<p>Every newly submitted post is written with <code>status: "pending"</code> and hidden from the public feed. A Firestore-triggered Cloud Function calls Claude Haiku 4.5 within 30 s and writes an <code>aiVerdict</code> (recommended decision + confidence + reason) back to the post document. Users whose Firestore profile has <code>role: "moderator"</code> see a <strong>Moderation</strong> screen in the app listing all pending posts with the AI hint. An admin taps Approve or Reject; a callable Cloud Function validates the role, flips the status, and notifies the author on rejection. Rejected posts are soft-deleted (status <code>"rejected"</code>, retained in Firestore for audit/appeals).</p>
 <hr />
-<h2 id="screens-navigation">Screens &amp; Navigation<a class="headerlink" href="#screens-navigation" title="Permanent link">&para;</a></h2>
-<p>Five entry points in the auth feature:</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph Flutter App
+        ModerationScreen
+        PendingPostCard
+        moderationQueueProvider
+        ModerationRepositoryImpl
+    end
+
+    subgraph Domain
+        ModerationRepository[ModerationRepository\n(abstract)]
+        GetPendingPosts
+        ApprovePost
+        RejectPost
+        PendingPostEntity
+        ModerationVerdictEntity
+    end
+
+    subgraph Firestore
+        posts[posts/{postId}\nstatus · aiVerdict\nmoderatedBy · moderatedAt]
+        users[users/{uid}\nrole: moderator]
+    end
+
+    subgraph Cloud Functions
+        moderatePost[moderatePost\n(onCreate trigger)]
+        handleModerationAction[handleModerationAction\n(callable)]
+        ClaudeAPI[Claude Haiku 4.5]
+    end
+
+    ModerationScreen --&gt; moderationQueueProvider
+    moderationQueueProvider --&gt; ModerationRepositoryImpl
+    ModerationRepositoryImpl --&gt; ModerationRepository
+    ModerationRepositoryImpl --&gt; Firestore
+
+    posts -- onCreate --&gt; moderatePost
+    moderatePost --&gt; ClaudeAPI
+    moderatePost -- writes aiVerdict --&gt; posts
+
+    ModerationScreen -- approve/reject --&gt; handleModerationAction
+    handleModerationAction -- validates role --&gt; users
+    handleModerationAction -- updates status --&gt; posts</code></pre>
+<hr />
+<h2 id="firestore-schema">Firestore schema<a class="headerlink" href="#firestore-schema" title="Permanent link">&para;</a></h2>
+<h3 id="postspostid-extended-fields"><code>posts/{postId}</code> — extended fields<a class="headerlink" href="#postspostid-extended-fields" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Route</th>
-<th>Screen</th>
-<th>Access</th>
+<th>Field</th>
+<th>Type</th>
+<th>Values</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>/welcome</code></td>
-<td>Logo, tagline, Google button, "Sign in with email", "Create account", "Continue as guest"</td>
-<td>Unauthenticated</td>
+<td><code>status</code></td>
+<td><code>string</code></td>
+<td><code>"pending"</code> | <code>"approved"</code> | <code>"rejected"</code></td>
 </tr>
 <tr>
-<td><code>/sign-in</code></td>
-<td>Email + password form with back navigation</td>
-<td>Unauthenticated</td>
+<td><code>aiVerdict.recommended</code></td>
+<td><code>string</code></td>
+<td><code>"approve"</code> | <code>"reject"</code></td>
 </tr>
 <tr>
-<td><code>/sign-up</code></td>
-<td>Name + university (optional) + email + password + confirm + consent</td>
-<td>Unauthenticated</td>
+<td><code>aiVerdict.confidence</code></td>
+<td><code>number</code></td>
+<td><code>0.0 – 1.0</code></td>
 </tr>
 <tr>
-<td><code>/</code></td>
-<td>Home feed</td>
-<td>All (guest = read-only)</td>
+<td><code>aiVerdict.reason</code></td>
+<td><code>string</code></td>
+<td>Short human-readable rationale</td>
 </tr>
 <tr>
-<td>overlay</td>
-<td>Academic profile bottom sheet</td>
-<td>Authenticated + <code>departmentId == null</code></td>
+<td><code>aiVerdict.processedAt</code></td>
+<td><code>timestamp</code></td>
+<td>When the Cloud Function wrote the verdict</td>
+</tr>
+<tr>
+<td><code>moderatedBy</code></td>
+<td><code>string?</code></td>
+<td>UID of admin who took action</td>
+</tr>
+<tr>
+<td><code>moderatedAt</code></td>
+<td><code>timestamp?</code></td>
+<td>When admin acted</td>
 </tr>
 </tbody>
 </table>
-<p><strong>GoRouter redirect rules:</strong>
-- No session + not guest → <code>/welcome</code>
-- Authenticated → <code>/</code> (feed)
-- Authenticated user hits <code>/welcome</code>, <code>/sign-in</code>, <code>/sign-up</code> → redirect to <code>/</code>
-- Authenticated + <code>departmentId == null</code> → feed loads, bottom sheet overlays on top (not a redirect)</p>
-<hr />
-<h2 id="firebase-data-layer">Firebase &amp; Data Layer<a class="headerlink" href="#firebase-data-layer" title="Permanent link">&para;</a></h2>
-<p><strong>Firebase Auth:</strong> <code>firebase_auth</code> + <code>google_sign_in</code>. Auth state exposed as a Riverpod stream provider watching <code>FirebaseAuth.instance.authStateChanges()</code>.</p>
-<p><strong>Firestore user document</strong> — created on first sign-in:</p>
-<div class="highlight"><pre><span></span><code>users/{uid}
-  name: String
-  email: String
-  photoUrl: String?
-  universityId: String?       ← collected during email sign-up
-  departmentId: String?       ← collected via academic profile modal
-  enrollmentYear: int?        ← collected via academic profile modal
-  role: &#39;student&#39; | &#39;admin&#39;   ← defaults to &#39;student&#39;
-  consentGivenAt: Timestamp?  ← written on email sign-up
-  createdAt: Timestamp
-</code></pre></div>
-<p><strong>Supporting collections (read-only at this phase):</strong>
-- <code>universities/{id}</code> — sign-up university dropdown
-- <code>departments/{id}</code> — academic profile modal dropdown</p>
-<p><strong>Guest mode:</strong> no Firestore user doc. Router allows <code>/</code> feed. All write actions (upload, react, comment) show a "sign in to continue" prompt.</p>
-<hr />
-<h2 id="clean-architecture-layers">Clean Architecture Layers<a class="headerlink" href="#clean-architecture-layers" title="Permanent link">&para;</a></h2>
-<h3 id="domain-pure-dart-zero-firebaseflutter-imports">Domain (pure Dart — zero Firebase/Flutter imports)<a class="headerlink" href="#domain-pure-dart-zero-firebaseflutter-imports" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>features/auth/domain/
-  entities/
-    app_user.dart                  ← id, name, email, photoUrl, universityId,
-                                      departmentId, enrollmentYear, role
-  repositories/
-    auth_repository.dart           ← abstract interface
-  usecases/
-    sign_in_with_google.dart
-    sign_in_with_email.dart
-    sign_up_with_email.dart
-    sign_out.dart
-    get_current_user.dart
-    update_academic_profile.dart
-</code></pre></div>
-<h3 id="data">Data<a class="headerlink" href="#data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>features/auth/data/
-  datasources/
-    firebase_auth_datasource.dart  ← Firebase Auth calls
-    firestore_user_datasource.dart ← user doc reads/writes
-  models/
-    app_user_model.dart            ← Freezed + JSON, extends AppUser
-  repositories/
-    auth_repository_impl.dart
-</code></pre></div>
-<h3 id="presentation">Presentation<a class="headerlink" href="#presentation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>features/auth/presentation/
-  providers/
-    auth_state_provider.dart       ← streams FirebaseAuth.authStateChanges()
-    current_user_provider.dart     ← fetches Firestore user doc
-  screens/
-    welcome_screen.dart
-    sign_in_screen.dart
-    sign_up_screen.dart
-  widgets/
-    academic_profile_bottom_sheet.dart
-    google_sign_in_button.dart
-    auth_text_field.dart
-</code></pre></div>
-<hr />
-<h2 id="error-handling-edge-cases">Error Handling &amp; Edge Cases<a class="headerlink" href="#error-handling-edge-cases" title="Permanent link">&para;</a></h2>
-<p><strong>Auth errors</strong> mapped to user-facing messages:</p>
+<h3 id="usersuid-extended-field"><code>users/{uid}</code> — extended field<a class="headerlink" href="#usersuid-extended-field" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Firebase code</th>
-<th>User message</th>
+<th>Field</th>
+<th>Type</th>
+<th>Values</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>wrong-password</code> / <code>user-not-found</code></td>
-<td>"Invalid email or password"</td>
-</tr>
-<tr>
-<td><code>email-already-in-use</code></td>
-<td>"An account with this email already exists"</td>
-</tr>
-<tr>
-<td><code>network-request-failed</code></td>
-<td>"Check your connection and try again"</td>
-</tr>
-<tr>
-<td>Google sign-in cancelled</td>
-<td>Silent — no snackbar</td>
+<td><code>role</code></td>
+<td><code>string?</code></td>
+<td><code>"moderator"</code> or absent</td>
 </tr>
 </tbody>
 </table>
-<p><strong>First-time Google sign-in:</strong> after Firebase Auth succeeds, check if <code>users/{uid}</code> exists. If not, create the doc from the OAuth token (name + photoUrl). University and department left null → triggers academic profile bottom sheet.</p>
-<p><strong>Academic profile modal:</strong>
-- "Do it later" dismisses for the session only
-- On next cold start, re-appears if <code>departmentId</code> is still null
-- Department dropdown is required to enable the save button
-- User can always escape via "Do it later"</p>
-<p><strong>Consent:</strong>
-- Email sign-up: explicit checkbox; <code>consentGivenAt</code> written to Firestore on submit
-- Google sign-up: footnote only ("By continuing you agree to Terms &amp; Privacy") — no checkbox, matches web behaviour</p>
+<p>Moderator role is assigned manually via Firebase Console — no in-app role-grant flow in this spec.</p>
 <hr />
-<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
-<p><strong>Widget tests (one per screen, mandatory per CLAUDE.md):</strong></p>
+<h2 id="file-map">File map<a class="headerlink" href="#file-map" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>File</th>
-<th>What it covers</th>
+<th>Action</th>
+<th>Path</th>
+<th>Responsibility</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>welcome_screen_test.dart</code></td>
-<td>Renders Google button, email links, guest link; tapping each navigates correctly</td>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/domain/entities/moderation_verdict.dart</code></td>
+<td>Pure Dart entity: <code>recommended</code>, <code>confidence</code>, <code>reason</code>, <code>processedAt</code></td>
 </tr>
 <tr>
-<td><code>sign_in_screen_test.dart</code></td>
-<td>Validation errors for empty/invalid fields; submit calls use case</td>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/domain/entities/pending_post.dart</code></td>
+<td>Pure Dart entity wrapping post fields + <code>aiVerdict</code></td>
 </tr>
 <tr>
-<td><code>sign_up_screen_test.dart</code></td>
-<td>Password mismatch error; consent required before submit</td>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/domain/repositories/moderation_repository.dart</code></td>
+<td>Abstract interface: <code>getPendingPosts</code>, <code>approvePost</code>, <code>rejectPost</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/domain/usecases/get_pending_posts.dart</code></td>
+<td>Delegates to <code>ModerationRepository.getPendingPosts()</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/domain/usecases/approve_post.dart</code></td>
+<td>Delegates to <code>ModerationRepository.approvePost(postId)</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/domain/usecases/reject_post.dart</code></td>
+<td>Delegates to <code>ModerationRepository.rejectPost(postId, reason)</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/data/models/pending_post_model.dart</code></td>
+<td>Freezed model with <code>fromFirestore</code> and <code>toEntity()</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/data/models/moderation_verdict_model.dart</code></td>
+<td>Freezed model with <code>fromMap</code> and <code>toEntity()</code></td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/data/datasources/moderation_firestore_datasource.dart</code></td>
+<td>Firestore reads/writes for pending posts and moderation actions</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/data/repositories/moderation_repository_impl.dart</code></td>
+<td>Implements <code>ModerationRepository</code>; delegates to datasource</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/presentation/providers/moderation_queue_provider.dart</code></td>
+<td><code>@riverpod AsyncNotifier&lt;List&lt;PendingPost&gt;&gt;</code> streaming pending posts</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/presentation/providers/moderation_action_provider.dart</code></td>
+<td><code>@riverpod AsyncNotifier</code> handling approve/reject calls</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart</code></td>
+<td>Lists pending posts; calls action provider on Approve/Reject tap</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>apps/mobile/lib/features/moderation/presentation/widgets/pending_post_card.dart</code></td>
+<td>Card showing title, tags, file type, AI verdict badge, action buttons</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/lib/core/router/router.dart</code></td>
+<td>Add <code>/moderation</code> route; redirect non-moderators to <code>/feed</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>apps/mobile/lib/shared/widgets/main_nav_bar.dart</code></td>
+<td>Show Moderation tab only when <code>role == "moderator"</code></td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>firestore.rules</code></td>
+<td>Pending posts readable only by owner + moderators; status writable only by Cloud Function admin SDK</td>
+</tr>
+<tr>
+<td>Modify</td>
+<td><code>firestore.indexes.json</code></td>
+<td>Composite index: <code>posts</code> — <code>status</code> (Asc) + <code>createdAt</code> (Desc)</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Unit tests:</strong></p>
+<hr />
+<h2 id="api-contracts">API contracts<a class="headerlink" href="#api-contracts" title="Permanent link">&para;</a></h2>
+<h3 id="domain-entities">Domain entities<a class="headerlink" href="#domain-entities" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/moderation/domain/entities/moderation_verdict.dart</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">ModerationVerdict</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">ModerationVerdict</span><span class="p">({</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">recommended</span><span class="p">,</span><span class="w"> </span><span class="c1">// &#39;approve&#39; | &#39;reject&#39;</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">confidence</span><span class="p">,</span><span class="w">  </span><span class="c1">// 0.0 – 1.0</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">reason</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">processedAt</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">recommended</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">confidence</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">reason</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">processedAt</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// lib/features/moderation/domain/entities/pending_post.dart</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">PendingPost</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">PendingPost</span><span class="p">({</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">title</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">description</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">authorId</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">authorName</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">tags</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">postType</span><span class="p">,</span>
+<span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">createdAt</span><span class="p">,</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">aiVerdict</span><span class="p">,</span><span class="w">        </span><span class="c1">// null while Cloud Function is processing</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">moderatedBy</span><span class="p">,</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">moderatedAt</span><span class="p">,</span>
+<span class="w">  </span><span class="p">});</span>
+
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">title</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">description</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">authorId</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">authorName</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">postType</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">ModerationVerdict</span><span class="o">?</span><span class="w"> </span><span class="n">aiVerdict</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">moderatedBy</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">DateTime</span><span class="o">?</span><span class="w"> </span><span class="n">moderatedAt</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="repository-interface">Repository interface<a class="headerlink" href="#repository-interface" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// lib/features/moderation/domain/repositories/moderation_repository.dart</span>
+<span class="kd">abstract</span><span class="w"> </span><span class="kd">class</span><span class="w"> </span><span class="nc">ModerationRepository</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">PendingPost</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">getPendingPosts</span><span class="p">();</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">approvePost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">);</span>
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rejectPost</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">reason</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="riverpod-providers">Riverpod providers<a class="headerlink" href="#riverpod-providers" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// moderation_queue_provider.dart</span>
+<span class="nd">@riverpod</span>
+<span class="n">Stream</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">PendingPost</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">moderationQueue</span><span class="p">(</span><span class="n">Ref</span><span class="w"> </span><span class="n">ref</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">repo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">moderationRepositoryProvider</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">repo</span><span class="p">.</span><span class="n">getPendingPosts</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// moderation_action_provider.dart</span>
+<span class="nd">@riverpod</span>
+<span class="kd">class</span><span class="w"> </span><span class="nc">ModerationAction</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">_$ModerationAction</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nd">@override</span>
+<span class="w">  </span><span class="n">AsyncValue</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">build</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">AsyncData</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">approve</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">AsyncLoading</span><span class="p">();</span>
+<span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">await</span><span class="w"> </span><span class="n">AsyncValue</span><span class="p">.</span><span class="n">guard</span><span class="p">(</span>
+<span class="w">      </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">approvePostProvider</span><span class="p">).</span><span class="n">call</span><span class="p">(</span><span class="n">postId</span><span class="p">),</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="w"> </span><span class="n">reject</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">postId</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">reason</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">AsyncLoading</span><span class="p">();</span>
+<span class="w">    </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">await</span><span class="w"> </span><span class="n">AsyncValue</span><span class="p">.</span><span class="n">guard</span><span class="p">(</span>
+<span class="w">      </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ref</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rejectPostProvider</span><span class="p">).</span><span class="n">call</span><span class="p">(</span><span class="n">postId</span><span class="p">,</span><span class="w"> </span><span class="n">reason</span><span class="p">),</span>
+<span class="w">    </span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="cloud-function-moderatepost-typescript">Cloud Function — <code>moderatePost</code> (TypeScript)<a class="headerlink" href="#cloud-function-moderatepost-typescript" title="Permanent link">&para;</a></h3>
+<p>Triggered on <code>posts/{postId}</code> create. Calls Claude Haiku 4.5 with prompt:</p>
+<div class="highlight"><pre><span></span><code>You are a content moderator for an academic file-sharing platform.
+Review this post and decide if it should be approved or rejected.
+Approved posts must be: academic in nature, relevant to coursework, non-offensive.
+
+Title: {title}
+Description: {description}
+Tags: {tags}
+File type: {postType}
+
+Respond with JSON only:
+{ &quot;recommended&quot;: &quot;approve&quot; | &quot;reject&quot;, &quot;confidence&quot;: 0.0–1.0, &quot;reason&quot;: &quot;&lt;one sentence&gt;&quot; }
+</code></pre></div>
+<p>Writes result to <code>posts/{postId}.aiVerdict</code>.</p>
+<h3 id="cloud-function-handlemoderationaction-callable">Cloud Function — <code>handleModerationAction</code> (callable)<a class="headerlink" href="#cloud-function-handlemoderationaction-callable" title="Permanent link">&para;</a></h3>
+<p>Accepts <code>{ postId, action: "approve" | "reject", reason?: string }</code>. Validates caller has <code>role: "moderator"</code> in Firestore. Updates <code>posts/{postId}</code> with <code>status</code>, <code>moderatedBy</code>, <code>moderatedAt</code>. On reject, writes a notification document to <code>users/{authorId}/notifications</code>.</p>
+<hr />
+<h2 id="firestore-security-rules-additions">Firestore security rules (additions)<a class="headerlink" href="#firestore-security-rules-additions" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="c1">// posts collection</span>
+<span class="nx">match</span><span class="w"> </span><span class="o">/</span><span class="nx">posts</span><span class="o">/</span><span class="p">{</span><span class="nx">postId</span><span class="p">}</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// Public feed: only approved posts</span>
+<span class="w">  </span><span class="nx">allow</span><span class="w"> </span><span class="nx">read</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;approved&#39;</span>
+<span class="w">              </span><span class="o">||</span><span class="w"> </span><span class="nx">isOwner</span><span class="p">(</span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">authorId</span><span class="p">)</span>
+<span class="w">              </span><span class="o">||</span><span class="w"> </span><span class="nx">isModerator</span><span class="p">();</span>
+
+<span class="w">  </span><span class="c1">// Status fields written only by admin SDK (Cloud Functions)</span>
+<span class="w">  </span><span class="nx">allow</span><span class="w"> </span><span class="nx">write</span><span class="o">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nx">isOwner</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">isCreating</span><span class="p">()</span>
+<span class="w">               </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">request</span><span class="p">.</span><span class="nx">resource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;pending&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">isModerator</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">get</span><span class="p">(</span><span class="sr">/databases/</span><span class="nx">$</span><span class="p">(</span><span class="nx">database</span><span class="p">)</span><span class="o">/</span><span class="nx">documents</span><span class="o">/</span><span class="nx">users</span><span class="o">/</span><span class="nx">$</span><span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">auth</span><span class="p">.</span><span class="nx">uid</span><span class="p">))</span>
+<span class="w">           </span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">role</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;moderator&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="test-plan">Test plan<a class="headerlink" href="#test-plan" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>File</th>
-<th>What it covers</th>
+<th>Test file</th>
+<th>Covers</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>auth_repository_impl_test.dart</code></td>
-<td>Mocked datasources; Firebase user → AppUser mapping</td>
+<td><code>test/unit/features/moderation/approve_post_test.dart</code></td>
+<td><code>ApprovePost</code> use case delegates correctly</td>
 </tr>
 <tr>
-<td><code>sign_in_with_google_test.dart</code></td>
-<td>Delegates to repository</td>
+<td><code>test/unit/features/moderation/reject_post_test.dart</code></td>
+<td><code>RejectPost</code> use case delegates correctly</td>
 </tr>
 <tr>
-<td><code>sign_in_with_email_test.dart</code></td>
-<td>Delegates to repository</td>
+<td><code>test/unit/features/moderation/pending_post_model_test.dart</code></td>
+<td><code>fromFirestore</code> / <code>toEntity()</code> round-trip</td>
 </tr>
 <tr>
-<td><code>sign_up_with_email_test.dart</code></td>
-<td>Delegates to repository</td>
+<td><code>test/widget/features/moderation/moderation_screen_test.dart</code></td>
+<td>Shows pending list; Approve/Reject buttons trigger provider</td>
 </tr>
 <tr>
-<td><code>update_academic_profile_test.dart</code></td>
-<td>Delegates to repository</td>
+<td><code>test/widget/features/moderation/pending_post_card_test.dart</code></td>
+<td>Renders AI verdict badge; confidence colour correct</td>
 </tr>
 </tbody>
 </table>
-<p>No golden tests at this phase — auth screens are simple enough that widget tests suffice.</p>
 <hr />
-<h2 id="out-of-scope-this-phase">Out of Scope (this phase)<a class="headerlink" href="#out-of-scope-this-phase" title="Permanent link">&para;</a></h2>
+<h2 id="out-of-scope">Out of scope<a class="headerlink" href="#out-of-scope" title="Permanent link">&para;</a></h2>
 <ul>
-<li>MS OAuth (deferred)</li>
-<li>Forgot password / email reset flow</li>
-<li>Email verification gate</li>
-<li>Admin role enforcement (read from Firestore but not acted on yet)</li>
+<li>In-app role assignment (moderator role set manually via Firebase Console)</li>
+<li>Appeals flow for rejected authors</li>
+<li>Bulk approve/reject actions</li>
+<li>Moderation history / audit log screen</li>
+<li>Push notifications to author on rejection (in-app notification only)</li>
+<li>AI verdict shown to post author</li>
+</ul>
+<hr />
+<h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] None — all open questions from PROP-0012 resolved with defaults above.</li>
 </ul>
 
 
