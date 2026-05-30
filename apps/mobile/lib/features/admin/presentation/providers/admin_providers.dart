@@ -32,57 +32,69 @@ Stream<List<AdminUser>> adminUsers(Ref ref) =>
 Stream<List<({String id, String name})>> adminDepartments(Ref ref) =>
     ref.watch(adminRepositoryProvider).watchDepartments();
 
-/// Imperative user actions (promote/demote, ban). Exposes an
-/// `AsyncValue<void>` the screen can watch for loading/error feedback.
+/// Imperative user actions (promote/demote, ban).
+///
+/// These methods **return** their [AsyncValue] result so the calling screen
+/// can react to success/failure directly. The screen must NOT read this
+/// provider's `state` after awaiting — the notifier auto-disposes once the
+/// screen stops listening (it only `ref.read`s the notifier), so a late
+/// `state =` write would throw "used after dispose". We guard every post-await
+/// write with `ref.mounted`.
 @riverpod
 class AdminUserActions extends _$AdminUserActions {
   @override
   AsyncValue<void> build() => const AsyncData(null);
 
-  Future<void> setRole(String uid, String role) async {
+  Future<AsyncValue<void>> setRole(String uid, String role) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(adminRepositoryProvider).setUserRole(uid, role),
     );
+    if (ref.mounted) state = result;
+    return result;
   }
 
-  /// TODO(admin-ban): currently throws (no backend). The screen catches it and
-  /// shows a "not implemented" message.
-  Future<void> setBanned(String uid, bool banned) async {
+  /// TODO(admin-ban): currently surfaces an error (no backend) — see datasource.
+  Future<AsyncValue<void>> setBanned(String uid, bool banned) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(adminRepositoryProvider).setUserBanned(uid, banned),
     );
+    if (ref.mounted) state = result;
+    return result;
   }
 }
 
-/// Imperative department/course creation actions.
+/// Imperative department/course creation actions. Same return-result +
+/// mounted-guard contract as [AdminUserActions].
 @riverpod
 class AdminCatalogActions extends _$AdminCatalogActions {
   @override
   AsyncValue<void> build() => const AsyncData(null);
 
-  Future<void> createDepartment({
+  Future<AsyncValue<void>> createDepartment({
     required String id,
     required String name,
     required String universityId,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref
           .read(adminRepositoryProvider)
           .createDepartment(id: id, name: name, universityId: universityId),
     );
+    if (ref.mounted) state = result;
+    return result;
   }
 
-  Future<void> createCourse({
+  Future<AsyncValue<void>> createCourse({
     required String departmentId,
     required String code,
     required String name,
     int? yearLevel,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref
           .read(adminRepositoryProvider)
           .createCourse(
@@ -92,5 +104,7 @@ class AdminCatalogActions extends _$AdminCatalogActions {
             yearLevel: yearLevel,
           ),
     );
+    if (ref.mounted) state = result;
+    return result;
   }
 }
