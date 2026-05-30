@@ -72,7 +72,7 @@ class MoreDrawerGrid extends StatelessWidget {
         ),
       if (isAdmin && onAdminDepartmentsTap != null)
         MoreDrawerTile(
-          label: 'DEPTS',
+          label: 'MANAGE DEPTS',
           icon: Icons.apartment_outlined,
           onTap: onAdminDepartmentsTap!,
         ),

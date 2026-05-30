@@ -1597,3 +1597,8 @@ Summary:  4 files changed, 76 insertions(+), 29 deletions(-)
 
   [16:55] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
   [16:55] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
+  [17:03] Write: apps/mobile/lib/features/admin/presentation/providers/admin_providers.dart
+  [17:04] Write: apps/mobile/lib/features/admin/presentation/widgets/role_picker_sheet.dart
+  [17:05] Write: apps/mobile/lib/features/admin/presentation/widgets/admin_user_tile.dart
+  [17:05] Write: apps/mobile/lib/features/admin/presentation/screens/admin_users_screen.dart
+  [17:06] Write: apps/mobile/lib/features/admin/presentation/screens/admin_departments_screen.dart
