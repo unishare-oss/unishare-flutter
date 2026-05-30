@@ -1595,3 +1595,5 @@ Files:
   ? apps/mobile/test/widget/features/admin/ (untracked)
 Summary:  4 files changed, 76 insertions(+), 29 deletions(-)
 
+  [16:55] Edit: apps/mobile/lib/shared/widgets/main_nav_bar.dart
+  [16:55] Edit: apps/mobile/lib/shared/widgets/guest_nav_bar.dart
