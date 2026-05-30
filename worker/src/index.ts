@@ -5,6 +5,7 @@ import { handleAiSummarize } from './ai-summarize';
 import { handleAiChat } from './ai-chat';
 import { handleAiSearch } from './ai-search';
 import { handleAiReindex } from './ai-reindex';
+import { handleAiModerate } from './ai-moderate';
 import { CORS_HEADERS, json } from './response';
 
 export interface Env {
@@ -17,6 +18,11 @@ export interface Env {
   GROQ_API_KEY: string;
   GROQ_MODEL?: string;
   GROQ_VISION_MODEL?: string;
+  // SPEC-0013 — shared secret gating the internal /ai/moderate route. Set via
+  // `wrangler secret put MODERATION_KEY`. Called server-to-server by the
+  // onPostUpdated Cloud Function, never by the client, so it uses an internal
+  // key rather than a user Firebase JWT.
+  MODERATION_KEY: string;
   // PROP-0011 Phase 4 — semantic search bindings. Provided by wrangler.toml.
   VECTORIZE: VectorizeIndex;
   // PROP-0011 Phase 4c — canonical-tag index for embedding-based tag dedup.
@@ -108,6 +114,16 @@ export default {
       return handleAiReindex(request, env, uid);
     }
 
+    // SPEC-0013 — internal moderation classifier. Server-to-server only: the
+    // caller is the onPostUpdated Cloud Function, authenticated by a shared
+    // secret header rather than a user Firebase JWT.
+    if (request.method === 'POST' && url.pathname === '/ai/moderate') {
+      if (!isInternalCaller(request, env)) {
+        return json({ error: 'Unauthorized' }, 401);
+      }
+      return handleAiModerate(request, env);
+    }
+
     if (request.method !== 'POST') {
       return json({ error: 'Method not allowed' }, 405);
     }
@@ -170,6 +186,20 @@ export default {
     return json({ uploadUrl, publicUrl }, 200);
   },
 };
+
+/// Constant-time-ish check of the shared internal secret used by trusted
+/// server callers (Cloud Functions) instead of a per-user Firebase JWT.
+/// Rejects when the key is unset so a misconfigured deploy fails closed.
+function isInternalCaller(request: Request, env: Env): boolean {
+  const provided = request.headers.get('X-Internal-Key') ?? '';
+  const expected = env.MODERATION_KEY ?? '';
+  if (expected.length === 0 || provided.length !== expected.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < expected.length; i++) {
+    mismatch |= provided.charCodeAt(i) ^ expected.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
 
 async function requireAuth(request: Request, env: Env): Promise<string | Response> {
   const auth = request.headers.get('Authorization') ?? '';
