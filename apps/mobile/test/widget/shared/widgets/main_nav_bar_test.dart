@@ -101,6 +101,9 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(_buildSubject(notificationsBadgeCount: 3));
+      // One extra frame so the AnimationController-based pill finishes its
+      // initial layout pass on headless (CI) renderers.
+      await tester.pump();
       expect(find.byKey(const Key('notification_dot')), findsOneWidget);
     });
 
