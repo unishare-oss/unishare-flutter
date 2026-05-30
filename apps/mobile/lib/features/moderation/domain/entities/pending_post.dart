@@ -17,6 +17,7 @@ class PendingPost {
     this.aiVerdict,
     this.moderatedBy,
     this.moderatedAt,
+    this.rejectionReason,
   });
 
   final String id;
@@ -40,4 +41,8 @@ class PendingPost {
 
   final String? moderatedBy;
   final DateTime? moderatedAt;
+
+  /// Moderator-supplied reason; set when the post was rejected. Shown in the
+  /// Rejected tab of the moderation screen.
+  final String? rejectionReason;
 }

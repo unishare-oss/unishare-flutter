@@ -26,6 +26,20 @@ class ModerationFirestoreDatasource {
         );
   }
 
+  Stream<List<PendingPost>> watchRejectedPosts() {
+    return _db
+        .collection('posts')
+        .where('status', isEqualTo: 'rejected')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (snap) => snap.docs
+              .map(PendingPostModel.fromFirestore)
+              .map((m) => m.toEntity())
+              .toList(),
+        );
+  }
+
   Future<void> approvePost(String postId) async {
     await _functions.httpsCallable('handleModerationAction').call({
       'postId': postId,
@@ -38,6 +52,13 @@ class ModerationFirestoreDatasource {
       'postId': postId,
       'action': 'reject',
       'reason': reason,
+    });
+  }
+
+  Future<void> restorePost(String postId) async {
+    await _functions.httpsCallable('handleModerationAction').call({
+      'postId': postId,
+      'action': 'restore',
     });
   }
 }

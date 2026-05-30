@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:unishare_mobile/features/moderation/domain/entities/moderation_verdict.dart';
 import 'package:unishare_mobile/features/moderation/domain/entities/pending_post.dart';
-import 'package:unishare_mobile/features/post/domain/entities/post_draft.dart';
+import 'package:unishare_mobile/features/moderation/presentation/widgets/moderation_post_chips.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_carousel.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
@@ -49,14 +49,14 @@ class PendingPostCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    _PostTypeChip(postType: post.postType),
+                    ModerationTypeChip(postType: post.postType),
                   ],
                 ),
                 const SizedBox(height: 4),
 
                 // Author name + createdAt
                 Text(
-                  '${post.authorName} · ${_timeAgo(post.createdAt)}',
+                  '${post.authorName} · ${moderationTimeAgo(post.createdAt)}',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: cs.onSurfaceVariant,
                   ),
@@ -80,7 +80,7 @@ class PendingPostCard extends StatelessWidget {
                     spacing: 6,
                     runSpacing: 4,
                     children: post.tags
-                        .map((tag) => _TagChip(tag: tag))
+                        .map((tag) => ModerationTagChip(tag: tag))
                         .toList(),
                   ),
                 ],
@@ -143,75 +143,6 @@ class PendingPostCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  String _timeAgo(DateTime dt) {
-    final diff = DateTime.now().difference(dt);
-    if (diff.inDays >= 1) return '${diff.inDays}d ago';
-    if (diff.inHours >= 1) return '${diff.inHours} hours ago';
-    if (diff.inMinutes >= 1) return '${diff.inMinutes} min ago';
-    return 'just now';
-  }
-}
-
-class _PostTypeChip extends StatelessWidget {
-  const _PostTypeChip({required this.postType});
-
-  final String postType;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final ac = theme.extension<AppColors>()!;
-    // postType is the stored PostType enum name, e.g. "lectureNote" | "exercise".
-    final type = PostType.fromName(postType);
-    final isNote = type == PostType.lectureNote;
-    final color = isNote ? ac.info : ac.amber;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: isNote ? ac.info.withValues(alpha: 0.12) : ac.amberSubtle,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        type.displayLabel,
-        style: AppTypography.mono(
-          base: theme.textTheme.labelSmall?.copyWith(
-            fontSize: 10,
-            letterSpacing: 0.55,
-            fontWeight: FontWeight.w700,
-            color: color,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TagChip extends StatelessWidget {
-  const _TagChip({required this.tag});
-
-  final String tag;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        border: Border.all(color: theme.dividerColor),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        tag,
-        style: AppTypography.mono(
-          base: theme.textTheme.labelSmall?.copyWith(
-            fontSize: 10,
-            letterSpacing: 0.55,
-          ),
-        ),
       ),
     );
   }

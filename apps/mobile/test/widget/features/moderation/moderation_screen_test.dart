@@ -47,56 +47,73 @@ final _fakePostsWithMedia = [
   ),
 ];
 
+final _fakeRejected = [
+  PendingPost(
+    id: 'post3',
+    title: 'Spammy Notes',
+    description: 'Buy cheap essays here.',
+    authorId: 'uid3',
+    authorName: 'Carol',
+    tags: ['spam'],
+    postType: 'lectureNote',
+    createdAt: _now.subtract(const Duration(days: 2)),
+    moderatedBy: 'mod1',
+    moderatedAt: _now.subtract(const Duration(days: 1)),
+    rejectionReason: 'Promotional spam, not academic content.',
+  ),
+];
+
+/// Builds the screen with the given queue data. The rejected queue defaults
+/// to empty so the (lazily built) Rejected tab never hits Firestore. Pass
+/// [pendingError] to exercise the pending error branch.
+Widget _subject({
+  Stream<List<PendingPost>>? pending,
+  Object? pendingError,
+  Stream<List<PendingPost>>? rejected,
+}) {
+  final pendingOverride = pendingError != null
+      ? moderationQueueProvider.overrideWithValue(
+          AsyncError(pendingError, StackTrace.empty),
+        )
+      : moderationQueueProvider.overrideWith(
+          (ref) => pending ?? const Stream.empty(),
+        );
+
+  // Inferred List<Override> — avoids naming the (unexported) Override type.
+  final overrides = [
+    pendingOverride,
+    moderationRejectedQueueProvider.overrideWith(
+      (ref) => rejected ?? Stream.value(<PendingPost>[]),
+    ),
+    moderationActionProvider.overrideWith(ModerationAction.new),
+  ];
+
+  return ProviderScope(
+    overrides: overrides,
+    child: MaterialApp(
+      theme: AppTheme.build(AppThemes.unishare),
+      home: const ModerationScreen(),
+    ),
+  );
+}
+
 void main() {
-  group('ModerationScreen', () {
+  group('ModerationScreen — Pending tab', () {
     testWidgets('shows loading indicator while queue is loading', (
       tester,
     ) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            moderationQueueProvider.overrideWith((ref) => const Stream.empty()),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.build(AppThemes.unishare),
-            home: const ModerationScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_subject(pending: const Stream.empty()));
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
     testWidgets('shows empty state when no pending posts', (tester) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            moderationQueueProvider.overrideWith((ref) => Stream.value([])),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.build(AppThemes.unishare),
-            home: const ModerationScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_subject(pending: Stream.value([])));
       await tester.pump();
       expect(find.text('No pending posts'), findsOneWidget);
     });
 
     testWidgets('renders pending post cards with AI verdict', (tester) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            moderationQueueProvider.overrideWith(
-              (ref) => Stream.value(_fakePosts),
-            ),
-            moderationActionProvider.overrideWith(ModerationAction.new),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.build(AppThemes.unishare),
-            home: const ModerationScreen(),
-          ),
-        ),
-      );
+      await tester.pumpWidget(_subject(pending: Stream.value(_fakePosts)));
       await tester.pump();
       expect(find.text('LR Parsing Notes'), findsOneWidget);
       expect(find.text('Approve'), findsOneWidget);
@@ -113,18 +130,7 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            moderationQueueProvider.overrideWith(
-              (ref) => Stream.value(_fakePostsWithMedia),
-            ),
-            moderationActionProvider.overrideWith(ModerationAction.new),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.build(AppThemes.unishare),
-            home: const ModerationScreen(),
-          ),
-        ),
+        _subject(pending: Stream.value(_fakePostsWithMedia)),
       );
       await tester.pump();
       expect(find.byType(AttachmentCarousel), findsOneWidget);
@@ -132,23 +138,47 @@ void main() {
     });
 
     testWidgets('shows error state on queue error', (tester) async {
-      // overrideWithValue(AsyncError) injects the error synchronously —
-      // no stream subscription or async pipeline involved. The widget renders
-      // the error branch in the first frame after pumpWidget.
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            moderationQueueProvider.overrideWithValue(
-              AsyncError(Exception('Firestore error'), StackTrace.empty),
-            ),
-          ],
-          child: MaterialApp(
-            theme: AppTheme.build(AppThemes.unishare),
-            home: const ModerationScreen(),
-          ),
-        ),
+        _subject(pendingError: Exception('Firestore error')),
       );
       expect(find.byKey(const Key('moderation-error')), findsOneWidget);
+    });
+  });
+
+  group('ModerationScreen — Rejected tab', () {
+    testWidgets('lists rejected posts with reason and restore action', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _subject(
+          pending: Stream.value([]),
+          rejected: Stream.value(_fakeRejected),
+        ),
+      );
+      await tester.pump();
+
+      // Switch to the Rejected tab.
+      await tester.tap(find.text('Rejected'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Spammy Notes'), findsOneWidget);
+      expect(
+        find.text('Promotional spam, not academic content.'),
+        findsOneWidget,
+      );
+      expect(find.text('Restore to queue'), findsOneWidget);
+      // No pending-only affordances on a rejected card.
+      expect(find.text('Approve'), findsNothing);
+    });
+
+    testWidgets('shows empty state when no rejected posts', (tester) async {
+      await tester.pumpWidget(_subject(pending: Stream.value([])));
+      await tester.pump();
+
+      await tester.tap(find.text('Rejected'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('No rejected posts'), findsOneWidget);
     });
   });
 }

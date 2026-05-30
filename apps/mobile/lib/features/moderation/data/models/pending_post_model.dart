@@ -18,6 +18,7 @@ class PendingPostModel {
     this.aiVerdictModel,
     this.moderatedBy,
     this.moderatedAt,
+    this.rejectionReason,
   });
 
   final String id;
@@ -33,6 +34,7 @@ class PendingPostModel {
   final ModerationVerdictModel? aiVerdictModel;
   final String? moderatedBy;
   final DateTime? moderatedAt;
+  final String? rejectionReason;
 
   factory PendingPostModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
@@ -83,6 +85,7 @@ class PendingPostModel {
       aiVerdictModel: aiVerdictModel,
       moderatedBy: data['moderatedBy'] as String?,
       moderatedAt: moderatedAt,
+      rejectionReason: data['rejectionReason'] as String?,
     );
   }
 
@@ -100,5 +103,6 @@ class PendingPostModel {
     aiVerdict: aiVerdictModel?.toEntity(),
     moderatedBy: moderatedBy,
     moderatedAt: moderatedAt,
+    rejectionReason: rejectionReason,
   );
 }
