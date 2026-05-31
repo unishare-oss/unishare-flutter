@@ -27,12 +27,25 @@ class AppFlags {
     maintenanceBanner: '',
   };
 
-  /// Read a boolean flag (falls back to the in-app default when unfetched).
-  static bool isOn(String key) => FirebaseRemoteConfig.instance.getBool(key);
+  /// Read a boolean flag. Falls back to the in-app default when Remote Config
+  /// is unavailable (e.g. before init, or in widget tests with no Firebase) so
+  /// gated widgets stay testable and the app never throws on a flag read.
+  static bool isOn(String key) {
+    try {
+      return FirebaseRemoteConfig.instance.getBool(key);
+    } catch (_) {
+      return (defaults[key] as bool?) ?? false;
+    }
+  }
 
-  /// Read a string flag (e.g. [maintenanceBanner]).
-  static String text(String key) =>
-      FirebaseRemoteConfig.instance.getString(key);
+  /// Read a string flag (e.g. [maintenanceBanner]); same safe fallback.
+  static String text(String key) {
+    try {
+      return FirebaseRemoteConfig.instance.getString(key);
+    } catch (_) {
+      return (defaults[key] as String?) ?? '';
+    }
+  }
 }
 
 /// Configures Remote Config: sets fetch settings + defaults and activates the

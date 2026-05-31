@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:unishare_mobile/core/firebase/remote_config.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer_tile.dart';
@@ -51,16 +52,18 @@ class MoreDrawerGrid extends StatelessWidget {
         icon: Icons.apartment_outlined,
         onTap: onDepartmentsTap,
       ),
-      MoreDrawerTile(
-        label: 'REQUESTS',
-        icon: Icons.inbox_outlined,
-        onTap: onRequestsTap,
-      ),
-      MoreDrawerTile(
-        label: 'ACHIEVEMENTS',
-        icon: Icons.workspace_premium_outlined,
-        onTap: onAchievementsTap,
-      ),
+      if (AppFlags.isOn(AppFlags.requests))
+        MoreDrawerTile(
+          label: 'REQUESTS',
+          icon: Icons.inbox_outlined,
+          onTap: onRequestsTap,
+        ),
+      if (AppFlags.isOn(AppFlags.achievements))
+        MoreDrawerTile(
+          label: 'ACHIEVEMENTS',
+          icon: Icons.workspace_premium_outlined,
+          onTap: onAchievementsTap,
+        ),
     ];
 
     final staff = <MoreDrawerTile>[

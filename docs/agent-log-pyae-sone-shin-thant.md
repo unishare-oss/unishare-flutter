@@ -1662,3 +1662,7 @@ Review: PENDING
   [21:24] Write: apps/mobile/lib/features/moderation/presentation/screens/moderation_screen.dart
 
 Addendum 2 (moderation tabs): Added Pending/Rejected tabs to ModerationScreen with a Restore action (rejected→pending). Backend: refactored handleModerationAction into a testable pure handler + onCall wrapper, added the restore action (requires status==rejected, clears moderatedBy/moderatedAt/rejectionReason, keeps aiVerdict) + 11 unit tests. Flutter: added rejectionReason to PendingPost entity+model, watchRejectedPosts datasource (reuses existing status+createdAt index), getRejectedPosts/restorePost usecases, providers, RejectedPostCard, and extracted shared ModerationTypeChip/ModerationTagChip/moderationTimeAgo into moderation_post_chips.dart. Verified: flutter analyze clean, 448/448 app tests; functions build+lint clean, 106/106 tests. Confirmed restore is safe — onPostUpdatedHandler bails when aiVerdict!=null and only fires on the summary-settle edge, so a status change does not re-trigger AI moderation. Commit 1aa21196.
+
+2026-05-31
+  [16:40] Edit: apps/mobile/lib/core/firebase/remote_config.dart
+  [16:40] Edit: apps/mobile/lib/features/post/presentation/screens/post_detail_screen.dart

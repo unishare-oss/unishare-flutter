@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import 'package:unishare_mobile/core/firebase/remote_config.dart';
 import 'package:unishare_mobile/features/achievements/domain/entities/badge.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/badge_catalog_provider.dart';
 import 'package:unishare_mobile/features/achievements/presentation/providers/earned_badges_provider.dart';
@@ -159,9 +160,11 @@ class ProfileCard extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 16),
-          Divider(color: theme.dividerColor),
-          const SizedBox(height: 8),
-          ProfileAchievementsSection(uid: user.id),
+          if (AppFlags.isOn(AppFlags.achievements)) ...[
+            Divider(color: theme.dividerColor),
+            const SizedBox(height: 8),
+            ProfileAchievementsSection(uid: user.id),
+          ],
         ],
       ),
     );
