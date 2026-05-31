@@ -1,0 +1,42 @@
+{
+  "parameters": {
+    "ai_summary_enabled": {
+      "defaultValue": { "value": "true" },
+      "valueType": "BOOLEAN",
+      "description": "Show AI summary panel on post detail (Groq cost kill-switch)."
+    },
+    "ai_chat_enabled": {
+      "defaultValue": { "value": "true" },
+      "valueType": "BOOLEAN",
+      "description": "Show the Ask-AI chat section on post detail (Groq cost kill-switch)."
+    },
+    "hybrid_search_enabled": {
+      "defaultValue": { "value": "true" },
+      "valueType": "BOOLEAN",
+      "description": "Use semantic + keyword hybrid search; off falls back to keyword-only."
+    },
+    "requests_enabled": {
+      "defaultValue": { "value": "true" },
+      "valueType": "BOOLEAN",
+      "description": "Show the content-requests feature."
+    },
+    "achievements_enabled": {
+      "defaultValue": { "value": "true" },
+      "valueType": "BOOLEAN",
+      "description": "Show badges/levels (achievements) surfaces."
+    },
+    "moderation_ai_advisory": {
+      "defaultValue": { "value": "true" },
+      "valueType": "BOOLEAN",
+      "description": "Show the AI verdict chip in the moderation queue."
+    },
+    "maintenance_banner": {
+      "defaultValue": { "value": "" },
+      "valueType": "STRING",
+      "description": "Non-empty text shows a maintenance banner app-wide; empty hides it."
+    }
+  },
+  "parameterGroups": {},
+  "conditions": [],
+  "version": {}
+}

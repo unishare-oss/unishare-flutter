@@ -736,7 +736,9 @@ class _PostHeader extends ConsumerWidget {
           if (AppFlags.isOn(AppFlags.aiSummary)) ...[
             AiSummaryPanel(status: post.summaryStatus, summary: post.summary),
             const SizedBox(height: 8),
-            if (post.summaryStatus == SummaryStatus.done) ...[
+            // Ask-AI chat is separately gated (its own Groq cost kill-switch).
+            if (AppFlags.isOn(AppFlags.aiChat) &&
+                post.summaryStatus == SummaryStatus.done) ...[
               AskAiSection(
                 postId: post.id,
                 summary: post.summary!,

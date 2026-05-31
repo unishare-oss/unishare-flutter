@@ -7,24 +7,32 @@ class AppFlags {
   AppFlags._();
 
   static const aiSummary = 'ai_summary_enabled';
+  static const aiChat = 'ai_chat_enabled';
   static const hybridSearch = 'hybrid_search_enabled';
   static const requests = 'requests_enabled';
   static const achievements = 'achievements_enabled';
   static const moderationAiAdvisory = 'moderation_ai_advisory';
+  static const maintenanceBanner = 'maintenance_banner';
 
   /// In-app fallbacks — used before the first fetch and when offline. These
-  /// MUST match the Console defaults so behaviour is identical either way.
+  /// MUST match the Console / template defaults so behaviour is identical
+  /// either way.
   static const Map<String, Object> defaults = {
     aiSummary: true,
+    aiChat: true,
     hybridSearch: true,
     requests: true,
     achievements: true,
     moderationAiAdvisory: true,
+    maintenanceBanner: '',
   };
 
   /// Read a boolean flag (falls back to the in-app default when unfetched).
-  static bool isOn(String key) =>
-      FirebaseRemoteConfig.instance.getBool(key);
+  static bool isOn(String key) => FirebaseRemoteConfig.instance.getBool(key);
+
+  /// Read a string flag (e.g. [maintenanceBanner]).
+  static String text(String key) =>
+      FirebaseRemoteConfig.instance.getString(key);
 }
 
 /// Configures Remote Config: sets fetch settings + defaults and activates the
