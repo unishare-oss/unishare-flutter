@@ -87,18 +87,26 @@ class AdminFirestoreDatasource {
     String deptId,
     int year,
   ) {
+    // Sort by name client-side rather than `.orderBy('name')`: combining an
+    // equality filter (`yearLevel`) with an orderBy on a different field would
+    // require a composite index. Course subcollections are small, so sorting in
+    // Dart is cheap — and it matches the non-admin course datasource, which
+    // also queries `yearLevel` with no server-side ordering.
     return _db
         .collection('departments')
         .doc(deptId)
         .collection('courses')
         .where('yearLevel', isEqualTo: year)
-        .orderBy('name')
         .snapshots()
-        .map(
-          (snap) => snap.docs
+        .map((snap) {
+          final courses = snap.docs
               .map((d) => (id: d.id, name: d.data()['name'] as String? ?? d.id))
-              .toList(growable: false),
-        );
+              .toList();
+          courses.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+          );
+          return courses;
+        });
   }
 
   Future<void> updateDepartment(String id, String name) {
