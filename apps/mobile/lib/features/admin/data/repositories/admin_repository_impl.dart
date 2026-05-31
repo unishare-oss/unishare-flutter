@@ -52,4 +52,29 @@ class AdminRepositoryImpl implements AdminRepository {
     name: name,
     yearLevel: yearLevel,
   );
+
+  @override
+  Stream<List<({String id, String name})>> watchCourses(
+    String deptId,
+    int year,
+  ) => _firestore.watchCourses(deptId, year);
+
+  @override
+  Future<void> updateDepartment(String id, String name) =>
+      _firestore.updateDepartment(id, name);
+
+  @override
+  Future<void> deleteDepartment(String id) => _firestore.deleteDepartment(id);
+
+  @override
+  Future<void> updateCourse(
+    String deptId,
+    String courseId,
+    String name,
+    int? yearLevel,
+  ) => _firestore.updateCourse(deptId, courseId, name, yearLevel);
+
+  @override
+  Future<void> deleteCourse(String deptId, String courseId) =>
+      _firestore.deleteCourse(deptId, courseId);
 }

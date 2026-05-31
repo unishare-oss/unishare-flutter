@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/app_user.dart';
 import 'package:unishare_mobile/features/auth/domain/repositories/auth_repository.dart';
@@ -129,6 +130,17 @@ void main() {
     ) async {
       final fakeRepo = _FakeAuthRepository();
 
+      // The button calls GoRouter.of(context).go('/feed') after sign-in, so
+      // the widget must be hosted inside a GoRouter — a bare MaterialApp has
+      // no router and GoRouter.of() would throw before signInAnonymously runs.
+      final router = GoRouter(
+        initialLocation: '/welcome',
+        routes: [
+          GoRoute(path: '/welcome', builder: (_, _) => const AuthScreen()),
+          GoRoute(path: '/feed', builder: (_, _) => const SizedBox()),
+        ],
+      );
+
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
@@ -137,17 +149,17 @@ void main() {
               (ref) => Stream.value(<({String id, String name})>[]),
             ),
           ],
-          child: MaterialApp(
+          child: MaterialApp.router(
             theme: AppTheme.build(AppThemes.unishare),
-            home: const AuthScreen(),
+            routerConfig: router,
           ),
         ),
       );
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       await tester.ensureVisible(find.text('Continue as guest'));
       await tester.tap(find.text('Continue as guest'));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(fakeRepo.signInAnonymouslyCalled, isTrue);
     });

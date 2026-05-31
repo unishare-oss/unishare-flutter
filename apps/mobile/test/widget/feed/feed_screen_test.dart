@@ -329,11 +329,11 @@ void main() {
   });
 
   group('FeedScreen — guest mode', () {
-    testWidgets('shows create-post button for guest user', (tester) async {
+    testWidgets('hides create-post button for guest user', (tester) async {
       await tester.pumpWidget(_buildSubject(guestMode: true));
       await tester.pump();
 
-      expect(find.byIcon(Icons.add), findsOneWidget);
+      expect(find.byIcon(Icons.add), findsNothing);
     });
   });
 

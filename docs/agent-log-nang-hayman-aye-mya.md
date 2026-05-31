@@ -90,3 +90,16 @@ Outcome: Full SPEC-0001 Notification System implemented. Data layer: Notificatio
 Decisions: Removed firebase_auth import from NotificationFirestoreDatasource — all methods accept explicit userId parameter so _uid getter was not needed. Used token.hashCode.toRadixString(16) as document ID for FCM tokens instead of SHA-256 (avoids adding crypto dependency; instruction allowed this fallback). firebase_messaging version bumped to ^16.2.1 to resolve firebase_core_platform_interface version conflict with firebase_auth ^6.5.0.
 Handoff: Cloud Functions (functions/ directory) are out of scope for the flutter-engineer and must be implemented separately. The notifications screen is live at /notifications. FCM token registration fires once on sign-in. The unread badge (unreadNotificationCountProvider) is available for the shell AppBar to consume.
 Review: PENDING
+
+---
+
+Date: 2026-05-31 02:30
+Member: Nang Hayman Aye Mya
+Agent: flutter-engineer
+Task: Fix admin department screen — clickable depts with 3-dot edit/delete menu, and add courses management screen
+Prompt: Template TODOs (all marked inline): Ban backend (callable + field + enforcement), Users pagination/search, Department screen: no edit/delete, universityId is free-text. When clicking "manage depts", departments should be clickable with a 3-dot menu (edit/delete) and clicking a department should show its courses with edit/delete capability. Checkout to new branch.
+
+Outcome: Created branch feat/admin-dept-courses from origin/main. Added edit/delete methods (updateDepartment, deleteDepartment, updateCourse, deleteCourse, watchCourses) to AdminFirestoreDatasource, AdminRepository interface, and AdminRepositoryImpl. Added corresponding notifier methods to AdminCatalogActions. Added vanilla adminCoursesProvider (StreamProvider.autoDispose.family). Rewrote AdminDepartmentsScreen: departments are now clickable InkWell tiles that navigate to /admin/departments/:deptId/courses, each with a PopupMenuButton offering Edit (name dialog) and Delete (confirmation dialog). Created AdminCoursesScreen: year-tabbed view (Year 1-4) using adminCoursesProvider, each course tile has a 3-dot menu with Edit and Delete, per-tab FAB to add courses. Added sub-route /admin/departments/:deptId/courses to router.dart. Ran build_runner; flutter analyze: 0 errors in admin feature (pre-existing moderation .g.dart gaps unrelated to this change).
+Decisions: Used vanilla StreamProvider.autoDispose.family for adminCoursesProvider instead of @riverpod to avoid rewriting the .g.dart manually — build_runner was run at the end to regenerate all other .g.dart files cleanly. universityId remains free-text on create (TODO inline). No cascade-delete of courses when a department is deleted (TODO inline). Template TODO comments preserved in code.
+Handoff: Run dart run build_runner build if regenerating after changes. The admin departments screen now drills into the courses screen correctly. Reviewer should verify Firestore rules allow admin writes for update/delete on departments and courses subcollection.
+Review: PENDING

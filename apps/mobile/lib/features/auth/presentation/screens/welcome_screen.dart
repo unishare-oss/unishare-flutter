@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:unishare_mobile/features/auth/domain/entities/auth_exception.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
@@ -623,8 +624,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           SizedBox(
             height: 42,
             child: OutlinedButton(
-              onPressed: () =>
-                  ref.read(authRepositoryProvider).signInAnonymously(),
+              onPressed: () async {
+                final router = GoRouter.of(context);
+                await ref.read(authRepositoryProvider).signInAnonymously();
+                router.go('/feed');
+              },
               style: OutlinedButton.styleFrom(
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(

@@ -36,4 +36,28 @@ abstract interface class AdminRepository {
     required String name,
     int? yearLevel,
   });
+
+  /// Live courses for a department, filtered by year level.
+  Stream<List<({String id, String name})>> watchCourses(
+    String deptId,
+    int year,
+  );
+
+  /// Rename an existing department.
+  Future<void> updateDepartment(String id, String name);
+
+  /// Delete a department. Courses subcollection is NOT cascade-deleted here —
+  /// see datasource TODO.
+  Future<void> deleteDepartment(String id);
+
+  /// Update a course's name and/or year level.
+  Future<void> updateCourse(
+    String deptId,
+    String courseId,
+    String name,
+    int? yearLevel,
+  );
+
+  /// Permanently delete a course.
+  Future<void> deleteCourse(String deptId, String courseId);
 }

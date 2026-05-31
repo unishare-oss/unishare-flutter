@@ -181,8 +181,10 @@ service cloud.firestore {
                     && !('rejectionReason' in request.resource.data);
       allow update: if request.auth != null
                     && (
+                      // Any authenticated user may increment/decrement likesCount
+                      // or reactionCounts (reaction toggles update the map field).
                       request.resource.data.diff(resource.data).affectedKeys()
-                        .hasOnly(['likesCount'])
+                        .hasOnly(['likesCount', 'reactionCounts'])
                       || (
                         request.auth.uid == resource.data.authorId
                         && request.resource.data.diff(resource.data).affectedKeys()
@@ -227,6 +229,15 @@ service cloud.firestore {
         allow create, delete: if request.auth != null
                                && request.auth.uid == userId;
         allow update: if false;
+      }
+
+      // Per-user reaction document keyed by uid. Each field is a reaction type
+      // (e.g. "thumbsUp": true). The transaction reads and writes only the
+      // requesting user's own document.
+      match /reactions/{userId} {
+        allow read: if true;
+        allow create, update, delete: if request.auth != null
+                                      && request.auth.uid == userId;
       }
     }
 
