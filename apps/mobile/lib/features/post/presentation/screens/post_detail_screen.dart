@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 
+import 'package:unishare_mobile/core/firebase/remote_config.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
 import 'package:unishare_mobile/shared/theme/app_typography.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_repository_provider.dart';
@@ -731,17 +732,20 @@ class _PostHeader extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // ── AI Summary ────────────────────────────────────────────────────
-          AiSummaryPanel(status: post.summaryStatus, summary: post.summary),
-          const SizedBox(height: 8),
-          if (post.summaryStatus == SummaryStatus.done) ...[
-            AskAiSection(
-              postId: post.id,
-              summary: post.summary!,
-              extractedText: post.extractedText,
-            ),
+          // Gated by the `ai_summary_enabled` Remote Config feature flag.
+          if (AppFlags.isOn(AppFlags.aiSummary)) ...[
+            AiSummaryPanel(status: post.summaryStatus, summary: post.summary),
+            const SizedBox(height: 8),
+            if (post.summaryStatus == SummaryStatus.done) ...[
+              AskAiSection(
+                postId: post.id,
+                summary: post.summary!,
+                extractedText: post.extractedText,
+              ),
+              const SizedBox(height: 8),
+            ],
             const SizedBox(height: 8),
           ],
-          const SizedBox(height: 8),
 
           // ── DESCRIPTION ───────────────────────────────────────────────────
           _SectionLabel(label: 'DESCRIPTION'),
