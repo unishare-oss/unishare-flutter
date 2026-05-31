@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/core/firebase/remote_config.dart';
 import 'package:unishare_mobile/core/router/router.dart'
     show academicProfileSessionDismissed;
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
@@ -350,7 +351,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
           ),
           data: (allPosts) {
             final keywordResults = _filterPosts(allPosts, filter);
-            final posts = _hybridRank(keywordResults, semanticResults, filter);
+            // hybrid_search_enabled off -> keyword-only fallback.
+            final posts = AppFlags.isOn(AppFlags.hybridSearch)
+                ? _hybridRank(keywordResults, semanticResults, filter)
+                : keywordResults;
             if (posts.isEmpty) {
               return FeedEmptyStateWidget(
                 onClear: () => ref.read(feedFilterProvider.notifier).clear(),

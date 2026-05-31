@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:unishare_mobile/features/moderation/domain/entities/moderation_verdict.dart';
 import 'package:unishare_mobile/features/moderation/domain/entities/pending_post.dart';
+import 'package:unishare_mobile/core/firebase/remote_config.dart';
 import 'package:unishare_mobile/features/moderation/presentation/widgets/moderation_post_chips.dart';
 import 'package:unishare_mobile/features/post/presentation/widgets/attachment_carousel.dart';
 import 'package:unishare_mobile/shared/theme/app_colors.dart';
@@ -102,9 +103,11 @@ class PendingPostCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // AI verdict section
-                _AiVerdictSection(verdict: verdict),
-                const SizedBox(height: 12),
+                // AI verdict section (gated by moderation_ai_advisory flag)
+                if (AppFlags.isOn(AppFlags.moderationAiAdvisory)) ...[
+                  _AiVerdictSection(verdict: verdict),
+                  const SizedBox(height: 12),
+                ],
 
                 // Action buttons
                 Row(

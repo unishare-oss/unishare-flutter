@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unishare_mobile/core/firebase/remote_config.dart';
 import 'package:unishare_mobile/core/router/router.dart';
 import 'package:unishare_mobile/features/auth/presentation/providers/auth_state_provider.dart';
 import 'package:unishare_mobile/features/more/presentation/widgets/more_drawer.dart';
@@ -66,7 +67,7 @@ class ShellScaffold extends ConsumerWidget {
       // the bar instead of being permanently clipped.
       child: Scaffold(
         extendBody: true,
-        body: navigationShell,
+        body: _MaintenanceBanner.wrap(navigationShell),
         bottomNavigationBar: MainNavBar(
           activeIndex: activeIndex,
           displayedIndex: displayedIndex,
@@ -105,5 +106,56 @@ class ShellScaffold extends ConsumerWidget {
       return;
     }
     navigationShell.goBranch(index);
+  }
+}
+
+/// App-wide maintenance banner driven by the `maintenance_banner` Remote Config
+/// string. Empty value -> no banner (just the shell); non-empty -> a dismissable-
+/// looking strip above the content, editable live from the Console with no deploy.
+class _MaintenanceBanner extends StatelessWidget {
+  const _MaintenanceBanner(this.child);
+
+  final Widget child;
+
+  static Widget wrap(Widget child) => _MaintenanceBanner(child);
+
+  @override
+  Widget build(BuildContext context) {
+    final message = AppFlags.text(AppFlags.maintenanceBanner).trim();
+    if (message.isEmpty) return child;
+    final cs = Theme.of(context).colorScheme;
+    return Column(
+      children: [
+        Material(
+          color: cs.errorContainer,
+          child: SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 18,
+                    color: cs.onErrorContainer,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      message,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: cs.onErrorContainer,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Expanded(child: child),
+      ],
+    );
   }
 }
