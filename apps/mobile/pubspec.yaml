@@ -61,7 +61,7 @@ dependencies:
   dio: ^5.9.2
   video_player: ^2.10.0
   chewie: ^1.14.1
-  path_provider: ^2.1.4
+  path_provider: ^2.1.6
   http: ^1.2.0
   liquid_glass_renderer: ^0.2.0-dev.4
   firebase_messaging: ^16.3.0
