@@ -11,7 +11,7 @@
     "@cf-wasm/photon": "^0.3.5",
     "groq-sdk": "^0.11.0",
     "mammoth": "^1.7.0",
-    "nanoid": "^5.0.0",
+    "nanoid": "^5.1.16",
     "unpdf": "^1.6.2"
   },
   "devDependencies": {
